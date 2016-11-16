@@ -1,0 +1,150 @@
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.12] -      black mamba
+-------        ---------------------------------------------------------------------------
+improved   ->  'persistence' post-exploitation module added to most windows payloads
+improved   ->  'timestomp' added to persistence.rc to change target payload mace values 
+improved   ->  no more need to write the extension (.exe .bat etc) in payload output name
+
+added      ->  x64 arch payloads added to 'availabe payloads list'
+added      ->  dalvik android meterpreter payload [payload.apk]
+added      ->  payload.vbs [powershell base64 enc] exec.vbs template
+added      ->  exe-service payload [windows service control manager (SCM)]
+added      ->  payload.exe [powershell base64 enc] c template compiled to stand-alone exec
+added      ->  payload.jar [poweshell base64 enc] exec.jar template added to [option 17]
+added      ->  payload.pdf [powershell+base64 OR C+random_xor] PDF trojan horse builds
+added      ->  'system built-in shells' -> simple powershell shell
+added      ->  'system built-in shells' -> simple php reverse shell
+added      ->  'system built-in shells' -> simple reverse python shell2
+added      ->  'system built-in shells' -> simple ruby Reverse_bash_shell
+added      ->  'system built-in shells' -> simple ruby Reverse_bash_shell2
+
+
+added      ->  'MSI_privilege_escalation' msf post-module to elevate MSI privs
+added      ->  'CleanTracks.rb' msf module to clear tracks in target (post-exploitation)
+added      ->  'deploy_service_payload.rb' msf module to deploy a service payload (windows)
+added      ->  'reverse_engineering_venom.pdf' shows custom technics used by venom tool
+added      ->  'hta-to-javascript.html' further encrypt hta payloads (thanks to 0xyg3n)
+added      ->  'VBS-crypter.exe' further encrypt vbs payloads (thanks to suriya)
+added      ->  'crypter_vbs_1.0_by_the_dark_side' further encrypt your vbs payloads
+-------        ---------------------------------------------------------------------------
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.11] -     malicious_server
+-------        ---------------------------------------------------------------------------
+bug fix    ->  msfvenom output 'append >>' bug fixed 
+
+improved   ->  FAQ file review (option 'F' main menu)
+improved   ->  'setup.sh' can be used to activate/delete apache2 venom domain name.
+improved   ->  'setup.sh' now installs WinRAR/SFX into WINE (x86 and x64 archs supported)
+improved   ->  auto-start of 'metasploit + postgresql + apache2' services befor running venom
+improved   ->  post-exploitation added to Apache2Server attack vector (windows targets only)
+improved   ->  php/meterpreter/reverse_tcp (base64 encoded) payload.php added to 'option 13'
+improved   ->  'Unix Apache2 Exploit' (payload.php + trigger.sh) added to 'option 13'
+
+added      ->  'system built-in shells' uses technics like /dev/tcp to spaw a connection
+added      ->  'mega-upload' fake webpage added to deliver your payloads (social engeneering)
+added      ->  'http://mega-upload.com' venom domain name attack vector (MitM+DNS_SPOOF)
+added      ->  java/meterpreter/reverse_tcp (drive-by-rce attack vector) payload.jar
+added      ->  payload 'VBS' -> generate a VBS payload (vbs-obfuscator crypted) payload.vbs
+added      ->  vbs-obfuscator.py encrypt your payload.vbs using ascii (only works in .vbs)
+added      ->  chose what process to auto-migrate after a successefuly exploitation
+               fast_migrate.rc script will migrate to wininit.exe by default unless you
+               run 'setup.sh' that rebuilds 'fast_migrate.rc' with the new settings enter.
+-------        ---------------------------------------------------------------------------
+
+
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.10] -
+-------        ---------------------------------------------------------------------------
+bug fix    ->  getsystem bug fixed in all resource files (.rc)
+
+improved   ->  venom terminal displays review/improved/fixed.
+improved   ->  elementary OS ip address support added (LHOST).
+improved   ->  @echo off added to all .bat files to hidde letter displays
+
+
+added      ->  apache2 added to deliver your payloads using a malicious URL..
+added      ->  powershell-to-bat Invoke-Shellcode.ps1 technic (Matthew Graeber)
+added      ->  stager 'reverse_tcp_dns' added to 'available payloads list'
+added      ->  gather.rc post-exploitation resource file (gather target info)
+added      ->  encrypt_PolarSSL base64+AES shellcode cypter (manual run)
+added      ->  pyinstaller to 'wine_32_INTEL' archs support added
+added      ->  'shell/aux/setup.sh' install missing dependencies help script
+added      ->  SimpleHTTPServerWithupload.py a simplehttpserver with
+               download/upload capabilittys if you need it (manual run)
+-------        ---------------------------------------------------------------------------
+
+
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.9] -
+-------        ---------------------------------------------------------------------------
+bug fix    ->  misspeeling errors and terminal display fixes
+bug fix    ->  i586-mingw32msvc-gcc dependencie check fix under kali distros
+bug fix    ->  pyinstaller to work under wine (pyinstaller.tar.gz) 'if you must'...
+               then unzip the file and follow the instructions inside readme file"...
+
+improved   ->  binaries folder renamed to templates
+improved   ->  venom banner and disclamer display redesigned...
+improved   ->  payload c-to-exe is now encoded using msf encoders (3)
+improved   ->  payload psh-cmd bat now builds a trigger.bat to easy run the .ps1 file
+
+added      ->  payload psh-cmd bat powershell(base64) -> output payload.bat
+added      ->  payload one-line-python(base64) shellcode -> executable python payload
+added      ->  stager reverse_http added to 'available payloads list'
+added      ->  stager reverse_https added to 'available payloads list'
+-------        ---------------------------------------------------------------------------
+
+
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.8] -    leaked befor time :(
+-------        ---------------------------------------------------------------------------
+bug fix    ->  misspeeling errors and terminal display fixes
+
+added      ->  changed main script name from 'crisp.sh' to 'venom.sh'
+added      ->  payload powershell(.ps1) -> base64 encoded powershell
+-------        ---------------------------------------------------------------------------
+
+
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.7] -
+-------        ---------------------------------------------------------------------------
+bug fix    ->  misspeeling errors and terminal displays fixes
+bug fix    ->  mingw32 'check if installed' now uses 'apt-get cache' to check installation
+
+improved   ->  mingw32 will use the switch '-mwindows' to hidde the display window (in target)
+improved   ->  payload c-to-dll -> now builds a 'trigger.bat' if we want to use winrar/SFX
+improved   ->  payload msiexec-msi -> now builds a 'trigger.bat' if we want to use winrar/SFX
+
+added      ->  payload reflective dll injection -> C-to-DLL (fud mingw32 obfuscated/compiled)
+added      ->  payload hta-psh hta powershell -> use index.html to execute hta-psh attack vector
+-------        ---------------------------------------------------------------------------
+
+
+
+
+
+
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.6] -
+-------        ---------------------------------------------------------------------------
+bug fix    ->  pyinstaller will check if its running under 'root user account'
+               (not normal user account), if its running under root account
+               then the funtion will abort (pyinstaller)..
+
+added      ->  License (Gnu Public License - GPL)
+added      ->  main menu -> FAQ (frequent ask questions)
+added      ->  payload 'MSIEXEC-MSI' -> use msiexec to execute shellcode into target system
+added      ->  payload 'PHP' -> generate a PHP payload (webshell) to run it on a Webserver
+added      ->  cred_dump.rc -> it will dump credentials of target system (windows only) 
+added      ->  fast_migrate.rc -> it will elevate current session to nt authority/system
+               and migrate to wininit.exe priviliged process on target machine.
+-------        ---------------------------------------------------------------------------
+

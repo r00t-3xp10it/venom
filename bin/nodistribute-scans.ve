@@ -1,0 +1,57 @@
+###
+# Multi-AV-Scan-WebSite: https://nodistribute.com/
+# nodistribute venom (27 payloads) scan results on: 17-abr-2016
+# check the links bellow to see what AV soluction can detect your build
+###
+
+
+OPTION -   FORMAT   -  OUTPUT             - DETECTION  -> NODISTRIBUTE LINK
+--------------------------------------------------------------------------------------------------------
+1      -     C      -    C                -    1/35    -> https://nodistribute.com/result/1Jq6KL8m0BhItXnAMHax
+2      -     C      -    DLL              -    1/35    -> https://nodistribute.com/result/80tOzm1GUioh6vXDML5ZI
+3      -     DLL    -    DLL              -   15/35    -> https://nodistribute.com/result/sZ8rYkIt5Pme1lVLp7
+4      -     C      -    PYTHON           -    0/35    -> https://nodistribute.com/result/G7ONIuSHrdx0YhRMT4DtBiJqf
+4      -     C      -    PYHERION         -    0/35    -> https://nodistribute.com/result/NwrVLn2XcJdz0H9QsoMjTSi6
+4      -     C      -    EXE              -    0/35    -> https://nodistribute.com/result/ZH6LqzjQAvBkDS1N0F4JVgO
+5      -     C      -    EXE              -    8/35    -> https://nodistribute.com/result/Y17qMBdSA3GjCmZof6Xt20 
+6      -   PSH-CMD  -    EXE              -    2/35    -> https://nodistribute.com/result/xqQ6dkY4NKzJ0eH3R
+7      -     C      -    RUBY             -    0/35    -> https://nodistribute.com/result/J4rDROdTln0piVUYGb51APKEht
+8      -   MSIEXEC  -    MSI              -    5/35    -> https://nodistribute.com/result/FJjCgu9fhNmntqDzo10WTkcrLKMPQU
+9      - POWERSHELL -    BAT              -    0/35    -> https://nodistribute.com/result/OJBYiFC3jwKITUh27Dk1QnlWm6MEyb
+10     -   HTA-PSH  -    HTA (normal)     -    0/35    -> https://nodistribute.com/result/Ww758aQrDIhpCAqbzgnT
+10     -   HTA-PSH  -    HTA (javascript) -    1/35    -> https://nodistribute.com/result/5w3DTPO7hcMxJGBqA
+11     -   PSH-CMD  -    PS1              -    0/35    -> https://nodistribute.com/result/6csd7UVZ0HCv5jy
+12     -   PSH-CMD  -    BAT              -    0/35    -> https://nodistribute.com/result/BGn9qkoND7K5axjM
+13     -     VBS    -    VBS              -    6/35    -> https://nodistribute.com/result/AnTSR05x4FUCzs2
+14     -   PSH-CMD  -    VBS              -    0/35    -> https://nodistribute.com/result/Df7u1zXINqK6GjJidUly8mvtFC5
+15     -   PSH-CMD  -    PDF              -   14/35    -> https://nodistribute.com/result/2LXmnjEMUzhaoCk3uQcWwgOdxtbD5
+15     -     C      -    PDF              -   14/35    -> https://nodistribute.com/result/eAvpQrxRYX2PBig84IyKsw3tF0W
+16     -     PHP    -    PHP              -    0/35    -> https://nodistribute.com/result/vXGZV4U9fkzbEiypWHFITPdLa50
+16     -     PHP    -    PHP (base64)     -    0/35    -> https://nodistribute.com/result/06jkoQayR8OKDrYEMztfFLP
+16     -     PHP    -    PHP+SH           -    0/35    -> https://nodistribute.com/result/06jkoQayR8OKDrYEMztfFLP
+17     -   PYTHON   -    PYTHON           -    1/35    -> https://nodistribute.com/result/VB15Ss0yQA8GFxTfUKeLqkmi
+18     -    JAVA    -    JAR              -    1/35    -> https://nodistribute.com/result/0jKcluw475XAVmWSRqaQp9eiLTB
+18     -  PSH-CMD   -    JAR              -    1/35    -> https://nodistribute.com/result/P5yIrKaWzZ3dVAlk8FG
+19     -     PSH    -    PYTHON           -    0/35    -> https://nodistribute.com/result/6OoKkNAxI7tBUzTFbsC3SliewX
+19     -     PSH    -    BAT              -    2/35    -> https://nodistribute.com/result/ty7w0JKe4N9WAzTG2
+--------------------------------------------------------------------------------------------------------
+
+
+
+###
+# EVASION IMPROVEMENTS IN VERSION 1.0.12
+###
+
+OPTION -   FORMAT   -  OUTPUT             - DETECTION  -> NODISTRIBUTE LINK
+--------------------------------------------------------------------------------------------------------
+13     -     VBS    -    VBS (new enc *1) -     2/35   -> https://nodistribute.com/result/67EOqrgJ5uUwyHva
+--------------------------------------------------------------------------------------------------------
+
+
+
+###
+# new obfuscators/cryters used
+###
+
+*1 - crypter vbs by darkside (it works under wine)
+

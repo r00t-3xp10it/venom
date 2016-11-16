@@ -1,0 +1,48 @@
+
+      ,           , 
+     /             \ 
+    ((__-^^-,-^^-__)) 
+     '-_---'  ---_-'
+      '--|o' 'o|--' 
+         \  '  / 
+          ): :( 
+          :o_o: 
+           "-"  GNU PUBLIC LICENSE (GPL)
+     Copyright © 2016 - License - Terms of Use <http://fsf.org/>
+     Everyone is permitted to copy and distribute verbatim copies
+     of this license document, but changing it is not allowed.
+
+---
+-- 1) You are not required to accept this License since you have not
+-- signed it, However nothing else grants you permission to modify or
+-- distribute the Program or its derivative works under another author
+-- name besides 'pedr0 ubuntu - r00t-3xp10it' or change the software
+-- name from 'venom', Therefore by modifying or distributing
+-- the Program you indicate your acceptance of this License.
+--
+-- 2) You can use this software and distribute it with anyone else
+-- as long as you do this for free and keep author credits, also the
+-- license must be included into the program without any changes made.
+-- However you are allowed to reverse engineer it and distribute it
+-- under this terms and conditions. 
+--
+-- 3) This project can only be distributed in open source format
+-- and any adjustments to the source code to spy or control user
+-- activity will not be allowed by third part companies/persons. 
+--
+-- 4) You assume full responsibility for any unlawful actions taken
+-- by using this software againts hosts in a local lan or wan networks
+-- without owner previous consent, remmenber that attacking targets
+-- without previous consent its illegal and punish by law.
+--
+-- 5) This software uses licenced frameworks develop by others and
+-- by any meens infringe that licenses by automating then. Credits:
+--  HD Moore (metasploit) | Nick Harbour (PEScrambler.exe)
+--  @harmj0y (pyherion) | @G0tmi1k @chris truncker @harmj0y(rubystager.rb)
+--  David Cortesi (pyinstaller) | 0entropy (powershell) 
+--  Matthew Graeber (powershell) | Liviu I (encrypt_polarSSL)
+--  alor&naga (ettercap mitm+dns_spoof - domain redirection)
+---
+
+Copyright © 2016 - venom shellcode generator
+

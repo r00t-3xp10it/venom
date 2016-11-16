@@ -1,0 +1,86 @@
+############################################################################
+#                                                                          #
+#  ettercap -- etter.dns -- host file for dns_spoof plugin                 #
+#                                                                          #
+#  Copyright (C) ALoR & NaGA                                               #
+#                                                                          #
+#  This program is free software; you can redistribute it and/or modify    #
+#  it under the terms of the GNU General Public License as published by    #
+#  the Free Software Foundation; either version 2 of the License, or       #
+#  (at your option) any later version.                                     #
+#                                                                          #
+############################################################################
+#                                                                          #
+#             etter.dns changed to be used in venom.sh                     #
+#                                                                          #
+#   shell/aux/setup.sh its used to config this file embbebing attackers    #
+#      ip adress so we can redirect domains to our apache2 webserver       #
+############################################################################
+
+
+
+
+
+#######################################
+#    venom domain name redirection    #
+# redirect mega-upload.com to apache2 #
+#######################################
+
+mega-upload.com           A   IpAdDr
+*.mega-upload.com         A   IpAdDr
+www.mega-upload.com       PTR IpAdDr      # Wildcards in PTR are not allowed
+
+
+######################################
+#  To redirect all .com domains too  #
+#    un-comment the follow lines     #
+######################################
+
+#.com                      A   IpAdDr
+#*.com                     A   IpAdDr
+#.com                      PTR IpAdDr      # Wildcards in PTR are not allowed
+
+
+######################################
+#  To redirect all .org domains too  #
+#    un-comment the follow lines     #
+######################################
+
+#.org                      A   IpAdDr
+#*.org                     A   IpAdDr
+#.org                      PTR IpAdDr      # Wildcards in PTR are not allowed
+
+
+
+
+
+
+##########################################
+# no one out there can have our domains...
+#
+
+www.alor.org  A 127.0.0.1
+www.naga.org  A 127.0.0.1
+
+###############################################
+# one day we will have our ettercap.org domain
+#
+
+www.ettercap.org           A  127.0.0.1
+ettercap.sourceforge.net   A  216.136.171.201
+
+###############################################
+# some MX examples
+#
+
+alor.org   MX  127.0.0.1
+naga.org   MX  127.0.0.1
+
+###############################################
+# This messes up NetBIOS clients using DNS
+# resolutions. I.e. Windows/Samba file sharing.
+#
+
+LAB-PC*  WINS  127.0.0.1
+
+# vim:ts=8:noexpandtab
