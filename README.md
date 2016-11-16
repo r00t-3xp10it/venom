@@ -39,6 +39,7 @@
     or "<form>" tags to be hable to trigger payload downloads.
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
+       Just run shell-main/aux/setup.sh to config framework settings.
 
 
 # DEPENDENCIES
