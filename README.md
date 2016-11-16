@@ -40,11 +40,18 @@
     framework dependencies (metasploit as to be manually installed). 
 
 # INSTALL
-    1º - download framework from github (zip OR git clone)
+    1º - download framework from github
+         zip OR git clone
+
     2º - set files execution permitions
-         cd venom-main && sudo chmod -R +x *.sh
+         cd venom-main
+         sudo chmod -R +x *.sh
+         sudo chmod -R +x *.py
+
     3º - install dependencies
-         cd aux && sudo ./setup.sh
+         cd aux
+         sudo ./setup.sh
+
     4º - run main tool
          sudo ./venom.sh
 
