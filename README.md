@@ -39,3 +39,15 @@
     Adicionally as build shell/aux/setup.sh to help you install all venom
     framework dependencies (metasploit as to be manually installed). 
 
+# INSTALL
+    1º - download framework from github (zip OR git clone)
+    2º - set files execution permitions
+         cd venom-main && sudo chmod -R +x *.sh
+    3º - install dependencies
+         cd aux && sudo ./setup.sh
+    4º - run main tool
+         sudo ./venom.sh
+
+
+
+_EOF
