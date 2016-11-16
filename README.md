@@ -1,5 +1,6 @@
-# VENOM v1.0.12-beta - metasploit Shellcode generator/compiller
-    Author: pedro ubuntu  [ r00t-3xp10it ]
+# VENOM 1.0.12 - metasploit Shellcode generator/compiller
+    Version release : v1.0.12-Beta
+    Author : pedro ubuntu  [ r00t-3xp10it ]
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
 # LEGAL DISCLAMER
@@ -50,19 +51,19 @@
     venom framework dependencies (metasploit as to be manually installed). 
 
 # DOWNLOAD/INSTALL
-    1º - download framework from github
+    1º - Download framework from github
          tar.gz OR zip OR git clone
 
-    2º - set files execution permitions
+    2º - Set files execution permitions
          cd venom-main
          sudo chmod -R +x *.sh
          sudo chmod -R +x *.py
 
-    3º - install dependencies
+    3º - Install dependencies
          cd aux
          sudo ./setup.sh
 
-    4º - run main tool
+    4º - Run main tool
          sudo ./venom.sh
 
 
