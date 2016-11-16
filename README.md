@@ -1,7 +1,7 @@
 # VENOM 1.0.12 - metasploit Shellcode generator/compiller
     Version release : v1.0.12-Beta
     Author : pedro ubuntu  [ r00t-3xp10it ]
-    Distros Supported : Linux Ubuntu, Kali, mint, Parrot OS
+    Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
 # LEGAL DISCLAMER
@@ -39,7 +39,7 @@
     or "<form>" tags to be hable to trigger payload downloads.
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
-       Just run shell-main/aux/setup.sh to config framework settings.
+       Just run venom-main/aux/setup.sh to config framework settings.
 
 
 # DEPENDENCIES
@@ -50,7 +50,7 @@
     ettercap MitM+DNS_Spoof (venom domain name attack vector)
 
     "venom.sh will download/install all dependencies as they are needed"
-    Adicionally as build shell-main/aux/setup.sh to help you install all
+    Adicionally as build venom-main/aux/setup.sh to help you install all
     venom framework dependencies (metasploit as to be manually installed). 
 
 # DOWNLOAD/INSTALL
