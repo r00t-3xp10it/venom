@@ -1,4 +1,4 @@
-# VENOM 1.0.12 - metasploit Shellcode generator/compiler/listenner
+# VENOM 1.0.12 - metasploit Shellcode generator/compiler
     Author: peterubuntu10@sourceforge.net  [ r00t-3xp10it ]
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
