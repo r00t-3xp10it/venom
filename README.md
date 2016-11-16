@@ -1,13 +1,15 @@
-# VENOM 1.0.12 - metasploit Shellcode generator/compiler
+# VENOM v1.0.12-beta - metasploit Shellcode generator/compiller
     Author: pedro ubuntu  [ r00t-3xp10it ]
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
-# DISCLAMER
+# LEGAL DISCLAMER
     The author does not hold any responsibility for the bad use
     of this tool, remember that attacking targets without prior
     consent is illegal and punished by law.
 
-# DESCRIPTION
+
+
+# FRAMEWORK DESCRIPTION
     The script will use msfvenom (metasploit) to generate shellcode
     in diferent formats ( c | python | ruby | dll | msi | hta-psh )
     injects the shellcode generated into one template (example: python)
@@ -28,6 +30,14 @@
     the 2º stage of shell/meterpreter directly into targets ram
     the other reazon its the use of external obfuscator/crypters.
 
+# HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
+    venom 1.0.11 (malicious_server) was build to take advantage of
+    apache2 webserver to deliver payloads (lan) using a fake webpage
+    writen in html that takes advantage of <iframe> <meta-http-equiv>
+    or "<form>" tags to be hable to trigger payload download.
+
+
+
 # DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
     mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
@@ -36,12 +46,12 @@
     ettercap MitM+DNS_Spoof (venom domain name attack vector)
 
     "venom.sh will download/install all dependencies as they are needed"
-    Adicionally as build shell/aux/setup.sh to help you install all venom
-    framework dependencies (metasploit as to be manually installed). 
+    Adicionally as build shell-main/aux/setup.sh to help you install all
+    venom framework dependencies (metasploit as to be manually installed). 
 
-# INSTALL
+# DOWNLOAD/INSTALL
     1º - download framework from github
-         zip OR git clone
+         tar.gz OR zip OR git clone
 
     2º - set files execution permitions
          cd venom-main
