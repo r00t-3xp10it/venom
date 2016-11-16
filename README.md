@@ -4,6 +4,7 @@
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
+
 # LEGAL DISCLAMER
     The author does not hold any responsibility for the bad use
     of this tool, remember that attacking targets without prior
@@ -32,26 +33,32 @@
     the 2º stage of shell/meterpreter directly into targets ram
     the other reazon its the use of external obfuscator/crypters.
 
+
 # HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
     venom 1.0.11 (malicious_server) was build to take advantage of
-    apache2 webserver to deliver payloads (lan) using a fake webpage
+    apache2 webserver to deliver payloads (LAN) using a fake webpage
     writen in html that takes advantage of <iframe> <meta-http-equiv>
-    or "<form>" tags to be hable to trigger payload downloads.
+    or "<form>" tags to be hable to trigger payload downloads, the
+    user just needs to send the link provided to target host.
+
+    ATTACK VECTOR: http://192.168.1.69
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
        Just run venom-main/aux/setup.sh to config framework settings.
+
 
 
 # DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
     mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
     PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar
-    vbs-obfuscator (crypter) | encrypt_PolarSSL (crypter) and
+    vbs-obfuscator (obfuscator) | encrypt_PolarSSL (crypter) and
     ettercap MitM+DNS_Spoof (venom domain name attack vector)
 
     "venom.sh will download/install all dependencies as they are needed"
     Adicionally as build venom-main/aux/setup.sh to help you install all
     venom framework dependencies (metasploit as to be manually installed). 
+
 
 # DOWNLOAD/INSTALL
     1º - Download framework from github
