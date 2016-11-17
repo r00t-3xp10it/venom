@@ -81,6 +81,8 @@
 # Framework Main Menu
 ![venom shellcode v1.0.12-Beta](https://dl.dropboxusercontent.com/u/21426454/git-hub-venom-banner2.png)
 # [ build 4 ] python/pyinstaller - osiris.exe
+    Build 4 Work floow: Build shellcode in C language, embebbed into
+    one python template and compiled to exe by pyinstaller = osiris.exe
 ![venom shellcode v1.0.12-Beta](https://dl.dropboxusercontent.com/u/21426454/venom-banner3.png)
 
 _EOF
