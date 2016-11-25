@@ -1,3 +1,12 @@
+[![Version](https://img.shields.io/badge/Xerosploit-Version_1.0-brightgreen.svg?maxAge=259200)]()
+[![Build](https://img.shields.io/badge/Supported_OS-linux-orange.svg)]()
+[![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
+
+[![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)]()
+[![GitHub release](https://img.shields.io/github/release/qubyte/rubidium.svg)]()
+[![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
+[![CocoaPods](https://img.shields.io/cocoapods/p/AFNetworking.svg)]()
+
 # VENOM 1.0.12 - metasploit Shellcode generator/compiller
     Version release : v1.0.12-Beta
     Author : pedro ubuntu  [ r00t-3xp10it ]
