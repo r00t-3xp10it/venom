@@ -5,7 +5,7 @@
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
 # VENOM 1.0.12 - metasploit Shellcode generator/compiller
-    Version release : v1.0.12-Beta
+    Version release : v1.0.12
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
