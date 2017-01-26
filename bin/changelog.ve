@@ -1,3 +1,9 @@
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      black mamba
+-------        ---------------------------------------------------------------------------
+added      ->  'post_linux.rc' linux wifi stored password dump (post-exploitation)
+
+
+
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.12] -      black mamba
 -------        ---------------------------------------------------------------------------

