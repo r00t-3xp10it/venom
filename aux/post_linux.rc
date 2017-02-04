@@ -1,0 +1,9 @@
+##
+# Author: r00t-3xp10it
+# dump wifi passwords from all profiles (linux system)
+# https://fossbytes.com/find-wifi-password-current-network/
+##
+
+sudo grep psk= /etc/NetworkManager/system-connections/*
+sudo grep wep-key0= /etc/NetworkManager/system-connections/*
+
