@@ -3,7 +3,7 @@
 # venom - metasploit Shellcode generator/compiler/listenner
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.13
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2016
-# codename: black_mamba [ GPL licensed ]
+# codename: the beast [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -41,11 +41,11 @@ fi
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
 ver="1.0.13" # script version display
-C0d3="Black mamba" # version codename display
+C0d3="the beast" # version codename display
 user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
 IPATH=`pwd` # grab venom.sh install path (home/username/shell)
-mSf=`locate modules/post/windows/escalate | egrep -m 1 "modules"` # grab msf post folder path
+mSf=`locate modules/post/windows/escalate | egrep -m 1 "post"` # grab msf post folder path
 # ------------------------------------------------------------------------
 # funtions [templates] to be injected with shellcode
 # ------------------------------------------------------------------------
@@ -262,7 +262,7 @@ rm -r $IPATH/dist > /dev/null 2>&1
 rm -r $IPATH/build > /dev/null 2>&1
 # exit venom.sh
 echo "[☠ ] Exit Shellcode Generator..."
-echo "[_Codename:black_mamba]"
+echo "[_Codename:the beast]"
 echo "☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆"
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
