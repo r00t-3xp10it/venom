@@ -45,6 +45,7 @@ C0d3="Black mamba" # version codename display
 user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
 IPATH=`pwd` # grab venom.sh install path (home/username/shell)
+mSf=`locate modules/post/windows/escalate | egrep -m 1 "modules"` # grab msf post folder path
 # ------------------------------------------------------------------------
 # funtions [templates] to be injected with shellcode
 # ------------------------------------------------------------------------
@@ -779,6 +780,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1166,6 +1168,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1372,6 +1375,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1685,6 +1689,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1883,6 +1888,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2388,6 +2394,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2687,6 +2694,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.vbs|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2904,6 +2912,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -3030,6 +3039,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cd $IPATH/aux
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
       sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
