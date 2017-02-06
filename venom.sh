@@ -781,6 +781,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1169,6 +1171,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1376,6 +1380,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1690,6 +1696,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -1889,6 +1897,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2395,6 +2405,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2695,6 +2707,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.vbs|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -2913,6 +2927,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
@@ -3040,6 +3056,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
       cp privilege_escalation.rc privilege_escalation[bak].rc
       cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠ ] reloading -> Metasploit database!"
+      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
       sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
       sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
       cd $IPATH
