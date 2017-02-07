@@ -1,10 +1,12 @@
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      the beast
 -------        ---------------------------------------------------------------------------
-added      ->  'post_linux.rc' linux wifi stored password dump (post-exploitation)
+bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89) 
+
+added      ->  'post_linux.rc' linux gather information module (post-exploitation)
 added      ->  'privilege_escalation.rc' windows privilege escalation (post-exploitation)
 
-added      ->  'enigma_fileless_uac_bypass.rb' privilege escalation (post-exploitation)
+added      ->  'enigma_fileless_uac_bypass.rb' windows privilege escalation (post-exploitation)
 -------        ---------------------------------------------------------------------------
 
 

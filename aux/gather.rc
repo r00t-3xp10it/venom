@@ -15,3 +15,4 @@ run post/windows/gather/usb_history
 run post/multi/gather/firefox_creds
 run post/windows/gather/credential_collector
 run post/windows/gather/enum_applications
+
