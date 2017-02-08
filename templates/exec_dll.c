@@ -1,5 +1,4 @@
 // C template | Author: Ast0Baby
-// execute shellcode into memory (ram)
 // https://astr0baby.wordpress.com/2014/02/12/custom-meterpreter-loader-dll/
 // ---
 

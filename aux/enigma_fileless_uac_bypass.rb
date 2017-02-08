@@ -142,6 +142,7 @@ class MetasploitModule < Msf::Post
 			'DefaultOptions' =>
 				{
                                          'SESSION' => '1', # Default its to run againts session 1
+                                         'EXEC_COMMAND' => 'start %temp%\\N4m', # command for venom framework
 				},
                         'SessionTypes'   => [ 'meterpreter' ]
  
