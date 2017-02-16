@@ -3,7 +3,7 @@
 # venom - metasploit Shellcode generator/compiler/listenner
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.13
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2016
-# codename: the beast [ GPL licensed ]
+# codename: the Minotaur [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -41,7 +41,7 @@ fi
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
 ver="1.0.13" # script version display
-C0d3="the beast" # version codename display
+C0d3="the Minotaur" # version codename display
 user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
 IPATH=`pwd` # grab venom.sh install path (home/username/shell)

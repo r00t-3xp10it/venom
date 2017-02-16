@@ -1,5 +1,5 @@
 
-FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      the beast
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      the Minotaur
 -------        ---------------------------------------------------------------------------
 bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89)
 
