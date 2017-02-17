@@ -94,6 +94,7 @@
 
 
 Special thanks: Shubham Singh | Chaitanya Haritash | Suriya Prakash
+
 "For all the help provided in debuging this tool in diferent operative systems"
 
 
