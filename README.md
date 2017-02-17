@@ -91,4 +91,12 @@
     one python template and compiled to exe by pyinstaller = osiris.exe
 ![venom shellcode v1.0.13-Beta](https://dl.dropboxusercontent.com/u/21426454/venom-banner3.png)
 
+
+
+Special thanks: Shubham Singh | Chaitanya Haritash | Suriya Prakash
+"For all the help provided in debuging this tool in diferent operative systems"
+
+
 _EOF
+
+
