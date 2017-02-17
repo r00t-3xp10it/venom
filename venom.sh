@@ -4448,7 +4448,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
    # built-in systems shells
    if [ "$InSh3ll" = "simple bash shell" ]; then
-     echo "[✔ ] Building -> simple bash shell..."
+     echo "[✔] Building -> simple bash shell..."
      echo "---"
      echo "- simple bash shell that uses bash dev/tcp"
      echo "- socket programming to build a conection over tcp"
@@ -4464,7 +4464,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "simple reverse bash shell" ]; then
-     echo "[✔ ] Building -> simple reverse bash shell..."
+     echo "[✔] Building -> simple reverse bash shell..."
      echo "---"
      echo "- simple reverse bash shell uses bash dev/tcp"
      echo "- socket programming to build a reverse shell over tcp"
@@ -4481,7 +4481,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "simple reverse netcat shell" ]; then
-     echo "[✔ ] Building -> simple reverse netcat shell..."
+     echo "[✔] Building -> simple reverse netcat shell..."
      echo "---"
      echo "- simple Netcat reverse shell using bash"
      echo "- https://highon.coffee/blog/reverse-shell-cheat-sheet/"
@@ -4496,7 +4496,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "simple ssh shell" ]; then
-     echo "[✔ ] Building -> simple ssh shell..."
+     echo "[✔] Building -> simple ssh shell..."
      echo "---"
      echo "- Reverse connect using an SSH tunnel"
      echo "- Use The ssh client to forward a local port"
@@ -4520,7 +4520,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple reverse python shell..."
+     echo "[✔] Building -> simple reverse python shell..."
      echo "---"
      echo "- Reverse connect using one-liner python shell"
      echo "- that uses bash and socket to forward a tcp connection"
@@ -4548,7 +4548,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
      chown $user $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple reverse python shell..."
+     echo "[✔] Building -> simple reverse python shell..."
      echo "---"
      echo "- Reverse connect using one-liner python shell"
      echo "- that uses bash and socket to forward a tcp connection"
@@ -4576,7 +4576,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple powershell shell..."
+     echo "[✔] Building -> simple powershell shell..."
      echo "---"
      echo "- Reverse connection using one-liner powershell (ancii enc)"
      echo "- that uses powershell socket to forward a tcp connection"
@@ -4596,7 +4596,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "ruby Reverse_bash_shell" ]; then
-     echo "[✔ ] Building -> reverse bin/sh shell..."
+     echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
      echo "- socket programming to build a conection over tcp"
@@ -4611,7 +4611,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "ruby Reverse_bash_shell2" ]; then
-     echo "[✔ ] Building -> reverse bin/sh shell..."
+     echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
      echo "- socket programming to build a conection over tcp"
@@ -4626,7 +4626,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
 
    elif [ "$InSh3ll" = "simple php reverse shell" ]; then
-     echo "[✔ ] Building -> simple php reverse shell..."
+     echo "[✔] Building -> simple php reverse shell..."
      echo "---"
      echo "- simple php reverse shell that uses socket programming"
      echo "- and bash (to execute) to forward a tcp connection"
