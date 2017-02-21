@@ -4504,7 +4504,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
    else
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" --width 350 --height 230) > /dev/null 2>&1
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
