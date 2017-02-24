@@ -7,44 +7,68 @@ resize -s 22 94 > /dev/null
 # banner display
 cat << !
 
-
-    postgresql metasploit database connection fix
+    ╔─────────────────────────────────────────────────╗
+    |  postgresql metasploit database connection fix  |
+    ╚─────────────────────────────────────────────────╝
 
 !
 
 # testings
-echo "[*] start postgresql service .."
+echo "[*] Starting postgresql service .."
 service postgresql start
 sleep 4
 
 
+  #
+  # check for postgresql port active
+  #
+  echo "[*] Checking port 5432 connection .."
+  check=`ss -ant | grep 5432 | awk {'print $4'}`
+  dis=`ss -ant | grep 5432`
 
-echo "[*] checking port 5432 .."
-check=`ss -ant | grep 5432 | awk {'print $4'}`
-dis=`ss -ant | grep 5432`
-if [ "$check" != "127.0.0.1:5432" ]; then
+    if [ "$check" != "127.0.0.1:5432" ]; then
+      echo "[*] Port 5432 (postgresql): NOT active .."
+      sleep 2
+      echo "[*] Please wait, rebuilding msf database .."
+      # rebuild msf database (database.yml)
+      echo ""
+      msfdb delete
+      msfdb init
+      echo ""
+      sleep 6
+      echo "[*] rechecking port 5432 connection .."
+      dis=`ss -ant | grep 5432`
+      echo "    $dis"
 
-echo "[*] port 5432 (postgresql) its not active .."
-sleep 2
+    else
 
-# rebuild msf database
-echo "[*] rebuilding msf database .."
-echo ""
-msfdb delete
-msfdb init
-echo ""
-sleep 4
-echo "[*] checking port 5432 .."
-dis=`ss -ant | grep 5432`
-echo "    $dis"
+      #
+      # port 5432 active, no need to rebuild msfdb
+      #
+      echo ""
+      echo "    $dis"
+      echo ""
+      echo "[*] Port 5432 (postgresql): active .."
+    fi
 
-else
-echo ""
-echo "    $dis"
-echo ""
+
+  #
+  # start msfconsole to check postgresql connection status
+  #
+  echo "[*] Checking msfdb connection status .."
+  msfconsole -q -x 'db_status; exit -y'
+  # echo "[*] stoping postgresql service .."
+  # service postgresql stop
+  sleep 1
+
+
+  # start venom framework
+  echo -n "[*] Start venom framework? (y/n):"
+  read question
+
+if [ "$question" = "y" ]; then
+echo "[*] Please wait, executing framework .."
+cd ..
+./venom.sh
 fi
 
-echo "[*] checking msfdb connection status .."
-msfconsole -q -x 'db_status; exit -y'
-# echo "[*] stoping postgresql service .."
-# service postgresql stop
