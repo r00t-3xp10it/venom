@@ -1,0 +1,52 @@
+
+
+#   ____  __. .__             .__  
+#  |    |/ _| |__|   _____    |__| 
+#  |      <   |  |  /      \  |  | 
+#  |    |  \  |  | |  Y Y   \ |  | 
+#  |____|__ \ |__| |__|_|   / |__| 
+#          \/            \./Suspicious Shell Activity     
+#          Malicious Debian Package Creator
+#          Coded by Chaitanya Haritash
+#          Twitter :: @bofheaded
+
+
+###
+# kimi - Malicious Debian Package generator v1.1
+# Script to generate malicious debian packages (unix systems)
+# "Kimi is the name inspired from 'Kimimaro' one of my favorite charaters from anime 'Naruto'"
+#
+#    Kimi is a script which generates Malicious debian packages for metasploit
+#    which consists of a bash file with one python call. The bash file is deployed
+#    into "/usr/local/bin" directory. The Bash file injected acts like a 'trigger'
+#    of msf web_delivery module that delivers a python payload to target and when
+#    executed by victim the attacker will get is session open in return.
+#
+#    Kimi basically depends upon web_delivery module and everything is automated. 
+#    All the attacker needs to do is to send the debian agent to target and start
+#    the conrrespondent handler(web_delivery) 'sudo msfconsole -r handler.rc'
+#
+#    Plus Points ::
+#    -- Fully indiependent. Means user no need to install any debian package creator
+#    -- Can be integrated with any payload generator easily due to engagements of argument's
+#
+#
+# GENERATING MALICIOUS PAYLOAD ::
+#     dreamer@mindless ~$ sudo python kimi.py -n name -l 127.0.0.1 -V 1.0
+#
+# EXECUTING METASPLOIT HANDLER ::
+#     dreamer@mindless ~$ sudo msfconsole -r handler.rc
+#
+# EXECUTING .DEB ON TARGET ::
+#     dreamer@mindless ~$ sudo dpkg -i <package_name.deb>
+#
+#
+# TESTED ON ::
+#    Linux Mint 17.2 Cinnamon (Ubuntu 14.04) 
+#    ParrotOS (Debian Jessie)
+#    Kali rolling (2.0) 
+#
+#    NOTE :: This project was made to be integrated in Venom Shellcode Generator 1.0.13.
+#    But it can be used as an standalone program also.
+##
+

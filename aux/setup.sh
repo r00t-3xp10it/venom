@@ -29,7 +29,7 @@ fi
 # variable declarations
 # ----------------------
 OS=`uname` # grab OS
-ver="1.0.12"
+ver="1.0.13"
 H0m3=`echo ~` # grab home path
 user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStRo=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali

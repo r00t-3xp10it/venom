@@ -1,5 +1,4 @@
 // C template | Author: r00t-3xp10it
-// execute shellcode powershell base 64 encoded into memory (ram)
 // ---
 
 #include <stdio.h>

