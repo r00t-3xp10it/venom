@@ -4735,7 +4735,13 @@ cat << !
 # building template
 echo "[☠] editing/backup files .."
 sleep 2
+if [ -e $H0m3/.msf4/local/$N4m.ppsx ]; then
+rm $H0m3/.msf4/local/$N4m.ppsx > /dev/null 2>&1
+fi
 
+
+echo "[☠] Generating binary agent .."
+sleep 2
 
 # use metasploit to build shellcode
 echo "[☠] Generating MS_word document .."
@@ -5144,7 +5150,7 @@ cat << !
     | 22 - shellcode     windows      EXE-SERVICE    EXE          |
     | 23 - shellcode     windows      C              DOCM(word)   |
     | 24 - shellcode     windows      PYTHON         PPSX(word)   |
-    |                                                             |
+    ╠─────────────────────────────────────────────────────────────╣
     |  S - system built-in shells                                 |
     |  F - FAQ (frequent ask questions)                           |
     |  E - exit Shellcode Generator                               |
