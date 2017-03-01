@@ -14,7 +14,7 @@
 # --------------------------------------------------------------
 # Resize terminal windows size befor running the tool (gnome terminal)
 # Special thanks to h4x0r Milton@Barra for this little piece of heaven! :D
-resize -s 40 89 > /dev/null
+resize -s 40 90 > /dev/null
 # inicio
 
 
@@ -112,6 +112,37 @@ else
 D0M4IN="no"
 fi
 
+
+
+
+# banner display
+cat << !
+    ╔─────────────────────────────────────────────────╗
+    |  postgresql metasploit database connection fix  |
+    ╚─────────────────────────────────────────────────╝
+!
+
+  #
+  # start msfconsole to check postgresql connection status
+  #
+  service postgresql start
+  echo "[*] Checking msfdb connection status .."
+  sleep 1
+  ih=`msfconsole -q -x 'db_status; exit -y' | awk {'print $3'}`
+  if [ "$ih" != "connected" ]; then
+    echo "[x] postgresql selected, no connection .."
+    echo "[*] Please wait, rebuilding msf database .."
+    # rebuild msf database (database.yml)
+    echo ""
+    msfdb delete
+    msfdb init
+    echo ""
+    echo "[✔] postgresql connected to msf .."
+    sleep 3
+  else
+    echo "[✔] postgresql connected to msf .."
+    sleep 3
+  fi
 
 
 
