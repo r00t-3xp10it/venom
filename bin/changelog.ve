@@ -5,11 +5,14 @@ bug fix    ->  msfdb postgresql datatase connection bug
 bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89)
 bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
 bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
+bug fix    ->  build 23 - exploit/windows/fileformat/office_word_macro (depracated)
+                          exploit/multi/fileformat/office_word_macro (upgrated)
 
 improved   ->  venom framework terminal displays review
 improved   ->  venom framework GPLv3 personal license review
 improved   ->  build 1 - shellcode unix C post-exploitation funtion added
 
+added      ->  'settings' config framework internal settings
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
 added      ->  'astrobaby.docm' word_macro_trojan_horse (windows systems)

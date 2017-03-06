@@ -1,0 +1,57 @@
+##############################################################################
+#                                                                            #
+#    The following config file will allow you to customize settings within   #
+#    VENOM tool, The lines that Do not have comment code ("#") are the       #
+#    fields you want to toy with. There are additional options, read the     #
+#    comments For additional config settings.                                #
+#                                                                            #
+#    CHANGING THIS SETTINGS WILL AFFECT 'venom.sh' WAY OF WORKING            #
+#                                                                            #
+##############################################################################
+
+
+
+### msf postgresql database connection check?
+# This nex setting allow users to check msf postgesql
+# connection status and rebuild msfdb if not connected.
+# values accepted are: OFF or ON
+---------------
+MSF_REBUILD=OFF
+---------------
+
+
+
+### update metasploit framework (msfupdate)?
+# This nex setting allow users to upgrade your metasploit
+# database with recent msf releases. (at script startup).
+# values accepted are: OFF or ON
+--------------
+MSF_UPDATE=OFF
+--------------
+
+
+
+
+########################################################################################
+# WARNING: DO NOT CHANGE THE FOLLOW SETTINGS - SETUP.SH WILL AUTO-CONFIG THIS SETTINGS #
+# WARNING: venom.sh main tool depends of this configurations to proper work ..         #
+########################################################################################
+--------------------
+MEGAUPLOAD_DOMAIN=NO
+--------------------
+ARP_SETTINGS=IPv4
+DOMAIN_NAME=localhost
+LOCAL_HOST=192.168.1.67
+APACHE_DEFAULT=/var/www/html
+APACHE_WEBROOT=/var/www/html
+WINE_DRIVEC=/root/.wine/drive_c
+ATTACK_VECTOR=http://192.168.1.67
+ETTER_DNS_PATH=/etc/ettercap/etter.dns
+
+
+
+
+
+
+_EOF
+
