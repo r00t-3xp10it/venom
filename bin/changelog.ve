@@ -3,8 +3,8 @@ FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      the Minotau
 -------        ---------------------------------------------------------------------------
 bug fix    ->  msfdb postgresql datatase connection bug
 bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89)
-bug fix    ->  build 17 - python.py payload execution fixed (multi_OS)
-bug fix    ->  build 19 - python.py trigger replaced by python.sh trigger
+bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
+bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
 
 improved   ->  venom framework terminal displays review
 improved   ->  venom framework GPLv3 personal license review

