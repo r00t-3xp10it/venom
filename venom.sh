@@ -118,8 +118,7 @@ fi
 # -----------------------------------------
 # msf postgresql database connection check?
 # -----------------------------------------
-ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
-if [ "$ChEk" == "YES" ]; then
+
 cat << !
     ╔─────────────────────────────────────────────────╗
     |  postgresql metasploit database connection fix  |
@@ -147,7 +146,6 @@ cat << !
     echo "[✔] postgresql connected to msf .."
     sleep 3
   fi
-fi
 
 
 
