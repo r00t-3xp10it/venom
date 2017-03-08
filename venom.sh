@@ -163,7 +163,7 @@ cat << !
                \  \// |   ___||     \| ||     ||     \/   |
                 \__/  |______||__/\____|\_____/|__/\__/|__|
                   |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
-                         - CodeName: $C0d3 -
+                      - CodeName: $C0d3 -
 !
 echo "    ╔────────────────────────────────────────────────────────────────╗"
 echo "    |  The author does not hold any responsibility for the bad use   |"
@@ -3244,9 +3244,13 @@ sleep 2
 echo "[☠] deleting webshell.php junk..."
 sleep 2
 cd $IPATH/output
-sed "s/\///" $N4m.php > web2.php
-sed "s|*||" web2.php > $N4m.php
-rm $IPATH/output/web2.php > /dev/null 2>&1
+#
+# no more need to clean output ?
+# new php/meterpreter is diferent output
+#
+#sed "s/\///" $N4m.php > web2.php
+#sed "s|*||" web2.php > $N4m.php
+#rm $IPATH/output/web2.php > /dev/null 2>&1
 
 
 

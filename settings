@@ -12,7 +12,7 @@
 
 
 ### msf postgresql database connection check?
-# This nex setting allow users to check msf postgesql
+# This next setting allow users to check msf postgesql
 # connection status and rebuild msfdb if not connected.
 # values accepted are: OFF or ON
 ---------------
@@ -22,7 +22,7 @@ MSF_REBUILD=OFF
 
 
 ### update metasploit framework (msfupdate)?
-# This nex setting allow users to upgrade your metasploit
+# This next setting allow users to upgrade your metasploit
 # database with recent msf releases. (at script startup).
 # values accepted are: OFF or ON
 --------------
