@@ -16,7 +16,7 @@
 # connection status and rebuild msfdb if not connected.
 # values accepted are: OFF or ON
 ---------------
-MSF_REBUILD=OFF
+MSF_REBUILD=ON
 ---------------
 
 
@@ -31,6 +31,16 @@ MSF_UPDATE=OFF
 
 
 
+### apache2 installation full path.
+# This next config its needed to be abble
+# to upload our builds to target machine.
+----------------------------
+APACHE_WEBROOT=/var/www/html
+----------------------------
+
+
+
+
 
 ########################################################################################
 # WARNING: DO NOT CHANGE THE FOLLOW SETTINGS - SETUP.SH WILL AUTO-CONFIG THIS SETTINGS #
@@ -40,10 +50,6 @@ MSF_UPDATE=OFF
 MEGAUPLOAD_DOMAIN=NO
 --------------------
 ARP_SETTINGS=IPv4
-DOMAIN_NAME=localhost
-LOCAL_HOST=192.168.1.67
-APACHE_DEFAULT=/var/www/html
-APACHE_WEBROOT=/var/www/html
 WINE_DRIVEC=/root/.wine/drive_c
 ATTACK_VECTOR=http://192.168.1.67
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
@@ -54,5 +60,6 @@ ETTER_DNS_PATH=/etc/ettercap/etter.dns
 
 
 _EOF
+
 
 

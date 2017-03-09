@@ -632,35 +632,29 @@ fi
 # change to rigth directory structure
 cd ..
 # store values in variables
-ApDe=`cat settings | egrep -m 1 "APACHE_DEFAULT" | cut -d '=' -f2` > /dev/null 2>&1
 ApWR=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 DTuR=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 WdPa=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
-DnLh=`cat settings | egrep -m 1 "LOCAL_HOST" | cut -d '=' -f2` > /dev/null 2>&1
 ArP=`cat settings | egrep -m 1 "ARP_SETTINGS" | cut -d '=' -f2` > /dev/null 2>&1
-DnAm=`cat settings | egrep -m 1 "DOMAIN_NAME" | cut -d '=' -f2` > /dev/null 2>&1
 AtVe=`cat settings | egrep -m 1 "ATTACK_VECTOR" | cut -d '=' -f2` > /dev/null 2>&1
 EdNp=`cat settings | egrep -m 1 "ETTER_DNS_PATH" | cut -d '=' -f2` > /dev/null 2>&1
 # config settings file
 if [ "$sddf" = "domain" ]; then
-Df="mega-upload.com"
 Af="http://mega-upload.com"
-Ps="$P0Is0N"
+Ps="$P0Is0N/etter.dns"
 else
-Df="localhost"
 Af="http://$lhost"
-Ps="/etc/ettercap"
+Ps="/etc/ettercap/etter.dns"
 fi
 # change setting file configurations
-sed -i "s|$ApDe|$D3F|" settings
+#sed -i "s|$ApDe|$D3F|" settings
 sed -i "s|$ApWR|$ApAcHe|" settings
 sed -i "s|$DTuR|$dsrr|" settings
 sed -i "s|$WdPa|$DrIvC/drive_c|" settings
-sed -i "s|$DnLh|$lhost|" settings
 sed -i "s|$ArP|$fd3d|" settings
-sed -i "s|$DnAm|$Df|" settings
+
 sed -i "s|$AtVe|$Af|" settings
-sed -i "s|$EdNp|$Ps/etter.dns|" settings
+sed -i "s|$EdNp|$Ps|" settings
 cd aux
 
 
@@ -674,4 +668,5 @@ cd .. && cd ..
 sudo chown -hR $user shell > /dev/null 2>&1
 sleep 1
 exit
+
 

