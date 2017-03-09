@@ -177,3 +177,4 @@ added      ->  fast_migrate.rc -> it will elevate current session to nt authorit
                and migrate to wininit.exe priviliged process on target machine.
 -------        ---------------------------------------------------------------------------
 
+
