@@ -78,9 +78,11 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 # -------------------------------------------
 ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
 MsFu=`cat settings | egrep -m 1 "MSF_UPDATE" | cut -d '=' -f2` > /dev/null 2>&1
+RePoR=`cat settings | egrep -m 1 "MSF_REPORTS" | cut -d '=' -f2` > /dev/null 2>&1
 ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
+
 
 
 
@@ -5087,6 +5089,12 @@ cd $IPATH/
 # exit venom framework
 # ------------------------------------
 sh_exit () {
+
+# STORING DATABASE CONTENTS
+if [ "$RePoR" = "ON" ]; then
+xterm -T " STORING DATABASE CONTENTS " -geometry 110x23 -e "msfconsole -x 'makerc $IPATH/output/report.rc; exit -y'"
+fi
+
 echo "[☠] Exit Console -> Stoping Services..."
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
@@ -5100,7 +5108,7 @@ fi
 rm $IPATH/templates/hta_attack/index[bak].html > /dev/null 2>&1
 cd $IPATH
 cd ..
-sudo chown -hR $user shell > /dev/null 2>&1
+sudo chown -hR $user venom-main > /dev/null 2>&1
 exit
 }
 
