@@ -20,6 +20,7 @@ added      ->  'settings' config framework internal settings
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
 added      ->  'astrobaby.docm' word_macro_trojan_horse (multi_OS systems)
+added      ->  'exploit_suggester.rc' multi_post_exploits_suggester (multi_OS)
 added      ->  'post_linux.rc' linux gather information module (post-exploitation)
 added      ->  'post_multi.rc' multi system gather information module (post-exploitation)
 added      ->  'privilege_escalation.rc' windows privilege escalation (post-exploitation)
