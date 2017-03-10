@@ -31,16 +31,6 @@ MSF_UPDATE=OFF
 
 
 
-### Save msf commands entered to a file ? (db_import)
-# This next setting allow users save msf commands
-# entered to a file when exit framework (report.xml)
-# values accepted are: OFF or ON
----------------
-MSF_REPORTS=OFF
----------------
-
-
-
 ### apache2 installation full path.
 # This next config its needed to be abble
 # to upload our builds to target machine.
