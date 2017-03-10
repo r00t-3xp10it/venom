@@ -83,9 +83,9 @@
          sudo ./venom.sh
 
 # Framework Banner
-![venom shellcode v1.0.13-Beta](https://dl.dropboxusercontent.com/u/21426454/git-hub-venom-banner1.png)
+![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/release-the-kraken.png)
 # Framework Main Menu
-![venom shellcode v1.0.13-Beta](https://dl.dropboxusercontent.com/u/21426454/git-hub-venom-banner2.png)
+![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/kraken-main-menu.png)
 # [ build 4 ] python/pyinstaller - osiris.exe
     Build 4 Work floow: Build shellcode in C language, embebbed into
     one python template and compiled to exe by pyinstaller = osiris.exe
@@ -94,8 +94,9 @@
 
 <br />
 
-### Special thanks: Shubham Singh | Chaitanya Haritash | Suriya Prakash
-"For all the help provided in debuging this tool in diferent operative systems"
+
+### Special thanks: @Chaitanya Haritash (MDPC-kimi.py debian agent)
+Suspicious-Shell-Activity© (SSA) RedTeam develop @2017
 
 
 _EOF
