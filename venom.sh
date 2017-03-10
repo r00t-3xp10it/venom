@@ -126,7 +126,12 @@ fi
 # update metasploit database before running tool?
 # -----------------------------------------------
 if [ "$MsFu" = "ON" ]; then
-  xterm -T " UPDATING DATABASE " -geometry 110x23 -e "msfconsole -x 'msfupdate; exit -y' && sleep 2"
+cat << !
+    ╔─────────────────────────────────────────────────╗
+    | please wait fetching latest metasploit modules  |
+    ╚─────────────────────────────────────────────────╝
+!
+  xterm -T " UPDATING MSF DATABASE " -geometry 110x23 -e "msfconsole -x 'msfupdate; exit -y' && sleep 2"
 fi
 
 
@@ -3259,12 +3264,8 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 sleep 2
-mv $IPATH/templates/exec[bak].php $InJEc11 > /dev/null 2>&1
-mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
-rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.php > /dev/null 2>&1
-rm $ApAcHe/index.html > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -3355,6 +3356,16 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
      sleep 2
 
    fi
+
+
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+mv $IPATH/templates/exec[bak].php $InJEc11 > /dev/null 2>&1
+rm $IPATH/output/chars.raw > /dev/null 2>&1
+rm $ApAcHe/$N4m.php > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+clear
 
 
 

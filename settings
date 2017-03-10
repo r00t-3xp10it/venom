@@ -12,7 +12,7 @@
 
 
 ### msf postgresql database connection check ? (msfdb init)
-# This next setting allow users to check msf postgesql
+# This next setting allow users to check msf postgresql
 # connection status and rebuild msfdb if not connected.
 # values accepted are: OFF or ON
 ---------------
@@ -31,9 +31,10 @@ MSF_UPDATE=OFF
 
 
 
-### apache2 installation full path.
-# This next config its needed to be abble
-# to upload our builds to target machine.
+### apache2 webroot installation full path.
+# This next config its needed to be abble to upload
+# our builds into target machine (apache2 - malicious url).
+# WARNING: venom-main/aux/setup.sh also configs this value.
 ----------------------------
 APACHE_WEBROOT=/var/www/html
 ----------------------------
