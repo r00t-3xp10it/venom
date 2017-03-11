@@ -31,6 +31,16 @@ MSF_UPDATE=OFF
 
 
 
+### Build logfiles using metasploit ? (spool core command)
+# This next setting allow users to record session outputs
+# from msfconsole (handler) into venom-main/output folder.
+# values accepted are: OFF or ON
+----------------
+MSF_LOGFILES=OFF
+----------------
+
+
+
 ### apache2 webroot installation full path.
 # This next config its needed to be abble to upload
 # our builds into target machine (apache2 - malicious url).

