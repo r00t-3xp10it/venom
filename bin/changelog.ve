@@ -18,6 +18,7 @@ improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecat
 
 
 added      ->  'settings' config framework internal settings
+added      ->  'system built-in shells' -> perl_reverse_shell
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
 added      ->  'astrobaby.docm' word_macro_trojan_horse (multi_OS systems)

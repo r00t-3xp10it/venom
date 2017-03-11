@@ -1,7 +1,7 @@
 ##############################################################################
 #                                                                            #
 #    The following config file will allow you to customize settings within   #
-#    VENOM tool, The lines that Do not have comment code ("#") are the       #
+#    venom tool, The lines that Do not have comment code ("#") are the       #
 #    fields you want to toy with. There are additional options, read the     #
 #    comments For additional config settings.                                #
 #                                                                            #
@@ -44,8 +44,8 @@ APACHE_WEBROOT=/var/www/html
 
 
 ########################################################################################
-# WARNING: DO NOT CHANGE THE FOLLOW SETTINGS - SETUP.SH WILL AUTO-CONFIG THIS SETTINGS #
-# WARNING: venom.sh main tool depends of this configurations to proper work ..         #
+# WARNING: DONT CHANGE THE FOLLOW SETTINGS - SETUP.SH WILL AUTO-CONFIG THIS SETTINGS   #
+# WARNING: venom.sh main tool depends of this follow configurations to proper work ..  #
 ########################################################################################
 --------------------
 MEGAUPLOAD_DOMAIN=NO
