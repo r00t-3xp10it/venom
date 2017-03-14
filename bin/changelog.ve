@@ -8,7 +8,6 @@ bug fix    ->  build 16 - payload.php execution fixed (new php syntax)
 bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
 bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
 
-
 improved   ->  venom framework terminal displays review
 improved   ->  venom framework GPLv3 personal license review
 improved   ->  venom domain name attack vector (http://mega-upload.com)
@@ -16,12 +15,11 @@ improved   ->  build 1 - shellcode unix C post-exploitation funtion added
 improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
                           exploit/multi/fileformat/office_word_macro (upgraded)
 
-
 added      ->  'settings' config framework internal settings
-added      ->  'system built-in shells' -> perl_reverse_shell
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
 added      ->  'astrobaby.docm' word_macro_trojan_horse (multi_OS systems)
+added      ->  'system built-in-shells' -> perl_reverse_shell (pentestmonkey)
 added      ->  'exploit_suggester.rc' multi_post_exploits_suggester (multi_OS)
 added      ->  'post_linux.rc' linux gather information module (post-exploitation)
 added      ->  'post_multi.rc' multi system gather information module (post-exploitation)
