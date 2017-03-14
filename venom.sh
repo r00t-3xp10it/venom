@@ -6301,6 +6301,7 @@ else
 /etc/init.d/apache2 stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
 fi
 
+
 rm $IPATH/templates/hta_attack/index[bak].html > /dev/null 2>&1
 cd $IPATH
 cd ..
