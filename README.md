@@ -83,13 +83,13 @@
          sudo ./venom.sh
 
 ## Framework Banner
-![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/release-the-kraken.png)
+![venom shellcode v1.0.13](http://4.1m.yt/zNRgR8N.png)
 ## Framework Main Menu
-![venom shellcode v1.0.13](https://dl.dropboxusercontent.com/u/21426454/github/kraken-main-menu.png)
+![venom shellcode v1.0.13](http://1.1m.yt/5GUpWxf.png)
 ## [ build 4 ] python/pyinstaller - osiris.exe
     Build 4 Work floow: Build shellcode in C language, embebbed into
     one python template and compiled to exe by pyinstaller = osiris.exe
-![venom shellcode v1.0.13-Beta](https://dl.dropboxusercontent.com/u/21426454/venom-banner3.png)
+![venom shellcode v1.0.13-Beta](http://1.1m.yt/K3Vd4x.png)
 
 
 <br />
