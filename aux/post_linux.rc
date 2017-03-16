@@ -1,4 +1,5 @@
 sysinfo
+run post/multi/gather/wlan_geolocate
 run post/linux/gather/enum_system
 run post/linux/gather/enum_network
 run post/linux/gather/enum_psk

