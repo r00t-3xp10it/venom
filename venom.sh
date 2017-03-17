@@ -501,7 +501,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[4m//g" final.log
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
-          sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
