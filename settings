@@ -16,7 +16,7 @@
 # connection status and rebuild msfdb if not connected.
 # values accepted are: OFF or ON
 ---------------
-MSF_REBUILD=ON
+MSF_REBUILD=OFF
 ---------------
 
 
