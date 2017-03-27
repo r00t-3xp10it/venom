@@ -1,4 +1,11 @@
 
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      ghost in a shel
+-------        ---------------------------------------------------------------------------
+improved   ->  build [13/14 VBS] - now asks to users if they want to ZIP payload (apache2)
+-------        ---------------------------------------------------------------------------
+
+
+
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      release the kraken
 -------        ---------------------------------------------------------------------------
 bug fix    ->  msfdb postgresql datatase connection bug
