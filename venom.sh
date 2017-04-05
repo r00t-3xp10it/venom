@@ -72,6 +72,16 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
 
+#
+# Config user system correct arch (wine)
+#
+if [ "$ArCh" = "i686" ]; then
+ComP="i586-mingw32msvc-gcc"
+else
+ComP="i686-w64-mingw32-gcc"
+fi
+
+
 
 # -------------------------------------------
 # SETTINGS FILE FUNTION (venom-main/settings)
@@ -616,7 +626,7 @@ sleep 2
       fi
 
    # check if mingw32 exists
-   c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
+   c0m=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -662,7 +672,7 @@ sleep 2
 echo "[☠] Compiling/obfuscating using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
-i586-mingw32msvc-gcc exec_dll.c -o $N4m.dll -lws2_32 -shared -mwindows
+$ComP exec_dll.c -o $N4m.dll -lws2_32 -shared -mwindows
 strip $N4m.dll
 mv $N4m.dll $IPATH/output/$N4m.dll
 
@@ -1315,7 +1325,7 @@ sleep 2
       fi
 
    # check if mingw32 exists
-   c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
+   c0m=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -1350,7 +1360,7 @@ cd $IPATH/templates
 echo "[☠] Compiling using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
-i586-mingw32msvc-gcc exec_bin.c -o $N4m.exe -mwindows
+$ComP exec_bin.c -o $N4m.exe -mwindows
 mv $N4m.exe $IPATH/output/$N4m.exe
 
 
@@ -1583,7 +1593,7 @@ echo "" && echo ""
       fi
 
    # check if mingw32 exists
-   c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
+   c0m=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -1612,7 +1622,7 @@ sed "s|InJ3C|$str0|" exec_psh.c > final.c
 echo "[☠] Compiling using mingw32..."
 sleep 2
 # special thanks to astr0baby for mingw32 -mwindows flag :D
-i586-mingw32msvc-gcc final.c -o $N4m.exe -mwindows
+$ComP final.c -o $N4m.exe -mwindows
 mv $N4m.exe $IPATH/output/$N4m.exe
 
 
@@ -3646,7 +3656,7 @@ sed -i "s|InJ3C|$str0|" $IPATH/output/template.c
 # template.c (C code to be compiled) -o (save output name)
 echo "[☠] Compiling template.c -> backdoor.exe!"
 sleep 2
-i586-mingw32msvc-gcc $IPATH/output/template.c -o $IPATH/output/backdoor.exe -mwindows
+$ComP $IPATH/output/template.c -o $IPATH/output/backdoor.exe -mwindows
 strip --strip-debug $IPATH/output/backdoor.exe
 
 
@@ -5924,8 +5934,8 @@ sleep 2
 # compiling template (windows systems)
 echo "[☠] Compiling using mingw32 .."
 sleep 2
-# i586-mingw32msvc-gcc -mwindows suid.c -o payload.exe
-i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
+# i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
+$ComP astrobaby.c -o payload.exe -mwindows
 strip payload.exe > /dev/null 2>&1
 mv payload.exe $IPATH/output/$N4m.exe > /dev/null 2>&1
 echo "[☠] Binary: $IPATH/output/$N4m.exe .."

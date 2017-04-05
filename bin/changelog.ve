@@ -1,6 +1,8 @@
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      ghost in a shel
 -------        ---------------------------------------------------------------------------
+bug fix    ->  mingw32 compiling error under 64bits systems
+ 
 improved   ->  build [13/14 VBS] - now asks to users if they want to ZIP payload (apache2)
 improved   ->  build [16 PHP] - now apache2 attack vector delivers a php ziped payload (.zip)
 -------        ---------------------------------------------------------------------------
