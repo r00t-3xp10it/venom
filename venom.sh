@@ -76,9 +76,11 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 # Config user system correct arch (wine)
 #
 if [ "$ArCh" = "i686" ]; then
-ComP="i586-mingw32msvc-gcc"
+  arch="wine"
+  ComP="i586-mingw32msvc-gcc"
 else
-ComP="i686-w64-mingw32-gcc"
+  arch="wine64"
+  ComP="i686-w64-mingw32-gcc"
 fi
 
 
@@ -1207,7 +1209,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
        echo "[☠] compile $N4m.py -> $cUe.exe"
        sleep 2
        cd $IPATH/output
-       xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c 'wine c:/Python26/Python.exe c:/pyinstaller-2.0/pyinstaller.py --noconsole --onefile $IPATH/output/$N4m.py'"
+       xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/Python26/Python.exe c:/pyinstaller-2.0/pyinstaller.py --noconsole --onefile $IPATH/output/$N4m.py'"
        cp $IPATH/output/dist/$cUe.exe $IPATH/output/$cUe.exe
        rm $IPATH/output/*.spec > /dev/null 2>&1
        rm $IPATH/output/*.log > /dev/null 2>&1
