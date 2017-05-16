@@ -122,7 +122,7 @@ cat << !
     echo "[*] Please wait, rebuilding msf database .."
     # rebuild msf database (database.yml)
     echo ""
-    msfdb reinit
+    msfdb reinit | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Rebuild metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
     echo ""
     echo "[✔] postgresql connected to msf .."
     sleep 2
@@ -171,6 +171,7 @@ InT3R=`netstat -r | grep "default" | awk {'print $8'}` # grab interface in use
 case $DiStR0 in
     Kali) IP=`ifconfig $InT3R | egrep -w "inet" | awk '{print $2}'`;;
     Debian) IP=`ifconfig $InT3R | egrep -w "inet" | awk '{print $2}'`;;
+    Mint) IP=`ifconfig $InT3R | egrep -w "inet" | awk '{print $2}' | cut -d ':' -f2`;;
     Ubuntu) IP=`ifconfig $InT3R | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
     Parrot) IP=`ifconfig $InT3R | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
     BackBox) IP=`ifconfig $InT3R | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
