@@ -75,6 +75,7 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 #
 # Config user system correct arch (wine)
 #
+ArCh=`uname -m`
 if [ "$ArCh" = "i686" ]; then
   arch="wine"
   ComP="i586-mingw32msvc-gcc"
