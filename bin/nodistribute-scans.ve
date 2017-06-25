@@ -1,6 +1,6 @@
 ###
 # Multi-AV-Scan-WebSite: https://nodistribute.com/
-# nodistribute venom (27 payloads) scan results on: 17-abr-2016
+# nodistribute venom (33 payloads) scan results on: 25-jun-2017
 # check the links bellow to see what AV soluction can detect your build
 ###
 
@@ -34,24 +34,15 @@ OPTION -   FORMAT   -  OUTPUT             - DETECTION  -> NODISTRIBUTE LINK
 18     -  PSH-CMD   -    JAR              -    1/35    -> https://nodistribute.com/result/P5yIrKaWzZ3dVAlk8FG
 19     -     PSH    -    PYTHON           -    0/35    -> https://nodistribute.com/result/6OoKkNAxI7tBUzTFbsC3SliewX
 19     -     PSH    -    BAT              -    2/35    -> https://nodistribute.com/result/ty7w0JKe4N9WAzTG2
+
+VENOM-v1.0.14 NEW BUILDS ----------------------------------------------------------------------------------
+
+4      -     C      -    NXcrypt          -    2/39    -> https://nodistribute.com/result/YN1WhHUaByPj56uotvsi
+23     -  C,PYTHON  -    EXE              -    2/39    -> https://nodistribute.com/result/LDynoZOq9A5TeBMYFW4k
+24     - C,SSL-AVET -    EXE              -    0/39    -> https://nodistribute.com/result/ENZ1b6R2TrYocWHCzy9fwMuQs
 --------------------------------------------------------------------------------------------------------
 
 
 
-###
-# EVASION IMPROVEMENTS IN VERSION 1.0.12
-###
-
-OPTION -   FORMAT   -  OUTPUT             - DETECTION  -> NODISTRIBUTE LINK
---------------------------------------------------------------------------------------------------------
-13     -     VBS    -    VBS (new enc *1) -     2/35   -> https://nodistribute.com/result/67EOqrgJ5uUwyHva
---------------------------------------------------------------------------------------------------------
-
-
-
-###
-# new obfuscators/cryters used
-###
-
-*1 - crypter vbs by darkside (it works under wine)
+_EOF
 

@@ -1,10 +1,18 @@
 
-FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      ghost in a shel
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      Pandora's box (pithos)
 -------        ---------------------------------------------------------------------------
-bug fix    ->  mingw32 compiling error under 64bits systems
+bug fix    ->  build 4     - execution error under windows systems fixed
+bug fix    ->  mingw32     - compiling error under 64bits systems fixed 
+bug fix    ->  pyinstaller - (python-2.0 + python-2.6.6) version installation
+                             under WINE can now be changed in the 'settings' file ..
  
-improved   ->  build [13/14 VBS] - now asks to users if they want to ZIP payload (apache2)
-improved   ->  build [16 PHP] - now apache2 attack vector delivers a php ziped payload (.zip)
+improved   ->  build 4     - now changes final executable icon (.exe - pyinstaller)
+improved   ->  build 13/14 - now asks to users if they want to ZIP payload (apache2)
+improved   ->  build 16    - now apache2 attack vector delivers a php ziped payload (.zip)
+
+added      ->  build 4     - NXcrypt - obfuscate your python agent (author: Hadi Mene)
+added      ->  build 23    - UUID - random key/junk obfuscation (junk by: null-byte)
+added      ->  build 24    - AVET - obfuscate your python agent (author: Daniel Sauder) 
 -------        ---------------------------------------------------------------------------
 
 
@@ -12,8 +20,8 @@ improved   ->  build [16 PHP] - now apache2 attack vector delivers a php ziped p
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      release the kraken
 -------        ---------------------------------------------------------------------------
 bug fix    ->  msfdb postgresql datatase connection bug
-bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89)
-bug fix    ->  build 2 - C to dll sourcecode fix (#include <winsock2.h>)
+bug fix    ->  build 1  - shellcode unix C sourcecode fix (int main() C89)
+bug fix    ->  build 2  - C to dll sourcecode fix (#include <winsock2.h>)
 bug fix    ->  build 16 - payload.php execution fixed (new php syntax)
 bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
 bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
@@ -21,7 +29,7 @@ bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
 improved   ->  venom framework terminal displays review
 improved   ->  venom framework GPLv3 personal license review
 improved   ->  venom domain name attack vector (http://mega-upload.com)
-improved   ->  build 1 - shellcode unix C post-exploitation funtion added
+improved   ->  build 1  - shellcode unix C post-exploitation funtion added
 improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
                           exploit/multi/fileformat/office_word_macro (upgraded)
 
