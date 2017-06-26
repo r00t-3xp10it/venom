@@ -12,6 +12,7 @@ improved   ->  build 4     - now changes final executable icon (.exe - pyinstall
 improved   ->  build 13/14 - now asks to users if they want to ZIP payload (apache2)
 improved   ->  build 16    - now apache2 attack vector delivers a php ziped payload (.zip)
 
+added      ->  build c     - cve2017-0199 - microsoft word.rtf (autho: bhdresh)
 added      ->  build 4     - NXcrypt - obfuscate your python agent (author: Hadi Mene)
 added      ->  build 23    - UUID - random key/junk obfuscation (junk by: null-byte)
 added      ->  build 24    - AVET - obfuscate your python agent (author: Daniel Sauder) 
