@@ -9,14 +9,14 @@ bug fix    ->  pyinstaller - (pyinstaller-2.0 + Python26) version installation
                              under WINE can now be configurated in 'settings' file
  
 improved   ->  build 4     - now changes final executable [agent.exe] icon
+improved   ->  build 4     - NXcrypt - obfuscate your python agent [author: Hadi Mene]
 improved   ->  build 13/14 - now asks to users if they want to ZIP the agent
 improved   ->  build 16    - now apache2 attack vector delivers a php ziped agent
 
 added      ->  build B     - SHELLTER - backdoor exe binarys with shellcode [author: kyREcon]
-added      ->  build c     - CVE-2017-0199 - microsoft word.rtf agent [r00t-3xp10it + bhdresh]
-added      ->  build 4     - NXcrypt - obfuscate your python agent [author: Hadi Mene]
-added      ->  build 23    - UUID - random key/junk obfuscation agent [r00t-3xp10it + null-byte]
-added      ->  build 24    - AVET - obfuscate your python agent to exe [author: Daniel Sauder]
+added      ->  build c     - CVE-2017-0199 - microsoft word.rtf agent.rtf [r00t-3xp10it + bhdresh]
+added      ->  build 23    - UUID - random key/junk obfuscation agent.exe [r00t-3xp10it + null-byte]
+added      ->  build 24    - AVET - obfuscate your agent.py to agent.exe [author: Daniel Sauder]
 -------        ---------------------------------------------------------------------------
 
 
