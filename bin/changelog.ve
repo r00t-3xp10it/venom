@@ -1,21 +1,24 @@
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      Pandora's box (pithos)
 -------        ---------------------------------------------------------------------------
-bug fix    ->  build a     - word doc compiling error fixed (astr0baby.c)
+bug fix    ->  build a     - word.docm [windows] compiling bug fixed
 bug fix    ->  build 4     - execution error under windows systems fixed
 bug fix    ->  mingw32     - compiling error under 64bits systems fixed
-bug fix    ->  megaupload  - phishing webpage display fixed (new image url)
-bug fix    ->  pyinstaller - (python-2.0 + python-2.6.6) version installation
-                             under WINE can now be changed in the 'settings' file ..
+bug fix    ->  megaupload  - phishing webpage background image fixed [new image]
+bug fix    ->  pyinstaller - (pyinstaller-2.0 + Python26) version installation
+                             under WINE can now be configurated in 'settings' file
  
-improved   ->  build 4     - now changes final executable icon (.exe - pyinstaller)
-improved   ->  build 13/14 - now asks to users if they want to ZIP payload (apache2)
-improved   ->  build 16    - now apache2 attack vector delivers a php ziped payload (.zip)
+improved   ->  build 4     - now changes final executable [agent.exe] icon
+improved   ->  build 13/14 - now asks to users if they want to ZIP the agent
+improved   ->  build 16    - now apache2 attack vector delivers a php ziped agent
 
-added      ->  build c     - cve2017-0199 - microsoft word.rtf (autho: bhdresh)
-added      ->  build 4     - NXcrypt - obfuscate your python agent (author: Hadi Mene)
-added      ->  build 23    - UUID - random key/junk obfuscation (junk by: null-byte)
-added      ->  build 24    - AVET - obfuscate your python agent (author: Daniel Sauder) 
+added      ->  build B     - SHELLTER - backdoor exe binarys with shellcode [author: kyREcon]
+added      ->  build c     - CVE-2017-0199 - microsoft word.rtf agent [r00t-3xp10it + bhdresh]
+added      ->  build 4     - NXcrypt - obfuscate your python agent [author: Hadi Mene]
+added      ->  build 23    - UUID - random key/junk obfuscation agent [r00t-3xp10it + null-byte]
+added      ->  build 24    - AVET - obfuscate your python agent to exe [author: Daniel Sauder]
+added      ->  mem64       - Execute your agent.exe [native] into ram [author: 0xyg3n]
+                             mem64 its available in 'CHOSE HOW TO DELIVER YOUR PAYLOAD'
 -------        ---------------------------------------------------------------------------
 
 
