@@ -17,8 +17,6 @@ added      ->  build c     - CVE-2017-0199 - microsoft word.rtf agent [r00t-3xp1
 added      ->  build 4     - NXcrypt - obfuscate your python agent [author: Hadi Mene]
 added      ->  build 23    - UUID - random key/junk obfuscation agent [r00t-3xp10it + null-byte]
 added      ->  build 24    - AVET - obfuscate your python agent to exe [author: Daniel Sauder]
-added      ->  mem64       - Execute your agent.exe [native] into ram [author: 0xyg3n]
-                             mem64 its available in 'CHOSE HOW TO DELIVER YOUR PAYLOAD'
 -------        ---------------------------------------------------------------------------
 
 
