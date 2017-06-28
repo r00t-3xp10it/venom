@@ -17,6 +17,7 @@ added      ->  build B     - SHELLTER - backdoor exe binarys with shellcode [aut
 added      ->  build c     - CVE-2017-0199 - microsoft word.rtf agent.rtf [r00t-3xp10it + bhdresh]
 added      ->  build 23    - UUID - random key/junk obfuscation agent.exe [r00t-3xp10it + null-byte]
 added      ->  build 24    - AVET - obfuscate your agent.py to agent.exe [author: Daniel Sauder]
+added      ->  'Invoke-PhantOm' - post-exploitation module to disable logfiles creation
 -------        ---------------------------------------------------------------------------
 
 
