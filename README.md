@@ -1,12 +1,12 @@
-[![Version](https://img.shields.io/badge/VENOM-1.0.13-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/VENOM-1.0.14-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
 ## VENOM 1.0.13 - metasploit Shellcode generator/compiller
-    Version release : v1.0.13
+    Version release : v1.0.14
     Author : pedro ubuntu  [ r00t-3xp10it ]
-    Codename: release the kraken (the mitologic sea monster)
+    Codename: Pandora's box (pithos)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2016
 
@@ -91,6 +91,9 @@
     one python template and compiled to exe by pyinstaller = osiris.exe
 ![venom shellcode v1.0.13-Beta](http://1.1m.yt/K3Vd4x.png)
 
+
+## video tutorial [build 24]
+![venom shellcode v1.0.13](http://i.cubeupload.com/PvqjBN.gif)
 
 <br />
 
