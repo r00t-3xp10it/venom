@@ -1,5 +1,5 @@
 [![Version](https://img.shields.io/badge/VENOM-1.0.14-brightgreen.svg?maxAge=259200)]()
-[![Stage](https://img.shields.io/badge/Release-Beta-Linux-orange.svg)]()
+[![Stage](https://img.shields.io/badge/Release_Beta-Linux-orange.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
