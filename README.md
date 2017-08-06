@@ -1,14 +1,14 @@
 [![Version](https://img.shields.io/badge/VENOM-1.0.14-brightgreen.svg?maxAge=259200)]()
-[![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
+[![Stage](https://img.shields.io/badge/Release-Beta-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
-## VENOM 1.0.13 - metasploit Shellcode generator/compiller
+## VENOM 1.0.14 - metasploit Shellcode generator/compiller
     Version release : v1.0.14
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Codename: Pandora's box (pithos)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
-    Suspicious-Shell-Activity (SSA) RedTeam develop @2016
+    Suspicious-Shell-Activity (SSA) RedTeam develop @2017
 
 
 ## LEGAL DISCLAMER
