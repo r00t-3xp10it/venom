@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/VENOM-1.0.14-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/VENOM-1.0.14-orange.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Beta-orange.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
@@ -50,11 +50,12 @@
     or "<form>" tags to be hable to trigger payload downloads, the
     user just needs to send the link provided to target host.
 
-    ATTACK VECTOR: http://192.168.1.69
+    ATTACK VECTOR: http://192.168.1.67
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
        Just run venom-main/aux/setup.sh to config framework settings.
 
+![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
 
 
 ## DEPENDENCIES
