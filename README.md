@@ -83,13 +83,14 @@
          sudo ./venom.sh
 
 ## Framework Banner
-![venom shellcode v1.0.13](http://4.1m.yt/zNRgR8N.png)
+![venom shellcode v1.0.13](http://i.cubeupload.com/bYQJc8.png)
 ## Framework Main Menu
-![venom shellcode v1.0.13](http://1.1m.yt/5GUpWxf.png)
+![venom shellcode v1.0.13](http://i.cubeupload.com/6yNJGG.png)
 ## [ build 4 ] python/pyinstaller - osiris.exe
     Build 4 Work floow: Build shellcode in C language, embebbed into
     one python template and compiled to exe by pyinstaller = osiris.exe
-![venom shellcode v1.0.13-Beta](http://1.1m.yt/K3Vd4x.png)
+![venom shellcode v1.0.13-Beta](http://i.cubeupload.com/n7Nxee.png)
+![venom shellcode v1.0.13-Beta](http://i.cubeupload.com/jWpjf3.png)
 
 
 ## video tutorial [build 23 - Invoke-Phant0m]
@@ -98,7 +99,6 @@
 <br />
 
 
-### Special thanks: @Chaitanya Haritash (MDPC-kimi.py debian agent)
 Suspicious-Shell-Activity© (SSA) RedTeam develop @2017
 
 
