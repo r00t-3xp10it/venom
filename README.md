@@ -10,6 +10,9 @@
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2017
 
+## Framework Banner
+![venom shellcode v1.0.13](http://i.cubeupload.com/bYQJc8.png)
+
 
 ## LEGAL DISCLAMER
     The author does not hold any responsibility for the bad use
@@ -82,8 +85,7 @@
     4º - Run main tool
          sudo ./venom.sh
 
-## Framework Banner
-![venom shellcode v1.0.13](http://i.cubeupload.com/bYQJc8.png)
+
 ## Framework Main Menu
 ![venom shellcode v1.0.13](http://i.cubeupload.com/6yNJGG.png)
 ## [ build 4 ] python/pyinstaller - osiris.exe
