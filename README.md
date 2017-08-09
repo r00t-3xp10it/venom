@@ -31,10 +31,6 @@
 
     'venom generator' tool reproduces some of the technics used
     by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
-    But venom its not a fork of any of this tools because its writen
-    using Bash contrary to those tools that uses Python, also
-    remmenber that veil evasion does not build this formats:
-    [.msi .hta .vbs .ps1 .dll .php .jar .pdf] payload formats...
 
     "P.S. some payloads are undetectable by AV soluctions... yes!!!"
     One of the reasons for that its the use of a funtion to execute
@@ -49,16 +45,17 @@
     or "<form>" tags to be hable to trigger payload downloads, the
     user just needs to send the link provided to target host.
 
+    "Apache2 (malicious url) will copy all files needed to your webroot"
+
 ![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
 
-    "Apache2 (malicious url) will copy all files needed to your webroot"
 
 ## DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
     mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
-    PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar
+    PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine)
     vbs-obfuscator (obfuscator) | encrypt_PolarSSL (crypter) and
-    ettercap MitM+DNS_Spoof (venom domain name attack vector)
+    ettercap (MitM+DNS_Spoof)| avet (Daniel Sauder) | shellter (KyRecon)
 
     "venom.sh will download/install all dependencies as they are needed"
     Adicionally as build venom-main/aux/setup.sh to help you install all
