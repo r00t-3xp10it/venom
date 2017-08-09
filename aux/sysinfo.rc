@@ -1,3 +1,5 @@
 sysinfo
 getuid
 getlwd
+run post/windows/gather/checkvm
+

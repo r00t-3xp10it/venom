@@ -5,65 +5,74 @@
 # and config/build venom.conf configuration file
 # also builds or delete apache2 domain name attack vector
 # --------------------------------------------------------
+resize -s 24 89 > /dev/null
 
 
 
-
-
-# ---------------------
+#
 # check if user is root
-# ---------------------
+#
 if [ $(id -u) != "0" ]; then
-echo "[☠] we need to be root to run this script..."
-echo "[☠] execute [ sudo ./setup.sh ] on terminal"
+echo "[x] we need to be root to run this script..."
+echo "[x] execute [ sudo ./setup.sh ] on terminal"
 exit
-else
-echo "root user" > /dev/null 2>&1
 fi
 
 
 
-
-
-# ----------------------
-# variable declarations
-# ----------------------
-OS=`uname` # grab OS
-ver="1.0.13"
-H0m3=`echo ~` # grab home path
-user=`who | cut -d' ' -f1 | sort | uniq` # grab username
-DiStRo=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
-inter=`netstat -r | grep "default" | awk {'print $8'}` # grab interface in use
-IP=`ifconfig $InT3R | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1` # grab ip (lhost)
-IPATH=`pwd` # grab setup.sh install path (home/username/shell/aux)
-
+#
+# variable declarations _________________________________
+#                                                        |
+OS=`uname`                                               # grab OS
+ver="1.0.14"                                             # toolkit version
+H0m3=`echo ~`                                            # grab home path
+user=`who | awk {'print $1'}`                            # grab username
+DiStRo=`awk '{print $1}' /etc/issue`                     # grab distribution -  Ubuntu or Kali
+inter=`netstat -r | grep "default" | awk {'print $8'}`   # grab interface in use
+IPATH=`pwd`                                              # grab setup.sh install path
+# _______________________________________________________|
 
 
 
+#
+# config local correct arch commands ..
+#
+if [ $(uname -m) = "i686" ]; then
+  Dftt="x86"
+  arch="wine"
+else
+  Dftt="x64"
+  arch="wine64"
+fi
 
+
+
+#
+# store local ip adress ..
+#
 case $DiStRo in
-    Kali) IP=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
-    Debian) IP=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
-    Ubuntu) IP=`ifconfig $inter | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
-    Parrot) IP=`ifconfig $inter | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
-    BackBox) IP=`ifconfig $inter | egrep -w "inet" | cut -d ':' -f2 | cut -d 'B' -f1`;;
-    *) IP=`zenity --title="☠ Input your IP addr ☠" --text "example: 192.168.1.68" --entry --width 300`;;
+    Kali) lhost=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
+    Debian) lhost=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
+    Linux) lhost=`ifconfig $inter | egrep -w "inet" | awk '{print $2}' | cut -d ':' -f2`;; # Mint strange bug
+    Ubuntu) lhost=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
+    Parrot) lhost=`ifconfig $inter | egrep -w "inet" | awk '{print $2}'`;;
+    *) lhost=`zenity --title="☠ Input your IP addr ☠" --text "example: 192.168.1.68" --entry --width 300`;;
   esac
 clear
 
 
 
-# -------------------
+#
 # BANNER DISPLAY
-# -------------------
+#
 clear
 cat << !
 
-    __    _ ______  ____   _  _____  ____    __  
+    __    _ ______  ____   _  _____  ____    __
    \  \  //|   ___||    \ | |/     \|    \  /  |
     \  \// |   ___||     \| ||     ||     \/   |
      \__/  |______||__/\____|\_____/|__/\__/|__|
-   +-------------------------------------------+
+   ╔───────────────────────────────────────────╗
    |    "setup.sh - configuration script"      |
    |                                           |
    |   Use this script to configure venom.sh   |
@@ -71,144 +80,252 @@ cat << !
    | of dependencies, mega-upload domain name  |
    | path to apache2 webroot, wine install...  |
    |                                           |
-   +-------------------------------------------+
-   |_ OS:$OS  DISTRO:$DiStRo  VERSION:$ver
+   ╠───────────────────────────────────────────╝
+   |  OS:$OS DISTRO:$DiStRo($Dftt) VERSION:$ver
+   |_ BROADCAST:$inter IP_ADDR:$lhost
 
 
 !
-sleep 3
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 330) > /dev/null 2>&1
+sleep 1
+QuE=$(zenity --question --title="☠ venom - installation ☠" --text "Run install script?\nAuthor: r00t-3xp10it" --width 200) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
 
 
+# updating local repository (apt-get update)
+sudo apt-get update | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Updating system (apt-get) .." --percentage=0 --auto-close --width 300 > /dev/null 2>&1
+echo ""
 
 
-# -----------------------------
-# check venom tool dependencies
-# -----------------------------
+#
+# check venom tool dependencies (backend appl)
+#
 # check if zenity its installed
 zen=`which zenity`
 if [ "$?" -eq "0" ]; then
-echo "[✔] zenity............................[ found ]"
-sleep 2
+  echo "[✔] zenity............................[ found ]"
+  sleep 2
 else
-echo ""
-echo "[☠] zenity -> not found!                      ]"
-echo "[☠] This script requires zenity               ]"
-sleep 2
-echo "[☠] Please download zenity                    ]"
-su $user -c "xdg-open http://www.tecmint.com/zenity-creates-graphical-gtk-dialog-boxes-in-command-line-and-shell-scripts/" > /dev/null 2>&1
+  echo "[x] zenity                        [ not found ]"
+  sleep 1
+  echo ""
+  sudo apt-get install zenity --force-yes -y
+  echo ""
+
+      sleep 1
+      again=`which zenity` > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+        echo "[✔] zenity........................[ installed ]"
+      else
+        echo ""
+        echo "    WARNING: Unable to locate package zenity"
+        echo "    To solve this issue make sure you have the right repositories in sources.list"
+        echo "    With the right repositories in sources.list, you need to run apt-get update"
+        echo "    and then run the installation command for the zenity package again."
+        echo "    http://www.tecmint.com/zenity-creates-graphical-gtk-dialog-boxes-in-command-line-and-shell-scripts/"
+        echo ""
+        sleep 2
+        exit
+      fi
 fi
 
 
 
-
-
+#
 # check if msfconsole its installed
+#
 imp=`which msfconsole`
 if [ "$?" -eq "0" ]; then
-echo "[✔] msfconsole........................[ found ]"
-sleep 2
+  echo "[✔] msfconsole........................[ found ]"
+  sleep 2
 else
-echo ""
-echo "[☠] msfconsole -> not found                   ]"
-echo "[☠] This script requires msfconsole           ]"
-sleep 2
-exit
+  echo "[x] msfconsole                    [ not found ]"
+  sleep 1
+  echo ""
+  echo "    Please Download/Install metasploit-framework .."
+  echo "    https://www.rapid7.com/products/metasploit/download/"
+  echo ""
+  sleep 2
+  exit
 fi
 
 
 
-
-
-# check if gcc exists
-c0m=`which gcc`> /dev/null 2>&1
+#
+# check if gcc compiler exists ..
+#
+c0m=`which gcc` > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-echo "[✔] gcc compiler......................[ found ]"
-sleep 2 
+  echo "[✔] gcc compiler......................[ found ]"
+  sleep 2
 else
-echo "[☠] gcc compiler      -> not found            ]"
-echo "[☠] Download compiler -> apt-get install gcc  ]"
-xterm -T "☠ INSTALL GCC COMPILLER ☠" -geometry 110x23 -e "sudo apt-get install gcc"
-sleep 2
+  echo "[x] gcc compiler                  [ not found ]"
+  sleep 1
+  echo ""
+  sudo apt-get install gcc --force-yes -y
+  echo ""
+
+  sleep 1
+  again=`which gcc` > /dev/null 2>&1
+  if [ "$?" -eq "0" ]; then
+    echo "[✔] gcc compiler..................[ installed ]"
+    sleep 2
+  else
+    echo ""
+    echo "    WARNING: Unable to locate package gcc"
+    echo "    To solve this issue make sure you have the right repositories in sources.list"
+    echo "    With the right repositories in sources.list, you need to run apt-get update"
+    echo "    and then run the installation command for the gcc package again."
+    echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
+    echo ""
+    sleep 2
+  fi
 fi
 
 
 
+#
+# check correct mingw-gcc install (x86/x64)..
+#
+if [ $(uname -m) = "i686" ]; then
+  # check if mingw32 exists
+  c0m=`which i586-mingw32msvc-gcc` > /dev/null 2>&1
+  if [ "$?" -eq "0" ]; then
+    echo "[✔] mingw32 compiler..................[ found ]"
+    sleep 2
+  else
+    echo "[x] mingw32 compiler              [ not found ]"
+    sleep 1
+    echo ""
+    sudo apt-get install mingw32 --force-yes -y
+    echo ""
 
+      sleep 1
+      again=`which i586-mingw32msvc-gcc` > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+        echo "[✔] mingw32 compiler..................[ installed ]"
+        sleep 2
+      else
+        echo ""
+        echo "    WARNING: Unable to locate package i586-mingw32msvc-gcc"
+        echo "    To solve this issue make sure you have the right repositories in sources.list"
+        echo "    With the right repositories in sources.list, you need to run apt-get update"
+        echo "    and then run the installation command for the Mingw32 package again."
+        echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
+        echo ""
+        sleep 2
+      fi
+  fi
 
-# check if mingw32 exists
-c0m=`which i586-mingw32msvc-gcc`> /dev/null 2>&1
-if [ "$?" -eq "0" ]; then
-echo "[✔] mingw32 compiler..................[ found ]"
-sleep 2
 else
-echo "[☠] mingw32 compiler  -> not found            ]"
-echo "[☠] Download compiler -> apt-get install mingw32"
-xterm -T "☠ INSTALL MINGW32 COMPILLER ☠" -geometry 110x23 -e "sudo apt-get install mingw32"
-sleep 2
+
+  # check if mingw64 exists
+  c0m=`which i686-w64-mingw32-gcc` > /dev/null 2>&1
+  if [ "$?" -eq "0" ]; then
+    echo "[✔] mingw64 compiler..................[ found ]"
+    sleep 2
+  else
+    echo "[x] mingw64 compiler              [ not found ]"
+    sleep 1
+    echo ""
+    sudo apt-get install mingw-w64 --force-yes -y
+    echo ""
+
+      sleep 1
+      again=`which i686-w64-mingw32-gcc` > /dev/null 2>&1
+      if [ "$?" -eq "0" ]; then
+        echo "[✔] mingw64 compiler..................[ installed ]"
+        sleep 2
+      else
+        echo ""
+        echo "    WARNING: Unable to locate package i686-w64-mingw32-gcc"
+        echo "    To solve this issue make sure you have the right repositories in sources.list"
+        echo "    With the right repositories in sources.list, you need to run apt-get update"
+        echo "    and then run the installation command for the mingw-w64 package again."
+        echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
+        echo ""
+        sleep 2
+      fi
+  fi
 fi
 
 
 
-
-
-cd ..
+#
 # check if pyherion exists
-if [ -e obfuscate/pyherion.py ]; then
-echo "[✔] pyherion crypter..................[ found ]"
-sleep 2
-cd $IPATH
-else
-echo "[☠] pyherion crypter -> not found             ]"
-sleep 2
-echo "[☠] please wait      -> updating              ]"
-sleep 2
-echo ""
-git pull
-echo ""
-sleep 2
-cd $IPATH
-fi
-
-
-
-
-
+#
 cd ..
-# check if vbs-obfuscator exists
-if [ -e obfuscate/vbs-obfuscator.py ]; then
-echo "[✔] vbs-obfuscator....................[ found ]"
-sleep 2
-cd $IPATH
+if [ -e obfuscate/pyherion.py ]; then
+  echo "[✔] pyherion crypter..................[ found ]"
+  sleep 2
+  cd $IPATH
 else
-echo "[☠] vbs-obfuscator -> not found               ]"
-sleep 2
-echo "[☠] please wait    -> updating                ]"
-sleep 2
-echo ""
-git pull
-echo ""
-sleep 2
-cd $IPATH
+  echo "[x] pyherion crypter              [ not found ]"
+  sleep 1
+  echo ""
+  echo "    WARNING: Unable to locate pyherion.py"
+  echo "    Please Download pytherion crypter to: venom-main/obfuscate"
+  echo "    https://github.com/r00t-3xp10it/venom/blob/master/obfuscate/pyherion.py"
+  echo ""
+  sleep 2
+  cd $IPATH
 fi
 
 
 
 
+#
+# check if vbs-obfuscator exists
+#
+cd ..
+if [ -e obfuscate/vbs-obfuscator.py ]; then
+  echo "[✔] vbs-obfuscator....................[ found ]"
+  sleep 2
+  cd $IPATH
+else
+  echo "[x] vbs-obfuscator                [ not found ]"
+  sleep 1
+  echo ""
+  echo "    WARNING: Unable to locate vbs-obfuscator.py"
+  echo "    Please Download vbs-obfuscator.py to: venom-main/obfuscate"
+  echo "    https://github.com/r00t-3xp10it/venom/blob/master/obfuscate/vbs-obfuscator.py"
+  echo ""
+  sleep 2
+  cd $IPATH
+fi
 
+
+
+
+#
 # check if apache2 exists
+#
 ch3=`which apache2`
 if [ "$?" -eq "0" ]; then
-echo "[✔] apache2 webserver.................[ found ]"
-sleep 2
+  echo "[✔] apache2 webserver.................[ found ]"
+  sleep 2
 else
-echo ""
-echo "[☠] apache2 webserver -> not found            ]"
-echo "[☠] Download apache2  -> apt-get install apache2"
-xterm -T "☠ INSTALL APACHE2 WEBSERVER ☠" -geometry 110x23 -e "sudo apt-get install apache2"
-sleep 2
-fi
+  echo "[x] apache2 webserver             [ not found ]"
+  sleep 1
+  echo ""
+  sudo apt-get install apache2 --force-yes -y
+  echo ""
 
+    sleep 1
+    again=`which apache2`
+    if [ "$?" -eq "0" ]; then
+      echo "[✔] apache2 webserver.............[ installed ]"
+      sleep 2
+    else
+      echo ""
+      echo "    WARNING: Unable to locate package apache2"
+      echo "    To solve this issue make sure you have the right repositories in sources.list"
+      echo "    With the right repositories in sources.list, you need to run apt-get update"
+      echo "    and then run the installation command for the apache2 package again."
+      echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
+      echo ""
+      sleep 2
+    fi
+fi
 
 
 
@@ -302,7 +419,7 @@ elif [ "$QuE" = "Delete Venom domain name" ]; then
 
 else
 
-  echo "[☆] Venom Domain name Configuration...[ skipp ]"
+  echo "[!] Venom Domain name Configuration...[ skipp ]"
   dsrr="NO"
 
 fi
@@ -311,9 +428,9 @@ fi
 
 
 
-# -------------------------------------------------
+#
 # ETTERCAP DNS SPOOFING - APACHE2 VENOM DOMAIN NAME
-# ------------------------------------------------- 
+#
 if [ "$sddf" = "domain" ]; then
 
 # venom domain name settings found...
@@ -365,73 +482,104 @@ fi
 
 
 
-# --------------------------------------------------
-# chose in post-exploitation (apache2 attack vector)
-# to auto-migrate to what process in target machine
-# -----------------------------------------------------
-CsT=`cat fast_migrate.rc | grep "migrate" | awk {'print $4'}`
-echo "[✔] post-exploitation.................[ found ]"
-sleep 2
-# enter process name to were migrate after a succesfully exloitation
-M1G=$(zenity --title="☠ AUTO MIGRATE SETTINGS ☠" --text "\nPost-exploitation 'fast-migrate.rc' module by default\nwill auto-migrate the session to 'wininit.exe' process.\n[ when using apache2 attack vector module ]\n\nInput the process name to were auto-migrate\nexample: explorer.exe" --entry --width 330) > /dev/null 2>&1
-# rebuild 'fast_migrate.rc' with new settings
-echo "getsystem" > fast_migrate.rc 
-echo "run migrate -n $M1G" >> fast_migrate.rc
-echo "sysinfo" >> fast_migrate.rc
-echo "getuid" >> fast_migrate.rc
 
 
 
-
-
-# --------------------
+#
 # check if wine exists
-# --------------------
-c0m=`which wine`> /dev/null 2>&1
+#
+c0m=`which $arch` > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-echo "[✔] wine..............................[ found ]"
-sleep 2
-# input wine drive_c path
-DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
-sleep 2
+
+  if [ "$arch" = "wine" ]; then
+    echo "[✔] $arch..............................[ found ]"
+    sleep 2
+  else
+    echo "[✔] $arch............................[ found ]"
+    sleep 2
+  fi
+  # input wine drive_c path
+  DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
+  sleep 2
+
 else
-echo "[☠] wine     -> not found                     ]"
-echo "[☠] Download -> apt-get install wine          ]"
-xterm -T "☠ INSTALL WINE ☠" -geometry 110x23 -e "sudo apt-get install wine"
-sleep 2
+
+  if [ "$arch" = "wine" ]; then
+    echo "[x] $arch                          [ not found ]"
+    sleep 1
+  else
+    echo "[x] $arch                        [ not found ]"
+    sleep 1
+  fi
+  echo ""
+  sudo apt-get install $arch --force-yes -y
+  echo ""
+
+    sleep 1
+    again=`which $arch` > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+      if [ "$arch" = "wine" ]; then
+        echo "[✔] $arch ........................[ installed ]"
+        sleep 2
+      else
+        echo "[✔] $arch ......................[ installed ]"
+        sleep 2
+      fi
+    else
+      echo ""
+      echo "    WARNING: Unable to locate package $arch"
+      echo "    To solve this issue make sure you have the right repositories in sources.list"
+      echo "    With the right repositories in sources.list, you need to run apt-get update"
+      echo "    and then run the installation command for the $arch package again."
+      echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
+      echo "    https://devilzlinux.blogspot.pt/2016/11/how-to-install-wine-on-kali-linux.html"
+      echo ""
+      sleep 2
+    fi
 fi
 
 
 
 
 
-# ------------------------
+#
 # configure WINE settings
-# ------------------------
+#
 if [ -d $DrIvC ]; then
   echo "[✔] wine folder.......................[ found ]"
   sleep 2
 
 else
 
-  echo "[☠] wine folder -> not found                  ]"
-  echo "[☠] Please wait -> running winecfg            ]"
-  sleep 2
+  echo "[x] wine folder                   [ not found ]"
+  echo "    Please wait, running winecfg .."
+  sleep 1
 
     if [ "$DiStRo" = "Kali" ]; then
       winecfg > /dev/null 2>&1
     else
-      su $user -c "winecfg > /dev/null 2>&1"
-    sleep 2
+      su $user -c "winecfg" > /dev/null 2>&1
     fi
 
+  # check again
+  if [ -d $DrIvC ]; then
+    echo "[✔] wine folder...................[ installed ]"
+    sleep 2
+  else
+    echo ""
+    echo "    WARNING: Unable to locate wine folder"
+    echo "    Please Download/Install wine before runing setup.sh .."
+    echo "    https://devilzlinux.blogspot.pt/2016/11/how-to-install-wine-on-kali-linux.html"
+    echo ""
+    sleep 2
+  fi
 fi
 
 
 
-
-
+#
 # install WinRAR under WINE
+#
 if [ $(uname -m) = "i686" ]; then
 
   echo "[✔] arch sellected....................[ 32bit ]"
@@ -441,64 +589,124 @@ if [ $(uname -m) = "i686" ]; then
   if [ "$DiStRo" = "Kali" ]; then
 
        if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
-       echo "[✔] WinRAR.exe........................[ found ]"
-       sleep 2
+         echo "[✔] WinRAR.exe........................[ found ]"
+         sleep 2
        else
-       echo "[☠] WinRAR.exe -> not found                   ]"
-       sleep 2
-       echo ""
-       wine install_winrar_wine32.exe
-       echo ""
-       cd $IPATH
+         echo "[x] WinRAR.exe                    [ not found ]"
+         sleep 1
+         echo ""
+         $arch install_winrar_wine32.exe
+         echo ""
+         cd $IPATH
+
+           sleep 1
+           # check again
+           if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
+             echo "[✔] WinRAR.exe....................[ installed ]"
+             sleep 2
+           else
+             echo ""
+             echo "    WARNING: Unable to locate WinRAR"
+             echo "    Please Download WinRAR to: venom-main/bin"
+             echo "    https://github.com/r00t-3xp10it/venom/blob/master/bin/install_winrar_wine32.exe"
+             echo ""
+             sleep 2
+             cd $IPATH
+           fi
        fi
 
   else
 
        if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
-       echo "[✔] WinRAR.exe........................[ found ]"
-       sleep 2
+         echo "[✔] WinRAR.exe........................[ found ]"
+         sleep 2
        else
-       echo "[☠] WinRAR.exe -> not found                   ]"
-       sleep 2
-       echo ""
-       su $user -c "wine install_winrar_wine32.exe"
-       echo ""
-       cd $IPATH
+         echo "[x] WinRAR.exe                    [ not found ]"
+         sleep 1
+         echo ""
+         su $user -c "$arch install_winrar_wine32.exe"
+         echo ""
+         cd $IPATH
+
+           sleep 1
+           # check again
+           if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
+             echo "[✔] WinRAR.exe....................[ installed ]"
+             sleep 2
+           else
+             echo ""
+             echo "    WARNING: Unable to locate WinRAR"
+             echo "    Please Download WinRAR to: venom-main/bin"
+             echo "    https://github.com/r00t-3xp10it/venom/blob/master/bin/install_winrar_wine32.exe"
+             echo ""
+             cd $IPATH
+             sleep 2
+           fi
        fi
   fi
 
 else
 
-   echo "[✔] arch sellected....................[ 64bit ]"
-   sleep 2
+  echo "[✔] arch sellected....................[ 64bit ]"
+  sleep 2
   cd .. && cd bin
   # copy winRAR to wine
   if [ "$DiStRo" = "Kali" ]; then
 
        if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
-       echo "[✔] WinRAR.exe........................[ found ]"
-       sleep 2
+         echo "[✔] WinRAR.exe........................[ found ]"
+         sleep 2
        else
-       echo "[☠] WinRAR.exe....................[ not found ]"
-       sleep 2
-       echo ""
-       wine64 install_winrar_wine64.exe
-       echo ""
-       cd $IPATH
+         echo "[x] WinRAR.exe                    [ not found ]"
+         sleep 1
+         echo ""
+         $arch install_winrar_wine64.exe
+         echo ""
+         cd $IPATH
+
+           sleep 1
+           # check again
+           if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
+             echo "[✔] WinRAR.exe....................[ installed ]"
+             sleep 2
+           else
+             echo ""
+             echo "    WARNING: Unable to locate WinRAR"
+             echo "    Please Download WinRAR to: venom-main/bin"
+             echo "    https://github.com/r00t-3xp10it/venom/blob/master/bin/install_winrar_wine64.exe"
+             echo ""
+             sleep 2
+             cd $IPATH
+           fi
        fi
 
   else
 
        if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
-       echo "[✔] WinRAR.exe........................[ found ]"
-       sleep 2
+         echo "[✔] WinRAR.exe........................[ found ]"
+         sleep 2
        else
-       echo "[☠] WinRAR.exe....................[ not found ]"
-       sleep 2
-       echo ""
-       su $user -c "wine64 install_winrar_wine64.exe"
-       echo ""
-       cd $IPATH
+         echo "[x] WinRAR.exe                    [ not found ]"
+         sleep 1
+         echo ""
+         su $user -c "$arch install_winrar_wine64.exe"
+         echo ""
+         cd $IPATH
+
+           sleep 1
+           # check again
+           if [ -d "$DrIvC/drive_c/Program Files/WinRAR" ]; then
+             echo "[✔] WinRAR.exe....................[ installed ]"
+             sleep 2
+           else
+             echo ""
+             echo "    WARNING: Unable to locate WinRAR"
+             echo "    Please Download WinRAR to: venom-main/bin"
+             echo "    https://github.com/r00t-3xp10it/venom/blob/master/bin/install_winrar_wine64.exe"
+             echo ""
+             sleep 2
+             cd $IPATH
+           fi
        fi
   fi
 
@@ -506,11 +714,9 @@ fi
 
 
 
-
-
-
-
+#
 # pyinstaller wine dependencies checks
+#
 if [ $(uname -m) = "i686" ]; then
 
     # check if pyinstaller its on wine directory
@@ -519,9 +725,8 @@ if [ $(uname -m) = "i686" ]; then
       sleep 2
     else
       # copy pyinstaller to wine
-      echo "[☠] pyinstaller -> not found                  ]"
-      echo ""
-      sleep 2
+      echo "[x] pyinstaller                   [ not found ]"
+      sleep 1
       cd $IPATH
       cd ..
       cd obfuscate
@@ -529,38 +734,18 @@ if [ $(uname -m) = "i686" ]; then
       cd pyinstaller
 
         if [ "$DiStRo" = "Kali" ]; then
-          echo "[☠] copy to     -> $DrIvC/drive_c/pyinstaller-2.0"
-          sleep 2
+          echo "    Copy to: $DrIvC/drive_c/pyinstaller-2.0"
+          sleep 1
           mv pyinstaller-2.0 $DrIvC/drive_c/pyinstaller-2.0 > /dev/null 2>&1
-          echo "[☠] install     -> python 2.6.6               ]"
-          sleep 2
-          echo ""
-          wine msiexec /i python-2.6.6.msi
-          echo ""
-          echo "[☠] install     -> pywin32-220                ]"
-          sleep 2
-          wine pywin32-220.win32-py2.6.exe
-          echo ""
           cd ..
           rm -R pyinstaller
-          sleep 2
           cd $IPATH
         else
-          echo "[☠] copy to     -> $DrIvC/drive_c/pyinstaller-2.0"
-          sleep 2
+          echo "    Copy to: $DrIvC/drive_c/pyinstaller-2.0"
+          sleep 1
           su $user -c "mv pyinstaller-2.0 $DrIvC/drive_c/pyinstaller-2.0" > /dev/null 2>&1
-          echo "[☠] install     -> python 2.6.6               ]"
-          sleep 2
-          echo ""
-          su $user -c "wine msiexec /i python-2.6.6.msi"
-          echo ""
-          echo "[☠] install     -> pywin32-220                ]"
-          sleep 2
-          su $user -c "wine pywin32-220.win32-py2.6.exe"
-          echo ""
           cd ..
           rm -R pyinstaller
-          sleep 2
           cd $IPATH
         fi
     fi
@@ -575,9 +760,8 @@ else
       sleep 2
     else
       # copy pyinstaller to wine
-      echo "[☠] pyinstaller -> not found                  ]"
-      echo ""
-      sleep 2
+      echo "[x] pyinstaller                   [ not found ]"
+      sleep 1
       cd $IPATH
       cd ..
       cd obfuscate
@@ -585,35 +769,16 @@ else
       cd pyinstaller
 
         if [ "$DiStRo" = "Kali" ]; then
-          echo "[☠] copy to     -> $DrIvC/drive_c/pyinstaller-2.0"
-          sleep 2
+          echo "    Copy to: $DrIvC/drive_c/pyinstaller-2.0"
+          sleep 1
           mv pyinstaller-2.0 $DrIvC/drive_c/pyinstaller-2.0 > /dev/null 2>&1
-          echo "[☠] install     -> python 2.6.6               ]"
-          sleep 2
-          echo ""
-          wine64 msiexec /i python-2.6.6.amd64.msi
-          echo ""
-          echo "[☠] install     -> pywin32-220                ]"
-          sleep 2
-          wine64 pywin32-220.win-amd64-py3.5.exe
-          echo ""
           cd ..
           rm -R pyinstaller
-          sleep 2
           cd $IPATH
         else
-          echo "[☠] copy to     -> $DrIvC/drive_c/pyinstaller-2.0"
-          sleep 2
+          echo "    Copy to: $DrIvC/drive_c/pyinstaller-2.0"
+          sleep 1
           su $user -c "mv pyinstaller-2.0 $DrIvC/drive_c/pyinstaller-2.0" > /dev/null 2>&1
-          echo "[☠] install     -> python 2.6.6               ]"
-          sleep 2
-          echo ""
-          su $user -c "wine64 msiexec /i python-2.6.6.amd64.msi"
-          echo ""
-          echo "[☠] install     -> pywin32-220                ]"
-          sleep 2
-          su $user -c "wine64 pywin32-220.win-amd64-py3.5.exe"
-          echo ""
           cd ..
           rm -R pyinstaller > /dev/null 2>&1
           cd $IPATH
@@ -624,49 +789,234 @@ fi
 
 
 
+#
+# check if pywin32-220 its installed ..
+#
+if [ $(uname -m) = "i686" ]; then
 
-# ---------------------
-# build venom.conf file
-# ---------------------
+    #
+    # check if pywin32-220 its on wine directory
+    #
+    if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+      echo "[✔] pywin32-220.......................[ found ]"
+      sleep 2
+    else
+      # copy pywin32 to wine
+      echo "[x] pywin32-220                   [ not found ]"
+      sleep 1
+      cd $IPATH
+      cd ..
+      cd obfuscate
+      tar -xf pyinstaller.tar.gz
+      cd pyinstaller
 
+        if [ "$DiStRo" = "Kali" ]; then
+          echo ""
+          echo "Install: python 2.6.6.msi"
+          echo ""
+          sleep 1
+          $arch msiexec /i python-2.6.6.msi
+          echo ""
+          echo "Install: pywin32-220.win32-py2.6.exe"
+          echo ""
+          sleep 1
+          $arch pywin32-220.win32-py2.6.exe
+          echo ""
+          cd ..
+          rm -R pyinstaller
+
+            sleep 1
+            # check again
+            if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+              echo "[✔] pywin32-220...................[ installed ]"
+              sleep 2
+            else
+              echo ""
+              echo "    WARNING: Unable to locate pywin32-220 (x86)"
+              echo "    Please Download/Install the follow packets"
+              echo "    python-2.6.6.msi"
+              echo "    pywin32-220.win32-py2.6.exe"
+              echo ""
+              sleep 2
+            fi
+            cd $IPATH
+
+        else
+
+          echo ""
+          echo "Install: python 2.6.6.msi"
+          echo ""
+          sleep 1
+          su $user -c "$arch msiexec /i python-2.6.6.msi"
+          echo ""
+          echo "Install: pywin32-220.win32-py2.6.exe"
+          echo ""
+          sleep 1
+          su $user -c "$arch pywin32-220.win32-py2.6.exe"
+          echo ""
+          cd ..
+          rm -R pyinstaller
+
+            sleep 1
+            # check again
+            if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+              echo "[✔] pywin32-220...................[ installed ]"
+              sleep 2
+            else
+              echo ""
+              echo "    WARNING: Unable to locate pywin32-220 (x86)"
+              echo "    Please Download/Install the follow packets"
+              echo "    python-2.6.6.msi"
+              echo "    pywin32-220.win32-py2.6.exe"
+              echo ""
+              sleep 2
+            fi
+        fi
+    fi
+    cd $IPATH
+
+
+else
+
+
+    # check if pywin32 its on wine directory
+    if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+      echo "[✔] pywin32-220.......................[ found ]"
+      sleep 2
+    else
+      # copy pywin32 to wine
+      echo "[x] pywin32-220                   [ not found ]"
+      sleep 1
+      cd $IPATH
+      cd ..
+      cd obfuscate
+      tar -xf pyinstaller.tar.gz
+      cd pyinstaller
+
+        if [ "$DiStRo" = "Kali" ]; then
+          echo ""
+          echo "Install: python-2.6.6.amd64.msi"
+          echo ""
+          sleep 1
+          $arch msiexec /i python-2.6.6.amd64.msi
+          echo ""
+          echo "Install: pywin32-220.win-amd64-py2.6.exe"
+          echo ""
+          sleep 1
+          $arch pywin32-220.win-amd64-py2.6.exe
+          echo ""
+          cd ..
+          rm -R pyinstaller
+
+            sleep 1
+            # check again
+            if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+              echo "[✔] pywin32-220...................[ installed ]"
+              sleep 2
+            else
+             echo ""
+             echo "    WARNING: Unable to locate pywin32-220 (x64)"
+             echo "    Please Download/Install the follow packets"
+             echo "    python-2.6.6.amd64.msi"
+             echo "    pywin32-220.win-amd64-py2.6.exe"
+             echo ""
+             sleep 2
+            fi
+            cd $IPATH
+
+        else
+
+          echo ""
+          echo "Install: python-2.6.6.amd64.msi"
+          echo ""
+          sleep 1
+          su $user -c "$arch msiexec /i python-2.6.6.amd64.msi"
+          echo ""
+          echo "Install: pywin32-220.win-amd64-py2.6.exe"
+          echo ""
+          sleep 1
+          su $user -c "$arch pywin32-220.win-amd64-py2.6.exe"
+          echo ""
+          cd ..
+          rm -R pyinstaller > /dev/null 2>&1
+
+            sleep 1
+            # check again
+            if [ -e "$DrIvC/drive_c/Python26/pywin32-wininst.log" ]; then
+              echo "[✔] pywin32-220...................[ installed ]"
+              sleep 2
+            else
+              echo ""
+              echo "    WARNING: Unable to locate pywin32-220 (x64)"
+              echo "    Please Download/Install the follow packets"
+              echo "    python-2.6.6.amd64.msi"
+              echo "    pywin32-220.win-amd64-py2.6.exe"
+              echo ""
+              sleep 2
+            fi
+        fi
+    fi
+    cd $IPATH
+fi
+
+
+
+#
+# rebuild settings file ..
+#
+echo "[✔] Rebuild toolkit settings file.....[  done ]"
+sleep 2
 # change to rigth directory structure
 cd ..
-# store values in variables
+# store settings file values in variables
 ApWR=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
 DTuR=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 WdPa=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
 ArP=`cat settings | egrep -m 1 "ARP_SETTINGS" | cut -d '=' -f2` > /dev/null 2>&1
-AtVe=`cat settings | egrep -m 1 "ATTACK_VECTOR" | cut -d '=' -f2` > /dev/null 2>&1
 EdNp=`cat settings | egrep -m 1 "ETTER_DNS_PATH" | cut -d '=' -f2` > /dev/null 2>&1
+EPAUA=`cat settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2` > /dev/null 2>&1
 # config settings file
 if [ "$sddf" = "domain" ]; then
-Af="http://mega-upload.com"
 Ps="$P0Is0N/etter.dns"
 else
-Af="http://$lhost"
 Ps="/etc/ettercap/etter.dns"
 fi
 # change setting file configurations
-#sed -i "s|$ApDe|$D3F|" settings
 sed -i "s|$ApWR|$ApAcHe|" settings
 sed -i "s|$DTuR|$dsrr|" settings
 sed -i "s|$WdPa|$DrIvC/drive_c|" settings
 sed -i "s|$ArP|$fd3d|" settings
-
-sed -i "s|$AtVe|$Af|" settings
 sed -i "s|$EdNp|$Ps|" settings
-cd aux
+sed -i "s|$EPAUA|$Dftt|" settings
+cd $IPATH/
 
 
 
+
+#
 # exit setup.sh script
+#
+echo "[✔] All checks completed..............[  done ]"
+sleep 2
 echo ""
-echo "[✔] All checks completed..............[   OK  ]"
+echo "    Report-Bugs: https://github.com/r00t-3xp10it/venom/issues"
+echo ""
 sleep 1
 cd $IPATH/
-cd .. && cd ..
-sudo chown -hR $user shell > /dev/null 2>&1
-sleep 1
 exit
 
+
+#
+# aborted setup.sh execution
+#
+else
+
+
+  echo "[x] Script execution aborted .."
+  sleep 2
+  echo "    Report-Bugs: https://github.com/r00t-3xp10it/venom/issues"
+  echo ""
+  sleep 1
+exit
+fi
 

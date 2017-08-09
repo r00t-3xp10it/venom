@@ -1,4 +1,6 @@
+sysinfo
+getprivs
 getsystem
 run migrate -n wininit.exe
-sysinfo
 getuid
+screenshot -v -p fast-migrate.jpeg -v true

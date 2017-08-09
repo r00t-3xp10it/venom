@@ -1,7 +1,5 @@
-# python  template | Author: r00t-3xp10it
-# ---
-
-
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from ctypes import *
 
 # Our code goes here

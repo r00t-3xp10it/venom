@@ -1,5 +1,7 @@
 // C template | Author: r00t-3xp10it
 
+#include <stdio.h>
+#include <windows.h>
 
 // Our code goes here
 unsigned char buf[]=

@@ -1,0 +1,10 @@
+These are set to kill the process after execution, so don't use them to evaluate Stealth Mode.
+
+
+calc: Launch Calc.exe - No Encoding
+
+calcenc : Launch Calc.exe - Custom Encoding
+
+krb1: Launch Calc.exe - Metasploit Single Encoding
+
+krb3 : Launch Calc.exe - Metasploit Triple Encoding
