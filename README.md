@@ -49,13 +49,10 @@
     or "<form>" tags to be hable to trigger payload downloads, the
     user just needs to send the link provided to target host.
 
-    ATTACK VECTOR: http://192.168.1.67
+![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
        Just run venom-main/aux/setup.sh to config framework settings.
-
-![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
-
 
 ## DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
