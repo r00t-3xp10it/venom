@@ -55,7 +55,7 @@
     mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
     PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine)
     vbs-obfuscator (obfuscator) | avet (Daniel Sauder) | shellter (KyRecon)
-    ettercap (MitM+DNS_Spoof) | encrypt_PolarSSL (AES crypter)
+    ettercap (MitM + DNS_Spoofing) | encrypt_PolarSSL (AES crypter)
 
     "venom.sh will download/install all dependencies as they are needed"
     Adicionally was build venom-main/aux/setup.sh to help you install all
