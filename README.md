@@ -52,7 +52,6 @@
 ![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
-       Just run venom-main/aux/setup.sh to config framework settings.
 
 ## DEPENDENCIES
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
