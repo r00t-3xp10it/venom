@@ -580,7 +580,7 @@ fi
 #
 # install WinRAR under WINE
 #
-if [ $(uname -m) = "i686" ]; then
+if [ "$Dftt" = "x86" ]; then
 
   echo "[✔] arch sellected....................[ 32bit ]"
   sleep 2
