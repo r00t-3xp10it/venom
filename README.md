@@ -64,7 +64,7 @@
 
 ## DOWNLOAD/INSTALL
     1º - Download framework from github
-         tar.gz OR zip OR git clone
+         git clone https://github.com/r00t-3xp10it/venom.git
 
     2º - Set files execution permitions
          cd venom-main
