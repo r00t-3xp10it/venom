@@ -717,7 +717,7 @@ fi
 #
 # pyinstaller wine dependencies checks
 #
-if [ $(uname -m) = "i686" ]; then
+if [ "$Dftt" = "x86" ]; then
 
     # check if pyinstaller its on wine directory
     if [ -d "$DrIvC/drive_c/pyinstaller-2.0" ]; then
@@ -792,7 +792,7 @@ fi
 #
 # check if pywin32-220 its installed ..
 #
-if [ $(uname -m) = "i686" ]; then
+if [ "$Dftt" = "x86" ]; then
 
     #
     # check if pywin32-220 its on wine directory
