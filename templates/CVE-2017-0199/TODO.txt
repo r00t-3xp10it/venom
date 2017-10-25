@@ -1,0 +1,2 @@
+### Future release:
+* Automatically send generated malicious RTF to victim using email spoofing

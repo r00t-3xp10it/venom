@@ -11,7 +11,7 @@
 
 
 
-### msf postgresql database connection check ? (msfdb init)
+### msf postgresql database connection check ? (msfdb reinit)
 # This next setting allow users to check msf postgresql
 # connection status and rebuild msfdb if not connected.
 # values accepted are: OFF or ON
@@ -21,7 +21,7 @@ MSF_REBUILD=OFF
 
 
 
-### update metasploit framework ? (msfupdate)
+### Update metasploit framework ? (msfupdate)
 # This next setting allow users to upgrade your metasploit
 # database with recent msf releases. (at script startup).
 # values accepted are: OFF or ON
@@ -41,15 +41,45 @@ MSF_LOGFILES=OFF
 
 
 
+### Metasploit post-exploitation directory structure.
+# This next setting allow users to input the full path
+# where venom toolkit msf_post_modules will be copy to.
+-------------------------------------------------------------
+POST_EXPLOIT_DIR=/usr/share/metasploit-framework/modules/post
+-------------------------------------------------------------
+
+
+
+### Wine and mingw-gcc - Local system arch (32bit/64bit)
+# This next setting forces the main tool (venom.sh) to use WINE
+# and MINGW-GCC command syntax based on the arch sellected bellow.
+# SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc
+---------------
+SYSTEM_ARCH=x86
+---------------
+
+
+
+### Pyinstaller and Python versions (under WINE)
+# setup.sh only installs Python26 (python-2.6.6.msi)
+# pyinstaller-2.0 and pywin32-220 versions (32bit/64bit) ..
+#
+# HINT: If you have manually installed other versions of
+# this softwares, then we can use the follow settings to
+# force the main tool (venom.sh) to use them at working.
+-----------------------------------
+PYTHON_VERSION=Python26
+PYINSTALLER_VERSION=pyinstaller-2.0
+-----------------------------------
+
+
+
 ### apache2 webroot installation full path.
-# This next config its needed to be abble to upload
+# This next config its needed to be able to upload
 # our builds into target machine (apache2 - malicious url).
-# WARNING: venom-main/aux/setup.sh also configs this value.
 ----------------------------
 APACHE_WEBROOT=/var/www/html
 ----------------------------
-
-
 
 
 
@@ -62,7 +92,6 @@ MEGAUPLOAD_DOMAIN=NO
 --------------------
 ARP_SETTINGS=IPv4
 WINE_DRIVEC=/root/.wine/drive_c
-ATTACK_VECTOR=http://192.168.1.67
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
 
 

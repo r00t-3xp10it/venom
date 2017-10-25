@@ -1,13 +1,6 @@
 sysinfo
-run post/multi/gather/wlan_geolocate
 run post/linux/gather/enum_system
 run post/linux/gather/enum_network
-run post/linux/gather/enum_psk
-run post/linux/gather/hashdump
-run post/linux/gather/enum_configs
-run post/linux/gather/enum_protections
-run post/linux/gather/enum_users_history
 run post/multi/gather/firefox_creds
-run post/firefox/gather/cookies
-run post/firefox/gather/history
-run post/firefox/gather/passwords
+run post/linux/gather/hashdump
+run post/linux/gather/wifi_dump_linux

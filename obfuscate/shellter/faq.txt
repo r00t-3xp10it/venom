@@ -1,0 +1,55 @@
+
+1) Does the execution flow return to normal after executing the payload?
+=========================================================================
+
+Shellter V (v5.0) introduces the Stealth Mode feature which preserves the
+original functionality of the application while it keeps all the benefits
+of dynamic PE infection.
+
+As mentioned also below, when you use the Stealth Mode feature you need to
+set the payload exit function to 'Thread', when you prepare the multi-handler
+listener in metasploit, otherwise the process will be terminated when you kill
+the session.
+
+For more information on how to use Stealth Mode effectively, please read the
+readme.txt document.
+
+
+
+2) Does the process die after the payload is executed?
+=======================================================
+
+This actually depends on how the payload behaves.
+
+If you use the Stealth Mode feature, then you must always set the exit
+function for the payload to 'Thread' so that it won't kill the process
+when it returns. In this case the process will still run.
+
+If you don't use the Stealth Mode feature, then if the exit function is
+set to 'Process', the payload will kill the process, otherwise the program
+will most probably crash.
+Keep in mind that this will happen after the execution of the payload, or
+after killing the reverse connection, so in any case this doesn't affect
+the effectiveness of the injected code.
+
+For more information on how to use Stealth Mode effectively, please read the
+readme.txt document.
+
+
+
+3) How long does it take to execute the payload?
+=================================================
+
+Normally, this happens instantly, unless you have injected into a point in
+the execution flow that requires user interaction with the application in order
+to be reached.
+
+Furthermore, when junk polymorphic code is used then this delays the execution
+of the payload. In Stealth Mode the delay is not significant.
+However, when Stealth Mode is not used the execution of the effective payload
+can be delayed by several seconds.
+
+This delay is good in order to bypass AV emulation engines and sandboxes that
+normally only monitor the process for a limited time. You don't have to use
+this feature if you don't want to. However, it can significantly contribute
+towards AV evasion.

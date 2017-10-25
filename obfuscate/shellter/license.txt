@@ -1,0 +1,61 @@
+                                License Agreement
+                               ====================
+
+By using this software you understand that it has been exclusively developed
+by Kyriakos Economou (@kyREcon) during his free time and his past, current or
+future employers may assume no prior knowledge of existence for it.
+
+This software makes use of the BeaEngine Disassemble library
+(http://www.beaengine.org) as stated in the readme.txt file.
+
+
+This license was updated the 18th of May 2015.
+
+
+
+
+                               Terms of Use
+                              ==============
+
+
+1) You can use this software and share it with anyone as long as you do this
+   for free.
+
+2) You assume full responsibility for any damage caused by this software either
+   this applies to you or to someone else.
+
+3) You assume full responsibility for any unlawful actions taken by using this
+   software.
+
+4) You are allowed to modify this software, but if you do then you have to
+   explicitly state so in case you share it with other people.
+
+5) You are allowed to reverse engineer it, disassemble it, debug it, for any
+   reason that might be, but in case you find a bug then please report it to
+   the author and give him the necessary amount of time to fix it before
+   disclosing it.
+
+6) You are allowed to distribute this software from your own website, but if
+   you do then you have to include a link to its original source along with
+   the license agreement.
+
+7) You are allowed to use this software for work purposes, but you are not
+   allowed to charge for it.
+   This means that you have the right to use it as a complementary tool to
+   assist you at work, but you are not allowed to build a commercial service
+   based on this tool or exploit this tool financially by any means without
+   the written agreement of its author.
+
+8) You are not allowed to use this software to gain unauthorized access to a
+   computer system or network without a written agreement of its owner.
+
+9) It is responsibility of the user to check for any modifications in this
+   license agreement, and adjust the way he is using this software accordingly.
+
+10) You are allowed to use this software for as long as you want only if you
+    respect all the previous terms.
+
+
+Good luck!
+
+kyREcon

@@ -463,6 +463,7 @@ def run
 
 
     # Print banner and scan results on screen
+    print_line("")
     print_line("    +----------------------------------------------+")
     print_line("    | enigma fileless UAC bypass command execution |")
     print_line("    |            Author : r00t-3xp10it             |")
