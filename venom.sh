@@ -8267,7 +8267,7 @@ cd $IPATH/
 
 
 # ---------------------------------------------------------------------
-# cve-ms17_11882 (rtf world doc)
+# CVE-2017-11882 (rtf word doc)
 # ---------------------------------------------------------------------
 sh_world25 () {
 # get user input to build shellcode
@@ -8285,7 +8285,7 @@ cat << !
 ╔------------------
 | LHOST   : $lhost
 | CVE     : CVE-2017-11882
-| FORMAT  : MICROSOFT OFFICE -> WINDOWS(RTF)
+| FORMAT  : ANCII/HEX -> MICROSOFT OFFICE (RTF)
 | PAYLOAD : $paylo
 |_AGENT   : $IPATH/output/$N4m.rtf
 
