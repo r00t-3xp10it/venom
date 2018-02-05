@@ -1,16 +1,16 @@
-[![Version](https://img.shields.io/badge/VENOM-1.0.14-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/VENOM-1.0.15-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
-## VENOM 1.0.14 - metasploit Shellcode generator/compiller
-    Version release : v1.0.14
+## VENOM 1.0.15 - metasploit Shellcode generator/compiller
+    Version release : v1.0.15
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Codename: Pandora's box (pithos)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2017
 
-![venom shellcode v1.0.13](http://i.cubeupload.com/bYQJc8.png)
+![venom shellcode v1.0.15](http://i.cubeupload.com/bYQJc8.png)
 
 
 ## LEGAL DISCLAMER
@@ -47,7 +47,7 @@
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
 
-![venom shellcode v1.0.13](http://i.cubeupload.com/nvmSq3.png)
+![venom shellcode v1.0.15](http://i.cubeupload.com/nvmSq3.png)
 
 
 ## DEPENDENCIES
@@ -80,16 +80,16 @@
 
 
 ## Framework Main Menu
-![venom shellcode v1.0.13](http://i.cubeupload.com/6yNJGG.png)
+![venom shellcode v1.0.15](http://i.cubeupload.com/6yNJGG.png)
 ## [ build 4 ] python/pyinstaller - osiris.exe
     Build 4 Work floow: Build shellcode in C language, embebbed into
     one python template and compiled to exe by pyinstaller = osiris.exe
-![venom shellcode v1.0.13-Beta](http://i.cubeupload.com/n7Nxee.png)
-![venom shellcode v1.0.13-Beta](http://i.cubeupload.com/jWpjf3.png)
+![venom shellcode v1.0.15-Beta](http://i.cubeupload.com/n7Nxee.png)
+![venom shellcode v1.0.15-Beta](http://i.cubeupload.com/jWpjf3.png)
 
 
 ## video tutorial [build 23 - Invoke-Phant0m]
-![venom shellcode v1.0.13](http://i.cubeupload.com/oBrL13.gif)
+![venom shellcode v1.0.15](http://i.cubeupload.com/oBrL13.gif)
 
 <br />
 
