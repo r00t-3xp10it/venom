@@ -16,7 +16,7 @@
 # and MINGW-GCC command syntax based on the arch sellected bellow.
 # SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc
 ---------------
-SYSTEM_ARCH=x86
+SYSTEM_ARCH=x64
 ---------------
 
 
