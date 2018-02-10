@@ -11,6 +11,16 @@
 
 
 
+### Wine and mingw-gcc - Local system arch (32bit/64bit)
+# This next setting forces the main tool (venom.sh) to use WINE
+# and MINGW-GCC command syntax based on the arch sellected bellow.
+# SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc
+---------------
+SYSTEM_ARCH=x86
+---------------
+
+
+
 ### msf postgresql database connection check ? (msfdb reinit)
 # This next setting allow users to check msf postgresql
 # connection status and rebuild msfdb if not connected.
@@ -41,22 +51,37 @@ MSF_LOGFILES=OFF
 
 
 
-### Metasploit post-exploitation directory structure.
+### apache2 webroot installation full path.
+# This next config its needed to be able to upload
+# our builds into target machine (apache2 - malicious url).
+----------------------------
+APACHE_WEBROOT=/var/www/html
+----------------------------
+
+
+
+### Metasploit modules (auxiliarys) directory structure.
 # This next setting allow users to input the full path
-# where venom toolkit msf_post_modules will be copy to.
--------------------------------------------------------------
-POST_EXPLOIT_DIR=/usr/share/metasploit-framework/modules/post
--------------------------------------------------------------
+# where to copy venom toolkit msf_auxiliary_modules.
+--------------------------------------------------------
+POST_EXPLOIT_DIR=/usr/share/metasploit-framework/modules
+--------------------------------------------------------
 
 
 
-### Wine and mingw-gcc - Local system arch (32bit/64bit)
-# This next setting forces the main tool (venom.sh) to use WINE
-# and MINGW-GCC command syntax based on the arch sellected bellow.
-# SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc
----------------
-SYSTEM_ARCH=x86
----------------
+### arno0x0x meterpreter_loader random stager bytes av bypass technic ..
+# This setting forces venom toolkit at startup to backup/replace the  msf meterpreter_loader.rb (x64)
+# and is counterpart (x64), rebuild msf database (msfdb) and reload venom meterpreter_loaders into msf.
+# The new loaders will add an arbitrary number of random bytes at the beginning of the stage being sent
+# back to the stager in an attempt to evade AV signature detection and run time detection.
+#
+# HINT: This option will only be available in windows/meterpreter loaders
+# HINT: the msf modules will be reverted to default at venom exit ..
+# values accepted are: OFF or ON
+-----------------------
+RANDOM_STAGER_BYTES=OFF
+METERPRETER_STAGER=/usr/share/metasploit-framework/lib/msf/core/payload/windows
+-----------------------
 
 
 
@@ -72,14 +97,6 @@ PYTHON_VERSION=Python26
 PYINSTALLER_VERSION=pyinstaller-2.0
 -----------------------------------
 
-
-
-### apache2 webroot installation full path.
-# This next config its needed to be able to upload
-# our builds into target machine (apache2 - malicious url).
-----------------------------
-APACHE_WEBROOT=/var/www/html
-----------------------------
 
 
 
