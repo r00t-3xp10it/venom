@@ -88,7 +88,7 @@
 
 <br />
 
-Detailed info about release 1.0.15: https://github.com/r00t-3xp10it/venom/releases
+Detailed info about release 1.0.15: https://github.com/r00t-3xp10it/venom/releases<br />
 Suspicious-Shell-Activity© (SSA) RedTeam develop @2018
 
 _EOF
