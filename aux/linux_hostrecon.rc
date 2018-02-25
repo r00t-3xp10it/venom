@@ -1,0 +1,9 @@
+##
+# Add module auto-run options as 'arguments' to further enumeration ..
+# example: run post/linux/gather/linux_hostrecon SESSIONS=4
+# example: run post/linux/gather/linux_hostrecon SINGLE_COMMAND="nmcli dev wifi list"
+# example: run post/linux/gather/linux_hostrecon STORE_LOOT=true CREDENTIALS_DUMP=true
+# example: run post/linux/gather/linux_hostrecon AGRESSIVE_DUMP=true SINGLE_COMMAND="lsblk -f"
+# example: run post/linux/gather/linux_hostrecon SINGLE_COMMAND="netstat -atnp | grep \"ESTABLISHED\""
+##
+run post/linux/gather/linux_hostrecon

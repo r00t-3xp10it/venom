@@ -43,7 +43,6 @@
 # ---
 # HINT: To execute a powershell command we need the follow settings active:
 # EXAMPLE: set USE_POWERSHELL true
-# EXAMPLE: set EXEC_COMMAND start chrome.exe www.youporn.com
 # ---
 #
 #

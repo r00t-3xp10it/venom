@@ -24,7 +24,7 @@ fi
 # variable declarations _________________________________
 #                                                        |
 OS=`uname`                                               # grab OS
-ver="1.0.14"                                             # toolkit version
+ver="1.0.15"                                             # toolkit version
 H0m3=`echo ~`                                            # grab home path
 user=`who | awk {'print $1'}`                            # grab username
 DiStRo=`awk '{print $1}' /etc/issue`                     # grab distribution -  Ubuntu or Kali
@@ -137,6 +137,7 @@ imp=`which msfconsole`
 if [ "$?" -eq "0" ]; then
   echo "[✔] msfconsole........................[ found ]"
   sleep 2
+  MSFDATA=$(zenity --title="☠ Enter METASPLOIT FULL PATH ☠" --text "example: /usr/share/metasploit-framework" --entry --width 330) > /dev/null 2>&1
 else
   echo "[x] msfconsole                    [ not found ]"
   sleep 1
@@ -196,7 +197,7 @@ if [ $(uname -m) = "i686" ]; then
     echo "[x] mingw32 compiler              [ not found ]"
     sleep 1
     echo ""
-    sudo apt-get install mingw32 --force-yes -y
+    sudo apt-get install mingw32
     echo ""
 
       sleep 1
@@ -210,6 +211,7 @@ if [ $(uname -m) = "i686" ]; then
         echo "    To solve this issue make sure you have the right repositories in sources.list"
         echo "    With the right repositories in sources.list, you need to run apt-get update"
         echo "    and then run the installation command for the Mingw32 package again."
+        echo "    HINT: Add kali-sana (old repo) to your sources.list and apt-get update"
         echo "    KALI: https://docs.kali.org/general-use/kali-linux-sources-list-repositories"
         echo ""
         sleep 2
@@ -227,7 +229,7 @@ else
     echo "[x] mingw64 compiler              [ not found ]"
     sleep 1
     echo ""
-    sudo apt-get install mingw-w64 --force-yes -y
+    sudo apt-get install mingw-w64
     echo ""
 
       sleep 1
@@ -975,6 +977,11 @@ WdPa=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
 ArP=`cat settings | egrep -m 1 "ARP_SETTINGS" | cut -d '=' -f2` > /dev/null 2>&1
 EdNp=`cat settings | egrep -m 1 "ETTER_DNS_PATH" | cut -d '=' -f2` > /dev/null 2>&1
 EPAUA=`cat settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2` > /dev/null 2>&1
+# config venom auxiliry modules install paths
+POSTPATH=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
+MSF_RANDOM_STAGER=`cat settings | egrep -m 1 "METERPRETER_STAGER" | cut -d '=' -f2` > /dev/null 2>&1
+
+
 # config settings file
 if [ "$sddf" = "domain" ]; then
 Ps="$P0Is0N/etter.dns"
@@ -988,6 +995,8 @@ sed -i "s|$WdPa|$DrIvC/drive_c|" settings
 sed -i "s|$ArP|$fd3d|" settings
 sed -i "s|$EdNp|$Ps|" settings
 sed -i "s|$EPAUA|$Dftt|" settings
+sed -i "s|$POSTPATH|$MSFDATA/modules|" settings
+sed -i "s|$MSF_RANDOM_STAGER|$MSFDATA/lib/msf/core/payload/windows|" settings
 cd $IPATH/
 
 

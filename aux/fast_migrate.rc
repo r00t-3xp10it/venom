@@ -3,4 +3,3 @@ getprivs
 getsystem
 run migrate -n wininit.exe
 getuid
-screenshot -v -p fast-migrate.jpeg -v true

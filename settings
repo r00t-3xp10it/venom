@@ -16,7 +16,7 @@
 # and MINGW-GCC command syntax based on the arch sellected bellow.
 # SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc
 ---------------
-SYSTEM_ARCH=x64
+SYSTEM_ARCH=x86
 ---------------
 
 
@@ -31,16 +31,6 @@ MSF_REBUILD=OFF
 
 
 
-### Update metasploit framework ? (msfupdate)
-# This next setting allow users to upgrade your metasploit
-# database with recent msf releases. (at script startup).
-# values accepted are: OFF or ON
---------------
-MSF_UPDATE=OFF
---------------
-
-
-
 ### Build logfiles using metasploit ? (spool core command)
 # This next setting allow users to record session outputs
 # from msfconsole (handler) into venom-main/output folder.
@@ -48,6 +38,16 @@ MSF_UPDATE=OFF
 ----------------
 MSF_LOGFILES=OFF
 ----------------
+
+
+
+### Update metasploit framework ? (msfupdate)
+# This next setting allow users to upgrade your metasploit
+# database with recent msf releases. (at script startup).
+# values accepted are: OFF or ON
+--------------
+MSF_UPDATE=OFF
+--------------
 
 
 

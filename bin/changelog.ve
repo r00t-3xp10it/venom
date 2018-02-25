@@ -1,4 +1,30 @@
 
+FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.15] -      Pandoras box (pithos)
+-------        ---------------------------------------------------------------------------
+added      ->  @subTee - certutil remote download/execute agent(.bat|.exe)
+added      ->  arno0x0x meterpreter_loader random stager bytes av bypass technic
+added      ->  linux_hostrecon.rb (post-exploitation) to apache2 attack vector
+added      ->  node.js reverse shell to categorie: 'SYSTEM built-in SHELLS'
+added      ->  csharp shellcode.xml (msbuild - appl_whitelisting_bypass)
+added      ->  unix_exploit (agent.php uploaded/executed in target apache2)
+added      ->  linux elf agent (x86|x64 bits - doubleclick exec)
+added      ->  CVE-2017-11882 (Microsoft office word rtf) agent
+added      ->  IOS devices macho payload (shell_reverse_tcp)
+added      ->  SSL support to windows/meterpreter/reverse_winhttps
+
+improved   ->  all builds detection ratio review (no-distribute)
+improved   ->  x64 support to kimi.py (debian payload generator)
+improved   ->  abort funtions improved in script (venom) syntax's
+improved   ->  executable DLL payload (.cpl) option, added to dll builds
+improved   ->  uuid(@nullbyte) obfuscation method added to some builds
+
+bug-fix    ->  msf encoders arch bug-fixed
+bug fix    ->  support to x64 AMD chiptechs review
+-------        ---------------------------------------------------------------------------
+
+
+
+
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      Pandoras box (pithos)
 -------        ---------------------------------------------------------------------------
 added      ->  option 23 - UUID - random key/junk obfuscation agent.exe [r00t-3xp10it/null-byte]

