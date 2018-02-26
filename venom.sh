@@ -10013,7 +10013,7 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 # input payload name
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 # input payload remote upload directory
-D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent\nexample: %tmp%" --entry --width 300) > /dev/null 2>&1
+D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agente.\n\nWARNING: To use absoluct paths, use double backslash's\nin the directory structure, dont use only one backslash.\nBAD ENTRY: C:\\\Users\\\pedro\\\Desktop\n\nThe easy way its to use 'Windows Environment Variables'\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
 
 
 
