@@ -34,15 +34,37 @@ IPATH=`pwd`                                              # grab setup.sh install
 
 
 
+
 #
-# config local correct arch commands ..
+# select the arch to use in setup.sh
 #
-if [ $(uname -m) = "i686" ]; then
+uN=`uname -m`
+if [ "$uN" = "i686" ]; then
+ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x86\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
+  if [ "$?" -eq "1" ]; then
+    ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x64" --entry --width 300) > /dev/null 2>&1
+  else
+    ARCHSELECTED="x86"
+  fi
+else
+ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x64\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
+  if [ "$?" -eq "1" ]; then
+    ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x86" --entry --width 300) > /dev/null 2>&1
+  else
+    ARCHSELECTED="x64"
+  fi
+fi
+
+if [ "$ARCHSELECTED" = "x86" ];then
   Dftt="x86"
   arch="wine"
-else
+elif [ "$ARCHSELECTED" = "x64" ];then
   Dftt="x64"
   arch="wine64"
+else
+  echo "[x] ERROR: Wrong value input: [ $ARCHSELECTED ]: not accepted .."
+  sleep 3
+  exit
 fi
 
 
@@ -108,7 +130,7 @@ else
   echo "[x] zenity                        [ not found ]"
   sleep 1
   echo ""
-  sudo apt-get install zenity --force-yes -y
+  sudo apt-get install zenity
   echo ""
 
       sleep 1
@@ -138,6 +160,14 @@ if [ "$?" -eq "0" ]; then
   echo "[✔] msfconsole........................[ found ]"
   sleep 2
   MSFDATA=$(zenity --title="☠ Enter METASPLOIT FULL PATH ☠" --text "example: /usr/share/metasploit-framework" --entry --width 330) > /dev/null 2>&1
+    if [ -d $MSFDATA ]; then
+      :
+    else
+      echo ""
+      echo "[x] ERROR: Metasploit path not found: $MSFDATA"
+      echo ""
+      MSFDATA=$(zenity --title="☠ Enter METASPLOIT FULL PATH ☠" --text "example: /usr/share/metasploit-framework" --entry --width 330) > /dev/null 2>&1
+    fi
 else
   echo "[x] msfconsole                    [ not found ]"
   sleep 1
@@ -162,7 +192,7 @@ else
   echo "[x] gcc compiler                  [ not found ]"
   sleep 1
   echo ""
-  sudo apt-get install gcc --force-yes -y
+  sudo apt-get install gcc
   echo ""
 
   sleep 1
@@ -187,7 +217,7 @@ fi
 #
 # check correct mingw-gcc install (x86/x64)..
 #
-if [ $(uname -m) = "i686" ]; then
+if [ "$Dftt" = "x86" ]; then
   # check if mingw32 exists
   c0m=`which i586-mingw32msvc-gcc` > /dev/null 2>&1
   if [ "$?" -eq "0" ]; then
@@ -309,7 +339,7 @@ else
   echo "[x] apache2 webserver             [ not found ]"
   sleep 1
   echo ""
-  sudo apt-get install apache2 --force-yes -y
+  sudo apt-get install apache2
   echo ""
 
     sleep 1
@@ -338,6 +368,16 @@ fi
 # ------------------------------------------------
 # Input apache2 webroot path
 ApAcHe=$(zenity --title="☠ Enter APACHE2 WEBROOT PATH ☠" --text "example: /var/www/html" --entry --width 330) > /dev/null 2>&1
+if [ -d $ApAcHe ]; then
+  :
+else
+  echo ""
+  echo "[x] ERROR: Apache2 path not found: $ApAcHe"
+  echo ""
+  ApAcHe=$(zenity --title="☠ Enter APACHE2 WEBROOT PATH ☠" --text "example: /var/www/html" --entry --width 330) > /dev/null 2>&1
+fi
+
+
 QuE=$(zenity --list --title "APACHE2 DOMAIN NAME CONFIGURATION" --text "\nChose option:" --radiolist --column "Pick" --column "Option" TRUE "Skipp Domain configuration" FALSE "Use Venom domain name" FALSE "Delete Venom domain name" --width 350 --height 220) > /dev/null 2>&1
 D3F="$ApAcHe"
 
@@ -492,41 +532,30 @@ fi
 #
 c0m=`which $arch` > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-
-  if [ "$arch" = "wine" ]; then
     echo "[✔] $arch..............................[ found ]"
     sleep 2
-  else
-    echo "[✔] $arch............................[ found ]"
-    sleep 2
-  fi
-  # input wine drive_c path
-  DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
-  sleep 2
+    DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
+      if [ -d $DrIvC ]; then
+        :
+      else
+        echo ""
+        echo "[x] ERROR: .wine path not found: $DrIvC"
+        echo ""
+        DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
+      fi
 
 else
-
-  if [ "$arch" = "wine" ]; then
     echo "[x] $arch                          [ not found ]"
     sleep 1
-  else
-    echo "[x] $arch                        [ not found ]"
-    sleep 1
-  fi
-  echo ""
-  sudo apt-get install $arch --force-yes -y
-  echo ""
+    echo ""
+    sudo apt-get install $arch
+    echo ""
 
-    sleep 1
+    # test again
     again=`which $arch` > /dev/null 2>&1
     if [ "$?" -eq "0" ]; then
-      if [ "$arch" = "wine" ]; then
-        echo "[✔] $arch ........................[ installed ]"
-        sleep 2
-      else
-        echo "[✔] $arch ......................[ installed ]"
-        sleep 2
-      fi
+      echo "[✔] $arch ........................[ installed ]"
+      sleep 2
     else
       echo ""
       echo "    WARNING: Unable to locate package $arch"
@@ -537,10 +566,9 @@ else
       echo "    https://devilzlinux.blogspot.pt/2016/11/how-to-install-wine-on-kali-linux.html"
       echo ""
       sleep 2
+      DrIvC="$H0m3/.wine"
     fi
 fi
-
-
 
 
 
