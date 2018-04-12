@@ -41,15 +41,31 @@ IPATH=`pwd`                                              # grab setup.sh install
 uN=`uname -m`
 if [ "$uN" = "i686" ]; then
 ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x86\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
+  # chose another arch to use in setup.sh installs
   if [ "$?" -eq "1" ]; then
     ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x64" --entry --width 300) > /dev/null 2>&1
+    # check for non-accepted empty inputs
+    if [ -z "$ARCHSELECTED" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
   else
     ARCHSELECTED="x86"
   fi
 else
 ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x64\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
+  # chose another arch to use in setup.sh installs
   if [ "$?" -eq "1" ]; then
     ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x86" --entry --width 300) > /dev/null 2>&1
+    # check for non-accepted empty inputs
+    if [ -z "$ARCHSELECTED" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
   else
     ARCHSELECTED="x64"
   fi
@@ -62,7 +78,9 @@ elif [ "$ARCHSELECTED" = "x64" ];then
   Dftt="x64"
   arch="wine64"
 else
-  echo "[x] ERROR: Wrong value input: [ $ARCHSELECTED ]: not accepted .."
+  echo ""
+  echo "    ERROR: Wrong value input: [ $ARCHSELECTED ]: not accepted .."
+  echo ""
   sleep 3
   exit
 fi
@@ -160,11 +178,18 @@ if [ "$?" -eq "0" ]; then
   echo "[✔] msfconsole........................[ found ]"
   sleep 2
   MSFDATA=$(zenity --title="☠ Enter METASPLOIT FULL PATH ☠" --text "example: /usr/share/metasploit-framework" --entry --width 330) > /dev/null 2>&1
+    # check for non-accepted empty inputs
+    if [ -z "$MSFDATA" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
     if [ -d $MSFDATA ]; then
       :
     else
       echo ""
-      echo "[x] ERROR: Metasploit path not found: $MSFDATA"
+      echo "    ERROR: Metasploit path not found: $MSFDATA"
       echo ""
       MSFDATA=$(zenity --title="☠ Enter METASPLOIT FULL PATH ☠" --text "example: /usr/share/metasploit-framework" --entry --width 330) > /dev/null 2>&1
     fi
@@ -368,11 +393,20 @@ fi
 # ------------------------------------------------
 # Input apache2 webroot path
 ApAcHe=$(zenity --title="☠ Enter APACHE2 WEBROOT PATH ☠" --text "example: /var/www/html" --entry --width 330) > /dev/null 2>&1
+
+    # check for non-accepted empty inputs
+    if [ -z "$ApAcHe" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
+
 if [ -d $ApAcHe ]; then
   :
 else
   echo ""
-  echo "[x] ERROR: Apache2 path not found: $ApAcHe"
+  echo "    ERROR: Apache2 path not found: $ApAcHe"
   echo ""
   ApAcHe=$(zenity --title="☠ Enter APACHE2 WEBROOT PATH ☠" --text "example: /var/www/html" --entry --width 330) > /dev/null 2>&1
 fi
@@ -420,7 +454,25 @@ if [ "$QuE" = "Use Venom domain name" ]; then
   sleep 2
 
   # config hosts file (DNS record - DNS_SPOOFING)
-  P0Is0N=$(zenity --title="☠ Enter etter.dns FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+  P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+
+    # check for non-accepted empty inputs
+    if [ -z "$P0Is0N" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
+
+    if [ -d $P0Is0N ]; then
+      :
+    else
+      echo ""
+      echo "    ERROR: ettercap path not found: $P0Is0N"
+      echo ""
+      P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+    fi
+
   echo "[☆] Added          -> DNS record to etter.dns"
   cp $P0Is0N/etter.dns $P0Is0N/etter[bak].dns > /dev/null 2>&1
   sed "s|IpAdDr|$IP|g" etter.dns > etter.filter
@@ -444,7 +496,25 @@ if [ "$QuE" = "Use Venom domain name" ]; then
 elif [ "$QuE" = "Delete Venom domain name" ]; then
     dsrr="NO"
   # use venom default configuration
-  P0Is0N=$(zenity --title="☠ Enter etter.dns FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+  P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+
+    # check for non-accepted empty inputs
+    if [ -z "$P0Is0N" ]; then
+      echo ""
+      echo "    ERROR: Empty inputs are not accepted .."
+      echo ""
+      exit
+    fi
+
+    if [ -d $P0Is0N ]; then
+      :
+    else
+      echo ""
+      echo "    ERROR: ettercap path not found: $P0Is0N"
+      echo ""
+      P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
+    fi
+
   echo ""
   # display config to user
   echo "[☆] DOMAIN_NAME    -> localhost"
@@ -535,11 +605,20 @@ if [ "$?" -eq "0" ]; then
     echo "[✔] $arch..............................[ found ]"
     sleep 2
     DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
+
+      # check for non-accepted empty inputs
+      if [ -z "$DrIvC" ]; then
+        echo ""
+        echo "    ERROR: Empty inputs are not accepted .."
+        echo ""
+        exit
+      fi
+
       if [ -d $DrIvC ]; then
         :
       else
         echo ""
-        echo "[x] ERROR: .wine path not found: $DrIvC"
+        echo "    ERROR: .wine path not found: $DrIvC"
         echo ""
         DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
       fi
