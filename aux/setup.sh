@@ -40,38 +40,26 @@ IPATH=`pwd`                                              # grab setup.sh install
 #
 uN=`uname -m`
 if [ "$uN" = "i686" ]; then
-ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x86\n\nDo you wish venom to use this arch? [yes]\nor change it to x64bits settings? [no]" --width 300) > /dev/null 2>&1
-  # arch sellection to use in setup.sh installs
-  if [ "$?" -eq "0" ]; then
-    echo "[✔] arch sellected to install backend appl: x86"
-    sleep 3
-    Dftt="x86"
-    arch="wine"
-    legit="x86"
-  else
-    echo "[✔] arch sellected to install backend appl: x64"
-    sleep 3
-    Dftt="x64"
-    arch="wine64"
-    legit="x86"
-  fi
+legit="x86"
 else
-ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x64\n\nDo you wish venom to use this arch? [yes]\nor change it to x86bits settings? [no]" --width 300) > /dev/null 2>&1
-  # arch sellection to use in setup.sh installs
-  if [ "$?" -eq "0" ]; then
-    echo "[✔] arch sellected to install backend appl: x64"
-    sleep 3
-    Dftt="x64"
-    arch="wine64"
-    legit="x64"
-  else
+legit="x64"
+fi
+ARCHSELECTED=$(zenity --list --title "☠ venom - arch sellection ☠" --text "Your system identify itself as: $legit\nDo you wish venom to use this arch?" --radiolist --column "Pick" --column "Option" TRUE "x86" FALSE "x64" --width 350 --height 200) > /dev/null 2>&1
+  if [ "$ARCHSELECTED" = "x86" ]; then
     echo "[✔] arch sellected to install backend appl: x86"
     sleep 3
     Dftt="x86"
     arch="wine"
-    legit="x64"
+  elif [ "$ARCHSELECTED" = "x64" ]; then
+    echo "[✔] arch sellected to install backend appl: x64"
+    sleep 3
+    Dftt="x64"
+    arch="wine64"
+  else
+    echo "[x] Script execution aborted .."
+    sleep 3
+    exit
   fi
-fi
 
 
 
@@ -590,7 +578,7 @@ fi
 #
 c0m=`which $arch` > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-    echo "[✔] $arch..............................[ found ]"
+    echo "[✔] wine..............................[ found ]"
     sleep 2
     DrIvC=$(zenity --title="☠ Enter .wine folder PATH ☠" --text "example: $H0m3/.wine" --entry --width 330) > /dev/null 2>&1
 
@@ -612,7 +600,7 @@ if [ "$?" -eq "0" ]; then
       fi
 
 else
-    echo "[x] $arch                          [ not found ]"
+    echo "[x] wine64                        [ not found ]"
     sleep 1
     echo ""
     sudo apt-get install $arch
