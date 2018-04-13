@@ -40,32 +40,36 @@ IPATH=`pwd`                                              # grab setup.sh install
 #
 uN=`uname -m`
 if [ "$uN" = "i686" ]; then
-ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x86\n\nDo you wish to use this configs? [yes]\nor change it to x64bits settings? [no]" --width 300) > /dev/null 2>&1
+ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x86\n\nDo you wish venom to use this arch? [yes]\nor change it to x64bits settings? [no]" --width 300) > /dev/null 2>&1
   # arch sellection to use in setup.sh installs
   if [ "$?" -eq "0" ]; then
     echo "[✔] arch sellected to install backend appl: x86"
     sleep 3
     Dftt="x86"
     arch="wine"
+    legit="x86"
   else
     echo "[✔] arch sellected to install backend appl: x64"
     sleep 3
     Dftt="x64"
     arch="wine64"
+    legit="x86"
   fi
 else
-ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x64\n\nDo you wish to use this configs? [yes]\nor change it to x86bits settings? [no]" --width 300) > /dev/null 2>&1
+ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x64\n\nDo you wish venom to use this arch? [yes]\nor change it to x86bits settings? [no]" --width 300) > /dev/null 2>&1
   # arch sellection to use in setup.sh installs
   if [ "$?" -eq "0" ]; then
     echo "[✔] arch sellected to install backend appl: x64"
     sleep 3
     Dftt="x64"
     arch="wine64"
+    legit="x64"
   else
     echo "[✔] arch sellected to install backend appl: x86"
     sleep 3
     Dftt="x86"
     arch="wine"
+    legit="x64"
   fi
 fi
 
@@ -105,7 +109,7 @@ cat << !
    | path to apache2 webroot, wine install...  |
    |                                           |
    ╠───────────────────────────────────────────╝
-   |  OS:$OS DISTRO:$DiStRo($Dftt) VERSION:$ver
+   |  OS:$OS DISTRO:$DiStRo($legit) VERSION:$ver
    |_ BROADCAST:$inter IP_ADDR:$lhost
 
 
