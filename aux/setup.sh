@@ -36,53 +36,37 @@ IPATH=`pwd`                                              # grab setup.sh install
 
 
 #
-# select the arch to use in setup.sh
+# select the arch to use in setup.sh installs
 #
 uN=`uname -m`
 if [ "$uN" = "i686" ]; then
-ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x86\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
-  # chose another arch to use in setup.sh installs
-  if [ "$?" -eq "1" ]; then
-    ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x64" --entry --width 300) > /dev/null 2>&1
-    # check for non-accepted empty inputs
-    if [ -z "$ARCHSELECTED" ]; then
-      echo ""
-      echo "    ERROR: Empty inputs are not accepted .."
-      echo ""
-      exit
-    fi
+ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x86\n\nDo you wish to use this configs? [yes]\nor change it to x64bits settings? [no]" --width 300) > /dev/null 2>&1
+  # arch sellection to use in setup.sh installs
+  if [ "$?" -eq "0" ]; then
+    echo "[✔] arch sellected to install backend appl: x86"
+    sleep 3
+    Dftt="x86"
+    arch="wine"
   else
-    ARCHSELECTED="x86"
+    echo "[✔] arch sellected to install backend appl: x64"
+    sleep 3
+    Dftt="x64"
+    arch="wine64"
   fi
 else
-ARCHSELECTED=$(zenity --question --title="☠ venom - installation ☠" --text "Your system identify itself as: x64\nDo you wish to use this configs?" --width 300) > /dev/null 2>&1
-  # chose another arch to use in setup.sh installs
-  if [ "$?" -eq "1" ]; then
-    ARCHSELECTED=$(zenity --title="☠ Select requiered arch to use ☠" --text "example: x86" --entry --width 300) > /dev/null 2>&1
-    # check for non-accepted empty inputs
-    if [ -z "$ARCHSELECTED" ]; then
-      echo ""
-      echo "    ERROR: Empty inputs are not accepted .."
-      echo ""
-      exit
-    fi
+ARCHSELECTED=$(zenity --question --title="☠ venom - arch sellection ☠" --text "Your system identify itself as: x64\n\nDo you wish to use this configs? [yes]\nor change it to x86bits settings? [no]" --width 300) > /dev/null 2>&1
+  # arch sellection to use in setup.sh installs
+  if [ "$?" -eq "0" ]; then
+    echo "[✔] arch sellected to install backend appl: x64"
+    sleep 3
+    Dftt="x64"
+    arch="wine64"
   else
-    ARCHSELECTED="x64"
+    echo "[✔] arch sellected to install backend appl: x86"
+    sleep 3
+    Dftt="x86"
+    arch="wine"
   fi
-fi
-
-if [ "$ARCHSELECTED" = "x86" ];then
-  Dftt="x86"
-  arch="wine"
-elif [ "$ARCHSELECTED" = "x64" ];then
-  Dftt="x64"
-  arch="wine64"
-else
-  echo ""
-  echo "    ERROR: Wrong value input: [ $ARCHSELECTED ]: not accepted .."
-  echo ""
-  sleep 3
-  exit
 fi
 
 
