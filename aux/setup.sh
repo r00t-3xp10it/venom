@@ -44,7 +44,7 @@ legit="x86"
 else
 legit="x64"
 fi
-ARCHSELECTED=$(zenity --list --title "☠ venom - arch sellection ☠" --text "Your system identify itself as: $legit\nDo you wish venom to use this arch?" --radiolist --column "Pick" --column "Option" TRUE "x86" FALSE "x64" --width 350 --height 200) > /dev/null 2>&1
+ARCHSELECTED=$(zenity --list --title "☠ venom - arch sellection ☠" --text "Your system identify itself as: $legit [ arch ]\nDo you wish setup.sh to use this arch to install backend applications?\nRemmenber: venom.sh will also use the arch sellected here to work." --radiolist --column "Pick" --column "Option" TRUE "x86" FALSE "x64" --width 350 --height 220) > /dev/null 2>&1
   if [ "$ARCHSELECTED" = "x86" ]; then
     echo "[✔] arch sellected to install backend appl: x86"
     sleep 3
