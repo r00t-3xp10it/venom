@@ -42,7 +42,7 @@
     venom 1.0.11 (malicious_server) was build to take advantage of
     apache2 webserver to deliver payloads (LAN) using a fake webpage
     writen in html that takes advantage of <iframe> <meta-http-equiv>
-    or "<form>" tags to be hable to trigger payload downloads, the
+    or "<form>" tags to be able to trigger payload downloads, the
     user just needs to send the link provided to target host.
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
