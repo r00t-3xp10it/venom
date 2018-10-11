@@ -35,7 +35,7 @@
     "P.S. some payloads are undetectable by AV soluctions... yes!!!"
     One of the reasons for that its the use of a funtion to execute
     the 2º stage of shell/meterpreter directly into targets ram
-    the other reazon its the use of external obfuscator/crypters.
+    the other reason its the use of external obfuscator/crypters.
 
 
 ## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
