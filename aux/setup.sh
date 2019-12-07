@@ -24,7 +24,7 @@ fi
 # variable declarations _________________________________
 #                                                        |
 OS=`uname`                                               # grab OS
-ver="1.0.15"                                             # toolkit version
+ver="1.0.16"                                             # toolkit version
 H0m3=`echo ~`                                            # grab home path
 user=`who | awk {'print $1'}`                            # grab username
 DiStRo=`awk '{print $1}' /etc/issue`                     # grab distribution -  Ubuntu or Kali

@@ -1,6 +1,31 @@
 
+FUNTION        DESCRIPTION   - [CHANGELOG VERSION 1.0.16.1] -  aconitum_nappelus (pithos)
+-------        ---------------------------------------------------------------------------
+improved   ->  categorie 1 -> agent nº 1 (spawning child process - orphan)
+improved   ->  setup.sh now asks what arch venom.sh/setup.sh will use to install/run backend appl
+               Special thanks to: @usama7628674 for all the help debugging setup.sh in 64bits
+
+added      ->  categorie 1 -> agent nº 4 (htop_installer.deb)
+added      ->  categorie 8 -> agent nº 1 (C tcp bind shell compiled to exe)
+added      ->  categorie 8 -> agent nº 3 (powercat ps1 reverse TCP shell)
+added      ->  String obfuscation funtion (obfuscate agent template systemcall's)
+               This funtion its available in categorie 2 -> agents nº 8|10|11|13|20
+
+bug fix    ->  categorie 2 -> agent nº 8  (wrong payload choise [shell|bind|winhttps])
+bug fix    ->  categorie 2 -> agent nº 16 (wrong python libs deleted) [chaitanya BugReport]
+bug fix    ->  multi_console_command new syntax bugfix [@darkoperator]
+-------        ---------------------------------------------------------------------------
+
+
+
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.15] -      Pandoras box (pithos)
 -------        ---------------------------------------------------------------------------
+improved   ->  all builds detection ratio review (no-distribute)
+improved   ->  x64 support to kimi.py (debian payload generator)
+improved   ->  abort funtions improved in script (venom) syntax's
+improved   ->  executable DLL payload (.cpl) option, added to dll builds
+improved   ->  uuid(@nullbyte) obfuscation method added to some builds
+
 added      ->  @subTee - certutil remote download/execute agent(.bat|.exe)
 added      ->  arno0x0x meterpreter_loader random stager bytes av bypass technic
 added      ->  linux_hostrecon.rb (post-exploitation) to apache2 attack vector
@@ -12,12 +37,6 @@ added      ->  CVE-2017-11882 (Microsoft office word rtf) agent
 added      ->  IOS devices macho payload (shell_reverse_tcp)
 added      ->  SSL support to windows/meterpreter/reverse_winhttps
 
-improved   ->  all builds detection ratio review (no-distribute)
-improved   ->  x64 support to kimi.py (debian payload generator)
-improved   ->  abort funtions improved in script (venom) syntax's
-improved   ->  executable DLL payload (.cpl) option, added to dll builds
-improved   ->  uuid(@nullbyte) obfuscation method added to some builds
-
 bug-fix    ->  msf encoders arch bug-fixed
 bug fix    ->  support to x64 AMD chiptechs review
 -------        ---------------------------------------------------------------------------
@@ -27,6 +46,12 @@ bug fix    ->  support to x64 AMD chiptechs review
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.14] -      Pandoras box (pithos)
 -------        ---------------------------------------------------------------------------
+improved   ->  setup.sh - sourcecode review [checks and installations]
+improved   ->  settings - news configurations available [venom.sh working settings]
+improved   ->  option 4 - now changes the final executable [agent.exe] icon
+improved   ->  option 13/14/16 - now asks to users if they want to ZIP the agent
+improved   ->  post_linux.rc   - now available in post-exploitation [linux builds]
+
 added      ->  option 23 - UUID - random key/junk obfuscation agent.exe [r00t-3xp10it/null-byte]
 added      ->  option 24 - AVET - obfuscate your agent.py to agent.exe [author: Daniel Sauder]
 added      ->  option 25 - SHELLTER - trojan binarys.exe with shellcode [author: kyREcon]
@@ -35,14 +60,6 @@ added      ->  NXcrypt   - obfuscate your python agent to evade AV [author: Hadi
 added      ->  CVE-2017-0199   - microsoft office word.rtf [r00t-3xp10it/bhdresh]
 added      ->  Invoke-PhantOm  - post-exploitation module to disable logfiles creation
 added      ->  wifi_dump_linux - post-exploitation module to dump linux wifi creds stored
-
-
-improved   ->  setup.sh - sourcecode review [checks and installations]
-improved   ->  settings - news configurations available [venom.sh working settings]
-improved   ->  option 4 - now changes the final executable [agent.exe] icon
-improved   ->  option 13/14/16 - now asks to users if they want to ZIP the agent
-improved   ->  post_linux.rc   - now available in post-exploitation [linux builds]
-
 
 bug fix    ->  option a - word.docm [windows] compiling bug fixed
 bug fix    ->  option 4 - execution error under windows systems fixed
@@ -58,6 +75,13 @@ bug fix    ->  pyinstaller - (pyinstaller-2.0 + Python26) version installation
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.13] -      release the kraken
 -------        ---------------------------------------------------------------------------
+improved   ->  venom framework terminal displays review
+improved   ->  venom framework GPLv3 personal license review
+improved   ->  venom domain name attack vector (http://mega-upload.com)
+improved   ->  build 1  - shellcode unix C post-exploitation funtion added
+improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
+                          exploit/multi/fileformat/office_word_macro (upgraded)
+
 added      ->  'settings' config framework internal settings
 added      ->  'office.ppsx' python_word_doc_payload (windows systems) 
 added      ->  'kimi.py' Malicious_Debian_Packet_Creator (linux systems)
@@ -68,15 +92,6 @@ added      ->  'post_linux.rc' linux gather information module (post-exploitatio
 added      ->  'post_multi.rc' multi system gather information module (post-exploitation)
 added      ->  'privilege_escalation.rc' windows privilege escalation (post-exploitation)
 added      ->  'enigma_fileless_uac_bypass.rb' windows privilege escalation (post-exploitation)
-
-
-improved   ->  venom framework terminal displays review
-improved   ->  venom framework GPLv3 personal license review
-improved   ->  venom domain name attack vector (http://mega-upload.com)
-improved   ->  build 1  - shellcode unix C post-exploitation funtion added
-improved   ->  build 23 - exploit/windows/fileformat/office_word_macro (deprecate)
-                          exploit/multi/fileformat/office_word_macro (upgraded)
-
 
 bug fix    ->  msfdb postgresql datatase connection bug
 bug fix    ->  build 1  - shellcode unix C sourcecode fix (int main() C89)
@@ -121,8 +136,6 @@ added      ->  'crypter_vbs_1.0_by_the_dark_side' further encrypt your vbs paylo
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.11] -     malicious_server
 -------        ---------------------------------------------------------------------------
-bug fix    ->  msfvenom output 'append >>' bug fixed 
-
 improved   ->  FAQ file review (option 'F' main menu)
 improved   ->  'setup.sh' can be used to activate/delete apache2 venom domain name.
 improved   ->  'setup.sh' now installs WinRAR/SFX into WINE (x86 and x64 archs supported)
@@ -140,6 +153,8 @@ added      ->  vbs-obfuscator.py encrypt your payload.vbs using ascii (only work
 added      ->  chose what process to auto-migrate after a successefuly exploitation
                fast_migrate.rc script will migrate to wininit.exe by default unless you
                run 'setup.sh' that rebuilds 'fast_migrate.rc' with the new settings enter.
+
+bug fix    ->  msfvenom output 'append >>' bug fixed 
 -------        ---------------------------------------------------------------------------
 
 
@@ -148,12 +163,9 @@ added      ->  chose what process to auto-migrate after a successefuly exploitat
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.10] -
 -------        ---------------------------------------------------------------------------
-bug fix    ->  getsystem bug fixed in all resource files (.rc)
-
 improved   ->  venom terminal displays review/improved/fixed.
 improved   ->  elementary OS ip address support added (LHOST).
 improved   ->  @echo off added to all .bat files to hidde letter displays
-
 
 added      ->  apache2 added to deliver your payloads using a malicious URL..
 added      ->  powershell-to-bat Invoke-Shellcode.ps1 technic (Matthew Graeber)
@@ -164,6 +176,8 @@ added      ->  pyinstaller to 'wine_32_INTEL' archs support added
 added      ->  'shell/aux/setup.sh' install missing dependencies help script
 added      ->  SimpleHTTPServerWithupload.py a simplehttpserver with
                download/upload capabilittys if you need it (manual run)
+
+bug fix    ->  getsystem bug fixed in all resource files (.rc)
 -------        ---------------------------------------------------------------------------
 
 
@@ -172,11 +186,6 @@ added      ->  SimpleHTTPServerWithupload.py a simplehttpserver with
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.9] -
 -------        ---------------------------------------------------------------------------
-bug fix    ->  misspeeling errors and terminal display fixes
-bug fix    ->  i586-mingw32msvc-gcc dependencie check fix under kali distros
-bug fix    ->  pyinstaller to work under wine (pyinstaller.tar.gz) 'if you must'...
-               then unzip the file and follow the instructions inside readme file"...
-
 improved   ->  binaries folder renamed to templates
 improved   ->  venom banner and disclamer display redesigned...
 improved   ->  payload c-to-exe is now encoded using msf encoders (3)
@@ -186,6 +195,11 @@ added      ->  payload psh-cmd bat powershell(base64) -> output payload.bat
 added      ->  payload one-line-python(base64) shellcode -> executable python payload
 added      ->  stager reverse_http added to 'available payloads list'
 added      ->  stager reverse_https added to 'available payloads list'
+
+bug fix    ->  misspeeling errors and terminal display fixes
+bug fix    ->  i586-mingw32msvc-gcc dependencie check fix under kali distros
+bug fix    ->  pyinstaller to work under wine (pyinstaller.tar.gz) 'if you must'...
+               then unzip the file and follow the instructions inside readme file"...
 -------        ---------------------------------------------------------------------------
 
 
@@ -194,10 +208,10 @@ added      ->  stager reverse_https added to 'available payloads list'
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.8] -    leaked befor time :(
 -------        ---------------------------------------------------------------------------
-bug fix    ->  misspeeling errors and terminal display fixes
-
 added      ->  changed main script name from 'crisp.sh' to 'venom.sh'
 added      ->  payload powershell(.ps1) -> base64 encoded powershell
+
+bug fix    ->  misspeeling errors and terminal display fixes
 -------        ---------------------------------------------------------------------------
 
 
@@ -206,15 +220,15 @@ added      ->  payload powershell(.ps1) -> base64 encoded powershell
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.7] -
 -------        ---------------------------------------------------------------------------
-bug fix    ->  misspeeling errors and terminal displays fixes
-bug fix    ->  mingw32 'check if installed' now uses 'apt-get cache' to check installation
-
 improved   ->  mingw32 will use the switch '-mwindows' to hidde the display window (in target)
 improved   ->  payload c-to-dll -> now builds a 'trigger.bat' if we want to use winrar/SFX
 improved   ->  payload msiexec-msi -> now builds a 'trigger.bat' if we want to use winrar/SFX
 
 added      ->  payload reflective dll injection -> C-to-DLL (fud mingw32 obfuscated/compiled)
 added      ->  payload hta-psh hta powershell -> use index.html to execute hta-psh attack vector
+
+bug fix    ->  misspeeling errors and terminal displays fixes
+bug fix    ->  mingw32 'check if installed' now uses 'apt-get cache' to check installation
 -------        ---------------------------------------------------------------------------
 
 
@@ -224,10 +238,6 @@ added      ->  payload hta-psh hta powershell -> use index.html to execute hta-p
 
 FUNTION        DESCRIPTION       - [CHANGELOG VERSION 1.0.6] -
 -------        ---------------------------------------------------------------------------
-bug fix    ->  pyinstaller will check if its running under 'root user account'
-               (not normal user account), if its running under root account
-               then the funtion will abort (pyinstaller)..
-
 added      ->  License (Gnu Public License - GPL)
 added      ->  main menu -> FAQ (frequent ask questions)
 added      ->  payload 'MSIEXEC-MSI' -> use msiexec to execute shellcode into target system
@@ -235,6 +245,10 @@ added      ->  payload 'PHP' -> generate a PHP payload (webshell) to run it on a
 added      ->  cred_dump.rc -> it will dump credentials of target system (windows only) 
 added      ->  fast_migrate.rc -> it will elevate current session to nt authority/system
                and migrate to wininit.exe priviliged process on target machine.
+
+bug fix    ->  pyinstaller will check if its running under 'root user account'
+               (not normal user account), if its running under root account
+               then the funtion will abort (pyinstaller)..
 -------        ---------------------------------------------------------------------------
 
 

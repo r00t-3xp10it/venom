@@ -1,0 +1,24 @@
+1 VERSIONINFO
+FILEVERSION 10,0,16,666
+PRODUCTVERSION 10,0,16,666
+FILEOS 0x4
+FILETYPE 0x1
+{
+BLOCK "StringFileInfo"
+{
+    BLOCK "040904E4"
+    {
+        VALUE "FileDescription", "Visual Studio .NET\0"
+        VALUE "FileVersion", "10.0.16.666\0"
+        VALUE "ProductName", "Microsoft® Windows Operating system\0"
+        VALUE "LegalCopyright", "©Microsoft Corporation. All Rights Reserved.\0"
+        VALUE "OriginalFilename", "OgFnpPt\0"
+        VALUE "ProductVersion", "10.0.16.666\0"
+    }
+}
+
+BLOCK "VarFileInfo"
+{
+    VALUE "Translation", 0x0409 0x04E4  
+}
+}

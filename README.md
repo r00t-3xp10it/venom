@@ -1,16 +1,16 @@
-[![Version](https://img.shields.io/badge/VENOM-1.0.15-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/VENOM-1.0.16-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 [![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
-## VENOM 1.0.15 - metasploit Shellcode generator/compiller
-    Version release : v1.0.15
+## VENOM 1.0.16 - metasploit Shellcode generator/compiller
+    Version release : v1.0.16
     Author : pedro ubuntu  [ r00t-3xp10it ]
-    Codename: Pandora's box (pithos)
+    Codename: Aconite (Aconitum napellus)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2018
 
-![venom shellcode v1.0.15](http://i.cubeupload.com/bYQJc8.png)
+![venom shellcode v1.0.16](http://i.cubeupload.com/bYQJc8.png)
 
 
 ## LEGAL DISCLAMER
@@ -47,7 +47,7 @@
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
 
-![venom shellcode v1.0.15](http://i.cubeupload.com/nvmSq3.png)
+![venom shellcode v1.0.16](http://i.cubeupload.com/nvmSq3.png)
 
 
 ## DEPENDENCIES
@@ -80,9 +80,9 @@
 
 
 ## Framework Main Menu
-![venom shellcode v1.0.15](http://i.cubeupload.com/YzUcgT.png)
-![venom shellcode v1.0.15](http://i.cubeupload.com/cVldOV.png)
-![venom shellcode v1.0.15](http://i.cubeupload.com/lluvPu.png)
+![venom shellcode v1.0.16](http://i.cubeupload.com/YzUcgT.png)
+![venom shellcode v1.0.16](http://i.cubeupload.com/cVldOV.png)
+![venom shellcode v1.0.16](http://i.cubeupload.com/lluvPu.png)
 
 
 

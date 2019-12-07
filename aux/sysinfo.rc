@@ -2,4 +2,4 @@ sysinfo
 getuid
 getlwd
 netstat -atnp
-screenshot
+ls

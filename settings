@@ -70,8 +70,8 @@ POST_EXPLOIT_DIR=/usr/share/metasploit-framework/modules
 
 
 ### arno0x0x meterpreter_loader random stager bytes av bypass technic ..
-# This setting forces venom toolkit at startup to backup/replace the  msf meterpreter_loader.rb (x64)
-# and is counterpart (x64), rebuild msf database (msfdb) and reload venom meterpreter_loaders into msf.
+# This setting forces venom toolkit at startup to backup/replace the  msf meterpreter_loader.rb (x86)
+# and is counterpart (x86), rebuild msf database (msfdb) and reload venom meterpreter_loaders into msf.
 # The new loaders will add an arbitrary number of random bytes at the beginning of the stage being sent
 # back to the stager in an attempt to evade AV signature detection and run time detection.
 #

