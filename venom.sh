@@ -8317,9 +8317,9 @@ rm /tmp/stream.mp4 > /dev/null 2>&1
 rm /tmp/reverse.txt > /dev/null 2>&1
 rm $ApAcHe/$mP4.mp4 > /dev/null 2>&1
 rm $ApAcHe/$mP4.zip > /dev/null 2>&1
-rm $ApAcHe/stream.mp4 > /dev/null 2>&1
+rm $ApAcHe/streaming.mp4 > /dev/null 2>&1
 rm $IPATH/output/$mP4.zip > /dev/null 2>&1
-rm $IPATH/output/stream.mp4 > /dev/null 2>&1
+rm $IPATH/output/streaming.mp4 > /dev/null 2>&1
 sleep 2 && sh_menu
 
 
