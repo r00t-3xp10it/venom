@@ -107,7 +107,7 @@ PYINSTALLER_VERSION=pyinstaller-2.0
 --------------------
 MEGAUPLOAD_DOMAIN=NO
 --------------------
-FORCE_OBFUSC=OFF
+OBFUSCATION=OFF
 ARP_SETTINGS=IPv4
 WINE_DRIVEC=/root/.wine/drive_c
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
