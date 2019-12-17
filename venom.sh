@@ -8303,7 +8303,7 @@ if [ "$serv" = "multi-handler (default)" ]; then
    echo "---";echo "-  ${YellowF}SOCIAL_ENGINEERING:"${Reset};
    echo "-  Persuade the target to run '$mP4.mp4' executable using their terminal."
    echo "-  That will remote download/exec (LAN) our mp4 video file and auto executes"
-   echo "-  our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "-  our C shellcode in an orphan process (detach from mp4 video process)."
    echo "-  REMARK: All files required by this module have been ported to apache2."
    echo "-";echo "-  ${YellowF}MANUAL_EXECUTION:"${Reset};
    echo "-  $original_string";echo "---"
@@ -8335,7 +8335,7 @@ else
    echo "---";echo "-  ${YellowF}SOCIAL_ENGINEERING:"${Reset};
    echo "-  Persuade the target to run the 'oneliner' OR the 'oneliner_obfuscated' command"
    echo "-  on their terminal. That will remote download/exec (LAN) our mp4 video file and"
-   echo "-  auto executes our C shellcode in an orphan process (deatch from mp4 video process)."
+   echo "-  auto executes our C shellcode in an orphan process (detach from mp4 video process)."
    echo "-";echo "-  ${YellowF}ONELINER:"${Reset};
    echo "-  $original_string";echo "-"
    echo "-  ${YellowF}ONELINER_OBFUSCATED:"${Reset};
