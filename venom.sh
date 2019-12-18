@@ -11871,7 +11871,7 @@ echo ${BlueF}
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : Msxml2 ComObject
+    LOLBin   : certutil
     LAUNCHER : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.exe
 
