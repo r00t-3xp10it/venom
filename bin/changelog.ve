@@ -7,6 +7,7 @@ improved   ->  setup.sh now asks what arch venom.sh/setup.sh will use to install
 
 added      ->  categorie 1 -> agent nº 4 (htop_installer.deb)
 added      ->  categorie 1 -> agent nº 5 (mp4 C trojan horse)
+added      ->  categorie 2 -> agent nº 21 (icmp shell)
 added      ->  categorie 4 -> agent nº 3 (android pdf trojan exploit)
 added      ->  categorie 8 -> agent nº 1 (C tcp bind shell compiled to exe)
 added      ->  categorie 8 -> agent nº 3 (powercat ps1 reverse TCP shell)

