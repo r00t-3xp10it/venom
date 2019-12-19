@@ -11263,8 +11263,13 @@ rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example:
 
 ## setting default values in case user have skip this ..
 if [ -z "$target" ]; then
-   echo ${RedF}[x] ERROR:${white} We must provide the target ip address ..${Reset};
-   sleep 3; clear; sh_exit
+   echo ${RedF}[x]${white} ERROR: We must provide the [${RedF} target ${white}] ip address ..${Reset};
+   sleep 3; sh_exit
+fi
+ext=$(echo $slave|cut -c 1)
+if [ "$ext" = "f" ]; then
+   echo ${RedF}[x]${white} ERROR: Payload name must NOT start with [${RedF} f ${white}] character ..${Reset};
+   sleep 3; sh_exit
 fi
 if [ -z "$lhost" ]; then
    lhost="$IP"
