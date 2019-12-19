@@ -11301,7 +11301,7 @@ sleep 2
 ## Disable ICMP ping replies
 echo "[☠] Checking ICMP replies status ..";sleep 1
 LOCALICMP=$(cat /proc/sys/net/ipv4/icmp_echo_ignore_all)
-if [ "$LOCALICMP" -eq 0 ]; then 
+if [ "$LOCALICMP" -eq 0 ]; then
    echo "${RedF}[x]${white} ICMP Replies enabled (disable temporarily)${white}"
    sysctl -w net.ipv4.icmp_echo_ignore_all=1 > /dev/null 2>&1
    ICMPDIS="disabled"
@@ -11310,9 +11310,10 @@ fi
 
 ## Resource Hacker - change payload icon
 cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/icmpsh.exe > /dev/nul 2>&1
-RhI="$H0m3/.wine/drive_c/Program Files/Resource Hacker/ResourceHacker.exe"
+wine_c=$(cat $IPATH/settings|grep -m 1 'WINE_DRIVEC'|cut -d '=' -f2)
+RhI="$wine_c/Program Files/Resource Hacker/ResourceHacker.exe"
 if [ "$ArCh" = "x64" ]; then
-   RhI="$H0m3/.wine/drive_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
+   RhI="$wine_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
 fi
 if [ -f "$RhI" ]; then
    echo "[☠] Resource Hacker - changing $slave.exe icon ..";sleep 1
@@ -11347,7 +11348,7 @@ cd $IPATH
 
 
 ## Enable ICMP ping replies
-# ONLY IF.. they have been disabled before. 
+# ONLY IF.. they have been disabled before.
 if [ "$ICMPDIS" = "disabled" ]; then
    echo "${white}[${GreenF}✔${white}] Enabling Local ICMP Replies again ..${white}";sleep 2
    sysctl -w net.ipv4.icmp_echo_ignore_all=0 > /dev/null 2>&1
@@ -11927,7 +11928,11 @@ cd $IPATH/
 
 
 ### change executable icon
-RhI="$HOME/.wine/drive_c/Program Files/Resource Hacker/ResourceHacker.exe"
+wine_c=$(cat $IPATH/settings|grep -m 1 'WINE_DRIVEC'|cut -d '=' -f2)
+RhI="$wine_c/Program Files/Resource Hacker/ResourceHacker.exe"
+if [ "$ArCh" = "x64" ]; then
+   RhI="$wine_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
+fi
 if [ -f "$RhI" ]; then
     echo "${BlueF}[☠]${white} Changing $NaM.exe icon (ResourceHacker) .."${Reset};
     sleep 2

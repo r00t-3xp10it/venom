@@ -60,6 +60,15 @@ APACHE_WEBROOT=/var/www/html
 
 
 
+### Wine install absoluct path
+# This next setting allow users to input
+# the absoluct path of wine install.
+-------------------------------
+WINE_DRIVEC=/root/.wine/drive_c
+-------------------------------
+
+
+
 ### Metasploit modules (auxiliarys) directory structure.
 # This next setting allow users to input the full path
 # where to copy venom toolkit msf_auxiliary_modules.
@@ -99,7 +108,6 @@ PYINSTALLER_VERSION=pyinstaller-2.0
 
 
 
-
 ########################################################################################
 # WARNING: DONT CHANGE THE FOLLOW SETTINGS - SETUP.SH WILL AUTO-CONFIG THIS SETTINGS   #
 # WARNING: venom.sh main tool depends of this follow configurations to proper work ..  #
@@ -109,7 +117,6 @@ MEGAUPLOAD_DOMAIN=NO
 --------------------
 OBFUSCATION=OFF
 ARP_SETTINGS=IPv4
-WINE_DRIVEC=/root/.wine/drive_c
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
 
 
