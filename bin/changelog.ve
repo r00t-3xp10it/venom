@@ -9,8 +9,8 @@ added      ->  categorie 1 -> agent nº 4 (htop_installer.deb)
 added      ->  categorie 1 -> agent nº 5 (mp4 C trojan horse)
 added      ->  categorie 2 -> agent nº 21 (icmp shell)
 added      ->  categorie 4 -> agent nº 3 (android pdf trojan exploit)
-added      ->  categorie 8 -> agent nº 1 (C tcp bind shell compiled to exe)
-added      ->  categorie 8 -> agent nº 3 (powercat ps1 reverse TCP shell)
+added      ->  categorie 8 -> agent nº 1 (Reverse Powershell Shell)
+added      ->  categorie 8 -> agent nº 2 (Reverse Python Shell)
 added      ->  String obfuscation funtion (obfuscate agent template systemcall's)
                This funtion its available in categorie 2 -> agents nº 8|10|11|13|20
 
