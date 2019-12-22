@@ -13008,8 +13008,8 @@ case $choice in
 5) sh_webshell_menu ;;
 6) sh_world ;;
 7) sh_buildin ;;
-# 8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
-8) sh_ninja ;;
+8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
+# 8) sh_ninja ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
