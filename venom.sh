@@ -12116,6 +12116,15 @@ sh_menu
 sh_evasion2 () {
 Colors;
 
+
+## Make sure openssl dependencie its installed
+imp=$(which openssl)
+if ! [ "$?" -eq "0" ]; then
+   echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}] [${YellowF}execute${BlueF}]${YellowF} sudo apt-get install openssl"${Reset};sleep 2
+   sh_exit
+fi
+
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
 echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
@@ -12191,7 +12200,7 @@ echo "}" >> $IPATH/output/$NaM.ps1
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
 xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes"
-echo "${BlueF}[${GreenF}✔${BlueF}]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 1
+echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 1
 cd $IPATH
 
 
@@ -12999,8 +13008,8 @@ case $choice in
 5) sh_webshell_menu ;;
 6) sh_world ;;
 7) sh_buildin ;;
-8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
-# 8) sh_ninja ;;
+# 8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
+8) sh_ninja ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
