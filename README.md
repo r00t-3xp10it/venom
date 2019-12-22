@@ -13,31 +13,18 @@
 
 
 ## LEGAL DISCLAMER
-    The author does not hold any responsibility for the bad use
-    of this tool, remember that attacking targets without prior
-    consent is illegal and punished by law.
+    The author does not hold any responsibility for the bad use of this tool, remember that attacking targets without prior consent is illegal and punished by law.
 
 
 
 ## FRAMEWORK DESCRIPTION
-    The script will use msfvenom (metasploit) to generate shellcode
-    in diferent formats ( c | python | ruby | dll | msi | hta-psh )
-    injects the shellcode generated into one template (example: python)
-    "the python funtion will execute the shellcode into ram" and uses
-    compilers like gcc (gnu cross compiler) or mingw32 or pyinstaller
-    to build the executable file, also starts a multi-handler to
-    recive the remote connection (shell or meterpreter session).
+    The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( c | python | ruby | dll | msi | hta-psh ) injects the shellcode generated into one template (example: python) "the python funtion will execute the shellcode into ram" and uses compilers like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the executable file, also starts a multi-handler to recive the remote connection (shell or meterpreter session).
 
-    'venom generator' tool reproduces some of the technics used
-    by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
+    'venom generator' tool reproduces some of the technics used by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
 
 
 ## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
-    venom 1.0.11 (malicious_server) was build to take advantage of
-    apache2 webserver to deliver payloads (LAN) using a fake webpage
-    writen in html that takes advantage of <iframe> <meta-http-equiv>
-    or "<form>" tags to be hable to trigger payload downloads, the
-    user just needs to send the link provided to target host.
+    venom 1.0.11 (malicious_server) was build to take advantage of apache2 webserver to deliver payloads (LAN) using a fake webpage writen in html that takes advantage of <iframe> <meta-http-equiv> or "<form>" tags to be hable to trigger payload downloads, the user just needs to send the link provided to target host.
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
 
