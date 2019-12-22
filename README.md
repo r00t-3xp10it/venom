@@ -22,7 +22,7 @@
     The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( C# | python | ruby
     dll | msi | hta-psh | docm | apk | macho | elf | deb | mp4 | etc ) injects the shellcode generated into
     one template (example: python) "the python funtion will execute the shellcode into ram" and uses compilers
-    like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the executable file, also starts a
+    like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the executable file. It also starts a
     multi-handler to recive the remote connection (shell or meterpreter session).
 
     'venom generator' reproduces some of the technics used by Veil-Evasion.py, unicorn.py, powersploit.py, etc..
@@ -30,10 +30,10 @@
 
 ## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
     venom 1.0.11 (malicious_server) was build to take advantage of apache2 webserver to deliver payloads (LAN)
-    using a fake webpage writen in html that takes advantage of <iframe> <meta-http-equiv> or "<form>" tags to
+    using a fake webpage writen in html that takes advantage of <iframe> <meta-http-equiv> or <form> tags to
     be hable to trigger payload downloads, the user just needs to send the link provided to target host.
 
-    "Apache2 (malicious url) will copy all files needed to your webroot"
+    "Apache2 (malicious url) will copy all files needed to your webroot, and starts apache for you."
 
 ![venom shellcode v1.0.16](http://i.cubeupload.com/nvmSq3.png)
 
@@ -42,9 +42,10 @@
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler) | mingw32 (compiler) | pyherion.py (crypter)
     wine (emulator) | PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine) | shellter (KyRecon)
     vbs-obfuscator (obfuscator) | avet (Daniel Sauder) | ettercap (MitM + DNS_Spoofing) | icmpsh (ICMP shell)
+    openssl (build SSL certs) | CarbonCopy (sign exe binarys) | Resource Hacker (wine) | NXcrypt (python crypter)
 
     "venom.sh will download/install all dependencies as they are needed". Adicionally was build the script
-    venom-main/aux/setup.sh to help you install all framework dependencies.
+    venom-main/aux/setup.sh to help you install all framework dependencies fast and easy.
 
 
 ## DOWNLOAD/INSTALL
