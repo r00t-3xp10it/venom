@@ -42,7 +42,7 @@
     Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler) | mingw32 (compiler) | pyherion.py (crypter)
     wine (emulator) | PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine) | shellter (KyRecon)
     vbs-obfuscator (obfuscator) | avet (Daniel Sauder) | ettercap (MitM + DNS_Spoofing) | icmpsh (ICMP shell)
-    openssl (build SSL certs) | CarbonCopy (sign exe binarys) | Resource Hacker (wine) | NXcrypt (python crypter)
+    openssl (build SSL certs) | CarbonCopy (sign exe binarys) | ResourceHacker (wine) | NXcrypt (python crypter)
 
     "venom.sh will download/install all dependencies as they are needed". Adicionally was build the script
     venom-main/aux/setup.sh to help you install all framework dependencies fast and easy.
