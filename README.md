@@ -58,26 +58,26 @@
 
 ## DOWNLOAD/INSTALL
 
-**1º - Download framework from github**
+**1º - Download framework from github**<br />
 `git clone https://github.com/r00t-3xp10it/venom.git`
 
-**2º - Set execution permitions**
+**2º - Set execution permitions**<br />
 `cd venom-main`
 `sudo find ./ -name "*.sh" -exec chmod +x {} \;`
 `sudo find ./ -name "*.py" -exec chmod +x {} \;`
 
-**3º - Install all dependencies**
+**3º - Install all dependencies**<br />
 `cd aux && sudo ./setup.sh`
 
-**4º - Run main tool**
+**4º - Run main tool**<br />
 `sudo ./venom.sh`
 
-**Update venom instalation** (compare local version againts github oficial version)
+**Update venom instalation** (compare local version againts github oficial version)<br />
 `sudo ./venom.sh -u`
 
 
 ## Framework Main Menu
-![venom shellcode v1.0.16](http://i.cubeupload.com/YzUcgT.png)
+![banner](https://user-images.githubusercontent.com/23490060/71019038-8cd1fa80-20f1-11ea-9cb3-795020d24481.png)
 ![venom shellcode v1.0.16](http://i.cubeupload.com/cVldOV.png)
 ![venom shellcode v1.0.16](http://i.cubeupload.com/lluvPu.png)
 
@@ -85,8 +85,8 @@
 
 <br />
 
-Detailed info about release 1.0.15: https://github.com/r00t-3xp10it/venom/releases<br />
-Suspicious-Shell-Activity© (SSA) RedTeam develop @2018
+Detailed info about release 1.0.16: https://github.com/r00t-3xp10it/venom/releases<br />
+Suspicious-Shell-Activity© (SSA) RedTeam develop @2019
 
 _EOF
 
