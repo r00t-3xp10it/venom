@@ -13,18 +13,25 @@
 
 
 ## LEGAL DISCLAMER
-    The author does not hold any responsibility for the bad use of this tool, remember that attacking targets without prior consent is illegal and punished by law.
+    The author does not hold any responsibility for the bad use of this tool, remember that attacking targets
+    without prior consent is illegal and punished by law.
 
 
 
 ## FRAMEWORK DESCRIPTION
-    The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( c | python | ruby | dll | msi | hta-psh ) injects the shellcode generated into one template (example: python) "the python funtion will execute the shellcode into ram" and uses compilers like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the executable file, also starts a multi-handler to recive the remote connection (shell or meterpreter session).
+    The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( c | python | ruby
+    | dll | msi | hta-psh ) injects the shellcode generated into one template (example: python) "the python
+    funtion will execute the shellcode into ram" and uses compilers like gcc (gnu cross compiler) or mingw32
+    or pyinstaller to build the executable file, also starts a multi-handler to recive the remote connection
+    (shell or meterpreter session).
 
-    'venom generator' tool reproduces some of the technics used by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
+    'venom generator' reproduces some of the technics used by Veil-Evasion.py, unicorn.py, powersploit.py, etc..
 
 
 ## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
-    venom 1.0.11 (malicious_server) was build to take advantage of apache2 webserver to deliver payloads (LAN) using a fake webpage writen in html that takes advantage of <iframe> <meta-http-equiv> or "<form>" tags to be hable to trigger payload downloads, the user just needs to send the link provided to target host.
+    venom 1.0.11 (malicious_server) was build to take advantage of apache2 webserver to deliver payloads (LAN)
+    using a fake webpage writen in html that takes advantage of <iframe> <meta-http-equiv> or "<form>" tags to
+    be hable to trigger payload downloads, the user just needs to send the link provided to target host.
 
     "Apache2 (malicious url) will copy all files needed to your webroot"
 
@@ -32,15 +39,12 @@
 
 
 ## DEPENDENCIES
-    Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler)
-    mingw32 (compiler) | pyherion.py (crypter) | wine (emulator)
-    PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine)
-    vbs-obfuscator (obfuscator) | avet (Daniel Sauder) | shellter (KyRecon)
-    ettercap (MitM + DNS_Spoofing) | encrypt_PolarSSL (AES crypter)
+    Zenity | Metasploit | GCC (compiler) | Pyinstaller (compiler) | mingw32 (compiler) | pyherion.py (crypter)
+    wine (emulator) | PEScrambler.exe (PE obfuscator) | apache2 (webserver)| winrar (wine) | shellter (KyRecon)
+    vbs-obfuscator (obfuscator) | avet (Daniel Sauder) | ettercap (MitM + DNS_Spoofing) | icmpsh (ICMP shell)
 
-    "venom.sh will download/install all dependencies as they are needed"
-    Adicionally was build venom-main/aux/setup.sh to help you install all
-    venom framework dependencies (metasploit as to be manually installed).
+    "venom.sh will download/install all dependencies as they are needed". Adicionally was build the script
+    venom-main/aux/setup.sh to help you install all framework dependencies.
 
 
 ## DOWNLOAD/INSTALL
@@ -49,9 +53,9 @@
 `git clone https://github.com/r00t-3xp10it/venom.git`
 
 **2º - Set execution permitions**<br />
-`cd venom-main`
-`sudo find ./ -name "*.sh" -exec chmod +x {} \;`
-`sudo find ./ -name "*.py" -exec chmod +x {} \;`
+`cd venom-main`<br />
+`sudo find ./ -name "*.sh" -exec chmod +x {} \;`<br />
+`sudo find ./ -name "*.py" -exec chmod +x {} \;`<br />
 
 **3º - Install all dependencies**<br />
 `cd aux && sudo ./setup.sh`
