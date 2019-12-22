@@ -10,7 +10,7 @@
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
     Suspicious-Shell-Activity (SSA) RedTeam develop @2018
 
-![venom shellcode v1.0.16](http://i.cubeupload.com/bYQJc8.png)
+![banner](https://user-images.githubusercontent.com/23490060/71019038-8cd1fa80-20f1-11ea-9cb3-795020d24481.png)
 
 
 ## LEGAL DISCLAMER
