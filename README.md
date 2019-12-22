@@ -1,14 +1,13 @@
 [![Version](https://img.shields.io/badge/VENOM-1.0.16-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
-[![AUR](https://img.shields.io/aur/license/yaourt.svg)]()
 
 ## VENOM 1.0.16 - metasploit Shellcode generator/compiller
     Version release : v1.0.16
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Codename: Aconite (Aconitum napellus)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
-    Suspicious-Shell-Activity (SSA) RedTeam develop @2018
+    Suspicious-Shell-Activity (SSA) RedTeam develop @2019
 
 ![banner](https://user-images.githubusercontent.com/23490060/71019038-8cd1fa80-20f1-11ea-9cb3-795020d24481.png)
 
@@ -31,11 +30,6 @@
 
     'venom generator' tool reproduces some of the technics used
     by Veil-Evasion.py, unicorn.py, powersploit.py, etc, etc, etc..
-
-    "P.S. some payloads are undetectable by AV soluctions... yes!!!"
-    One of the reasons for that its the use of a funtion to execute
-    the 2º stage of shell/meterpreter directly into targets ram
-    the other reazon its the use of external obfuscator/crypters.
 
 
 ## HOW DO I DELIVER MY PAYLOADS TO TARGET HOST ?
@@ -63,20 +57,23 @@
 
 
 ## DOWNLOAD/INSTALL
-    1º - Download framework from github
-         `git clone https://github.com/r00t-3xp10it/venom.git`
 
-    2º - Set files execution permitions
-         `cd venom`
-         `sudo chmod -R +x *.sh`
-         `sudo chmod -R +x *.py`
+**1º - Download framework from github**
+`git clone https://github.com/r00t-3xp10it/venom.git`
 
-    3º - Install dependencies
-         `cd aux`
-         `sudo ./setup.sh`
+**2º - Set execution permitions**
+`cd venom-main`
+`sudo find ./ -name "*.sh" -exec chmod +x {} \;`
+`sudo find ./ -name "*.py" -exec chmod +x {} \;`
 
-    4º - Run main tool
-         `sudo ./venom.sh`
+**3º - Install all dependencies**
+`cd aux && sudo ./setup.sh`
+
+**4º - Run main tool**
+`sudo ./venom.sh`
+
+**Update venom instalation** (compare local version againts github oficial version)
+`sudo ./venom.sh -u`
 
 
 ## Framework Main Menu
