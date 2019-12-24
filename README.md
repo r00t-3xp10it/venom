@@ -1,7 +1,7 @@
 [![Version](https://img.shields.io/badge/VENOM-1.0.16-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
-[![License](https://img.shields.io/badge/License)](https://github.com/r00t-3xp10it/venom/blob/master/bin/LICENSE.txt)
+[!licence](https://img.shields.io/badge/license-GPLv3-lightgrey.svg)
 
 ## VENOM 1.0.16 - metasploit Shellcode generator/compiller
     Version release : v1.0.16
