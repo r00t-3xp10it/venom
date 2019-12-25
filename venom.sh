@@ -11941,9 +11941,9 @@ cat << !
     ╔──────────────────────────────────────────────────────────────
     | DESCRIPTION        : Reverse OpenSSL Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : WinHttpRequest
+    | LOLBin             : Powershell (DownloadFile)
     | AGENT EXTENSION    : PS1
-    |_DROPPER EXTENSION  : PS1
+    |_DROPPER EXTENSION  : BAT
 
     AGENT Nº3
     ╔──────────────────────────────────────────────────────────────
