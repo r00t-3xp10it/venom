@@ -11995,8 +11995,8 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
@@ -12141,9 +12141,9 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-CN=$(zenity --title="☠ Enter CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 
@@ -12164,9 +12164,9 @@ cat << !
     LHOST    : $lhost
     CN NAME  : $CN
     LOLBin   : Powershell (DownloadFile)
-    UPLOAD   : $rpath\\\\$NaM.ps1
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
+    UPLOAD   : $rpath\\\\$NaM.ps1
 !
 echo "---"
 
@@ -12303,8 +12303,8 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
@@ -12321,9 +12321,9 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : Powershell (DownloadFile)
-    UPLOAD   : $rpath\\\\$NaM.ps1
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
+    UPLOAD   : $rpath\\\\$NaM.ps1
 !
 echo "---"
 
