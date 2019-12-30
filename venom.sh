@@ -12462,7 +12462,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
-   zenity --title="☠ Reverse Powershell Shell (hex obfustaion) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat" --info --width 350 > /dev/null 2>&1
+   zenity --title="☠ Reverse Powershell Shell (hex obfuscation) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat" --info --width 350 > /dev/null 2>&1
 fi
 sh_menu
 }
