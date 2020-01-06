@@ -12205,6 +12205,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
+    PERSISTENCE ID: { $random_name }
 !
 echo "---"
 
@@ -12347,6 +12348,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
@@ -12422,6 +12424,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
+    PERSISTENCE ID: { $random_name }
 !
 echo "---"
 
@@ -12546,6 +12549,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
