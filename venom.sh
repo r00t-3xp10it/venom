@@ -12152,7 +12152,7 @@ sh_menu
 sh_evasion2 () {
 Colors;
 
-## Make sure openssl dependencie its installed
+## Make sure openssl dependencies are installed
 imp=$(which openssl)
 if ! [ "$?" -eq "0" ]; then
    echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 2
@@ -12160,6 +12160,9 @@ if ! [ "$?" -eq "0" ]; then
    sh_exit
 fi
 
+## Delete old certs to prevent future errors.
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
 echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
