@@ -12032,10 +12032,10 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    UPLOAD   : Fileless (ram)
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
+    UPLOADTO : Fileless (ram)
 !
 echo "---"
 
@@ -12327,13 +12327,16 @@ sleep 2
 echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
-rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
-rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
-rm $IPATH/output/cert.pem > /dev/nul 2>&1
-rm $IPATH/output/key.pem > /dev/nul 2>&1
-rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
-rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
+rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+## Only delete certs' IF persitence was NOT sellected.
+if [ "$persistence" = "Dont Add Persistence" ]; then
+   rm $IPATH/output/cert.pem > /dev/nul 2>&1
+   rm $IPATH/output/key.pem > /dev/nul 2>&1
+fi
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
@@ -12529,11 +12532,11 @@ sleep 2
 echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
 rm $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
-rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
