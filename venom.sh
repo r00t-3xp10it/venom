@@ -11971,7 +11971,6 @@ cat << !
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
 
-
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
