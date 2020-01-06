@@ -11948,7 +11948,7 @@ cat << !
     ╔──────────────────────────────────────────────────────────────
     | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : WinHttpRequest
+    | LOLBin             : WinHttpRequest (Fileless)
     | DROPPER EXTENSION  : PS1
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : NOT AVAILABLE
