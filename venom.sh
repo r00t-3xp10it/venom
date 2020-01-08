@@ -12375,7 +12375,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "BUILD ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
@@ -12582,7 +12582,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
    echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "PERSISTENCE ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "BUILD ID: { $random_name }" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
