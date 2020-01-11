@@ -11940,10 +11940,6 @@ exit
 ## -------------------
 sh_ninja () {
 echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};sleep 2
-easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
-if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   echo ${BlueF}[${YellowF}i${BlueF}]${white} Silent Execution [${GreenF}ON${white}]${Reset};sleep 2
-fi
 cat << !
 
 
@@ -12245,7 +12241,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    SILENT EXECUTION : $easter_egg
+    SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
 
@@ -12482,7 +12478,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath\\\\$NaM.ps1
-    SILENT EXECUTION : $easter_egg
+    SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
 
