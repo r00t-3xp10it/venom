@@ -12041,7 +12041,17 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : WinHttpRequest
+!
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
+cat << !
     DROPPER  : $IPATH/output/$Drop.ps1
+!
+else
+cat << !
+    DROPPER  : $IPATH/output/$Drop.vbs
+!
+fi
+cat << !
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : Fileless (In-Memory)
     SILENT EXECUTION : $easter_egg
