@@ -41,6 +41,15 @@ MSF_LOGFILES=OFF
 
 
 
+### This function allow users to auto-obfuscate the droppers
+# And in 'amsi evasion' module it will trigger dropper|persistence
+# (scripts) Silent Executions (terminal prompt does not popup).
+---------------
+OBFUSCATION=OFF
+---------------
+
+
+
 ### Update metasploit framework ? (msfupdate)
 # This next setting allow users to upgrade your metasploit
 # database with recent msf releases. (at script startup).
@@ -115,7 +124,6 @@ PYINSTALLER_VERSION=pyinstaller-2.0
 --------------------
 MEGAUPLOAD_DOMAIN=NO
 --------------------
-OBFUSCATION=OFF
 ARP_SETTINGS=IPv4
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
 
