@@ -12382,11 +12382,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-## Only delete certs' IF persitence was NOT sellected.
-if [ "$persistence" = "Dont Add Persistence" ]; then
-   rm $IPATH/output/cert.pem > /dev/nul 2>&1
-   rm $IPATH/output/key.pem > /dev/nul 2>&1
-fi
+
 
 dtr=$(date)
 ## Remark related to 'persistence' function..
@@ -12408,6 +12404,10 @@ if [ "$persistence" = "Add persistence)" ]; then
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/delete_persistence_ID_$random_name.txt
    zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "REMARK: Instructions how to manualy delete persistence from target stored in:\n$IPATH/output/delete_persistence_ID_$random_name.txt" --info > /dev/null 2>&1
+else
+   ## Only delete certs' IF persitence was NOT sellected.
+   rm $IPATH/output/cert.pem > /dev/nul 2>&1
+   rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
 sh_menu
 }
