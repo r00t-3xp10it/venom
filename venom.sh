@@ -12362,10 +12362,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}-${white} NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}-${white} NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12587,10 +12587,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}-${white} NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}-${white} NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
