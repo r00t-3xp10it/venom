@@ -12413,7 +12413,7 @@ if [ "$persistence" = "Add persistence)" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.txt
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.txt
-   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "REMARK: Instructions from persistence agent stored under:\n$IPATH/output/persistence_ID_$random_name.txt" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "REMARK: Settings related to persistence agent stored under:\n$IPATH/output/persistence_ID_$random_name.txt" --info > /dev/null 2>&1
 else
    ## Only delete certs' IF persitence was NOT sellected.
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
@@ -12642,7 +12642,7 @@ if [ "$persistence" = "Add persistence)" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.txt
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.txt
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Instructions from persistence agent stored under:\n$IPATH/output/persistence_ID_$random_name.txt" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "REMARK: Settings related to persistence agent stored under:\n$IPATH/output/persistence_ID_$random_name.txt" --info > /dev/null 2>&1
 fi
 sh_menu
 }
