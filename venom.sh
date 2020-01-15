@@ -12017,7 +12017,7 @@ echo "";sleep 2
 
 ## Reading settings from persistence stored file ..
 handler=$(zenity --title="☠ PERSISTENCE HANDLER SELLECTION ☠" --text "example: persistence_ID_4Fn7.txt" --entry --width 300) > /dev/null 2>&1
-set_name=$(cat $handler|grep -m 1 'KB4524147')
+set_name=$(cat $handler|'KB4524147'|grep -oE "[^\]+$")
 set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
 set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
 set_state=$(cat $handler|grep -m 1 'SILENT'|cut -d ':' -f2)
@@ -12042,8 +12042,8 @@ SILENT   : $set_state
 LPORT    : $set_lport
 LHOST    : $set_lhost
 LOLBin   : Powershell (Download)
-SCRIPT   : $set_name
 ACTIVE_ON: $set_dates
+SCRIPT   : $set_name
 !
 echo ""
 sleep 2
