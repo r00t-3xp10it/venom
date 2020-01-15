@@ -12017,18 +12017,18 @@ echo "";sleep 2
 
 ## Reading settings from persistence stored file ..
 handler=$(zenity --title="☠ PERSISTENCE HANDLER SELLECTION ☠" --text "example: persistence_ID_4Fn7.txt" --entry --width 300) > /dev/null 2>&1
-set_name=$(cat $handler|'KB4524147'|grep -oE "[^\]+$")
 set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
 set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
 set_state=$(cat $handler|grep -m 1 'SILENT'|cut -d ':' -f2)
 set_handler=$(cat $handler|grep -m 1 'HANDLER'|cut -d ':' -f2)
 set_dates=$(cat $handler|grep -m 1 'ACTIVE_ON'|cut -d '=' -f2)
+set_name=$(cat $handler|grep -m 1 'KB4524147'|grep -oE "[^\]+$")
 
 
 ## Make sure we have captured settings
 if [ -z "$set_handler" ]; then
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None persistence ID Handler(s) Found .."${Reset};sleep 2
+  echo "${RedF}[x]${white} None persistence Handler(s) ID Found .."${Reset};sleep 2
   clear;sh_ninja
 fi
 
