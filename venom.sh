@@ -12037,7 +12037,7 @@ fi
 echo ""
 cat << !
 Handler: $handler
---------------------------------
+------------------------------------
 SILENT    : $set_state
 LPORT     : $set_lport
 LHOST     : $set_lhost
@@ -12051,7 +12051,7 @@ echo "";sleep 1
 ## Execute Sellected Handler Settings to Run
 QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ? ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo Handler: [StartUp:$set_name]:[Silent:$set_state];$set_handler"
+   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
 else
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 2
 fi
