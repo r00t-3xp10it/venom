@@ -12378,7 +12378,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo Listening on [any] $lport ..;echo OpenSSL: [key].pem [cert].pem;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN]=CN [key].pem [cert].pem;echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 cd $IPATH
 sleep 2
 
