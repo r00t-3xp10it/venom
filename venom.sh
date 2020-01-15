@@ -11972,7 +11972,7 @@ cat << !
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
-    ║   H    - Start Stored Handler(s)                            ║
+    ║   H    - Start Stored Handler                               ║
     ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
@@ -12028,7 +12028,7 @@ set_name=$(cat $handler|grep -m 1 'KB4524147'|grep -oE "[^\]+$")
 ## Make sure we have captured settings
 if [ -z "$set_handler" ]; then
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None persistence Handler(s) ID Found .."${Reset};sleep 2
+  echo "${RedF}[x]${white} None Handler String Found .."${Reset};sleep 3
   clear;sh_ninja
 fi
 
@@ -12045,14 +12045,13 @@ LOLBin    : Powershell (Download)
 STARTUP   : $set_name
 ACTIVE_ON : $set_dates
 !
-echo ""
-sleep 2
+echo "";sleep 1
 
 
 ## Execute Sellected Handler Settings to Run
-QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
+QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ? ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
-   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "$set_handler"
+   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo Handler: [StartUp:$set_name]:[Silent:$set_state];$set_handler"
 else
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 2
 fi
