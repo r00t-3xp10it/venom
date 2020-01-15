@@ -11972,7 +11972,7 @@ cat << !
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
-    ║   H    - Easy Start Of Stored Handler(s)                    ║
+    ║   H    - Start Stored Handler(s)                            ║
     ║   E    - Exit venom Framework                               ║
     ╚─────────────────────────────────────────────────────────────╝
 
@@ -12042,7 +12042,7 @@ SILENT    : $set_state
 LPORT     : $set_lport
 LHOST     : $set_lhost
 LOLBin    : Powershell (Download)
-SCRIPT    : $set_name
+STARTUP   : $set_name
 ACTIVE_ON : $set_dates
 !
 echo ""
