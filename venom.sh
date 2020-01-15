@@ -12038,12 +12038,12 @@ echo ""
 cat << !
 Handler: $handler
 --------------------------------
-SILENT   : $set_state
-LPORT    : $set_lport
-LHOST    : $set_lhost
-LOLBin   : Powershell (Download)
-ACTIVE_ON: $set_dates
-SCRIPT   : $set_name
+SILENT    : $set_state
+LPORT     : $set_lport
+LHOST     : $set_lhost
+LOLBin    : Powershell (Download)
+SCRIPT    : $set_name
+ACTIVE_ON : $set_dates
 !
 echo ""
 sleep 2
