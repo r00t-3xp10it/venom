@@ -1,8 +1,8 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16evas
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - F2019
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - @2019
 # codename: aconitum_nappelus [ GPL licensed ]
 # --------------------------------------------------------------Fe
 # [DEPENDENCIES]
@@ -11972,8 +11972,8 @@ cat << !
 
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
-    ║   H    - Start Stored Handler                               ║
     ║   E    - Exit venom Framework                               ║
+    ║   H    - Start Stored Handler (persistence)                 ║
     ╚─────────────────────────────────────────────────────────────╝
 
 
@@ -12001,18 +12001,20 @@ esac
 sh_per_handler () {
 Colors;
 
-echo ""
 cd $IPATH/output
-per_list=$(ls *.handler)
+## Make sure that [.handler] files are present
+per_list=$(ls|grep '.handler')
 if [ -z "$per_list" ]; then
-  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None persistence Handler ID Found .."${Reset};sleep 3
+  echo "${RedF}[x]${white} Abort Module Execution .."${Reset};sleep 1
+  echo "${RedF}[x]${white} None Persistence Handler Files Found .."${Reset};sleep 3
   clear;sh_ninja
+else
+   echo ""
+   echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
+   echo "-------------------------------------";sleep 1
+   echo "$per_list"
+   echo "";sleep 2
 fi
-echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
-echo "-------------------------------------";sleep 1
-echo "$per_list"
-echo "";sleep 2
 
 
 ## Reading settings from persistence stored file ..
@@ -12025,17 +12027,18 @@ set_dates=$(cat $handler|grep -m 1 'ACTIVE_ON'|cut -d '=' -f2)
 set_name=$(cat $handler|grep -m 1 'KB4524147'|grep -oE "[^\]+$")
 
 
-## Make sure we have captured settings
+## Make sure we have captured any settings
+# [HANDLER] string contains the handler command.
 if [ -z "$set_handler" ]; then
   echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None Handler String Found .."${Reset};sleep 3
+  echo "${RedF}[x]${white} None [HANDLER:] Command Found .."${Reset};sleep 3
   clear;sh_ninja
 fi
 
 
 ## Displaying settings to user
-echo ""
 cat << !
+
 Handler: $handler
 ------------------------------------
 SILENT    : $set_state
@@ -12044,10 +12047,11 @@ LHOST     : $set_lhost
 LOLBin    : Powershell (Download)
 STARTUP   : $set_name
 ACTIVE_ON : $set_dates
+
 !
-echo "";sleep 1
 
 
+sleep 1
 ## Execute Sellected Handler Settings to Run
 QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ? ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
