@@ -12001,24 +12001,59 @@ esac
 sh_per_handler () {
 Colors;
 
+count=0
 cd $IPATH/output
 ## Make sure that [.handler] files are present
 per_list=$(ls|grep '.handler')
 if [ -z "$per_list" ]; then
-  echo "${RedF}[x]${white} Abort Module Execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None Persistence Handler Files Found .."${Reset};sleep 3
+  echo "[x] Abort module execution ..";sleep 1
+  echo "[x] None Persistence Handler Files Found ..";sleep 3
   clear;sh_ninja
-else
-   echo ""
-   echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
-   echo "-------------------------------------";sleep 1
-   echo "$per_list"
-   echo "";sleep 2
+fi
+
+## This function Lists until [7] occurrencies {Files} ..
+echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
+echo "-------------------------------------";sleep 1
+for i in $per_list; do
+   count=$(($count+1)) # count nº of occurencies {max:7}
+   echo "[$count] $i"  # display each occurrencie with id number attach
+   if [ "$count" = "1" ]; then
+      um="$i"
+   elif [ "$count" = "2" ]; then
+      dois="$i"
+   elif [ "$count" = "3" ]; then
+      tres="$i"
+   elif [ "$count" = "4" ]; then
+      quatro="$i"
+   elif [ "$count" = "5" ]; then
+      cinco="$i"
+   elif [ "$count" = "6" ]; then
+      seis="$i"
+   elif [ "$count" = "7" ]; then
+      sete="$i"
+   fi
+done
+
+## Sellection of { Handler Number | Handler Name }
+echo -n "${YellowF}[i]${white} Chose Handler Number: ";read sellection
+if [ "$sellection" = "1" ]; then
+   handler="$um"
+elif [ "$sellection" = "2" ]; then
+   handler="$dois"
+elif [ "$sellection" = "3" ]; then
+   handler="$tres"
+elif [ "$sellection" = "4" ]; then
+   handler="$quatro"
+elif [ "$sellection" = "5" ]; then
+   handler="$cinco"
+elif [ "$sellection" = "6" ]; then
+   handler="$seis"
+elif [ "$sellection" = "7" ]; then
+   handler="$sete"
 fi
 
 
-## Reading settings from persistence stored file ..
-handler=$(zenity --title="☠ PERSISTENCE HANDLER SELLECTION ☠" --text "example: persistence_ID_4Fn7.handler" --entry --width 300) > /dev/null 2>&1
+## Reading settings from sellected stored file ..
 set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
 set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
 set_state=$(cat $handler|grep -m 1 'SILENT'|cut -d ':' -f2)
@@ -12039,6 +12074,7 @@ fi
 ## Displaying settings to user
 cat << !
 
+
 Handler: $handler
 ------------------------------------
 SILENT    : $set_state
@@ -12048,17 +12084,18 @@ LOLBin    : Powershell (Download)
 STARTUP   : $set_name
 ACTIVE_ON : $set_dates
 
-!
 
+!
 
 sleep 1
 ## Execute Sellected Handler Settings to Run
-QuE=$(zenity --question --title "☠ RUN SELLECTED HANDLER ? ☠" --text "Do you wish to run the Sellected Handler ?" --width 320) > /dev/null 2>&1
-if [ "$?" -eq "0" ]; then
+echo -n "${YellowF}[i]${white} Run Sellected Handler (y|n)?: ";read sellection
+if [ "$sellection" = "y" ] || [ "$sellection" = "Y" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
 else
-  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 2
+  echo "${RedF}[x]${white} Abort Module Execution .."${Reset};sleep 2
 fi
+
 
 ## Exit Module
 cd $IPATH
