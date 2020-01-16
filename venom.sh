@@ -12053,6 +12053,14 @@ elif [ "$sellection" = "7" ]; then
 fi
 
 
+## Make sure user have input choise
+if [ -z "$sellection" ]; then
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
+  echo "${RedF}[x]${white} None [Handler Number Sellected] .."${Reset};sleep 3
+  clear;sh_ninja
+fi
+
+
 ## Reading settings from sellected stored file ..
 set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
 set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
@@ -12086,12 +12094,13 @@ ACTIVE_ON : $set_dates
 
 
 !
-
-sleep 1
-## Execute Sellected Handler Settings to Run
-echo -n "${YellowF}[i]${white} Run Sellected Handler (y|n)?: ";read sellection
-if [ "$sellection" = "y" ] || [ "$sellection" = "Y" ]; then
+## Execute Sellected Handler Settings to Run.
+echo "${YellowF}[i]${white} Handler Sellection .. ";sleep 1
+sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Return to Amsi Evasion Menu" --width 350 --height 230) > /dev/null 2>&1
+if [ "$sellection" = "Run Sellected Handler (default)" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
+elif [ "$sellection" = "Chose A New Handler File" ]; then
+   sleep 1;clear;sh_per_handler
 else
   echo "${RedF}[x]${white} Abort Module Execution .."${Reset};sleep 2
 fi
