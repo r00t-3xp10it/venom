@@ -12006,10 +12006,20 @@ cd $IPATH/output
 ## Make sure that [.handler] files are present
 per_list=$(ls|grep '.handler')
 if [ -z "$per_list" ]; then
-  echo "${RedF}[x]${white} Abort module execution ..";sleep 1
-  echo "${RedF}[x]${white} None Persistence Handler Files Found ..";sleep 3
-  clear;sh_ninja
+   echo "${RedF}[x]${white} Abort module execution ..";sleep 1
+   echo "${RedF}[x]${white} None Persistence Handler Files Found ..${BlueF}";sleep 2
+   cat << !
+---
+- To be abble to use this Module, we need first to [persiste] our agent into
+- target system. Then venom will auto store the persistence handler settings
+- into venom/output folder under the extenstion [.handler] that this Function
+- Requerires to work. [Agents nº (2|3) will write the neccesary .handler file]
+---
+   !
+   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to Return to Amsi Evasion Menu ..";read fiu
+   clear;sh_ninja
 fi
+
 
 ## This function Lists until [7] occurrencies {Files} ..
 echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
@@ -12034,8 +12044,15 @@ for i in $per_list; do
    fi
 done
 
+
 ## Sellection of { Handler Number | Handler Name }
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Chose Handler Number: ";read sellection
+## Make sure user have input sellection number
+if [ -z "$sellection" ]; then
+  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
+  echo "${RedF}[x]${white} None [Handler Number Sellected] .."${Reset};sleep 3
+  clear;sh_ninja
+fi
 if [ "$sellection" = "1" ]; then
    handler="$um"
 elif [ "$sellection" = "2" ]; then
@@ -12050,14 +12067,6 @@ elif [ "$sellection" = "6" ]; then
    handler="$seis"
 elif [ "$sellection" = "7" ]; then
    handler="$sete"
-fi
-
-
-## Make sure user have input choise
-if [ -z "$sellection" ]; then
-  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None [Handler Number Sellected] .."${Reset};sleep 3
-  clear;sh_ninja
 fi
 
 
