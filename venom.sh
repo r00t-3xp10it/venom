@@ -12006,18 +12006,18 @@ cd $IPATH/output
 ## Make sure that [.handler] files are present
 per_list=$(ls|grep '.handler')
 if [ -z "$per_list" ]; then
-   echo "${RedF}[x]${white} Abort module execution ..";sleep 1
-   echo "${RedF}[x]${white} None Persistence Handler Files Found ..${BlueF}";sleep 2
-   cat << !
+echo "${RedF}[x]${white} Abort module execution ..";sleep 1
+echo "${RedF}[x]${white} None Persistence Handler Files Found ..${BlueF}";sleep 2
+cat << !
 ---
 - To be abble to use this Module, we need first to [persiste] our agent into
 - target system. Then venom will auto store the persistence handler settings
 - into venom/output folder under the extenstion [.handler] that this Function
 - Requerires to work. [Agents nº (2|3) will write the neccesary .handler file]
 ---
-   !
-   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to Return to Amsi Evasion Menu ..";read fiu
-   clear;sh_ninja
+!
+echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to Return to Amsi Evasion Menu ..";read fiu
+clear;sh_ninja
 fi
 
 
