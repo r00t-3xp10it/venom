@@ -12108,8 +12108,8 @@ sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose 
 if [ "$sellection" = "Run Sellected Handler (default)" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
 elif [ "$sellection" = "Just Start Netcat -lvp [port]" ]; then
-   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Input Listing Port Number: "; read revport
-   xterm -T " PERSISTENCE HANDLER " -geometry 110x23 -e "sudo netcat -lvp $revport"
+   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Input Port Number: "; read revport
+   xterm -T " PERSISTENCE HANDLER " -geometry 110x23 -e "sudo nc -lvp $revport"
 elif [ "$sellection" = "Chose A New Handler File" ]; then
    sleep 1;clear;sh_per_handler
 else
