@@ -12006,8 +12006,8 @@ cd $IPATH/output
 ## Make sure that [.handler] files are present
 per_list=$(ls|grep '.handler')
 if [ -z "$per_list" ]; then
-  echo "[x] Abort module execution ..";sleep 1
-  echo "[x] None Persistence Handler Files Found ..";sleep 3
+  echo "${RedF}[x]${white} Abort module execution ..";sleep 1
+  echo "${RedF}[x]${white} None Persistence Handler Files Found ..";sleep 3
   clear;sh_ninja
 fi
 
@@ -12016,7 +12016,7 @@ echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
 echo "-------------------------------------";sleep 1
 for i in $per_list; do
    count=$(($count+1)) # count nº of occurencies {max:7}
-   echo "[$count] $i"  # display each occurrencie with id number attach
+   echo "[$count}] $i"  # display each occurrencie with id number attach
    if [ "$count" = "1" ]; then
       um="$i"
    elif [ "$count" = "2" ]; then
@@ -12035,7 +12035,7 @@ for i in $per_list; do
 done
 
 ## Sellection of { Handler Number | Handler Name }
-echo -n "${YellowF}[i]${white} Chose Handler Number: ";read sellection
+echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Chose Handler Number: ";read sellection
 if [ "$sellection" = "1" ]; then
    handler="$um"
 elif [ "$sellection" = "2" ]; then
@@ -12079,11 +12079,10 @@ if [ -z "$set_handler" ]; then
 fi
 
 
+echo "";echo ""
 ## Displaying settings to user
+echo "${BlueF}Handler: $handler"${Reset};
 cat << !
-
-
-Handler: $handler
 ------------------------------------
 SILENT    : $set_state
 LPORT     : $set_lport
@@ -12095,12 +12094,12 @@ ACTIVE_ON : $set_dates
 
 !
 ## Execute Sellected Handler Settings to Run.
-echo "${YellowF}[i]${white} Handler Sellection .. ";sleep 1
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Handler Sellection .. ";sleep 1
 sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Just Start Netcat -lvp [port]" FALSE "Return to Amsi Evasion Menu" --width 350 --height 260) > /dev/null 2>&1
 if [ "$sellection" = "Run Sellected Handler (default)" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
 elif [ "$sellection" = "Just Start Netcat -lvp [port]" ]; then
-   echo -n "${YellowF}[i]${white} Input Listing Port Number: "; read revport
+   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Input Listing Port Number: "; read revport
    xterm -T " PERSISTENCE HANDLER " -geometry 110x23 -e "sudo netcat -lvp $revport"
 elif [ "$sellection" = "Chose A New Handler File" ]; then
    sleep 1;clear;sh_per_handler
