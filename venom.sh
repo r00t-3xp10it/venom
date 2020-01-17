@@ -12016,7 +12016,7 @@ echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
 echo "-------------------------------------";sleep 1
 for i in $per_list; do
    count=$(($count+1)) # count nº of occurencies {max:7}
-   echo "[$count}] $i"  # display each occurrencie with id number attach
+   echo "[$count] $i"  # display each occurrencie with id number attach
    if [ "$count" = "1" ]; then
       um="$i"
    elif [ "$count" = "2" ]; then
