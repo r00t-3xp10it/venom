@@ -4,7 +4,7 @@
 # Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16
 # Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - @2019
 # codename: aconitum_nappelus [ GPL licensed ]
-# --------------------------------------------------------------Fe
+# --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
 # Zenity | Metasploit | GCC (unix) |  Pyinstaller (python-to-exe module)
@@ -12498,10 +12498,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12730,10 +12730,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
