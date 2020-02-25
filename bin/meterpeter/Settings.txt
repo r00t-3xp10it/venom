@@ -1,0 +1,7 @@
+## meterpeter.ps2 - v2.7 Conf (Automation)
+# 'Change My Values and rename me to Settings'
+
+HTTPSERVER:8087
+IP:292.168.1.72
+PORT:1337
+OBFUS:2
