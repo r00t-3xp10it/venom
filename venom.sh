@@ -12812,9 +12812,16 @@ Colors;
 ## Check for Attacker arch dependencie
 # M$ only supports PS under x64 bit systems
 if [ "$ArCh" = "x86" ]; then
-  echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[x32 bit]"${Reset};sleep 1
+  echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[32 bit]"${Reset};sleep 1
+  echo "${BlueF}---"
+  echo "- meterpeter Framework Depends of Powershell (pwsh) installed Under"
+  echo "- Linux Distros. But \$Microsoft Only provides pwsh to Linux x64 bits"
+  echo "- 'For that reason venom its impotent to do anything more '..."
+  echo "---"${Reset};
   echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
   read op;clear;sh_ninja
+else
+  echo "${BlueF}[☠]${white} Check: Correct Arch [$ArCh] Found .."${Reset};sleep 1
 fi
 
 
@@ -12823,14 +12830,18 @@ fi
 ps_test=$(which pwsh)
 if ! [ "$?" -eq "0" ]; then
    echo "${RedF}[x]${white} Check: Powershell not found (pwsh) .."${Reset};
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, installing dependencies .."${Reset};
+   echo "${BlueF}---"
+   echo "- meterpeter Framework Depends of Powershell (pwsh) installed under"
+   echo "- Linux Distros. Venom will try to auto-Install all dependencies .."
+   echo "---"${Reset};
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, installing dependencies .."${Reset};sleep 2
    echo ""
    sudo apt-get update && apt-get -y install powershell
    echo ""
      ## try again now
      second_test=$(which pwsh)
      if ! [ "$?" -eq "0" ]; then
-        echo "${RedF}[x]${white} Check: Venom Cant install powershell (pwsh)"${Reset};
+        echo "${RedF}[x]${white} Check: Venom Cant install powershell (pwsh)"${Reset};sleep 2
         echo "${RedF}[x] Powershell Default Dir: /usr/bin/pwsh"${Reset};
         echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
         read op;clear;sh_ninja
@@ -12838,6 +12849,8 @@ if ! [ "$?" -eq "0" ]; then
         echo "${BlueF}[${YellowF}i${BlueF}]${white} Check: Venom Reports that pwsh was successfull installed."${Reset};
         sleep 3
      fi
+else
+  echo "${BlueF}[☠]${white} Check: Powershell Linux [pwsh] Found .."${Reset};sleep 1
 fi
 
 
@@ -12866,7 +12879,7 @@ if [ -z "$Obtype" ]; then Obtype="ANCII";fi
 # Config meterpeter Settings File & exec PS1 (Server)
 if ! [ -d "$IPATH/bin/meterpeter" ]; then
   echo "${RedF}[x]${white} Abort, meterpeter Project not Found .."${Reset};
-  echo "${RedF}[x] Local Path: $IPATH/bin/meterpeter"${Reset};sleep 1
+  echo "${RedF}[x] Local Path: $IPATH/bin/meterpeter"${Reset};sleep 2
   echo "${BlueF}[${YellowF}i${BlueF}]${white} https://github.com/r00t-3xp10it/meterpeter";
   echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
   read op;clear;sh_ninja
@@ -12884,6 +12897,8 @@ else
   sed -i "s|$set_obfs|$Obtype|" Settings.txt
   ## Run meterpeter binary (ps1)
   dtr=$(date|awk {'print $1,$2,$3,$4'})
+  echo "${BlueF}[☠]${white} [${YellowF}$dtr${white}] Runing meterpeter Framework .."${Reset};sleep 2
+  # gnome-terminal --title "meterpeter (Server)" --window --maximize -x bash -c 'pwsh -File meterpeter.ps1'
   pwsh -File meterpeter.ps1
   cd $IPATH
 fi
