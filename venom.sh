@@ -12811,7 +12811,7 @@ Colors;
 
 ## Check for Attacker arch dependencie
 # M$ only supports PS under x64 bit systems
-if ! [ "$ArCh" = "x86" ]; then
+if [ "$ArCh" = "x86" ]; then
   echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[32 bit]"${Reset};sleep 1
   echo "${BlueF}---"
   echo "- meterpeter Framework Depends of Powershell (pwsh) installed Under"
@@ -12828,7 +12828,7 @@ fi
 ## Check if PS its installed
 # Powershell under x64 Linux Distros (pwsh)
 ps_test=$(which pwsh)
-if [ "$?" -eq "0" ]; then
+if ! [ "$?" -eq "0" ]; then
    echo "${RedF}[x]${white} Check: Powershell not found (pwsh) .."${Reset};
    echo "${BlueF}---"
    echo "- meterpeter Framework Depends of Powershell (pwsh) installed under"
