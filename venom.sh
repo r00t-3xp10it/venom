@@ -12811,7 +12811,7 @@ Colors;
 
 ## Check for Attacker arch dependencie
 # M$ only supports PS under x64 bit systems
-if [ "$ArCh" = "x86" ]; then
+if ! [ "$ArCh" = "x86" ]; then
   echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[32 bit]"${Reset};sleep 1
   echo "${BlueF}---"
   echo "- meterpeter Framework Depends of Powershell (pwsh) installed Under"
@@ -12828,7 +12828,7 @@ fi
 ## Check if PS its installed
 # Powershell under x64 Linux Distros (pwsh)
 ps_test=$(which pwsh)
-if ! [ "$?" -eq "0" ]; then
+if [ "$?" -eq "0" ]; then
    echo "${RedF}[x]${white} Check: Powershell not found (pwsh) .."${Reset};
    echo "${BlueF}---"
    echo "- meterpeter Framework Depends of Powershell (pwsh) installed under"
@@ -12868,11 +12868,11 @@ sleep 2
 ## Store User Inputs (bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Obtype=$(zenity --list --title "☠ OBFUSCATION MODULE ☠" --text "\nAvailable Obfuscation Methods:" --radiolist --column "Pick" --column "Option" TRUE "ANCII" FALSE "BXOR" --width 350 --height 200) > /dev/null 2>&1
+Obtype=$(zenity --list --title "☠ OBFUSCATION MODULE ☠" --text "\nAvailable Obfuscation Methods:" --radiolist --column "Pick" --column "Option" TRUE "ASCII" FALSE "BXOR" --width 350 --height 200) > /dev/null 2>&1
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
-if [ -z "$Obtype" ]; then Obtype="ANCII";fi
+if [ -z "$Obtype" ]; then Obtype="ASCII";fi
 
 
 ## meterpeter project
@@ -12887,7 +12887,7 @@ else
   cd $IPATH/bin/meterpeter
   ## Config 'meterpeter' Settings File
   echo "${BlueF}[${YellowF}i${BlueF}] meterpeter Working Dir:${GreenF} '$IPATH/bin/meterpeter'"${Reset};sleep 2
-  if [ "$Obtype" = "ANCII" ]; then Obtype="1";else Obtype="2";fi
+  if [ "$Obtype" = "ASCII" ]; then Obtype="1";else Obtype="2";fi
   set_ip=$(cat Settings.txt|grep -m 1 'IP'|cut -d ':' -f2)
   set_port=$(cat Settings.txt|grep -m 1 'PORT'|cut -d ':' -f2)
   set_obfs=$(cat Settings.txt|grep -m 1 'OBFUS'|cut -d ':' -f2)

@@ -1,27 +1,25 @@
-### PROJECT:
-   my_meterp(r)eter_Server<br />
-   'For Guys Like Me that Misses the meterpreter Prompt, In our redteam engagements using reverse shells' d(^_^)b<br />
+### PROJECT
+   my_meterp(r)eter_Server [**`STABLE`**] <br />
 
-### AUTHOR:
-   @r00t-3xp10it { version 2.7 }<br />
+### AUTHOR
+   @r00t-3xp10it { version 2.8 }<br />
    Original Shell: @ZHacker13 **'https://github.com/ZHacker13/ReverseTCPShell'**
 
-### Quick Jump List:
-[meterpeter Project Description](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#description)<br />
-[How to change client working dir](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#how-to-displaychange-client-working-directory)<br />
-[How To - Under Linux Distributions](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#attacker-machine-linux-kali)<br />
-[How To - Under Windows Distributions](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#attacker-machiner-windows-pc)<br />
-[List Of Available Modules](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#currently-available-modules)<br />
-[Windows Defender (Target Related)](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#remark-about-windows-defender)<br />
-[Some meterpeter Screenshots](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#meterpeter-screenshots)<br />
-[Two meterpeter video tutorials](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#videos)<br />
-[Special Thanks|Contributions](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#special-thanks)<br />
+**Article Quick Jump List**<br />
+- **[meterpeter Project Description](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#description)**<br />
+- **[List Of Available Modules](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#meterpeter-server-available-modules)**<br />
+- **[How To - Under Linux Distributions](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#attacker-machine-linux-kali)**<br />
+- **[How To - Under Windows Distributions](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#attacker-machiner-windows-pc)**<br />
+- **[Windows Defender (Target Related)](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#remark-about-windows-defender)**<br />
+- **[Some meterpeter Screenshots](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#meterpeter-screenshots)**<br />
+- **[Special Thanks|Contributions|Videos](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#video-tutorials)**<br />
+- **[Please Read my WIKI for Detailed information about each Module](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
 
 ---
 
 <br />
 
-### DESCRIPTION:
+### DESCRIPTION
    **meterpeter** - This PS1 starts a listener Server on a Windows|Linux attacker machine and generates oneliner PS reverse shell payloads obfuscated in ANCII|BXOR with a random secret key and another layer of Characters/Variables Obfuscation to be executed on the victim machine (The payload will also execute AMSI reflection bypass in current session to evade AMSI detection while working). You can also recive the generated oneliner reverse shell connection via netcat. (in this case you will lose the C2 functionalities like screenshot, upload, download files, Keylogger, AdvInfo, PostExploitation, etc)<br /><br />meterpeter payloads/droppers can be executed using User or Administrator Privileges depending of the cenario (executing the Client as Administrator will unlock ALL Server Modules, amsi bypasses, etc.). Droppers will mimic a Fake KB Security Update while in background Downloads and executes our Client in $env:tmp trusted location, with the intent of evading  Windows Defender Exploit Guard. meterpeter payloads|droppers are FUD (dont test samples on VirusTotal).<br /><br />This project has been inspired in the work of @ZHacker13 from GitHub **->** [github.com/ZHacker13/ReverseTCPShell](https://github.com/ZHacker13/ReverseTCPShell) **<-**<br />
 ![banner](https://user-images.githubusercontent.com/23490060/74566700-fba1c780-4f6b-11ea-85a0-ac26576302b3.png)<br />
 
@@ -32,42 +30,46 @@
 
 <br />
 
-#### How To Display|Change 'Client' Working Directory:
-**Client** Remote Working directory its located in **$env:tmp**, But meterpeter gives us access to one **'Interactive powershell console',** that means that all powershell commands executed in **' :meterpeter> '** prompt will be executed remotely.<br />
-![dirs1](https://user-images.githubusercontent.com/23490060/75086920-d8f64c80-5531-11ea-9420-43f0ab947d0d.png)
-![dirs2](https://user-images.githubusercontent.com/23490060/75086924-e01d5a80-5531-11ea-84a5-87fcc1aa6818.png)
+**meterpeter Modules Shortcuts**<br />
+meterpeter prompt reveals us some of the shortcuts we have available to use.
+![Shortcuts](https://user-images.githubusercontent.com/23490060/75630967-ad84f900-5be6-11ea-9810-7430cb72663c.png)
 
-[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#quick-jump-list)<br />
-
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 ---
 
-<br />
+<br /><br />
 
-### Currently available modules:
-![keylogger](https://user-images.githubusercontent.com/23490060/74612250-79e0a400-50fb-11ea-8f21-60cd34c314aa.png)
+### meterpeter (Server) available modules
+**{ [Please Read my WIKI for Detailed information about each Module](https://github.com/r00t-3xp10it/meterpeter/wiki) }**<br />
+![keylogger](https://user-images.githubusercontent.com/23490060/74612250-79e0a400-50fb-11ea-8f21-60cd34c314aa.png)<br />
 
-- **Info**       : Retrieve Target PC Information
-- **AdvInfo**    : Advanced Gather Information Modules [Sub-Menu]
+- **Info**       : Quick Retrieve of Target PC Information
+- **AdvInfo**    : Advanced Gather Information Modules (Sub-Menu)
   - **ListAdm**  : Retrieve Client Shell Path|Privileges
   - **ListAcc**  : Retrieve Remote-Host Accounts List
   - **ListSmb**  : Retrieve Remote-Host SMB shares List
   - **ListDns**  : Retrieve Remote-Host DNS Entrys List
   - **ListApp**  : Retrieve Remote-Host Installed Applications List
-  - **ListTask** : Retrieve Remote-Host Schedule Tasks List [Sub-Menu]
+  - **ListTask** : Remote-Host Schedule Tasks Module (Sub-Menu)
     - **Check**    : Retrieve Schedule Tasks List
-    - **Inform**   : Advanced Info Single Task Information
-    - **Create**   : Create Remote-Host New Task
-    - **Delete**   : Delete Remote-Host Single Task
+    - **Inform**   : Schedule Taks Verbose Information
+    - **Create**   : Create Remote-Host New Tasks
+    - **Delete**   : Delete Remote-Host Tasks
   - **ListRece** : Retrieve Remote-Host Recent Folder Contents
+  - **ListPriv** : Remote-Host Weak Service|Folders permissions (Sub-Menu)
+    - **Check**   : Retrieve Folder Permissions
+    - **WeakDir** : Search for Folders weak Permissions recursive
+    - **Service** : Search for Unquoted Service Paths vulnerability
+    - **RottenP** : Search for Rotten Potato Privilege Vulnerability
   - **StartUp**  : Retrieve Remote-Host StartUp Folder Contents
   - **ListDriv** : Retrieve Remote-Host Drives Available List
   - **ListRun**  : Retrieve Remote-Host Startup Run Entrys
-  - **ListProc** : Remote-Host Processe(s) [Sub-Menu]
-    - **Check**    : Retrieve Remote Processe(s) Running List
-    - **KillProc** : Kill Remote Process By Name From Running
+  - **ListProc** : Remote-Host Processe(s) (Sub-Menu)
+    - **Check**    : Retrieve Remote Processe(s) Running
+    - **KillProc** : Kill Remote Process By DisplayName
   - **ListConn** : Retrieve Remote-Host Active TCP Connections List
   - **ListIpv4** : Retrieve Remote-Host IPv4 Network Statistics List
-  - **ListWifi** : Remote-Host Profiles/SSID/Passwords [Sub-Menu]
+  - **ListWifi** : Remote-Host Profiles/SSID/Passwords (Sub-Menu)
     - **ListProf**  : Retrieve Remote-Host wifi Profile
     - **ListNetw**  : Retrieve wifi Available networks List
     - **ListSSID**  : Retrieve Remote-Host SSID Entrys List
@@ -76,62 +78,70 @@
 - **Upload**     : Upload File from Local-Host to Remote-Host.
 - **Download**   : Download File from Remote-Host to Local-Host.
 - **Screenshot** : Save Screenshot from Remote-Host to Local-Host.
-- **keylogger**  : Remote-Host Keylogger [Sub-Menu].
+- **keylogger**  : Remote-Host Keylogger (Sub-Menu)
   - **Install**  : Install Remote keylogger
   - **StartK**   : Start remote keylogger
   - **ReadLog**  : Read keystrokes logfile
   - **StopKP**   : Stop keylogger Process(s)
-- **PostExploit**: Post-Exploitation Modules [Sub-Menu]
-  - **Persist**  : Remote Persist Client [Sub-Menu]
+- **PostExploit**: Post-Exploitation Modules (Sub-Menu)
+  - **Persist**  : Remote Persist Client (Sub-Menu)
     - **StartUp**   : Persiste Client Using startup Folder
+    - **RUNONCE**   :  Persiste Client using REGISTRY:RunOnce Key
     - **REGRUN**    : Persiste Client using REGISTRY:Run Key
+    - **Schtasks**  :  Make Client Beacon Home with xx minuts of Interval
     - **WinLogon**  : Persiste Client using WinLogon REGISTRY:Userinit Key
   - **Restart**  : Restart in xx seconds
-  - **ListLog**  : List/Delete EventLogs Module [Sub-Menu]
+  - **ListLog**  : List/Delete EventLogs Module (Sub-Menu)
     - **Check**     : Retrieve Remote-Host EventLogs List
     - **DelLogs**   : Delete  Remote-Host EventLogs (eventvwr)
     - **DelFull**   : Delete  Remote-Host LogFiles from Disk
   - **SetMace**  : Change files date/time TimeStomp
   - **ListPas**  : Search for passwords in txt Files
+  - **ListDir**  : Search for hidden folders recursive
   - **GoogleX**  : Open Remote Browser in google sphere (prank)
   - **LockPC**   : Lock Remote workstation (prank|refresh explorer)
-  - **SpeakPC**  : Make Remote-Host Speak your sentence
-  - **AMSIset**  : Enable/Disable AMSI Module [Sub-Menu]
+  - **SpeakPC**  : Make Remote-Host Speak your sentence (prank)
+  - **AMSIset**  : Enable/Disable AMSI Module (Sub-Menu)
     - **Disable**   : Disable AMSI in REGISTRY:hklm|hkcu
     - **Enable**    : Enable  AMSI in REGISTRY:hklm|hkcu
-  - **UACSet**   : Enable/Disable remote UAC Module [Sub-Menu]
+  - **ListCred** : Retrieve Remote-Host cmdkey stored Creds
+  - **UACSet**   : Enable/Disable remote UAC Module (Sub-Menu)
     - **Disable**   : Disable UAC in REGISTRY:hklm
     - **Enable**    : Enable  UAC in REGISTRY:hklm
-  - **TaskMan**  : Enable/Disable TaskManager Module [Sub-Menu]
+  - **ASLRSet**  : Enable/Disable ASLR Module (Sub-Menu)
+    - **Disable**   : Disable ASLR in REGISTRY:hklm
+    - **Enable**    : Enable  ASLR in REGISTRY:hklm
+  - **TaskMan**  : Enable/Disable TaskManager Module (Sub-Menu)
     - **Disable**   : Disable TaskManager in REGISTRY:hklm
     - **Enable**    : Enable  TaskManager in REGISTRY:hklm
-  - **Firewall** : Enable/Disable Remote Firewall Module [Sub-Menu]
+  - **Firewall** : Enable/Disable Remote Firewall Module (Sub-Menu)
     - **Check**     : Review Remote-Host Firewall Settings
     - **Disable**   : Disable Remote-Host Firewall
     - **Enable**    : Enable  Remote-Host Firewall
   - **DumpSAM**  : Dump SAM/SYSTEM Credentials to a remote location
-  - **Dnspoof**  : Hijack Entrys in hosts file Module [Sub-Menu]
+  - **Dnspoof**  : Hijack Entrys in hosts file Module (Sub-Menu)
     - **Check**     : Review Remote-Host hosts File
     - **Spoof**     : Add Entrys to Remote-Host hosts File
     - **Default**   : Defaults Remote-Host hosts File
-  - **NoDrive**  : Hide Drives from Explorer Module [Sub-Menu]
+  - **NoDrive**  : Hide Drives from Explorer Module (Sub-Menu)
     - **Disable**   : Hide Drives from explorer in REGISTRY:hklm
     - **Enable**    : Enable Drives from explorer in REGISTRY:hklm
 - **exit**       : Exit Reverse TCP Shell (Server + Client).
 
-[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#quick-jump-list)<br />
+- **[Please Read my WIKI for Detailed information about each Module](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
 
 <br /><br />
 
 ### ATTACKER MACHINE: [Linux Kali]
-      Warning: powershell under linux distributions its only available for x64 archs ..
+      Warning: powershell under linux distributions its only available for x64 bits archs ..
 ![linux](https://user-images.githubusercontent.com/23490060/74575258-26951700-4f7e-11ea-832c-512dce1c97cc.png)
 
 <br />
 
-#### Install Powershell (Linux)
+#### Install Powershell (Linux x64 bits)
 ```
 apt-get update && apt-get install -y powershell
 ```
@@ -149,7 +159,6 @@ service apache2 start
 #### Start C2 Server (Local)
 ```
 cd meterpeter
-pwsh Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 pwsh -File meterpeter.ps1
 ```
 
@@ -165,7 +174,7 @@ UNZIP (IN DESKTOP) AND EXECUTE 'Update-KB4524147.bat' (Run As Administrator)..
      IF Attacker decided to manualy execute Client: Then Client remote location (pwd) will be used has working dir .
 
 
-[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#quick-jump-list)<br />
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
 
@@ -177,6 +186,7 @@ UNZIP (IN DESKTOP) AND EXECUTE 'Update-KB4524147.bat' (Run As Administrator)..
 <br />
 
 #### Install Python3 (optional)
+Install Python3 (http.Server) to deliver payloads under LAN networks ..<br />
 ```
 https://www.python.org/downloads/release/python-381/
 ```
@@ -188,13 +198,12 @@ powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser
 powershell -File meterpeter.ps1
 ```
 
-     Remark:
-     -------
-     meterpeter.ps1 delivers Dropper/Payload using python3 http.server. IF attacker has python3 installed
-     If NOT then the payload (Client) its written in Server Local Working Directory to be Manualy Deliver ..
+**Remark**
+- meterpeter.ps1 delivers Dropper/Payload using python3 http.server. IF attacker has python3 installed.<br />
+  **'If NOT then the payload (Client) its written in Server Local [Working Directory](https://github.com/r00t-3xp10it/meterpeter/wiki/How-To-Display%7CChange-'Client'-Working-Directory) to be Manualy Deliver'** ..
 
-     Remmnenber to close the http.server terminal after the target have recived the two files (Dropper & Client)
-     and we have recived the connection back in our meterpeter Server { to prevent Server|Client connection errors }
+- Remmnenber to close the http.server terminal after the target have recived the two files (Dropper & Client)<br />
+  **'And we have recived the connection in our meterpeter Server { to prevent Server|Client connection errors }'**<br /><br />
 
 #### Deliver Dropper/Payload To Target Machine (manual OR python3)
 ```
@@ -206,7 +215,7 @@ DELIVER 'Update-KB4524147' (.ps1=manual) OR (.zip=automated|silentExec) TO TARGE
      IF dropper.bat its executed: Then the Client will use $env:tmp has its working directory ('recomended')..
      IF Attacker decided to manualy execute Client: Then Client remote location (pwd) will be used has working dir .
 
-[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#quick-jump-list)<br />
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
 
@@ -228,10 +237,8 @@ incursions into Remote-Host (**in persistence cenario Demonstrations**) ..
 ```
 powershell Set-ExecutionPolicy Restricted -Scope CurrentUser
 ```
-**meterpeter Settings File**<br />
-Allow Attackers to **automate** the creation of payloads (Client) without the need of User inputs. To activate it Attacker just need to edit the **Settings file**, change is values and then rename it from **'settingZZZ'** to **'Settings'** before executing the Server.
 
-[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#quick-jump-list)<br />
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
 
@@ -239,27 +246,23 @@ Allow Attackers to **automate** the creation of payloads (Client) without the ne
 
 ### meterpeter Screenshots:
 ![screenshot](https://user-images.githubusercontent.com/23490060/74612209-22423880-50fb-11ea-8c1d-66a9a14e18f7.png)
-![dnshijack](https://user-images.githubusercontent.com/23490060/74612220-2cfccd80-50fb-11ea-9bfa-7b32d503d306.png)
-![delogs](https://user-images.githubusercontent.com/23490060/74612217-2a01dd00-50fb-11ea-9dd4-0ea93b0dfcb1.png)
 ![uacoff](https://user-images.githubusercontent.com/23490060/74612213-266e5600-50fb-11ea-8557-b06c3ff93e09.png)
-![keylogger](https://user-images.githubusercontent.com/23490060/74612250-79e0a400-50fb-11ea-8f21-60cd34c314aa.png)
-![dumpsam](https://user-images.githubusercontent.com/23490060/74611908-43edf080-50f8-11ea-81a2-71cbf3d82123.png)
 ![taskoff](https://user-images.githubusercontent.com/23490060/74618345-3b61de00-5129-11ea-8e78-4834107a01a3.png)
 ![mace](https://user-images.githubusercontent.com/23490060/74764142-1a100780-5279-11ea-9e18-09f2e555baca.png)
 
 ---
 
+
 <br />
 
 ### Video Tutorials:
-meterpeter Under Windows Distros: https://youtu.be/5_VLBWYUuJ8<br />
-meterpeter Under Linux Distros: http://Not-recorded-yet<br />
-
-
-<br />
+meterpeter Under Windows Distros: https://youtu.be/k9aX3yBQrEQ<br />
+meterpeter Under Linux Distros: https://www.youtube.com/watch?v=CmMbWmN246E<br /><br />
 
 ### Special Thanks:
-**@ZHacker13** (Original Rev Shell) | **@codings9** (debugging project under Windows|Linux)<br />
-[Jump To Top of this readme File](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)
+**@ZHacker13** (Original Rev Shell) | **@codings9** (debugging project under Windows|Linux Distros)<br /><br />
+- **[meterpeter WIKI pages (Oficial Documentation)](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
+- **[Jump To Top of this readme File](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
+---
 
 
