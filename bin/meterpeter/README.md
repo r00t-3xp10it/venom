@@ -2,7 +2,7 @@
    my_meterp(r)eter_Server [**`STABLE`**] <br />
 
 ### AUTHOR
-   @r00t-3xp10it { version 2.8 }<br />
+   @r00t-3xp10it { version 2.9 }<br />
    Original Shell: @ZHacker13 **'https://github.com/ZHacker13/ReverseTCPShell'**
 
 **Article Quick Jump List**<br />
@@ -84,11 +84,17 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
   - **ReadLog**  : Read keystrokes logfile
   - **StopKP**   : Stop keylogger Process(s)
 - **PostExploit**: Post-Exploitation Modules (Sub-Menu)
+  - **Escalate** : WSReset.exe Privilege Escalation (Sub-Menu)
+    - **Escal**     : Escalate Client Privileges (UserLand -> NT/System)
+    - **Delete**    : Delete Old Priv Escalation Configurations
+  - **CamSnap**  : Manipulate remote webcam (sub-menu)
+    - **Device**    : List Remote-Host webcams available
+    - **Snap**      : Take Remote-Host screenshot (webcam)
   - **Persist**  : Remote Persist Client (Sub-Menu)
     - **StartUp**   : Persiste Client Using startup Folder
-    - **RUNONCE**   :  Persiste Client using REGISTRY:RunOnce Key
+    - **RUNONCE**   : Persiste Client using REGISTRY:RunOnce Key
     - **REGRUN**    : Persiste Client using REGISTRY:Run Key
-    - **Schtasks**  :  Make Client Beacon Home with xx minuts of Interval
+    - **Schtasks**  : Make Client Beacon Home with xx minuts of Interval
     - **WinLogon**  : Persiste Client using WinLogon REGISTRY:Userinit Key
   - **Restart**  : Restart in xx seconds
   - **ListLog**  : List/Delete EventLogs Module (Sub-Menu)
@@ -260,7 +266,8 @@ meterpeter Under Windows Distros: https://youtu.be/k9aX3yBQrEQ<br />
 meterpeter Under Linux Distros: https://www.youtube.com/watch?v=CmMbWmN246E<br /><br />
 
 ### Special Thanks:
-**@ZHacker13** (Original Rev Shell) | **@codings9** (debugging project under Windows|Linux Distros)<br /><br />
+**@ZHacker13** (Original Rev Shell) | **@tedburke** (CommandCam.exe binary) <br />
+**@codings9** (debugging project under Windows|Linux Distros)<br /><br />
 - **[meterpeter WIKI pages (Oficial Documentation)](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
 - **[Jump To Top of this readme File](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 ---

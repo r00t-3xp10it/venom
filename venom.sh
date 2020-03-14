@@ -12899,6 +12899,7 @@ else
   dtr=$(date|awk {'print $1,$2,$3,$4'})
   echo "${BlueF}[☠]${white} [${YellowF}$dtr${white}] Runing meterpeter Framework .."${Reset};sleep 2
   # gnome-terminal --title "meterpeter (Server)" --window --maximize -x bash -c 'pwsh -File meterpeter.ps1'
+  pwsh Start-Process Apache2 -Passthru # Start Local Machine apache2 webserver
   pwsh -File meterpeter.ps1
   cd $IPATH
 fi

