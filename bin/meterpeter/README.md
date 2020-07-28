@@ -2,7 +2,7 @@
    my_meterp(r)eter_Server [**`STABLE`**] <br />
 
 ### AUTHOR
-   @r00t-3xp10it { version 2.9 }<br />
+   @r00t-3xp10it { version 2.10 }<br />
    Original Shell: @ZHacker13 **'https://github.com/ZHacker13/ReverseTCPShell'**
 
 **Article Quick Jump List**<br />
@@ -13,6 +13,7 @@
 - **[Windows Defender (Target Related)](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#remark-about-windows-defender)**<br />
 - **[Some meterpeter Screenshots](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#meterpeter-screenshots)**<br />
 - **[Special Thanks|Contributions|Videos](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#video-tutorials)**<br />
+- **[How To - Use PS2EXE to convert ps1 scripts to standalone executables](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#Use-PS2EXE-to-convert-ps1-scripts-to-standalone-executables)**<br />
 - **[Please Read my WIKI for Detailed information about each Module](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
 
 ---
@@ -61,6 +62,7 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
     - **WeakDir** : Search for Folders weak Permissions recursive
     - **Service** : Search for Unquoted Service Paths vulnerability
     - **RottenP** : Search for Rotten Potato Privilege Vulnerability
+    - **RegACL**  : Search for weak permissions on registry
   - **StartUp**  : Retrieve Remote-Host StartUp Folder Contents
   - **ListDriv** : Retrieve Remote-Host Drives Available List
   - **ListRun**  : Retrieve Remote-Host Startup Run Entrys
@@ -85,13 +87,14 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
   - **StopKP**   : Stop keylogger Process(s)
 - **PostExploit**: Post-Exploitation Modules (Sub-Menu)
   - **Escalate** : WSReset.exe Privilege Escalation (Sub-Menu)
-    - **Escal**     : Escalate Client Privileges (UserLand -> NT/System)
+    - **Getsystem** : Escalate Client Privileges (UserLand -> SYSTEM)
     - **Delete**    : Delete Old Priv Escalation Configurations
   - **CamSnap**  : Manipulate remote webcam (sub-menu)
     - **Device**    : List Remote-Host webcams available
-    - **Snap**      : Take Remote-Host screenshot (webcam)
+    - **Snap**      : Take Remote-Host screenshot (Default webcam)
+    - **Manual**    : Manual sellect webcam device to use (device name)
   - **Persist**  : Remote Persist Client (Sub-Menu)
-    - **StartUp**   : Persiste Client Using startup Folder
+    - **Beacon**    : Persiste Client Using startup Folder (beacon home from xx to xx sec)
     - **RUNONCE**   : Persiste Client using REGISTRY:RunOnce Key
     - **REGRUN**    : Persiste Client using REGISTRY:Run Key
     - **Schtasks**  : Make Client Beacon Home with xx minuts of Interval
@@ -124,6 +127,9 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
     - **Check**     : Review Remote-Host Firewall Settings
     - **Disable**   : Disable Remote-Host Firewall
     - **Enable**    : Enable  Remote-Host Firewall
+  - **Defender** : Enable/Disable Windows Defender Module (Sub-Menu)
+    - **Disable**   : Disable Remote-Host Windows Defender
+    - **Enable**    : Enable  Remote-Host Windows Defender
   - **DumpSAM**  : Dump SAM/SYSTEM Credentials to a remote location
   - **Dnspoof**  : Hijack Entrys in hosts file Module (Sub-Menu)
     - **Check**     : Review Remote-Host hosts File
@@ -132,6 +138,11 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
   - **NoDrive**  : Hide Drives from Explorer Module (Sub-Menu)
     - **Disable**   : Hide Drives from explorer in REGISTRY:hklm
     - **Enable**    : Enable Drives from explorer in REGISTRY:hklm
+  - **CredPhi**  : Phishing for remote logon credentials
+    - **OldBox**   : Trigger Remote Phishing PS Script (Windows 7 or less)
+    - **NewBox**   : Trigger Remote Phishing PS Script (Windows 7 or above)
+    - **ReadLog**   : Read Remote Phishing LogFile
+  - **Browser**   : Enumerate Installed Browsers (IE,FIREFOX,CHROME)
 - **exit**       : Exit Reverse TCP Shell (Server + Client).
 
 - **[Please Read my WIKI for Detailed information about each Module](https://github.com/r00t-3xp10it/meterpeter/wiki)**<br />
@@ -224,6 +235,32 @@ DELIVER 'Update-KB4524147' (.ps1=manual) OR (.zip=automated|silentExec) TO TARGE
 - **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
+
+<br />
+
+### Use PS2EXE to convert ps1 scripts to standalone executables
+
+<br />
+
+PS2EXE BY  : Ingo Karstein | MScholtes<br />
+Description: Script to convert powershell scripts to standalone executables<br />
+Source     : https://gallery.technet.microsoft.com/scriptcenter/PS2EXE-GUI-Convert-e7cb69d5<br />
+
+```
+meterpeter users can use this script (manually) to convert the Client.ps1 to Client.exe
+
+```
+
+- 1º - Copy **`'Update-KB4524147.ps1'`** build by meterpeter C2 to **`'PS2EXE'`** dir<br />
+- 2º - Open Powershell terminal console in **`'PS2EXE'`** directory (none admin privs required)<br />
+- 3º - Execute the follow command to convert the Client.ps1 to standalone executable<br />
+```
+.\ps2exe.ps1 -inputFile 'Update-KB4524147.ps1' -outputFile 'Update-KB4524147.exe' -noConsole -iconFile 'meterpeter.ico' -title 'meterpeter binary file' -version '2.10.6' -description 'meterpeter binary file' -copyright 'Microsoft® Windows® Operative System'
+```
+
+---
+
+
 
 <br />
 

