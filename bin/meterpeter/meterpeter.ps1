@@ -235,7 +235,15 @@ If([System.IO.File]::Exists($Conf_File))
 }
 ## Default settings
 If(-not($Local_Port)){$Local_Port = "666"};
-If(-not($Local_Host)){$Local_Host = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]};
+If(-not($Local_Host)){
+   If($DISTRO_OS){
+      ## Linux Flavor
+      $Local_Host = ((ifconfig | grep [0-9].\.)[0]).Split()[-1]
+   }else{
+      ## Windows Flavor
+      $Local_Host = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+   }
+}
 ## End Of venom Function ..
 
 
