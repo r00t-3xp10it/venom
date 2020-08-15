@@ -1,96 +1,123 @@
-﻿<#
+<#
 .SYNOPSIS
-Converts powershell scripts to standalone executables.
-.DESCRIPTION
-Converts powershell scripts to standalone executables. GUI output and input is activated with one switch,
-real windows executables are generated. You may use the graphical front end Win-PS2EXE for convenience.
+   Converts powershell scripts to standalone executables.
 
-Please see Remarks on project page for topics "GUI mode output formatting", "Config files", "Password security",
-"Script variables" and "Window in background in -noConsole mode".
+.DESCRIPTION
+   Converts powershell scripts to standalone executables. GUI output and input is activated with one switch,
+   real windows executables are generated. You may use the graphical front end Win-PS2EXE for convenience.
+
+   Please see Remarks on project page for topics "GUI mode output formatting", "Config files", "Password security",
+   "Script variables" and "Window in background in -noConsole mode".
 
 A generated executables has the following reserved parameters:
 
 -debug              Forces the executable to be debugged. It calls "System.Diagnostics.Debugger.Break()".
--extract:<FILENAME> Extracts the powerShell script inside the executable and saves it as FILENAME.
-										The script will not be executed.
--wait               At the end of the script execution it writes "Hit any key to exit..." and waits for a
-										key to be pressed.
--end                All following options will be passed to the script inside the executable.
-										All preceding options are used by the executable itself.
+-extract:<FILENAME> Extracts the powerShell script inside the executable and saves it as FILENAME. The script will not be executed.
+-wait               At the end of the script execution it writes "Hit any key to exit..." and waits for a key to be pressed.
+-end                All following options will be passed to the script inside the executable. All preceding options are used by the executable itself.
+
 .PARAMETER inputFile
-Powershell script to convert to executable
+   Powershell script to convert to executable
+   
 .PARAMETER outputFile
-destination executable file name, defaults to inputFile with extension '.exe'
+   destination executable file name, defaults to inputFile with extension '.exe'
+   
 .PARAMETER runtime20
-this switch forces PS2EXE to create a config file for the generated executable that contains the
-"supported .NET Framework versions" setting for .NET Framework 2.0/3.x for PowerShell 2.0
+   this switch forces PS2EXE to create a config file for the generated executable that contains the "supported .NET Framework versions" setting for .NET Framework 2.0/3.x for PowerShell 2.0
+
 .PARAMETER runtime40
-this switch forces PS2EXE to create a config file for the generated executable that contains the
-"supported .NET Framework versions" setting for .NET Framework 4.x for PowerShell 3.0 or higher
+   this switch forces PS2EXE to create a config file for the generated executable that contains the "supported .NET Framework versions" setting for .NET Framework 4.x for PowerShell 3.0 or higher
+
 .PARAMETER x86
-compile for 32-bit runtime only
+   compile for 32-bit runtime only
+
 .PARAMETER x64
-compile for 64-bit runtime only
+   compile for 64-bit runtime only
+   
 .PARAMETER lcid
-location ID for the compiled executable. Current user culture if not specified
+   location ID for the compiled executable. Current user culture if not specified
+   
 .PARAMETER STA
-Single Thread Apartment mode
+   Single Thread Apartment mode
+   
 .PARAMETER MTA
-Multi Thread Apartment mode
+   Multi Thread Apartment mode
+   
 .PARAMETER nested
-internal use
+   internal use
+
 .PARAMETER noConsole
-the resulting executable will be a Windows Forms app without a console window.
-You might want to pipe your output to Out-String to prevent a message box for every line of output
-(example: dir C:\ | Out-String)
+   the resulting executable will be a Windows Forms app without a console window. You might want to pipe your output to Out-String to prevent a message box for every line of output (example: dir C:\ | Out-String)
+
 .PARAMETER credentialGUI
-use GUI for prompting credentials in console mode instead of console input
+   use GUI for prompting credentials in console mode instead of console input
+
 .PARAMETER iconFile
-icon file name for the compiled executable
+   icon file name for the compiled executable
+
 .PARAMETER title
-title information (displayed in details tab of Windows Explorer's properties dialog)
+   title information (displayed in details tab of Windows Explorer's properties dialog)
+
 .PARAMETER description
-description information (not displayed, but embedded in executable)
+   description information (not displayed, but embedded in executable)
+
 .PARAMETER company
-company information (not displayed, but embedded in executable)
+   company information (not displayed, but embedded in executable)
+
 .PARAMETER product
-product information (displayed in details tab of Windows Explorer's properties dialog)
+   product information (displayed in details tab of Windows Explorer's properties dialog)
+
 .PARAMETER copyright
-copyright information (displayed in details tab of Windows Explorer's properties dialog)
+   copyright information (displayed in details tab of Windows Explorer's properties dialog)
+
 .PARAMETER trademark
-trademark information (displayed in details tab of Windows Explorer's properties dialog)
+   trademark information (displayed in details tab of Windows Explorer's properties dialog)
+
 .PARAMETER version
-version information (displayed in details tab of Windows Explorer's properties dialog)
+   version information (displayed in details tab of Windows Explorer's properties dialog)
+
 .PARAMETER configFile
-write a config file (<outputfile>.exe.config)
+   write a config file (<outputfile>.exe.config)
+
 .PARAMETER noConfigFile
-compatibility parameter
+   compatibility parameter
+
 .PARAMETER noOutput
-the resulting executable will generate no standard output (includes verbose and information channel)
+   the resulting executable will generate no standard output (includes verbose and information channel)
+
 .PARAMETER noError
-the resulting executable will generate no error output (includes warning and debug channel)
+   the resulting executable will generate no error output (includes warning and debug channel)
+
 .PARAMETER noVisualStyles
-disable visual styles for a generated windows GUI application. Only applicable with parameter -noConsole
+   disable visual styles for a generated windows GUI application. Only applicable with parameter -noConsole
+
 .PARAMETER requireAdmin
-if UAC is enabled, compiled executable will run only in elevated context (UAC dialog appears if required)
+   if UAC is enabled, compiled executable will run only in elevated context (UAC dialog appears if required)
+
 .PARAMETER supportOS
-use functions of newest Windows versions (execute [Environment]::OSVersion to see the difference)
+   use functions of newest Windows versions (execute [Environment]::OSVersion to see the difference)
+
 .PARAMETER virtualize
-application virtualization is activated (forcing x86 runtime)
+   application virtualization is activated (forcing x86 runtime)
+
 .PARAMETER longPaths
-enable long paths ( > 260 characters) if enabled on OS (works only with Windows 10)
+   enable long paths ( > 260 characters) if enabled on OS (works only with Windows 10)
+
 .EXAMPLE
-ps2exe.ps1 C:\Data\MyScript.ps1
-Compiles C:\Data\MyScript.ps1 to C:\Data\MyScript.exe as console executable
+   ps2exe.ps1 C:\Data\MyScript.ps1
+   Compiles C:\Data\MyScript.ps1 to C:\Data\MyScript.exe as console executable
+
 .EXAMPLE
-ps2exe.ps1 -inputFile C:\Data\MyScript.ps1 -outputFile C:\Data\MyScriptGUI.exe -iconFile C:\Data\Icon.ico -noConsole -title "MyScript" -version 0.0.0.1
-Compiles C:\Data\MyScript.ps1 to C:\Data\MyScriptGUI.exe as graphical executable, icon and meta data
+   ps2exe.ps1 -inputFile C:\Data\MyScript.ps1 -outputFile C:\Data\MyScriptGUI.exe -iconFile C:\Data\Icon.ico -noConsole -title "MyScript" -version 0.0.0.1
+   Compiles C:\Data\MyScript.ps1 to C:\Data\MyScriptGUI.exe as graphical executable, icon and meta data
+
 .NOTES
-Version: 0.5.0.21
-Date: 2020-07-10
-Author: Ingo Karstein, Markus Scholtes
+   Version: 0.5.0.21
+   Date: 2020-07-10
+   Author: Ingo Karstein, Markus Scholtes
+
 .LINK
-https://gallery.technet.microsoft.com/PS2EXE-GUI-Convert-e7cb69d5
+   https://gallery.technet.microsoft.com/PS2EXE-GUI-Convert-e7cb69d5
 #>
 
 Param([STRING]$inputFile = $NULL, [STRING]$outputFile = $NULL, [SWITCH]$verbose, [SWITCH]$debug, [SWITCH]$runtime20, [SWITCH]$runtime40,
@@ -113,11 +140,11 @@ Param([STRING]$inputFile = $NULL, [STRING]$outputFile = $NULL, [SWITCH]$verbose,
 
 if (!$nested)
 {
-	Write-Output "PS2EXE-GUI v0.5.0.21 by Ingo Karstein, reworked and GUI support by Markus Scholtes`n"
+	Write-Output "   PS2EXE - v0.5.0.21 by Ingo Karstein, reworked and GUI support by Markus Scholtes"
 }
 else
 {
-	Write-Output "PowerShell 2.0 environment started...`n"
+	Write-Output "PowerShell 2.0 environment started..."
 }
 
 if ([STRING]::IsNullOrEmpty($inputFile))
@@ -164,7 +191,7 @@ $psversion = 0
 if ($PSVersionTable.PSVersion.Major -ge 4)
 {
 	$psversion = 4
-	Write-Output "You are using PowerShell 4.0 or above."
+	#Write-Output "You are using PowerShell 4.0 or above."
 }
 
 if ($PSVersionTable.PSVersion.Major -eq 3)
@@ -198,13 +225,13 @@ else
 
 if (!(Test-Path $inputFile -PathType Leaf))
 {
-	Write-Error "Input file $($inputfile) not found!"
+	Write-Error "   Input file  => $($inputfile) not found!"
 	exit -1
 }
 
 if ($inputFile -eq $outputFile)
 {
-	Write-Error "Input file is identical to output file!"
+	Write-Error "   Input file is identical to output file!"
 	exit -1
 }
 
@@ -343,7 +370,7 @@ if ($psversion -ge 3 -and $runtime20)
 
 if ($psversion -lt 3 -and $runtime40)
 {
-	Write-Error "You need to run ps2exe in an Powershell 3.0 or higher environment to use parameter -runtime40`n"
+	Write-Error "You need to run ps2exe in an Powershell 3.0 or higher environment to use parameter -runtime40"
 	exit -1
 }
 
@@ -487,7 +514,8 @@ if ($debug)
 	$cp.TempFiles.KeepFiles = $TRUE
 }
 
-Write-Output "Reading input file $inputFile"
+If($inputFile -match 'meterpeter'){$parsingPath = $inputFile -replace '\\PS2EXE',''}else{$parsingPath = $inputFile}
+Write-Output "   Input  file => $parsingPath"
 $content = Get-Content -LiteralPath $inputFile -Encoding UTF8 -ErrorAction SilentlyContinue
 if ([STRING]::IsNullOrEmpty($content))
 {
@@ -2736,7 +2764,7 @@ if ($longPaths)
 	$configFileForEXE3 = "<?xml version=""1.0"" encoding=""utf-8"" ?>`r`n<configuration><startup><supportedRuntime version=""v4.0"" sku="".NETFramework,Version=v4.0"" /></startup><runtime><AppContextSwitchOverrides value=""Switch.System.IO.UseLegacyPathHandling=false;Switch.System.IO.BlockLongPaths=false"" /></runtime></configuration>"
 }
 
-Write-Output "Compiling file...`n"
+#Write-Output "Compiling file..."
 $cr = $cop.CompileAssemblyFromSource($cp, $programFrame)
 if ($cr.Errors.Count -gt 0)
 {
@@ -2751,7 +2779,8 @@ else
 {
 	if (Test-Path $outputFile)
 	{
-		Write-Output "Output file $outputFile written`n"
+        If($outputFile -match 'meterpeter'){$parsingPath = $outputFile -replace '\\PS2EXE',''}else{$parsingPath = $outputFile}
+		Write-Output "   Output file => $parsingPath `n`n"
 
 		if ($debug)
 		{
@@ -2777,7 +2806,7 @@ else
 	}
 	else
 	{
-		Write-Error -ErrorAction "Continue" "Output file $outputFile not written`n"
+		Write-Error -ErrorAction "Continue" "   Output file => $outputFile not written`n`n"
 	}
 }
 

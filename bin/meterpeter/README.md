@@ -87,6 +87,7 @@ meterpeter prompt reveals us some of the shortcuts we have available to use.
   - **StopKP**   : Stop keylogger Process(s)
 - **PostExploit**: Post-Exploitation Modules (Sub-Menu)
   - **Escalate** : WSReset.exe Privilege Escalation (Sub-Menu)
+    - **SluiEOP**   : Execute one command with admin privs (SYSTEM)
     - **Getsystem** : Escalate Client Privileges (UserLand -> SYSTEM)
     - **Delete**    : Delete Old Priv Escalation Configurations
   - **CamSnap**  : Manipulate remote webcam (sub-menu)
@@ -242,24 +243,27 @@ DELIVER 'Update-KB4524147' (.ps1=manual) OR (.zip=automated|silentExec) TO TARGE
 
 <br />
 
-PS2EXE BY  : Ingo Karstein | MScholtes<br />
-Description: Script to convert powershell scripts to standalone executables<br />
-Source     : https://gallery.technet.microsoft.com/scriptcenter/PS2EXE-GUI-Convert-e7cb69d5<br />
+**PS2EXE BY**  : Ingo Karstein | MScholtes<br />
+**Description**: Script to convert powershell scripts to standalone executables<br />
+**Source**     : https://gallery.technet.microsoft.com/scriptcenter/PS2EXE-GUI-Convert-e7cb69d5<br /><br />
 
-```
-meterpeter users can use this script (manually) to convert the Client.ps1 to Client.exe
+`meterpeter users can use this script (manually) to convert the Client.ps1 to Client.exe`<br /><br />
 
-```
-
-- 1º - Copy **`'Update-KB4524147.ps1'`** build by meterpeter C2 to **`'PS2EXE'`** dir<br />
-- 2º - Open Powershell terminal console in **`'PS2EXE'`** directory (none admin privs required)<br />
+- 1º - Copy **`'Update-KB4524147.ps1'`** build by meterpeter C2 to **`'PS2EXE'`** directory.
+- 2º - Open Powershell terminal console in **`'PS2EXE'`** directory (none admin privs required)
 - 3º - Execute the follow command to convert the Client.ps1 to standalone executable<br />
+
 ```
-.\ps2exe.ps1 -inputFile 'Update-KB4524147.ps1' -outputFile 'Update-KB4524147.exe' -noConsole -iconFile 'meterpeter.ico' -title 'meterpeter binary file' -version '2.10.6' -description 'meterpeter binary file' -copyright 'Microsoft® Windows® Operative System'
+.\ps2exe.ps1 -inputFile 'Update-KB4524147.ps1' -outputFile 'Update-KB4524147.exe' -iconFile 'meterpeter.ico' -title 'meterpeter binary file' -version '2.10.6' -description 'meterpeter binary file' -product 'meterpeter C2 Client' -company 'Microsoft Corporation' -copyright '©Microsoft Corporation. All Rights Reserved' -noConsole -noVisualStyles -noError
 ```
+
+![final](https://user-images.githubusercontent.com/23490060/88741165-d75f2f00-d136-11ea-8761-28b690f0ddf3.png)
+
+- **`REMARK:`** Client.exe (created by PS2EXEC) migth **malfunction** with meterpeter **mimiratz scripts**.
+
+- **[Quick Jump List](https://github.com/r00t-3xp10it/meterpeter/blob/master/README.md#project)**<br />
 
 ---
-
 
 
 <br />
@@ -299,7 +303,7 @@ powershell Set-ExecutionPolicy Restricted -Scope CurrentUser
 <br />
 
 ### Video Tutorials:
-meterpeter Under Windows Distros: https://youtu.be/k9aX3yBQrEQ<br />
+meterpeter Under Windows Distros: https://www.youtube.com/watch?v=d2npuCXsMvE<br />
 meterpeter Under Linux Distros: https://www.youtube.com/watch?v=CmMbWmN246E<br /><br />
 
 ### Special Thanks:

