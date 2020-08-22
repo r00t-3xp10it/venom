@@ -1,10 +1,10 @@
-[![Version](https://img.shields.io/badge/VENOM-1.0.16-brightgreen.svg?maxAge=259200)]()
+[![Version](https://img.shields.io/badge/VENOM-1.0.17-brightgreen.svg?maxAge=259200)]()
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 ![licence](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)
 
-## VENOM 1.0.16 - metasploit Shellcode generator/compiller
-    Version release : v1.0.16
+## VENOM 1.0.17 - metasploit Shellcode generator/compiller
+    Version release : v1.0.17
     Author : pedro ubuntu  [ r00t-3xp10it ]
     Codename: Aconite (Aconitum napellus)
     Distros Supported : Linux Ubuntu, Kali, Mint, Parrot OS
@@ -36,7 +36,7 @@
 
     "Apache2 (malicious url) will copy all files needed to your webroot, and starts apache for you."
 
-![venom shellcode v1.0.16](http://i.cubeupload.com/nvmSq3.png)
+![venom shellcode v1.0.17](http://i.cubeupload.com/nvmSq3.png)
 
 
 ## DEPENDENCIES
@@ -72,14 +72,14 @@
 
 ## Framework Main Menu
 ![banner](https://user-images.githubusercontent.com/23490060/71019038-8cd1fa80-20f1-11ea-9cb3-795020d24481.png)
-![venom shellcode v1.0.16](http://i.cubeupload.com/cVldOV.png)
-![venom shellcode v1.0.16](http://i.cubeupload.com/lluvPu.png)
+![venom shellcode v1.0.17](http://i.cubeupload.com/cVldOV.png)
+![venom shellcode v1.0.17](http://i.cubeupload.com/lluvPu.png)
 
 
 
 <br />
 
-Detailed info about release 1.0.16: https://github.com/r00t-3xp10it/venom/releases<br />
+Detailed info about release 1.0.17: https://github.com/r00t-3xp10it/venom/releases<br />
 Suspicious-Shell-Activity© (SSA) RedTeam develop @2019
 
 _EOF

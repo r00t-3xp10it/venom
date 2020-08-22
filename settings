@@ -11,7 +11,7 @@
 
 
 
-### Wine and mingw-gcc - Local system arch (32bit/64bit)
+### Wine and mingw-gcc - Local system arch (32-bit/64-bit)
 # This next setting forces the main tool (venom.sh) to use WINE
 # and MINGW-GCC command syntax based on the arch sellected bellow.
 # SYNTAX: wine OR wine64 | i586-mingw32msvc-gcc OR i686-w64-mingw32-gcc

