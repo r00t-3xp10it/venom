@@ -12881,6 +12881,7 @@ if [ "$ArCh" = "x64" ]; then # 64-bit configurations
 
       cd $IPATH/bin
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Installing wine-mono-4.9.4 (msi)"
+      echo "" && wget https://dl.winehq.org/wine/wine-mono/4.9.4/wine-mono-4.9.4.msi && echo ""
       echo "" && wine msiexec /i wine-mono-4.9.4.msi && echo ""
       multiArch="TRUE"
       cd $IPATH
