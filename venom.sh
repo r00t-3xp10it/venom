@@ -12857,11 +12857,11 @@ if [ "$?" -ne "0" ]; then
 fi
 
 if [ -e "$IPATH/aux/WineMultiArch" ]; then
-   rootwine=$(cat $IPATH/aux/WineMultiArch) # read wine full path from WineMultiArch file
+   rootwine=$(cat $IPATH/aux/WineMultiArch|sed "s| ||g") # read wine full path from WineMultiArch file
 else
    askpath=$(zenity --title="☠ Enter the location of .wine directory ☠" --text "example: /root/.wine\nexample: /home/pedro/.wine" --entry --width 300) > /dev/null 2>&1
    rootwine=$(echo $askpath|sed "s|.wine||")   # set 'first time run' wine full path variable declaration.
-   echo "$rootwine" > $IPATH/aux/WineMultiArch # write WineMultiArch file, to prevent this ZENITY question again
+   echo "$rootwine" > $IPATH/aux/WineMultiArch # write WineMultiArch.ve file, to prevent this ZENITY question again
 fi
 
 if [ "$ArCh" = "x64" ]; then # 64-bit configurations
