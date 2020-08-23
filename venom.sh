@@ -13059,7 +13059,7 @@ else
 fi
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 if [ "$easter_egg" = "ON" ]; then
-   cp $IPATH/output/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+   mv $IPATH/output/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 else
    cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 fi
