@@ -12958,7 +12958,7 @@ if [ "$TestExtension" != "pdf" ]; then
    exit
 fi
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'\n\nIf 'FileName' input its leave blank, then venom will\nuse the pdf 'FileName' to rename the dropper.exe" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
 
 
 ## Setting default values in case user have skip this ..
