@@ -12188,12 +12188,9 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.del
    echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
    echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
-else
-   echo "EXECUTE IN TARGET CMD PROMPT" > $IPATH/output/delete_artifacts_ID_4nF7.del
-   echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.del
-   echo "del /F /Q $Drop.vbs" >> $IPATH/output/delete_artifacts_ID_4nF7.txt.del
+   zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.del" --info > /dev/null 2>&1
 fi
-zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.del" --info > /dev/null 2>&1
+
 sh_menu
 }
 
