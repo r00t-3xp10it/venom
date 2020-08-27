@@ -24,7 +24,7 @@ fi
 # variable declarations _________________________________
 #                                                        |
 OS=`uname`                                               # grab OS
-ver="1.0.16"                                             # toolkit version
+ver="1.0.17"                                             # toolkit version
 H0m3=`echo ~`                                            # grab home path
 user=`who | awk {'print $1'}`                            # grab username
 DiStRo=`awk '{print $1}' /etc/issue`                     # grab distribution -  Ubuntu or Kali
@@ -38,7 +38,7 @@ IPATH=`pwd`                                              # grab setup.sh install
 # Make sure ZENITY its installed
 #
 zen=$(which zenity)
-if ! [ "$?" -eq "0" ]; then
+if [ "$?" -ne "0" ]; then
    echo "[x] zenity............................[ NOT found ]";sleep 12
    echo "[i] Please Wait, installing dependencie...";sleep 2
    sudo apt-get install zenity
@@ -138,7 +138,7 @@ else
   echo ""
 
       sleep 1
-      again=`which zenity` > /dev/null 2>&1
+      again=$(which zenity) > /dev/null 2>&1
       if [ "$?" -eq "0" ]; then
         echo "[✔] zenity........................[ installed ]"
       else
@@ -159,7 +159,7 @@ fi
 #
 # check if msfconsole its installed
 #
-imp=`which msfconsole`
+imp=$(which msfconsole)
 if [ "$?" -eq "0" ]; then
   echo "[✔] msfconsole........................[ found ]"
   sleep 2
@@ -195,7 +195,7 @@ fi
 #
 # check if gcc compiler exists ..
 #
-c0m=`which gcc` > /dev/null 2>&1
+c0m=$(which gcc) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
   echo "[✔] gcc compiler......................[ found ]"
   sleep 2
@@ -207,7 +207,7 @@ else
   echo ""
 
   sleep 1
-  again=`which gcc` > /dev/null 2>&1
+  again=$(which gcc) > /dev/null 2>&1
   if [ "$?" -eq "0" ]; then
     echo "[✔] gcc compiler..................[ installed ]"
     sleep 2
@@ -230,7 +230,7 @@ fi
 #
 if [ "$Dftt" = "x86" ]; then
   # check if mingw32 exists
-  c0m=`which i586-mingw32msvc-gcc` > /dev/null 2>&1
+  c0m=$(which i586-mingw32msvc-gcc) > /dev/null 2>&1
   if [ "$?" -eq "0" ]; then
     echo "[✔] mingw32 compiler..................[ found ]"
     sleep 2
@@ -242,7 +242,7 @@ if [ "$Dftt" = "x86" ]; then
     echo ""
 
       sleep 1
-      again=`which i586-mingw32msvc-gcc` > /dev/null 2>&1
+      again=$(which i586-mingw32msvc-gcc) > /dev/null 2>&1
       if [ "$?" -eq "0" ]; then
         echo "[✔] mingw32 compiler..................[ installed ]"
         sleep 2
@@ -262,7 +262,7 @@ if [ "$Dftt" = "x86" ]; then
 else
 
   # check if mingw64 exists
-  c0m=`which i686-w64-mingw32-gcc` > /dev/null 2>&1
+  c0m=$(which i686-w64-mingw32-gcc) > /dev/null 2>&1
   if [ "$?" -eq "0" ]; then
     echo "[✔] mingw64 compiler..................[ found ]"
     sleep 2
@@ -274,7 +274,7 @@ else
     echo ""
 
       sleep 1
-      again=`which i686-w64-mingw32-gcc` > /dev/null 2>&1
+      again=$(which i686-w64-mingw32-gcc) > /dev/null 2>&1
       if [ "$?" -eq "0" ]; then
         echo "[✔] mingw64 compiler..................[ installed ]"
         sleep 2
@@ -342,7 +342,7 @@ fi
 #
 # check if apache2 exists
 #
-ch3=`which apache2`
+ch3=$(which apache2)
 if [ "$?" -eq "0" ]; then
   echo "[✔] apache2 webserver.................[ found ]"
   sleep 2
@@ -354,7 +354,7 @@ else
   echo ""
 
     sleep 1
-    again=`which apache2`
+    again=$(which apache2)
     if [ "$?" -eq "0" ]; then
       echo "[✔] apache2 webserver.............[ installed ]"
       sleep 2
@@ -398,195 +398,11 @@ else
 fi
 
 
-QuE=$(zenity --list --title "APACHE2 DOMAIN NAME CONFIGURATION" --text "\nChose option:" --radiolist --column "Pick" --column "Option" TRUE "Skipp Domain configuration" FALSE "Use Venom domain name" FALSE "Delete Venom domain name" --width 350 --height 220) > /dev/null 2>&1
-D3F="$ApAcHe"
-
-if [ "$QuE" = "Use Venom domain name" ]; then
-  dsrr="YES"
-  # check if running Apache/2.2 or Apache/2.4
-  apache2 -v | grep "Server version" | cut -d ':' -f2 | cut -d '(' -f1 >> version.log
-  sed -i "s/ //g" version.log
-  un=`cat version.log`
-  rm version.log > /dev/null 2>&1
-
-     echo ""
-     if [ "$un" = "Apache/2.2.22" ]; then
-       # build mega-upload.conf apache 2.2
-       echo "[☆] Building       -> venom mega-upload.conf"
-       echo "<VirtualHost *:80>" > /etc/apache2/sites-available/mega-upload.conf
-       echo "   ServerName mega-upload.com" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "   DocumentRoot $IPATH/public_html/mega-upload.com" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "</VirtualHost>" >> /etc/apache2/sites-available/mega-upload.conf
-       sleep 2
-     else
-       # build mega-upload.conf apache 2.4
-       echo "[☆] Building       -> venom mega-upload.conf"
-       echo "<VirtualHost *:80>" > /etc/apache2/sites-available/mega-upload.conf
-       echo "   ServerName mega-upload.com" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "   DocumentRoot $IPATH/public_html/mega-upload.com" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "   <Directory $IPATH/public_html/mega-upload.com/>" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "      Require all granted" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "   </Directory>" >> /etc/apache2/sites-available/mega-upload.conf
-       echo "</VirtualHost>" >> /etc/apache2/sites-available/mega-upload.conf
-       sleep 2
-     fi
-
-
-  # build directorys needed by mega-upload domain
-  echo "[☆] Building       -> venom domain directory"
-  mkdir -p $IPATH/public_html/mega-upload.com
-  echo "<html><H1>VENOM DOMAIN WORKING ....</H1></html>" > $IPATH/public_html/mega-upload.com/index.html
-  sudo chmod -R g+rw $IPATH/public_html/mega-upload.com
-  sleep 2
-
-  # config hosts file (DNS record - DNS_SPOOFING)
-  P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
-
-    # check for non-accepted empty inputs
-    if [ -z "$P0Is0N" ]; then
-      echo ""
-      echo "    ERROR: Empty inputs are not accepted .."
-      echo ""
-      exit
-    fi
-
-    if [ -d $P0Is0N ]; then
-      :
-    else
-      echo ""
-      echo "    ERROR: ettercap path not found: $P0Is0N"
-      echo ""
-      P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
-    fi
-
-  echo "[☆] Added          -> DNS record to etter.dns"
-  cp $P0Is0N/etter.dns $P0Is0N/etter[bak].dns > /dev/null 2>&1
-  sed "s|IpAdDr|$IP|g" etter.dns > etter.filter
-  mv etter.filter $P0Is0N/etter.dns > /dev/null 2>&1
-  sleep 2
-
-  # display configs to user
-  ApAcHe="$IPATH/public_html/mega-upload.com"
-  echo "[☆] DOMAIN_NAME    -> mega-upload.com"
-  echo "[☆] ATTACK_VECTOR  -> http://mega-upload.com"
-  echo "[☆] APACHE_WEBROOT -> $ApAcHe"
-  echo ""
-  sleep 2
-  # enable new site
-  sddf="domain"
-  a2ensite mega-upload.conf
-  /etc/init.d/apache2 restart | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="restart apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
-  echo ""
-
-
-elif [ "$QuE" = "Delete Venom domain name" ]; then
-    dsrr="NO"
-  # use venom default configuration
-  P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
-
-    # check for non-accepted empty inputs
-    if [ -z "$P0Is0N" ]; then
-      echo ""
-      echo "    ERROR: Empty inputs are not accepted .."
-      echo ""
-      exit
-    fi
-
-    if [ -d $P0Is0N ]; then
-      :
-    else
-      echo ""
-      echo "    ERROR: ettercap path not found: $P0Is0N"
-      echo ""
-      P0Is0N=$(zenity --title="☠ Enter ettercap FULL PATH ☠" --text "example: /usr/share/ettercap" --entry --width 330) > /dev/null 2>&1
-    fi
-
-  echo ""
-  # display config to user
-  echo "[☆] DOMAIN_NAME    -> localhost"
-  echo "[☆] ATTACK_VECTOR  -> http://$lhost"
-  echo "[☆] APACHE_WEBROOT -> $ApAcHe"
-  echo ""
-  sleep 2
-  mv $P0Is0N/etter[bak].dns $P0Is0N/etter.dns > /dev/null 2>&1
-  rm /etc/apache2/sites-available/mega-upload.conf > /dev/null 2>&1
-  rm /etc/apache2/sites-enabled/mega-upload.conf > /dev/null 2>&1
-  rm -r $IPATH/public_html > /dev/null 2>&1
-  /etc/init.d/apache2 restart | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="restart apache2 webserver" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
-  echo ""
-
-else
-
-  echo "[!] Venom Domain name Configuration...[ skipp ]"
-  dsrr="NO"
-
-fi
-
-
-
-
-
-#
-# ETTERCAP DNS SPOOFING - APACHE2 VENOM DOMAIN NAME
-#
-if [ "$sddf" = "domain" ]; then
-
-# venom domain name settings found...
-Pr0T0=$(zenity --list --title "☠ ETTERCAP IPV6 SETTINGS ☠" --text "\nchose to use ettercap IPv6 or IPv4 arp poison." --radiolist --column "Pick" --column "Option" TRUE "IPv4 (old operative systems)" FALSE "IPv6 (new operative systems)" --width 350 --height 190) > /dev/null 2>&1
-
-
-   # use 'SED' to replace settings in venom.sh file...
-   # like the use of ettercap IPV4 or IPV6 settings to run
-   # everytime apache2 attack vector its trigger...
-   if [ "$Pr0T0" = "IPv4 (old operative systems)" ]; then
-
-     cd ..
-     echo "[✔] ettercap settings.................[  IPv4 ]"
-     sed "s|-M ARP /// ///|-M ARP // //|g" venom.sh > test.bak
-     mv test.bak venom.sh > /dev/null 2>&1
-     chmod +x venom.sh > /dev/null 2>&1
-     cd $IPATH
-     fd3d="IPv4"
-     sleep 2
-
-   else
-
-     cd ..
-     echo "[✔] ettercap settings.................[  IPv6 ]"
-     sed "s|-M ARP // //|-M ARP /// ///|g" venom.sh > test.bak
-     mv test.bak venom.sh > /dev/null 2>&1
-     chmod +x venom.sh > /dev/null 2>&1
-     cd $IPATH
-     fd3d="IPv6"
-     sleep 2
-
-   fi
-
-else
-
-cd ..
-# DONT USE VENOM DOMAIN NAME ATTACK VECTOR SETTINGS
-# DEFAULT SETTINGS IN VENOM.SH ETTERCAP COMMANDS TO DEFAULT.
-echo "[✔] ettercap settings.................[  IPv4 ]"
-sed "s|-M ARP /// ///|-M ARP // //|g" venom.sh > test.bak
-mv test.bak venom.sh > /dev/null 2>&1
-chmod +x venom.sh > /dev/null 2>&1
-cd $IPATH
-fd3d="IPv4"
-echo "null" > /dev/null 2>&1
-sleep 2
-fi
-
-
-
-
-
-
 
 #
 # check if wine exists
 #
-c0m=`which $arch` > /dev/null 2>&1
+c0m=$(which $arch) > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
     echo "[✔] wine..............................[ found ]"
     sleep 2
@@ -617,7 +433,7 @@ else
     echo ""
 
     # test again
-    again=`which $arch` > /dev/null 2>&1
+    again=$(which $arch) > /dev/null 2>&1
     if [ "$?" -eq "0" ]; then
       echo "[✔] $arch ........................[ installed ]"
       sleep 2
@@ -1065,28 +881,17 @@ sleep 2
 cd ..
 # store settings file values in variables
 ApWR=`cat settings | egrep -m 1 "APACHE_WEBROOT" | cut -d '=' -f2` > /dev/null 2>&1
-DTuR=`cat settings | egrep -m 1 "MEGAUPLOAD_DOMAIN" | cut -d '=' -f2` > /dev/null 2>&1
 WdPa=`cat settings | egrep -m 1 "WINE_DRIVEC" | cut -d '=' -f2` > /dev/null 2>&1
-ArP=`cat settings | egrep -m 1 "ARP_SETTINGS" | cut -d '=' -f2` > /dev/null 2>&1
-EdNp=`cat settings | egrep -m 1 "ETTER_DNS_PATH" | cut -d '=' -f2` > /dev/null 2>&1
 EPAUA=`cat settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2` > /dev/null 2>&1
 # config venom auxiliry modules install paths
 POSTPATH=`cat settings | egrep -m 1 "POST_EXPLOIT_DIR" | cut -d '=' -f2` > /dev/null 2>&1
 MSF_RANDOM_STAGER=`cat settings | egrep -m 1 "METERPRETER_STAGER" | cut -d '=' -f2` > /dev/null 2>&1
 
 
-# config settings file
-if [ "$sddf" = "domain" ]; then
-Ps="$P0Is0N/etter.dns"
-else
-Ps="/etc/ettercap/etter.dns"
-fi
+## config settings file
 # change setting file configurations
 sed -i "s|$ApWR|$ApAcHe|" settings
-sed -i "s|$DTuR|$dsrr|" settings
 sed -i "s|$WdPa|$DrIvC/drive_c|" settings
-sed -i "s|$ArP|$fd3d|" settings
-sed -i "s|$EdNp|$Ps|" settings
 sed -i "s|$EPAUA|$Dftt|" settings
 sed -i "s|$POSTPATH|$MSFDATA/modules|" settings
 sed -i "s|$MSF_RANDOM_STAGER|$MSFDATA/lib/msf/core/payload/windows|" settings
