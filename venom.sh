@@ -13158,12 +13158,12 @@ sleep 2
 
 ## Make Sure all dependencies are meet
 # Check if python3 its installed on attacker machine
-echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";
-echo "${BlueF}[${YellowF}i${BlueF}]${white} Remark: python3 its required in Attacker/Target to exec Server/Client.${white}";sleep 2
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
 audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] python3 interpreter not found${white}"
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package."
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Remark: python3 its required in Attacker/Target to exec Server/Client.${white}";
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
    echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
 fi
 

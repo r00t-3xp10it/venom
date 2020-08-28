@@ -463,7 +463,6 @@ class COMMCENTER:
             pull.error("You need to connect before execute this command!")
 
     def c_exit(self):
-        sys.stdout.write("\n")
         pull.exit("See Ya!")
 
 class INTERFACE(COMMCENTER):
