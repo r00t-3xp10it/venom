@@ -463,7 +463,7 @@ class COMMCENTER:
             pull.error("You need to connect before execute this command!")
 
     def c_exit(self):
-        pull.exit("See Ya!")
+        pull.exit("Closing SillyRAT server.")
 
 class INTERFACE(COMMCENTER):
 

