@@ -3,7 +3,6 @@
 # setup.sh | Author: r00t-3xp10it
 # Install all dependencies nedded by venom to work
 # and config/build venom.conf configuration file
-# also builds or delete apache2 domain name attack vector
 # --------------------------------------------------------
 resize -s 24 89 > /dev/null
 
