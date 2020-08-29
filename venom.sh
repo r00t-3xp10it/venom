@@ -10212,7 +10212,7 @@ fi
 # SillyRAT (reverse TCP python shell)
 # https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
 # ------------------------------------------
-sh_evasion6 () {
+sh_shellcode27 () {
 Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
@@ -10296,7 +10296,7 @@ elif [ "$SOSP" = "Linux" ]; then
    dropperpath="$IPATH/output/$Drop"
 else
    lolbin="Direct Download (url)"
-   targetos="$SOSP"
+   targetos="Multi-Platforms"
    dropextension="py"
    uploadpath="NULL"
    dropperpath="NULL"
@@ -12228,7 +12228,6 @@ case $choice in
 3) sh_evasion3 ;;
 4) sh_evasion4 ;;
 5) sh_evasion5 ;;
-6) sh_evasion6 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
@@ -13881,7 +13880,7 @@ case $choice in
 2) sh_shellcode18 ;;
 3) sh_shellcode19 ;;
 4) sh_shellcode26 ;;
-5) sh_evasion6 ;;
+5) sh_shellcode27 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_multi_menu ;;
