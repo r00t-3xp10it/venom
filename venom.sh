@@ -13208,10 +13208,10 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
+    TARGETOS : $targetos
     LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.$dropextension
     AGENT    : $IPATH/output/$Drop.py
-    TARGETOS : $targetos
     UPLOADTO : $rpath => (remote)
 !
 echo "---"
