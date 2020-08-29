@@ -106,9 +106,9 @@ class PULL:
 
     def get_com(self, mss=()):
         if mss:
-            rtval = input(self.DARKCYAN + ":prompt>" + self.END + " [" + self.GREEN + mss[1].ip + self.END + ":" + self.RED + str(mss[1].port) + self.END + "] ")
+            rtval = input(self.DARKCYAN + ":SillyRAT" + self.END + " [" + self.GREEN + mss[1].ip + self.END + ":" + self.RED + str(mss[1].port) + self.END + "] > ")
         else:
-            rtval = input(self.DARKCYAN + ":prompt>" + self.END + " ")
+            rtval = input(self.DARKCYAN + ":SillyRAT>" + self.END + " ")
         rtval = rtval.rstrip(" ").lstrip(" ")
         return rtval
 
@@ -479,7 +479,7 @@ class INTERFACE(COMMCENTER):
         try:
             self.SOCKET.bind((self.address, self.port))
             pull.print("Successfuly Bind to %s%s:%i" % (
-                pull.RED,
+                pull.GREEN,
                 self.address,
                 self.port,
             ))

