@@ -1,4 +1,14 @@
+"""
 
+ r00t-3xp10it changes v1.1
+ 
+ file/var      description
+ --------      -----------
+ imports.py    import sysconfig
+ pythonver     sysconfig.get_python_version()
+ myval         os.getpid()
+
+"""
 
 class SYSINFO:
 
@@ -24,7 +34,9 @@ class SYSINFO:
         headers = ("Platform Tag", "Information")
         values  = []
 
+        pythonver = sysconfig.get_python_version()
         uname = platform.uname()
+        myval = os.getpid()
 
         values.append(("System", uname.system))
         values.append(("Node Name", uname.node))
@@ -32,6 +44,8 @@ class SYSINFO:
         values.append(("Version", uname.version))
         values.append(("Machine", uname.machine))
         values.append(("Processor", uname.processor))
+        values.append(("Python Version", pythonver))
+        values.append(("PID", myval))
         
         rtval = tabulate.tabulate(values, headers=headers)
         return rtval
@@ -112,7 +126,7 @@ class SYSINFO:
         return rtval             
 
     def get_net_info(self):
-        headers = ('Interface', 'IP Address', 'MAC Address', 'Netmask', 'Broadcast IP', 'Broadcast MAC')
+        headers = ('Interface', 'IP Address', 'MAC Address', 'Netmask', 'Broadcast IP')
         values = []
 
         if_addrs = psutil.net_if_addrs()

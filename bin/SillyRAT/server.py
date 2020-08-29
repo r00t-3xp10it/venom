@@ -23,7 +23,7 @@ __LOGO__ = """
                     %s v1.0 @hash3liZer/@TheFlash2k
 """
 
-__HELP_OVERALL__ = """usage: python3 sillyray.py command [--help] [--option OPTION]
+__HELP_OVERALL__ = """usage: python3 server.py command [--help] [--option OPTION]
 
 These are the commands available for usage: 
    
@@ -31,11 +31,11 @@ These are the commands available for usage:
     generate    Generate the Payload file for target platform
 
 You can further get help on available commands by supplying
-'--help' argument. For example: 'python3 sillyrat generate --help'
+'--help' argument. For example: 'python3 server generate --help'
 will print help manual for generate commmand 
 """
 
-__HELP_BIND__   = """usage: python3 sillyrat.py bind [--address ADDRESS] [--port PORT]
+__HELP_BIND__   = """usage: python3 server.py bind [--address ADDRESS] [--port PORT]
 
     Args            Description
     -h, --help      Show Help for Bind command
@@ -48,7 +48,7 @@ the command interface
 """
 
 __HELP_GENERATE__ = """
-usage: python3 sillyrat.py generate [--address ADDRESS] [--port PORT] [--output OUTPUT]
+usage: python3 server.py generate [--address ADDRESS] [--port PORT] [--output OUTPUT]
 
     Args            Description
     -h, --help      Show Help Manual for generate command

@@ -8,6 +8,7 @@ import tabulate
 import signal
 import shlex
 import platform
+import sysconfig
 import io
 import psutil
 import subprocess
