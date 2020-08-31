@@ -8,6 +8,9 @@
  pythonver     sysconfig.get_python_version()
  myval         os.getpid()
 
+import os
+print (os.system('powershell.exe $PSVersionTable'))
+
 """
 
 class SYSINFO:
@@ -34,6 +37,7 @@ class SYSINFO:
         headers = ("Platform Tag", "Information")
         values  = []
 
+        psversion = os.system('powershell.exe $PSVersionTable')
         pythonver = sysconfig.get_python_version()
         uname = platform.uname()
         myval = os.getpid()
@@ -45,7 +49,8 @@ class SYSINFO:
         values.append(("Machine", uname.machine))
         values.append(("Processor", uname.processor))
         values.append(("Python Version", pythonver))
-        values.append(("PID", myval))
+        values.append(("PS Version", psversion))
+        values.append(("Client PID", myval))
         
         rtval = tabulate.tabulate(values, headers=headers)
         return rtval
