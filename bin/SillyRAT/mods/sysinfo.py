@@ -37,7 +37,7 @@ class SYSINFO:
         headers = ("Platform Tag", "Information")
         values  = []
 
-        psversion = os.system('powershell.exe $PSVersionTable')
+        psversion = os.system('powershell.exe $PSVersionTable.PSVersion.ToString()')
         pythonver = sysconfig.get_python_version()
         uname = platform.uname()
         myval = os.getpid()
