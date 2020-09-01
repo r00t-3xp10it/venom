@@ -10507,6 +10507,7 @@ rm $IPATH/output/server.py > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 cd $IPATH
 
+vbsevasion="OFF"
 sh_menu
 }
 
