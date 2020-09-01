@@ -41,9 +41,9 @@ MSF_LOGFILES=OFF
 
 
 
-### This function allow users to auto-obfuscate the droppers
-# And in 'amsi evasion' module it will trigger dropper|persistence
-# (scripts) Silent Executions (terminal prompt does not popup).
+### This function allow users to obfuscate the droppers build
+# by venom. And in 'amsi evasion' modules it will trigger dropper
+# Persistence, Obfuscation or Silent Executions using vbs scripts.
 ---------------
 OBFUSCATION=OFF
 ---------------

