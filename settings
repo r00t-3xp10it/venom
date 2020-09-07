@@ -69,7 +69,7 @@ APACHE_WEBROOT=/var/www/html
 
 
 
-### Wine install absoluct path
+### Wine drive_c install absoluct path
 # This next setting allow users to input
 # the absoluct path of wine install.
 -------------------------------
@@ -126,9 +126,6 @@ MEGAUPLOAD_DOMAIN=NO
 --------------------
 ARP_SETTINGS=IPv4
 ETTER_DNS_PATH=/etc/ettercap/etter.dns
-
-
-
 
 
 

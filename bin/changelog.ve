@@ -1,10 +1,13 @@
 FUNTION        DESCRIPTION   - [CHANGELOG VERSION 1.0.17] - Shinigami
 -------        ---------------------------------------------------------------------------
-improved   ->  Setup.sh review/Improved
-improved   ->  Venom Framework terminal displays review/Improved
+improved   ->  Setup.sh sourcecode review/improved
+improved   ->  Venom Framework terminal displays review/improved
+improved   ->  categorie 8 -> agent nº 6 (OBFUSCATION=ON -> obfuscate dropper.vbs)
+improved   ->  vbs-obfuscator.py updated (Obfuscate vbs files with random ancii chars)
 
 added      ->  categorie 8 -> agent nº 4 (meterpeter C2 PS Command & Control Framework)
 added      ->  categorie 8 -> agent nº 5 (Client.pdf.exe reverse TCP shell - PDF Trojan)
+added      ->  categorie 8 -> agent nº 6 (SillyRAT multi-platform reverse TCP python shell)
 added      ->  categorie 3 -> agent nº 5 (SillyRAT multi-platform reverse TCP python shell)
 
 bug fix    ->  The requested URL was not found on this server (@ricko2991)

