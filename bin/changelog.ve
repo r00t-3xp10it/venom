@@ -8,6 +8,7 @@ improved   ->  vbs-obfuscator.py updated (Obfuscate vbs files with random ancii 
 added      ->  categorie 8 -> agent nº 4 (meterpeter C2 PS Command & Control Framework)
 added      ->  categorie 8 -> agent nº 5 (Client.pdf.exe reverse TCP shell - PDF Trojan)
 added      ->  categorie 8 -> agent nº 6 (SillyRAT multi-platform reverse TCP python shell)
+added      ->  categorie 8 -> agent nº 7 (Reverse OpenSSL TCP Powershell Shell - FileLess)
 added      ->  categorie 3 -> agent nº 5 (SillyRAT multi-platform reverse TCP python shell)
 
 bug fix    ->  The requested URL was not found on this server (@ricko2991)
