@@ -11876,7 +11876,7 @@ zenity --title="☠ ICMP (ping) Reverse Shell ☠" --text "REMARK:\nRemmenber to
 # INTERACTIVE SHELLS (built-in) 
 # ----------------------------- 
 sh_buildin () {
-QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "This module uses system built-in tools sutch as:\n'bash, netcat, ssh, python, perl, js, powershell'\nAnd use them to spaw a tcp connection.\n\nrun module?" --width 320) > /dev/null 2>&1
+QuE=$(zenity --question --title "☠ BUILT-IN SHELL GENERATOR ☠" --text "This module uses system built-in tools sutch as:\n'bash, netcat, ssh, python, perl, js, powershell'\nAnd use them to spawn a tcp connection.\n\nrun module?" --width 320) > /dev/null 2>&1
      if [ "$?" -eq "0" ]; then
 
 cat << !
@@ -12242,7 +12242,7 @@ if [ "$Chts" = "ON" ]; then
 fi
 
 
-echo "${BlueF}[☠]${white} Exit Console -> Stoping Services..."${Reset};
+echo "${BlueF}[☠]${white} Exit Console -> Stoping Services."${Reset};
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
 service postgresql stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop postgresql" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
@@ -12291,7 +12291,7 @@ cat << !
     AGENT Nº2
     ─────────
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
-    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    TARGET SYSTEMS     : Windows (8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
     DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PS1
@@ -12319,7 +12319,7 @@ cat << !
     ─────────
     DESCRIPTION        : Reverse TCP Shell (PDF Trojan)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    LOLBin             : Powershell (DownloadFile)
+    LOLBin             : Powershell|bitsadmin (DownloadFile)
     DROPPER EXTENSION  : EXE|PDF.EXE
     AGENT EXTENSION    : EXE
     AGENT PERSISTENCE  : NOT AVAILABLE
@@ -12336,7 +12336,7 @@ cat << !
     AGENT Nº7
     ─────────
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
-    TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
+    TARGET SYSTEMS     : Windows (8|8.1|10)
     LOLBin             : WinHttpRequest (FileLess)
     DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PS1
@@ -12369,7 +12369,7 @@ case $choice in
 "help 7") easter7 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
 esac
 }
 
@@ -13311,10 +13311,11 @@ sleep 2
 
 ## Make Sure all dependencies are meet
 # check if mingw32 OR mingw-W64 GCC library exists
+if [ "$arch" = "wine64" ]; then report="mingw-W64"; else report="mingw32";fi
 echo "${BlueF}[${YellowF}i${BlueF}]${white} Checking Module Dependencies.${white}";sleep 2
 audit=$(which $ComP) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
-   echo "${RedF}[ERROR] mingw32 GCC compiler not found ($ComP)${white}"
+   echo "${RedF}[ERROR] $report GCC compiler not found ($ComP)${white}"
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Info: https://github.com/r00t-3xp10it/venom/wiki/Venom---Amsi-Evasion---agent-n%C2%BA5-(PDF-Trojan)";sleep 2
    if [ "$ArCh" = "x64" ]; then
       echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing GCC compiler."
@@ -14063,7 +14064,7 @@ case $choice in
 5) sh_mp4_trojan ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_unix_menu ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_unix_menu ;;
 esac
 }
 
@@ -14282,7 +14283,7 @@ case $choice in
 21) sh_icmp_shell ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_microsoft_menu ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_microsoft_menu ;;
 esac
 }
 
@@ -14333,8 +14334,8 @@ cat << !
     ─────────
     TARGET SYSTEMS     : Windows|Linux|OSx
     DESCRIPTION        : Reverse TCP python Shell (SillyRAT)
-    LOLBin             : Powershell|Wget (DownloadFile)
-    DROPPER EXTENSION  : EXE|BAT (obfuscation)
+    LOLBin             : Powershell|bitsadmin|Wget (DownloadFile)
+    DROPPER EXTENSION  : EXE|BAT (obfuscation=on)
     AGENT EXTENSION    : PY
 
     ╔═════════════════════════════════════════════════════════════╗
@@ -14356,7 +14357,7 @@ case $choice in
 5) sh_shellcode27 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_multi_menu ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_multi_menu ;;
 esac
 }
 
@@ -14415,7 +14416,7 @@ case $choice in
 3) sh_android_pdf ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_android_menu ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_android_menu ;;
 esac
 }
 
@@ -14472,7 +14473,7 @@ case $choice in
 3) sh_webshellunix ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_webshell_menu ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_webshell_menu ;;
 esac
 }
 
@@ -14530,7 +14531,7 @@ case $choice in
 3) sh_world25 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2; clear; sh_world ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_world ;;
 esac
 }
 
@@ -14585,7 +14586,7 @@ case $choice in
 7) sh_buildin ;;
 8) sh_ninja ;;
 e|E) sh_exit ;;
-*) echo ${RedF}[x]${white} "$choice": is not a valid Option${Reset}; sleep 2 ;;
+*) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2 ;;
 esac
 done
 
