@@ -13806,9 +13806,11 @@ echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver";sleep 2
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+   echo "${BlueF}- ATTACK VECTOR  : http://$lhost/MegaUpload.html"
+   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
+   echo "${BlueF}- ATTACK VECTOR  : http://$lhost/Download.html"
+   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
 fi
 echo "${BlueF}- OPENSSL SYSINFO: systeminfo|findstr \"Host OS Type\""
 echo "${BlueF}---"${Reset};
