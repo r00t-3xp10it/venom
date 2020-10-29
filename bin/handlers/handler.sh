@@ -33,6 +33,18 @@ Reset="${Escape}[0m";
 Colors;
 
 
+## Check for handler dependencies
+if ! [ -e "cert.pem" ] || ! [ -e "key.pem" ]; then
+   echo ${RedF}"Certificates not found in current directory .."
+   sleep 2 && exit
+fi
+zen=$(which openssl)
+if ! [ "$?" -eq "0" ]; then
+   echo ${RedF}"OpenSSL not found in current system .."
+   sleep 2 && exit
+fi
+
+
 ## Persistence Info Function
 sh_Info () {
 echo ""${BlueF}
@@ -70,7 +82,7 @@ cls
 sh_Certs () {
 echo "${YellowF}Editing cert.pem certificate."${Reset};sleep 1
 echo ""
-cat cert.pem
+openssl x509 -in cert.pem -noout -text
 echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset};
 read op
 cls

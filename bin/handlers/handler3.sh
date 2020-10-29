@@ -32,6 +32,13 @@ Reset="${Escape}[0m";
 Colors;
 
 
+## Check for handler dependencies
+if ! [ -e "server.py" ]; then
+   echo ${RedF}"server.py not found in current directory .."
+   sleep 2 && exit
+fi
+
+
 ## Persistence Info Function
 sh_Info () {
 echo ""${BlueF}

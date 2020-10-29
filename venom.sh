@@ -10533,6 +10533,22 @@ cd $IPATH
 sleep 2
 
 
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
+rm $ApAcHe/$Drop.py > /dev/nul 2>&1
+rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+rm $IPATH/output/$Drop > /dev/nul 2>&1
+rm $IPATH/output/$Drop.c > /dev/nul 2>&1
+rm $IPATH/output/$Drop.py > /dev/nul 2>&1
+rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $IPATH/output/dropper.c > /dev/nul 2>&1
+rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $IPATH/output/server.py > /dev/nul 2>&1
+rm $IPATH/output/Obfuscated.bat > /dev/nul 2>&1
+rm $IPATH/output/vbs-obfuscator.py > /dev/nul 2>&1
+rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+
+
 cd $IPATH/output
 ## Persistence handler script (zip) creation ..
 if [ "$persistence" = "Add persistence" ]; then
@@ -10585,23 +10601,7 @@ if [ "$persistence" = "Add persistence" ]; then
    zenity --title="☠ Reverse TCP python Shell (SillyRAT) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
 fi
 
-
-## Clean old files.
-echo "${BlueF}[☠]${white} Please Wait, cleaning old files.${white}";sleep 2
-rm $ApAcHe/$Drop.py > /dev/nul 2>&1
-rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
-rm $IPATH/output/$Drop > /dev/nul 2>&1
-rm $IPATH/output/$Drop.c > /dev/nul 2>&1
-rm $IPATH/output/$Drop.py > /dev/nul 2>&1
-rm $ApAcHe/Download.html > /dev/nul 2>&1
-rm $IPATH/output/dropper.c > /dev/nul 2>&1
-rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
-rm $IPATH/output/server.py > /dev/nul 2>&1
-rm $IPATH/output/Obfuscated.bat > /dev/nul 2>&1
-rm $IPATH/output/vbs-obfuscator.py > /dev/nul 2>&1
-rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 cd $IPATH
-
 vbsevasion="OFF"
 sh_menu
 }
@@ -13020,6 +13020,7 @@ else
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
    rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
+cd $IPATH
 sh_menu
 }
 
@@ -13277,7 +13278,7 @@ if [ "$persistence" = "Add persistence" ]; then
 
    ## zip handler files
    echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Compressing (zip) handler files .."${Reset};sleep 2
-   zip handler_ID:$Id.zip handler.sh cert.pem key.pem README -m -q
+   zip handler_ID:$Id.zip handler.sh README -m -q
    cd $IPATH
    zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
 else
@@ -13285,6 +13286,7 @@ else
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
    rm $IPATH/output/key.pem > /dev/nul 2>&1
 fi
+cd $IPATH
 sh_menu
 }
 
