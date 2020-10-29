@@ -35,12 +35,12 @@ Colors;
 
 ## Check for handler dependencies
 if ! [ -e "cert.pem" ] || ! [ -e "key.pem" ]; then
-   echo ${RedF}"Certificates not found in current directory .."
+   echo ${RedF}"- Certificates not found in current directory .."
    sleep 2 && exit
 fi
 zen=$(which openssl)
 if ! [ "$?" -eq "0" ]; then
-   echo ${RedF}"OpenSSL not found in current system .."
+   echo ${RedF}"- OpenSSL not found in current system .."
    sleep 2 && exit
 fi
 

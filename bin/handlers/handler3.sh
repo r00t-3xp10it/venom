@@ -34,7 +34,7 @@ Colors;
 
 ## Check for handler dependencies
 if ! [ -e "server.py" ]; then
-   echo ${RedF}"server.py not found in current directory .."
+   echo ${RedF}"- server.py not found in current directory .."
    sleep 2 && exit
 fi
 

@@ -35,7 +35,7 @@ Colors;
 ## Check for handler dependencies
 zen=$(which nc)
 if ! [ "$?" -eq "0" ]; then
-   echo ${RedF}"Netcat not found in current system .."
+   echo ${RedF}"- Netcat not found in current system .."
    sleep 2 && exit
 fi
 
