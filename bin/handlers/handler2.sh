@@ -113,7 +113,7 @@ cat << !
     --------    -----------
     Info        Detail information about this handler
     Start       Start this stored handler (Listenner)
-    Exit        Exit  this stored handler (Script)
+    Exit        Exit this stored handler and zip files.
 
 
 !

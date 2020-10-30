@@ -132,7 +132,7 @@ cat << !
     Info        Detail information about this handler
     Start       Start this stored handler (Listenner)
     Certs       Review Server/Client certificates (SSL)
-    Exit        Exit  this stored handler (Script)
+    Exit        Exit this stored handler and zip files.
 
 
 !
