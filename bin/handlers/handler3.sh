@@ -8,14 +8,14 @@
 
 ## Variable declarations
 # venom.sh will config this settings
-ID='NULL'
-RPATH='NULL'
-LPORT='NULL'
-LHOST='NULL'
-CLIENT='NULL'
-DROPPER='NULL'
-LAST_ACCESS='NULL'
-FIRST_ACCESS='NULL'
+ID='@NULL'
+RPATH='@NULL'
+LPORT='@NULL'
+LHOST='@NULL'
+CLIENT='@NULL'
+DROPPER='@NULL'
+LAST_ACCESS='@NULL'
+FIRST_ACCESS='@NULL'
 
 
 ## Colorise shell Script output leters

