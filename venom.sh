@@ -10543,7 +10543,6 @@ rm $IPATH/output/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
-rm $IPATH/output/server.py > /dev/nul 2>&1
 rm $IPATH/output/Obfuscated.bat > /dev/nul 2>&1
 rm $IPATH/output/vbs-obfuscator.py > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
