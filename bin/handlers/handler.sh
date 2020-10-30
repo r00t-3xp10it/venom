@@ -60,7 +60,7 @@ echo "    CATEGORIE   : Amsi Evasion (agent nº2)"
 echo "    DESCRIPTION : Reverse TCP OpenSSL PS Shell"
 echo "    AGENT RPATH : $RPATH"
 echo "    PERSISTENCE : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147_$ID.update.bat"
-echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
+echo "" && echo ${RedF}:${BlueF}Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls
 }
@@ -84,7 +84,7 @@ sh_Certs () {
 echo "${YellowF}Editing cert.pem certificate."${Reset};sleep 1
 echo ""
 openssl x509 -in cert.pem -noout -text
-echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset};
+echo "" && echo ${RedF}:${BlueF}Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset};
 read op
 cls
 }
@@ -130,7 +130,7 @@ cat << !
 
 !
 
-echo -n ${BlueF}":Handler> "${Reset}
+echo -n ${RedF}":${BlueF}Handler> "${Reset}
 read choice
 case $choice in
 Info|info|INFO) sh_Info ;;

@@ -52,7 +52,7 @@ echo "    CATEGORIE   : Amsi Evasion (agent nº6)"
 echo "    DESCRIPTION : Reverse TCP python Shell (SillyRAT)"
 echo "    AGENT RPATH : $RPATH"
 echo "    PERSISTENCE : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat"
-echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
+echo "" && echo ${RedF}:${BlueF}Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls
 }
@@ -112,7 +112,7 @@ cat << !
 
 !
 
-echo -n ${BlueF}":Handler> "${Reset}
+echo -n ${RedF}":${BlueF}Handler> "${Reset}
 read choice
 case $choice in
 Info|info|INFO) sh_Info ;;
