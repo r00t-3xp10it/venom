@@ -4,7 +4,7 @@
 # Suspicious-Shell-Activity (SSA) RedTeam @2017 - @2020
 # codename: Shinigami (GPL licensed)
 # Stable version: 1.0.17
-# Dev version: 1.0.17.5
+# Dev version: 1.0.17.6
 # --------------------------------------------------------------
 # [INSTALL DEPENDENCIES]
 # cd aux && sudo ./setup.sh
