@@ -98,9 +98,9 @@ cat << !
 
 
 !
-echo "${YellowF}    Id      LocalHost           ActiveOn"${BlueF};
-echo "${BlueF}    ----    ------------        ------------"${BlueF};
-echo "${RedF}    $ID${BlueF}     $LHOST:$LPORT    $FIRST_ACCESS"${BlueF};
+echo "${YellowF}    Id      ActiveOn               LocalHost"${BlueF};
+echo "${BlueF}    ----    ------------           -------------"${BlueF};
+echo "${RedF}    $ID${BlueF}     $FIRST_ACCESS   $LHOST:$LPORT"${BlueF};
 echo "" && echo "${YellowF}    Commands    Description"${BlueF};
 cat << !
     --------    -----------

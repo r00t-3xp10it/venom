@@ -12909,7 +12909,11 @@ rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Building SSL certificates (openssl) .."${Reset};sleep 2
 xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
-echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
+if [ -e cert.pem ]; then
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
+else
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${RedF}FAIL${white}])${white} ..";sleep 2
+fi
 cd $IPATH
 
 
@@ -13918,7 +13922,11 @@ else
 fi
 
 xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
-echo "${BlueF}[${YellowF}i${BlueF}]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])";sleep 2
+if [ -e cert.pem ]; then
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
+else
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${RedF}FAIL${white}])${white} ..";sleep 2
+fi
 cd $IPATH
 
 
