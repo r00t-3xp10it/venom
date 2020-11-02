@@ -13109,7 +13109,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : Powershell (DownloadFile)
+    LOLBin   : bitsadmin (DownloadFile)
     DROPPER  : $IPATH/output/$Drop.$ext.bat
     AGENT    : $IPATH/output/$NaM.ps1
     UPLOADTO : $rpath => ($wvd)
