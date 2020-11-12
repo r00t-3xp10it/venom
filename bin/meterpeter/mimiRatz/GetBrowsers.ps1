@@ -243,7 +243,7 @@ function BROWSER_RECON {
     echo "-------   -------   ------   -------         ----------" >> $LogFilePath\BrowserEnum.log
     echo "IE        $IEfound  $iStatus   $IEVersion    $id" >> $LogFilePath\BrowserEnum.log
     echo "CHROME    $CHfound  $cStatus   $Chrome_App   $cd" >> $LogFilePath\BrowserEnum.log
-    echo "FIREFOX   $FFfound  $fStatus   $ParsingData            $fd" >> $LogFilePath\BrowserEnum.log
+    echo "FIREFOX   $FFfound  $fStatus   $ParsingData          $fd" >> $LogFilePath\BrowserEnum.log
     ## Get-NetAdapter { Interfaces Available }
     $Interfaces = Get-NetAdapter|Select-Object Status,InterfaceDescription -ErrorAction SilentlyContinue
     If($Interfaces){echo "`n" $Interfaces >> $LogFilePath\BrowserEnum.log}
