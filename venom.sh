@@ -12707,7 +12707,7 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12956,10 +12956,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -13266,10 +13266,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -13802,7 +13802,7 @@ echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";slee
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-echo "${BlueF}- NETCAT SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
@@ -14036,7 +14036,7 @@ else
    echo "${BlueF}- ATTACK VECTOR  : http://$lhost/Download.html"
    if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
 fi
-echo "${BlueF}- OPENSSL SYSINFO: systeminfo|findstr \"Host OS Type\""
+   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
