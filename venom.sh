@@ -10543,6 +10543,7 @@ rm $IPATH/output/$Drop.py > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/dropper.c > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 rm $IPATH/output/Obfuscated.bat > /dev/nul 2>&1
 rm $IPATH/output/vbs-obfuscator.py > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
@@ -12707,7 +12708,7 @@ if [ "$phish" = "Mega-Upload (default)" ]; then
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
 fi
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -12726,6 +12727,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 rm $ApAcHe/Download.html > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 
 ## Build Report File in output folder ..
 if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" ]; then
@@ -12956,10 +12958,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -12980,6 +12982,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
@@ -13266,10 +13269,10 @@ echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 else
    echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 fi
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
@@ -13290,6 +13293,7 @@ rm $ApAcHe/Download.html > /dev/nul 2>&1
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
@@ -13802,7 +13806,7 @@ echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";slee
 echo "${BlueF}---"
 echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
 echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
@@ -13826,6 +13830,7 @@ rm $IPATH/output/Client.exe > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $IPATH/output/Server.exe > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
@@ -14036,7 +14041,7 @@ else
    echo "${BlueF}- ATTACK VECTOR  : http://$lhost/Download.html"
    if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
 fi
-   echo "${BlueF}- CmdLine & Scripts for rev shell: shorturl.at/nuwJV"
+   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
@@ -14057,6 +14062,7 @@ rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 sh_menu
