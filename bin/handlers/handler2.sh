@@ -38,6 +38,7 @@ if ! [ "$?" -eq "0" ]; then
    echo ${RedF}"[ERROR] Netcat not found in current system .."
    sleep 2 && exit
 fi
+service apache2 start
 
 
 ## Persistence Info Function

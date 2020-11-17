@@ -37,6 +37,7 @@ if ! [ -e "server.py" ]; then
    echo ${RedF}"[ERROR] server.py not found in current directory .."
    sleep 2 && exit
 fi
+service apache2 start
 
 
 ## Persistence Info Function
