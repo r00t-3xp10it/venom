@@ -609,11 +609,11 @@ If(-not($Installation) -or $Installation -ieq $null){
          Write-Host "$datasix"
          Write-Host "$datafive"
          Write-Host "$datatwo"
-         Write-Host "$datatre"
+         Write-Host "$datatre`n"
       }Else{
          Write-Host "`nwebserver firewall rule"
          Write-Host "-----------------------"
-         Write-Host "[fail] @webserver cant find the firewall rule" -ForegroundColor DarkRed -BackgroundColor Cyan
+         Write-Host "[fail] @webserver cant find the firewall rule`n" -ForegroundColor DarkRed -BackgroundColor Cyan
       }
    }
 }
