@@ -602,18 +602,18 @@ If(-not($Installation) -or $Installation -ieq $null){
          $datafour = $FirewallProfile -replace ':                            ',' :'
          $datafive = $FirewallProto -replace ':                            ',' :'
          $datasix = $FirewallAction -replace ':                              ','   :'
-         Write-Host "`nwebserver firewall rule"
+         Write-Host "`nWebserver firewall rule"
          Write-Host "-----------------------"
-         Write-Host "$dataone"
-         Write-Host "$datafour"
-         Write-Host "$datasix"
-         Write-Host "$datafive"
-         Write-Host "$datatwo"
-         Write-Host "$datatre`n"
+         Write-Host "  $dataone"
+         Write-Host "  $datafour"
+         Write-Host "  $datasix"
+         Write-Host "  $datafive"
+         Write-Host "  $datatwo"
+         Write-Host "  $datatre`n"
       }Else{
-         Write-Host "`nwebserver firewall rule"
+         Write-Host "`nWebserver firewall rule"
          Write-Host "-----------------------"
-         Write-Host "[fail] @webserver cant find the firewall rule`n" -ForegroundColor DarkRed -BackgroundColor Cyan
+         Write-Host "  [fail] @webserver cant find the firewall rule`n" -ForegroundColor DarkRed -BackgroundColor Cyan
       }
    }
 }
@@ -624,4 +624,5 @@ If(-not($Installation) -or $Installation -ieq $null){
 If(Test-Path "$Env:TMP\$BinName"){Remove-Item "$Env:TMP\$BinName" -Force}
 Start-Sleep -Seconds 1
 exit
+
 
