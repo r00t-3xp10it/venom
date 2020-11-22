@@ -240,15 +240,21 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    ## Kill Process by is PID number
    If($Sessions -Match '^\d+$'){
       Write-Host "`nKilling Process PID: $Sessions" -ForegroundColor DarkGreen
-      cmd /c taskkill /F /PID $Sessions;Start-Sleep -Seconds 1
-      Write-Host "`nCurrently active session process(s)" -ForegroundColor Yellow
-      Write-Host "ProcessName                   PID  SessionName                Session MemUsage" -ForegroundColor DarkGreen
-      cmd /c tasklist /NH|findstr /I "python"
+      $PidExists = Get-Process python -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id
+      ## Make sure that python process PID exists
+      If($PidExists -Match "$Sessions"){
+         cmd /c taskkill /F /PID $Sessions;Start-Sleep -Seconds 1
+         Write-Host "`nCurrently active session process(s)" -ForegroundColor Yellow
+         Write-Host "ProcessName                   PID  SessionName                Session MemUsage" -ForegroundColor DarkGreen
+         cmd /c tasklist /NH|findstr /I "python"
 
-      ## Delete session PID Number from sessions.log file
-      $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
-      $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
-      ((Get-Content -Path "$Env:TMP\sessions.log" -Raw) -Replace "$SessionPidDeletion","****")|Set-Content -Path "$Env:TMP\sessions.log"  -NoNewline -Force
+         ## Delete session PID Number from sessions.log file
+         $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
+         $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
+         ((Get-Content -Path "$Env:TMP\sessions.log" -Raw) -Replace "$SessionPidDeletion","****")|Set-Content -Path "$Env:TMP\sessions.log"  -NoNewline -Force
+      }Else{
+         Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor DarkRed -BackGroundColor Cyan
+      }
    }
    write-host "";Start-Sleep -Seconds 1
    exit ## exit @webserver
