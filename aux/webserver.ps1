@@ -251,7 +251,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
          ## Delete session PID Number from sessions.log file
          $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
          $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
-         ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","****")|Set-Content -Path "$Env:TMP\sessions.log" -Force
+         ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","****")|Set-Content -Path "$Env:TMP\sessions.log" -NoNewLine -Force
       }Else{
          Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor DarkRed -BackGroundColor Cyan
       }
