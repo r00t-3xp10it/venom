@@ -151,7 +151,7 @@ $Banner = @"
  ===  ===  === ======   =======   =====  ======   =======  ===  === ======   ======= 
   ===========  ===      ===  ===     === ===      === ===   ======  ===      === === 
    ==== ====   ======== =======  ======  ======== ===  ===    ==    ======== ===  ===
-        Simple (SE) HTTP WebServer by:r00t-3xp10it {SSA@RedTeam} $CmdletVersion
+          Simple (SE) HTTP WebServer by:r00t-3xp10it {SSA@RedTeam} $CmdletVersion
 
 "@;
 Clear-Host;
@@ -597,6 +597,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "ESTABLISHED"|findstr /V "::"|findstr /V "["|findstr /V "UDP" >> $Env:TMP\logfile.log
       Get-Content $Env:TMP\logfile.log;Remove-Item $Env:TMP\logfile.log -Force
+      Write-Host ""
    }
 }
 
