@@ -598,6 +598,19 @@ If(-not($Installation) -or $Installation -ieq $null){
       cmd /c netstat -ano|findstr "ESTABLISHED"|findstr /V "::"|findstr /V "["|findstr /V "UDP" >> $Env:TMP\logfile.log
       Get-Content $Env:TMP\logfile.log;Remove-Item $Env:TMP\logfile.log -Force
       Write-Host ""
+
+      ## Capture wlan interface password
+      $interface = netsh wlan show interfaces|findstr /C:"SSID"|findstr /V "BSSID"
+      If($LASTEXITCODE -eq 0){
+         $DataParse = $interface -replace '    SSID                   :','' -replace ' ',''
+         $Key = netsh wlan show profile name="$DataParse" key=clear|findstr /C:"Key Content"
+         $Data = $Key -replace '    Key Content            :','' -replace ' ',''
+         Write-Host "Wlan SSID password"
+         Write-Host "------------------"
+         Write-Host "  SSID: $DataParse"
+         Write-Host "  Key : $Data"
+         Write-Host ""
+      }
    }
 }
 
