@@ -12983,6 +12983,7 @@ rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
+rm $IPATH/output/.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 
@@ -14063,6 +14064,7 @@ rm $IPATH/output/key.pem > /dev/nul 2>&1
 rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
 rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
 rm $ApAcHe/webserver.ps1 > /dev/nul 2>&1
+rm $IPATH/output/.ps1 > /dev/nul 2>&1
 rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 
 sh_menu
