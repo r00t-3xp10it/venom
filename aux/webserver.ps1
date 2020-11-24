@@ -599,20 +599,28 @@ If(-not($Installation) -or $Installation -ieq $null){
       Get-Content $Env:TMP\logfile.log;Remove-Item $Env:TMP\logfile.log -Force
       Write-Host ""
 
-      ## Capture wlan interface password
-      $interface = netsh wlan show interfaces|findstr /C:"SSID"|findstr /V "BSSID"
-      If($LASTEXITCODE -eq 0){
-         $DataParse = $interface -replace '    SSID                   :','' -replace ' ',''
-         $Key = netsh wlan show profile name="$DataParse" key=clear|findstr /C:"Key Content"
-         $Data = $Key -replace '    Key Content            :','' -replace ' ',''
-         Write-Host "Wlan SSID password"
-         Write-Host "------------------"
-         Write-Host "  SSID: $DataParse"
-         Write-Host "  Key : $Data"
-         Write-Host ""
+      ## Capture wlan interface passwords
+      $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
+      $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
+
+      ## Create Data Table for output
+      $mytable = new-object System.Data.DataTable
+      $mytable.Columns.Add("SSID name") | Out-Null
+      $mytable.Columns.Add("Password") | Out-Null
+
+      foreach($Token in $DataParse){
+         $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
+         $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
+         ## Put results in the data table   
+         $mytable.Rows.Add("$Token",
+                           "$Key") | Out-Null
       }
+      ## Display Table
+      $mytable|Format-Table -AutoSize > $Env:TMP\lk.log
+      Get-Content $Env:TMP\lk.log;Remove-Item $Env:TMP\lk.log -Force
    }
 }
+
 
 ## Final Notes:
 # The 'cmd /c' syscall its used in certain ocasions in this cmdlet only because
