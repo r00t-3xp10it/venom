@@ -490,11 +490,11 @@ $Timer = Get-Date -Format 'HH:mm:ss'
 
             ## Create Data Table for output
             $mytable = New-Object System.Data.DataTable
-            $mytable.Columns.Add("PID")|Out-Null
             $mytable.Columns.Add("StartTime")|Out-Null
             $mytable.Columns.Add("ProcessName")|Out-Null
+            $mytable.Columns.Add("PID")|Out-Null
             $mytable.Columns.Add("LogFile")|Out-Null
-            $mytable.Rows.Add("$PIDS","$KeyLoggerTimer","void.exe","$Env:TMP\void.log")|Out-Null
+            $mytable.Rows.Add("$KeyLoggerTimer","void.exe","$PIDS","$Env:TMP\void.log")|Out-Null
 
          ## Display Data Table
          $mytable|Format-Table -AutoSize > $Env:TMP\KeyDump.log
