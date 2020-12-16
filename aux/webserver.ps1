@@ -777,16 +777,12 @@ If(-not($Installation) -or $Installation -ieq $null){
 
       If($SEnum -ieq "Verbose"){
          ## Display @webserver firewall rule
-         echo "" > $Env:TMP\PSfirewall.log
-         echo "webserver Firewall" >> $Env:TMP\PSfirewall.log
-         echo "------------------" >> $Env:TMP\PSfirewall.log
-         cmd /c netsh advfirewall firewall show rule name="python.exe"|findstr /V "^[Ok.]"|findstr /V "^[-]"|Where {$_ -ne ""} >> $Env:TMP\PSfirewall.log
+         Get-NetFirewallRule|Where { $_.DisplayName -eq 'python.exe' }|Select-Object DisplayName,Description,Enabled,Profile,Direction,Action|Format-Table -AutoSize > $Env:TMP\PSfirewall.log
          Get-Content -Path "$Env:TMP\PSfirewall.log";Remove-Item -Path "$Env:TMP\PSfirewall.log" -Force
       }
 
       ## TCP Connections enumeration
-      echo "" > $Env:TMP\logfile.log
-      echo "Connection Status" >> $Env:TMP\logfile.log
+      echo "Connection Status" > $Env:TMP\logfile.log
       echo "-----------------" >> $Env:TMP\logfile.log
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "${Remote_Host}:${Remote_Server_Port}"|findstr "LISTENING ESTABLISHED" >> $Env:TMP\logfile.log
