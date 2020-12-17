@@ -782,7 +782,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       }
 
       ## TCP Connections enumeration
-      echo "Connection Status" > $Env:TMP\logfile.log
+      echo "`nConnection Status" > $Env:TMP\logfile.log
       echo "-----------------" >> $Env:TMP\logfile.log
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "${Remote_Host}:${Remote_Server_Port}"|findstr "LISTENING ESTABLISHED" >> $Env:TMP\logfile.log
@@ -853,6 +853,7 @@ If(-not($Installation) -or $Installation -ieq $null){
    }
 }
 
+Write-Host ""
 ## Final Notes:
 # The 'cmd /c' syscall its used in certain ocasions in this cmdlet only because
 # it produces less error outputs in terminal prompt compared with PowerShell.
