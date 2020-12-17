@@ -188,6 +188,20 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    Start-Sleep -Seconds 1
 }
 
+   <#
+   .SYNOPSIS
+      Author: @rasta.mouse
+      Find missing software patchs for privilege escalation
+
+   .NOTES
+      This Module does not exploit any vulnerabitys found.
+      It will 'report' them and presents the exploit-db link
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -EOP True
+      Find missing software patchs for privilege escalation
+   #>
+
    ## Download Sherlock from @rasta-mouse github repository
    Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/rasta-mouse/Sherlock/master/Sherlock.ps1 -Destination $Env:TMP\Sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null   
 
