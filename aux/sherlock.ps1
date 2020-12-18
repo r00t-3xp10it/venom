@@ -28,7 +28,7 @@ $Global:ExploitTable = $null
 
 function Get-FileVersionInfo ($FilePath) {
 
-    $VersionInfo = (Get-Item $FilePath).VersionInfo
+    $VersionInfo = (Get-Item $FilePath -EA SilentlyContinue).VersionInfo
     $FileVersion = ( "{0}.{1}.{2}.{3}" -f $VersionInfo.FileMajorPart, $VersionInfo.FileMinorPart, $VersionInfo.FileBuildPart, $VersionInfo.FilePrivatePart )
         
     return $FileVersion
