@@ -276,8 +276,10 @@ function Find-MS15078 {
 
     $Path = $env:windir + "\system32\atmfd.dll"
     $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
-    $VersionInfo = $VersionInfo.Split(" ")
-    $Revision = $VersionInfo[2]
+    If($VersionInfo){
+       $VersionInfo = $VersionInfo.Split(" ")
+       $Revision = $VersionInfo[2]
+    }
 
     switch($Revision){
         243 { $VulnStatus = "Appears Vulnerable" }
