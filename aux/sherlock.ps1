@@ -273,12 +273,13 @@ function Find-MS15051 {
 function Find-MS15078 {
 
     $MSBulletin = "MS15-078"
-
     $Path = $env:windir + "\system32\atmfd.dll"
-    $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
-    If($VersionInfo){
+    If(Test-Path -Path "$Path" -EA SilentlyContinue){
+       $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
        $VersionInfo = $VersionInfo.Split(" ")
        $Revision = $VersionInfo[2]
+    }Else{
+      $VulnStatus = "Not Vulnerable"
     }
 
     switch($Revision){
