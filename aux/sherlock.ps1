@@ -36,7 +36,7 @@ function Get-InstalledSoftware($SoftwareName){
 }
 
 function Get-Architecture {
-    # This is the CPU architecture.  Returns "64-bit" or "32-bit".
+    # This is the CPU architecture.  Returns "64 bits" or "32-bit".
     $CPUArchitecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
 
     # This is the process architecture, e.g. are we an x86 process running on a 64-bit system.  Retuns "AMD64" or "x86".
@@ -131,8 +131,8 @@ function Find-MS10015 {
 
     $MSBulletin = "MS10-015"
     $Architecture = Get-Architecture
-    If($Architecture[0] -eq "64-bit"){
-        $VulnStatus = "Not supported on 64-bit systems"
+    If($Architecture[0] -eq "64 bits"){
+        $VulnStatus = "Not supported on 64 bits systems"
     }Else{
         $Path = $env:windir + "\system32\ntoskrnl.exe"
         $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
@@ -153,7 +153,7 @@ function Find-MS10092 {
     $Architecture = Get-Architecture
     If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\schedsvc.dll"
-    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+    }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\schedsvc.dll"
     }
 
@@ -173,7 +173,7 @@ function Find-MS13053 {
 
     $MSBulletin = "MS13-053"
     $Architecture = Get-Architecture
-    If($Architecture[0] -eq "64-bit"){
+    If($Architecture[0] -eq "64 bits"){
         $VulnStatus = "Not supported on 64-bit systems"
     }Else{
         $Path = $env:windir + "\system32\win32k.sys"
@@ -197,7 +197,7 @@ function Find-MS13081 {
 
     $MSBulletin = "MS13-081"
     $Architecture = Get-Architecture
-    If($Architecture[0] -eq "64-bit"){
+    If($Architecture[0] -eq "64 bits"){
         $VulnStatus = "Not supported on 64-bit systems"
     }Else{
 
@@ -224,7 +224,7 @@ function Find-MS14058 {
     $Architecture = Get-Architecture
     If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+    }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
     }
 
@@ -250,7 +250,7 @@ function Find-MS15051 {
     $Architecture = Get-Architecture
     If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+    }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
     }
 
@@ -290,7 +290,7 @@ function Find-MS16016 {
 
     $MSBulletin = "MS16-016"
     $Architecture = Get-Architecture
-    If($Architecture[0] -eq "64-bit"){
+    If($Architecture[0] -eq "64 bits"){
         $VulnStatus = "Not supported on 64-bit systems"
     }Else{
 
@@ -326,7 +326,7 @@ function Find-MS16032 {
         $Architecture = Get-Architecture
         If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
             $Path = $env:windir + "\system32\seclogon.dll"
-        }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+        }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
             $Path = $env:windir + "\sysnative\seclogon.dll"
         } 
 
@@ -356,7 +356,7 @@ function Find-MS16034 {
     $Architecture = Get-Architecture
     If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+    }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
     } 
 
@@ -403,7 +403,7 @@ function Find-MS16135 {
     $Architecture = Get-Architecture
     If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
+    }ElseIf($Architecture[0] -eq "64 bits" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
     }
 
