@@ -4,11 +4,8 @@
     Author: @_RastaMouse
     License: GNU General Public License v3.0
 
-#>
 
-<#
-
-RTM build reference, because I'm stupid and forget...
+RTM build reference
 
 6002: Vista SP2/2008 SP2
 7600: 7/2008 R2
@@ -24,28 +21,21 @@ RTM build reference, because I'm stupid and forget...
 
 #>
 
+
 $Global:ExploitTable = $null
-
-function Get-FileVersionInfo ($FilePath) {
-
+function Get-FileVersionInfo($FilePath){
     $VersionInfo = (Get-Item $FilePath -EA SilentlyContinue).VersionInfo
     $FileVersion = ( "{0}.{1}.{2}.{3}" -f $VersionInfo.FileMajorPart, $VersionInfo.FileMinorPart, $VersionInfo.FileBuildPart, $VersionInfo.FilePrivatePart )
-        
     return $FileVersion
-
 }
 
-function Get-InstalledSoftware($SoftwareName) {
-
+function Get-InstalledSoftware($SoftwareName){
     $SoftwareVersion = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq $SoftwareName } | Select-Object Version
     $SoftwareVersion = $SoftwareVersion.Version  # I have no idea what I'm doing
-    
     return $SoftwareVersion
-
 }
 
 function Get-Architecture {
-
     # This is the CPU architecture.  Returns "64-bit" or "32-bit".
     $CPUArchitecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
 
@@ -53,15 +43,11 @@ function Get-Architecture {
     $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 
     return $CPUArchitecture, $ProcessArchitecture
-
 }
 
 function Get-CPUCoreCount {
-
     $CoreCount = (Get-WmiObject Win32_Processor).NumberOfLogicalProcessors
-    
     return $CoreCount
-
 }
 
 function New-ExploitTable {
@@ -99,45 +85,30 @@ function New-ExploitTable {
 
 }
 
-function Set-ExploitTable ($MSBulletin, $VulnStatus) {
-
-    if ( $MSBulletin -like "MS*" ) {
-
+function Set-ExploitTable ($MSBulletin, $VulnStatus){
+    If($MSBulletin -like "MS*"){
         $Global:ExploitTable | Where-Object { $_.MSBulletin -eq $MSBulletin
-
         } | ForEach-Object {
-
             $_.VulnStatus = $VulnStatus
-
         }
 
-    } else {
-
+    }Else{
 
     $Global:ExploitTable | Where-Object { $_.CVEID -eq $MSBulletin
-
         } | ForEach-Object {
-
             $_.VulnStatus = $VulnStatus
-
         }
-
     }
-
 }
 
 function Get-Results {
-
     $Global:ExploitTable
-
 }
 
 function Find-AllVulns {
 
-    if ( !$Global:ExploitTable ) {
-
+    If(-not($Global:ExploitTable)){
         $null = New-ExploitTable
-    
     }
 
         Find-MS10015
@@ -154,206 +125,149 @@ function Find-AllVulns {
         Find-CVE20177199
 
         Get-Results
-
 }
 
 function Find-MS10015 {
 
     $MSBulletin = "MS10-015"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[0] -eq "64-bit" ) {
-
+    If($Architecture[0] -eq "64-bit"){
         $VulnStatus = "Not supported on 64-bit systems"
-
-    } Else {
-
+    }Else{
         $Path = $env:windir + "\system32\ntoskrnl.exe"
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
-
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
-
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "20591" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS10092 {
 
     $MSBulletin = "MS10-092"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+    If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\schedsvc.dll"
-
-    } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\schedsvc.dll"
-
     }
 
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
-
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "20830" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS13053 {
 
     $MSBulletin = "MS13-053"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[0] -eq "64-bit" ) {
-
+    If($Architecture[0] -eq "64-bit"){
         $VulnStatus = "Not supported on 64-bit systems"
-
-    } Else {
-
+    }Else{
         $Path = $env:windir + "\system32\win32k.sys"
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
 
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -ge "17000" ] }
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "22348" ] }
             9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "20732" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS13081 {
 
     $MSBulletin = "MS13-081"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[0] -eq "64-bit" ) {
-
+    If($Architecture[0] -eq "64-bit"){
         $VulnStatus = "Not supported on 64-bit systems"
-
-    } Else {
+    }Else{
 
         $Path = $env:windir + "\system32\win32k.sys"
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
 
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -ge "18000" ] }
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "22435" ] }
             9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "20807" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS14058 {
 
     $MSBulletin = "MS14-058"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+    If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-
-    } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
-
     }
 
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
 
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -ge "18000" ] }
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "22823" ] }
             9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "21247" ] }
             9600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "17353" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS15051 {
 
     $MSBulletin = "MS15-051"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+    If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-
-    } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
-
     }
 
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
 
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "18000" ] }
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "22823" ] }
             9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "21247" ] }
             9600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "17353" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS15078 {
@@ -361,42 +275,33 @@ function Find-MS15078 {
     $MSBulletin = "MS15-078"
 
     $Path = $env:windir + "\system32\atmfd.dll"
-    $VersionInfo = Get-FileVersionInfo($Path)
+    $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
     $VersionInfo = $VersionInfo.Split(" ")
-
     $Revision = $VersionInfo[2]
 
-    switch ( $Revision ) {
-
+    switch($Revision){
         243 { $VulnStatus = "Appears Vulnerable" }
         default { $VulnStatus = "Not Vulnerable" }
-
     }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS16016 {
 
     $MSBulletin = "MS16-016"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[0] -eq "64-bit" ) {
-
+    If($Architecture[0] -eq "64-bit"){
         $VulnStatus = "Not supported on 64-bit systems"
-
-    } Else {
+    }Else{
 
         $Path = $env:windir + "\system32\drivers\mrxdav.sys"
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
 
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "16000" ] }
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "23317" ] }
             9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "21738" ] }
@@ -404,48 +309,34 @@ function Find-MS16016 {
             10240 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "16683" ] }
             10586 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "103" ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS16032 {
 
     $MSBulletin = "MS16-032"
-    
     $CPUCount = Get-CPUCoreCount
 
-    if ( $CPUCount -eq "1" ) {
-
+    If($CPUCount -eq "1"){
         $VulnStatus = "Not Supported on single-core systems"
-    
-    } Else {
+    }Else{
     
         $Architecture = Get-Architecture
-
-        if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+        If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
             $Path = $env:windir + "\system32\seclogon.dll"
-
-        } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+        }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
             $Path = $env:windir + "\sysnative\seclogon.dll"
-
         } 
 
-            $VersionInfo = Get-FileVersionInfo($Path)
-
+            $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
             $VersionInfo = $VersionInfo.Split(".")
 
             $Build = [int]$VersionInfo[2]
             $Revision = [int]$VersionInfo[3].Split(" ")[0]
 
-            switch ( $Build ) {
-
+            switch($Build){
                 6002 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revison -lt 19598 -Or ( $Revision -ge 23000 -And $Revision -le 23909 ) ] }
                 7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 19148 ] }
                 7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 19148 -Or ( $Revision -ge 23000 -And $Revision -le 23347 ) ] }
@@ -454,113 +345,81 @@ function Find-MS16032 {
                 10240 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 16724 ] }
                 10586 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 161 ] }
                 default { $VulnStatus = "Not Vulnerable" }
-
             }
     }
-    
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-MS16034 {
 
     $MSBulletin = "MS16-034"
-    
     $Architecture = Get-Architecture
-
-    if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+    If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-
-    } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
-
     } 
 
-    $VersionInfo = Get-FileVersionInfo($Path)
-
+    $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
     $VersionInfo = $VersionInfo.Split(".")
 
     $Build = [int]$VersionInfo[2]
     $Revision = [int]$VersionInfo[3].Split(" ")[0]
 
-    switch ( $Build ) {
-
+    switch($Build){
         6002 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revison -lt 19597 -Or $Revision -lt 23908 ] }
         7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 19145 -Or $Revision -lt 23346 ] }
         9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revison -lt 17647 -Or $Revision -lt 21766 ] }
         9600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revison -lt 18228 ] }
         default { $VulnStatus = "Not Vulnerable" }
-
     }
-    
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
 
 function Find-CVE20177199 {
 
     $CVEID = "2017-7199"
     $SoftwareVersion = Get-InstalledSoftware "Nessus Agent"
-    
-    if ( !$SoftwareVersion ) {
-
+    If(-not($SoftwareVersion)){
         $VulnStatus = "Not Vulnerable"
-
-    } else {
+    }Else{
 
         $SoftwareVersion = $SoftwareVersion.Split(".")
-
         $Major = [int]$SoftwareVersion[0]
         $Minor = [int]$SoftwareVersion[1]
         $Build = [int]$SoftwareVersion[2]
 
-        switch( $Major ) {
-
+        switch($Major){
         6 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Minor -eq 10 -and $Build -le 3 -Or ( $Minor -eq 6 -and $Build -le 2 ) -Or ( $Minor -le 9 -and $Minor -ge 7 ) ] } # 6.6.2 - 6.10.3
         default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     }
-
     Set-ExploitTable $CVEID $VulnStatus
-
 }
 
 function Find-MS16135 {
 
     $MSBulletin = "MS16-135"
     $Architecture = Get-Architecture
-
-    if ( $Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit" ) {
-
+    If($Architecture[1] -eq "AMD64" -or $Architecture[0] -eq "32-bit"){
         $Path = $env:windir + "\system32\win32k.sys"
-
-    } ElseIf ( $Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86" ) {
-
+    }ElseIf($Architecture[0] -eq "64-bit" -and $Architecture[1] -eq "x86"){
         $Path = $env:windir + "\sysnative\win32k.sys"
-
     }
 
-        $VersionInfo = Get-FileVersionInfo($Path)
+        $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
         $VersionInfo = $VersionInfo.Split(".")
         
         $Build = [int]$VersionInfo[2]
         $Revision = [int]$VersionInfo[3].Split(" ")[0]
 
-        switch ( $Build ) {
-
+        switch($Build){
             7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 23584 ] }
             9600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 18524 ] }
             10240 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 16384 ] }
             10586 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 19 ] }
             14393 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 446 ] }
             default { $VulnStatus = "Not Vulnerable" }
-
         }
-
     Set-ExploitTable $MSBulletin $VulnStatus
-
 }
