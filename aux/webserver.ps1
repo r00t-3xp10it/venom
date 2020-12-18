@@ -904,6 +904,7 @@ If(-not($Installation) -or $Installation -ieq $null){
    }
 }
 
+Write-Host ""
 ## Final Notes:
 # The 'cmd /c' syscall its used in certain ocasions in this cmdlet only because
 # it produces less error outputs in terminal prompt compared with PowerShell.
