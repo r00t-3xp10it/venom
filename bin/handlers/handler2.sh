@@ -27,6 +27,9 @@ Escape="\033";
   YellowF="${Escape}[33m";
   BlueF="${Escape}[34m";
   CyanF="${Escape}[36m";
+  RedBg="${Escape}[1;3;7;31m";
+  CyanBg="${Escape}[1;3;7;36m";
+  GreenBg="${Escape}[1;3;7;32m";
 Reset="${Escape}[0m";
 }
 Colors;
@@ -47,8 +50,8 @@ echo ""${BlueF}
 echo "    Id          : $ID"
 echo "    LPORT       : $LPORT"
 echo "    LHOST       : $LHOST"
-echo "    ACTIVE ON   : ${RedF}$FIRST_ACCESS${BlueF}"
-echo "    LAST ACCESS : ${CyanF}$LAST_ACCESS${BlueF}"
+echo "    ACTIVE ON   : ${RedBg}$FIRST_ACCESS${Reset}${BlueF}"
+echo "    LAST ACCESS : ${CyanBg}$LAST_ACCESS${Reset}${BlueF}"
 echo "    DROPPERNAME : $DROPPER"
 echo "    CATEGORIE   : Amsi Evasion (agent nº3)"
 echo "    DESCRIPTION : Reverse TCP PS Shell (hex)"
@@ -63,7 +66,7 @@ cls
 ## Persistence Start handler Function
 sh_Start () {
 echo "${YellowF}Waiting for ${BlueF}TCP${YellowF} connection ..";sleep 1
-xterm -T " NETCAT LISTENER => $LHOST:$LPORT" -geometry 110x23 -e "sudo nc -lvvp $LPORT"
+gnome-terminal --title="NETCAT LISTENER => $LHOST:$LPORT" --geometry=90x21 --wait -- sh -c "sudo nc -lvvp $LPORT" > /dev/null 2>&1
 
 ## Config this handler settings
 dtr=$(date|awk {'print $2,$3,$4,$5'})

