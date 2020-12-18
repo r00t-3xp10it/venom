@@ -389,6 +389,8 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    #>
 
    ## Download Sherlock (@rasta-mouse) from my github repository
+   # Remark: I add to port sherlock to my Git-Hub to be abble to fix
+   # the cmdlet 'ObjectNotFound' error display when the file its not found ...
    Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1 -Destination $Env:TMP\sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null   
 
    ## Check for file download integrity (fail/corrupted downloads)
