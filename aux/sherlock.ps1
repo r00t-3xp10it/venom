@@ -1,11 +1,20 @@
 <#
+.SYNOPSIS
+   find missing software patchs for privilege escalation (windows).
 
-    File: Sherlock.ps1
-    Author: @_RastaMouse
-    License: GNU General Public License v3.0
+   Author: @_RastaMouse (Deprecated) | r00t-3xp10it (v1.2)
+   Tested Under: Windows 10 - Build 18363
+   License: GNU General Public License v3.0
+   Required Dependencies: none
+   Optional Dependencies: none
+   PS cmdlet Dev version: v1.2
 
-   RTM build reference
-   -------------------
+.DESCRIPTION
+   Cmdlet to find missing software patchs for privilege escalation (windows).
+
+.NOTES
+   RTM build reference (affected windows versions)
+
    6002: Vista SP2/2008 SP2
    7600: 7/2008 R2
    7601: 7 SP1/2008 R2 SP1
@@ -17,11 +26,37 @@
    15063: 10 Redstone 2
    16299: 10 Redstone 3
    17134: 10 Redstone 4
+   
+.EXAMPLE
+   PS C:\> Get-Help .\Sherlock.ps1 -full
+   Access This cmdlet Comment_Based_Help
 
+.EXAMPLE
+   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1";Find-AllVulns
+   Import module and scan all vulnerabilitys status (CVE match)
+
+.INPUTS
+   None. You cannot pipe objects into Sherlock.ps1
+
+.OUTPUTS
+   Title      : TrackPopupMenu Win32k Null Point Dereference
+   MSBulletin : MS14-058
+   CVEID      : 2014-4113
+   Link       : https://www.exploit-db.com/exploits/35101/
+   VulnStatus : Appers Vulnerable
+
+.LINK
+    https://github.com/r00t-3xp10it/venom
+    https://github.com/r00t-3xp10it/venom/tree/master/aux/Sherlock.ps1
 #>
 
 
+## Variable declarations
+$CmdletVersion = "v1.2"
 $Global:ExploitTable = $null
+$host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
+
+
 function Get-FileVersionInfo($FilePath){
     $VersionInfo = (Get-Item $FilePath -EA SilentlyContinue).VersionInfo
     $FileVersion = ( "{0}.{1}.{2}.{3}" -f $VersionInfo.FileMajorPart, $VersionInfo.FileMinorPart, $VersionInfo.FileBuildPart, $VersionInfo.FilePrivatePart )
@@ -37,10 +72,8 @@ function Get-InstalledSoftware($SoftwareName){
 function Get-Architecture {
     # This is the CPU architecture.  Returns "64 bits" or "32-bit".
     $CPUArchitecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
-
     # This is the process architecture, e.g. are we an x86 process running on a 64-bit system.  Retuns "AMD64" or "x86".
     $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
-
     return $CPUArchitecture, $ProcessArchitecture
 }
 
@@ -61,7 +94,6 @@ function New-ExploitTable {
     $Global:ExploitTable.Columns.Add("Link")
     $Global:ExploitTable.Columns.Add("VulnStatus")
 
-
     ## Exploit MS10
     $Global:ExploitTable.Rows.Add("User Mode to Ring (KiTrap0D)","MS10-015","2010-0232","https://www.exploit-db.com/exploits/11199/")
     $Global:ExploitTable.Rows.Add("Task Scheduler .XML","MS10-092","2010-3338, 2010-3888","https://www.exploit-db.com/exploits/19930/")
@@ -80,6 +112,9 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privilege","MS16-135","2016-7255","https://github.com/FuzzySecurity/PSKernel-Primitives/tree/master/Sample-Exploits/MS16-135")
     ## Miscs that aren't MS
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
+
+    ## r00t-3xp10it update (v1.2)
+    $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
 
 }
 
@@ -121,9 +156,12 @@ function Find-AllVulns {
         Find-MS16034
         Find-MS16135
         Find-CVE20177199
+        ## version 1.2 update
+        Find-CVE20200624 
 
         Get-Results
 }
+
 
 function Find-MS10015 {
 
@@ -423,4 +461,51 @@ function Find-MS16135 {
             default { $VulnStatus = "Not Vulnerable" }
         }
     Set-ExploitTable $MSBulletin $VulnStatus
+}
+
+
+## Sherlock version 1.2 update
+# The next functions are related to 2020 CVE's (by @r00t-3xp10it)
+function Find-CVE20200624 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Win32k.sys Local Privilege Escalation
+
+   .DESCRIPTION
+      CVE: 2020-0624
+      MS : MS13-036
+      Affected systems:
+         Windows 10 (1903)
+         Windows 10 (1909)
+         Windows Server Version 1909 (Core)
+   #>
+
+    $CVEID = "2020-0624"
+    $MSBulletin = "MS13-036"
+    $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
+
+    ## Check for OS affected version (Windows 10)
+    $VulnOSVersion = (Get-WmiObject Win32_OperatingSystem).version
+    $MajorVersion = [int]$VulnOSVersion.split(".")[0]
+    If($MajorVersion -ne 10){## Affected version number (Windows)
+        $VulnStatus = "Not supported on Windows $VulnOSVersion systems"
+    }Else{
+
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## Win32k.sys driver not found
+           $VulnStatus = "Not Vulnerable (Win32k.sys not found)"
+       }Else{
+
+          $Major = [int]$SoftwareVersion.split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           18362 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 900 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
 }
