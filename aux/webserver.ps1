@@ -377,7 +377,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Author: @rasta-mouse (sherlock.ps1)
+      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v2)
       Find missing software patchs for privilege escalation
 
    .NOTES
@@ -389,9 +389,10 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Find missing software patchs for privilege escalation
    #>
 
-   ## Download Sherlock (@rasta-mouse) from my github repository
+   ## Download Sherlock (@_RastaMouse) from my github repository
    # Remark: I add to port sherlock to my Git-Hub to be abble to fix
-   # the cmdlet 'ObjectNotFound' error display when the file its not found ...
+   # the cmdlet 'ObjectNotFound' error display when the file its not
+   # found, And to update the cmdlet (deprecated) with new 2020 EOP CVE's
    ## Downloads sherlock.ps1 to disk using BitsTransfer service (BITS)
    Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1 -Destination $Env:TMP\sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null
  
@@ -408,10 +409,10 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    ## Import-Module
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
-      Write-Host "CmdLet: sherlock.ps1 Author: @rasta-mouse" -ForeGroundColor DarkGreen
+      Write-Host "CmdLet: sherlock v2 Author: @_RastaMouse|@r00t-3xp10it" -ForeGroundColor DarkGreen
       Write-Host "Find missing software patchs for privilege escalation"
       Write-Host "-----------------------------------------------------"
-      Import-Module $Env:TMP\sherlock.ps1
+      Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
       Find-AllVulns
    }
    ## Delete sherlock script if NOT used the FileLess technic
