@@ -2,19 +2,20 @@
 .SYNOPSIS
    find missing software patchs for privilege escalation (windows).
 
-   Author: @_RastaMouse (Deprecated) | r00t-3xp10it (v1.2)
+   Author: @_RastaMouse (Deprecated)
+   Update: @r00t-3xp10it (v1.2)
    Tested Under: Windows 10 - Build 18363
-   License: GNU General Public License v3.0
    Required Dependencies: none
    Optional Dependencies: none
    PS cmdlet Dev version: v1.2
 
 .DESCRIPTION
    Cmdlet to find missing software patchs for privilege escalation (windows).
+   This CmdLet continues @_RastaMouse (Deprecated) Module with new 2020 CVE's
 
 .NOTES
-   RTM build reference (affected windows versions)
-
+   RTM build reference (affected OS versions)
+   ------------------------------------------
    6002: Vista SP2/2008 SP2
    7600: 7/2008 R2
    7601: 7 SP1/2008 R2 SP1
@@ -26,14 +27,41 @@
    15063: 10 Redstone 2
    16299: 10 Redstone 3
    17134: 10 Redstone 4
+
+   CVE's checked by this cmdlet
+   ----------------------------
+   CVE-2010-0232
+   CVE-2010-3338
+   CVE-2010-3888
+   CVE-2013-1300
+   CVE-2013-3881
+   CVE-2014-4113
+   CVE-2015-1701
+   CVE-2015-2426
+   CVE-2015-2433
+   CVE-2016-0051
+   CVE-2016-0093/94/95/96
+   CVE-2016-0099
+   CVE-2016-7255
+   CVE-2017-7199
+   CVE-2020-0624 (v1.2)
+   CVE-2020-1054 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
    Access This cmdlet Comment_Based_Help
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1";Find-AllVulns
-   Import module and scan all vulnerabilitys status (CVE match)
+   PS C:\> Import-Module Sherlock.ps1 -Force;Find-AllVulns
+   Import module and scan for all CVE's vulnerabilitys status
+
+.EXAMPLE
+   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Find-AllVulns
+   Import module and scan for all CVE's vulnerabilitys status
+
+.EXAMPLE
+   PS C:\> (Find-AllVulns(iwr https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1))
+   Import module and scan for all CVE's vulnerabilitys status (FileLess - sherlock.ps1 does not touch disk)
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -45,8 +73,16 @@
    Link       : https://www.exploit-db.com/exploits/35101/
    VulnStatus : Appers Vulnerable
 
+   Title      : Win32k Elevation of Privileges
+   MSBulletin : MS13-036
+   CVEID      : 2020-0624
+   Link       : https://tinyurl.com/ybpz7k6y
+   VulnStatus : Not supported on Windows 10 systems
+
 .LINK
+    https://www.exploit-db.com/
     https://github.com/r00t-3xp10it/venom
+    https://packetstormsecurity.com/files/os/windows/
     https://github.com/r00t-3xp10it/venom/tree/master/aux/Sherlock.ps1
 #>
 
@@ -54,6 +90,7 @@
 ## Variable declarations
 $CmdletVersion = "v1.2"
 $Global:ExploitTable = $null
+$OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
 
 
@@ -115,6 +152,7 @@ function New-ExploitTable {
 
     ## r00t-3xp10it update (v1.2)
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
+    $Global:ExploitTable.Rows.Add("Win32k DrawIconEx Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
 
 }
 
@@ -158,6 +196,7 @@ function Find-AllVulns {
         Find-CVE20177199
         ## version 1.2 update
         Find-CVE20200624 
+        Find-CVE20201054
 
         Get-Results
 }
@@ -464,8 +503,20 @@ function Find-MS16135 {
 }
 
 
-## Sherlock version 1.2 update
-# The next functions are related to 2020 CVE's (by @r00t-3xp10it)
+   <#
+   .SYNOPSIS
+      Author: @r00t-3xp10it
+      Sherlock version v1.2 update
+
+   .DESCRIPTION
+      The next functions are related to new 2020 EOP CVE's
+
+   .LINK
+      https://www.exploit-db.com/
+      https://packetstormsecurity.com/files/os/windows/
+   #>
+
+
 function Find-CVE20200624 {
 
    <#
@@ -487,15 +538,14 @@ function Find-CVE20200624 {
     $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
 
     ## Check for OS affected version (Windows 10)
-    $VulnOSVersion = (Get-WmiObject Win32_OperatingSystem).version
-    $MajorVersion = [int]$VulnOSVersion.split(".")[0]
+    $MajorVersion = [int]$OSVersion.split(".")[0]
     If($MajorVersion -ne 10){## Affected version number (Windows)
-        $VulnStatus = "Not supported on Windows $VulnOSVersion systems"
+        $VulnStatus = "Not supported on Windows $MajorVersion systems"
     }Else{
 
        $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
        If(-not($SoftwareVersion)){## Win32k.sys driver not found
-           $VulnStatus = "Not Vulnerable (Win32k.sys not found)"
+           $VulnStatus = "Not Vulnerable (Win32k.sys driver not found)"
        }Else{
 
           $Major = [int]$SoftwareVersion.split(".")[2]
@@ -503,6 +553,49 @@ function Find-CVE20200624 {
 
            switch($Major){
            18362 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 900 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
+}
+
+
+function Find-CVE20201054 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Win32k.sys DrawIconEx Local Privilege Escalation
+
+   .DESCRIPTION
+      CVE: 2020-1054
+      MS : N/A
+      Affected systems:
+         Windows 7 SP1
+   #>
+
+    $CVEID = "2020-1054"
+    $MSBulletin = "N/A"
+    $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
+
+    ## Check for OS affected version (Windows 7 SP1)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If($MajorVersion -ne 7){## Affected version number (Windows)
+        $VulnStatus = "Not supported on Windows $MajorVersion systems"
+    }Else{
+
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## Win32k.sys driver not found
+           $VulnStatus = "Not Vulnerable (Win32k.sys driver not found)"
+       }Else{
+
+          ## Affected: 6.1.7601.24553 (SP1) | 6.1.7601.24542
+          $Major = [int]$SoftwareVersion.split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 24553 ] } # Windows 7 SP1
            default { $VulnStatus = "Not Vulnerable" }
            }
        }
