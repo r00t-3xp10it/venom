@@ -514,7 +514,6 @@ function Find-MS16135 {
 }
 
 # -------------------------------------------------------------------------------------------------------
-
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
@@ -629,8 +628,8 @@ function Find-CVE20205752 {
          Windows 10 (x64)
    #>
 
-    $CVEID = "2020-5752"
     $MSBulletin = "N/A"
+    $CVEID = "2020-5752"
     $Architecture = Get-Architecture
     $ArchBuildBits = $Architecture[0]
 
@@ -640,11 +639,13 @@ function Find-CVE20205752 {
         $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
     }Else{
 
-       ## Find drupa.exe absoluct install path
-       If(Test-Path -Path "${Env:PROGRAMFILES(x86)}\Druva\inSync4\druva.exe"){## Default install path
+       ## Find druva.exe absoluct install path
+       # Default Path: ${Env:PROGRAMFILES(x86)}\Druva\inSync4\druva.exe
+       $SearchFilePath = (Get-ChildItem -Path ${Env:PROGRAMFILES(x86)}\Druva\, $Env:PROGRAMFILES\Druva\, $Env:LOCALAPPDATA\Programs\Druva\ -Filter druva.exe -Recurse -ErrorAction SilentlyContinue -Force).fullname
+       If(-not($SearchFilepath)){## Add value to $FilePath or else 'Get-Item' pops up an error if $null
           $FilePath = ${Env:PROGRAMFILES(x86)} + "\Druva\inSync4\druva.exe"
-       }Else{## Just in case the User have installed it on an diferent path
-          $FilePath = $Env:PROGRAMFILES + "\Druva\inSync4\druva.exe"       
+       }Else{
+          $FilePath = $SearchFilePath[0]
        }
        
        $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
