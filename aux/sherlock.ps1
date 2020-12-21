@@ -46,18 +46,23 @@
    CVE-2017-7199
    CVE-2020-0624 (v1.2)
    CVE-2020-1054 (v1.2)
+   CVE-2020-5752 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
    Access This cmdlet Comment_Based_Help
 
 .EXAMPLE
+   PS C:\> Import-Module Sherlock.ps1 -Force;Get-HotFixs
+   Import module, display all installed KB Updates (HotFix)
+
+.EXAMPLE
    PS C:\> Import-Module Sherlock.ps1 -Force;Find-AllVulns
    Import module and scan for all CVE's vulnerabilitys status
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Find-AllVulns
-   Import module and scan for all CVE's vulnerabilitys status
+   PS C:\> Import-Module -Name "Sherlock.ps1" -Force;Get-HotFixs;Find-AllVulns
+   Import module, Display KB's Installed and scan for all CVE's vuln status
 
 .EXAMPLE
    PS C:\> (Find-AllVulns(iwr https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1))
@@ -77,7 +82,7 @@
    MSBulletin : MS13-036
    CVEID      : 2020-0624
    Link       : https://tinyurl.com/ybpz7k6y
-   VulnStatus : Not supported on Windows 10 systems
+   VulnStatus : Not Vulnerable
 
 .LINK
     https://www.exploit-db.com/
@@ -93,6 +98,10 @@ $Global:ExploitTable = $null
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
 
+function Get-HotFixs {
+   Get-HotFix
+   Write-Host ""
+}
 
 function Get-FileVersionInfo($FilePath){
     $VersionInfo = (Get-Item $FilePath -EA SilentlyContinue).VersionInfo
@@ -152,7 +161,8 @@ function New-ExploitTable {
 
     ## r00t-3xp10it update (v1.2)
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
-    $Global:ExploitTable.Rows.Add("Win32k DrawIconEx Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
+    $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
+    $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
 
 }
 
@@ -197,6 +207,7 @@ function Find-AllVulns {
         ## version 1.2 update
         Find-CVE20200624 
         Find-CVE20201054
+        Find-CVE20205752
 
         Get-Results
 }
@@ -207,7 +218,7 @@ function Find-MS10015 {
     $MSBulletin = "MS10-015"
     $Architecture = Get-Architecture
     If($Architecture[0] -eq "64 bits"){
-        $VulnStatus = "Not supported on 64 bits systems"
+        $VulnStatus = "Not supported on 64-bits systems"
     }Else{
         $Path = $env:windir + "\system32\ntoskrnl.exe"
         $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
@@ -249,7 +260,7 @@ function Find-MS13053 {
     $MSBulletin = "MS13-053"
     $Architecture = Get-Architecture
     If($Architecture[0] -eq "64 bits"){
-        $VulnStatus = "Not supported on 64-bit systems"
+        $VulnStatus = "Not supported on 64-bits systems"
     }Else{
         $Path = $env:windir + "\system32\win32k.sys"
         $VersionInfo = (Get-Item $Path -EA SilentlyContinue).VersionInfo.ProductVersion
@@ -273,7 +284,7 @@ function Find-MS13081 {
     $MSBulletin = "MS13-081"
     $Architecture = Get-Architecture
     If($Architecture[0] -eq "64 bits"){
-        $VulnStatus = "Not supported on 64-bit systems"
+        $VulnStatus = "Not supported on 64-bits systems"
     }Else{
 
         $Path = $env:windir + "\system32\win32k.sys"
@@ -369,7 +380,7 @@ function Find-MS16016 {
     $MSBulletin = "MS16-016"
     $Architecture = Get-Architecture
     If($Architecture[0] -eq "64 bits"){
-        $VulnStatus = "Not supported on 64-bit systems"
+        $VulnStatus = "Not supported on 64-bits systems"
     }Else{
 
         $Path = $env:windir + "\system32\drivers\mrxdav.sys"
@@ -502,6 +513,7 @@ function Find-MS16135 {
     Set-ExploitTable $MSBulletin $VulnStatus
 }
 
+# -------------------------------------------------------------------------------------------------------
 
    <#
    .SYNOPSIS
@@ -516,6 +528,7 @@ function Find-MS16135 {
       https://packetstormsecurity.com/files/os/windows/
    #>
 
+# -------------------------------------------------------------------------------------------------------
 
 function Find-CVE20200624 {
 
@@ -526,7 +539,7 @@ function Find-CVE20200624 {
 
    .DESCRIPTION
       CVE: 2020-0624
-      MS : MS13-036
+      MSBulletin: MS13-036
       Affected systems:
          Windows 10 (1903)
          Windows 10 (1909)
@@ -560,17 +573,16 @@ function Find-CVE20200624 {
     Set-ExploitTable $CVEID $VulnStatus
 }
 
-
 function Find-CVE20201054 {
 
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Win32k.sys DrawIconEx Local Privilege Escalation
+      DrawIconEx Win32k.sys Local Privilege Escalation
 
    .DESCRIPTION
       CVE: 2020-1054
-      MS : N/A
+      MSBulletin: N/A
       Affected systems:
          Windows 7 SP1
    #>
@@ -596,6 +608,56 @@ function Find-CVE20201054 {
 
            switch($Major){
            7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 24553 ] } # Windows 7 SP1
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
+}
+
+function Find-CVE20205752 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Druva inSync Local Privilege Escalation
+
+   .DESCRIPTION
+      CVE: 2020-5752
+      MSBulletin: N/A
+      Affected systems:
+         Windows 10 (x64)
+   #>
+
+    $CVEID = "2020-5752"
+    $MSBulletin = "N/A"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+
+    ## Check for OS affected version/arch (Windows 10 x64)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 10 -and $Architecture[0] -eq "64 bits")){
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
+    }Else{
+
+       ## Find drupa.exe absoluct install path
+       If(Test-Path -Path "${Env:PROGRAMFILES(x86)}\Druva\inSync4\druva.exe"){## Default install path
+          $FilePath = ${Env:PROGRAMFILES(x86)} + "\Druva\inSync4\druva.exe"
+       }Else{## Just in case the User have installed it on an diferent path
+          $FilePath = $Env:PROGRAMFILES + "\Druva\inSync4\druva.exe"       
+       }
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## druva.exe appl not found
+           $VulnStatus = "Not Vulnerable (druva.exe not found)"
+       }Else{
+
+          ## Affected: < 6.6.3 (Windows 10 x64)
+          $Major = [int]$SoftwareVersion.split(".")[1]
+          $Revision = [int]$SoftwareVersion.Split(".")[2]
+
+           switch($Major){
+           6 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 3 ] }
            default { $VulnStatus = "Not Vulnerable" }
            }
        }
