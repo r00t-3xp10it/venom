@@ -117,7 +117,7 @@
    
    PS C:\> .\webserver.ps1 -EOP ALL
    Find missing software patches for local privilege escalation
-   and list all KB's security patchs installed onscreen
+   and list all KB's installed security patchs onscreen
 
    Title      : TrackPopupMenu Win32k Null Point Dereference
    MSBulletin : MS14-058
@@ -373,7 +373,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
 }
 
 
-If(-not($EOP -eq "False")){
+If($EOP -eq "CVE" -or $EOP -eq "ALL"){
 If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
    write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
@@ -381,12 +381,12 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v1.2)
+      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v2)
       Find missing software patchs for privilege escalation
 
    .NOTES
       This Module does not exploit any vulnerabitys found.
-      It will 'report' and present the POC exploit-db link
+      It will 'report' them and presents the exploit-db link
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -EOP CVE
@@ -394,7 +394,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    
       PS C:\> .\webserver.ps1 -EOP ALL
       Find missing software patches for local privilege escalation
-      and list all KB's security patchs installed onscreen
+      and list all KB's installed security patchs onscreen
 
       Title      : TrackPopupMenu Win32k Null Point Dereference
       MSBulletin : MS14-058
@@ -426,10 +426,9 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Write-Host "Find missing software patchs for privilege escalation"
       Write-Host "-----------------------------------------------------"
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
-      ## 'Get-HotFixs' function is only available using -EOP <ALL>
-      If($EOP -eq "ALL"){Get-HotFixs;Find-AllVulns}Else{Find-AllVulns}
+      If($EOP -eq "CVE"){Find-AllVulns}Else{Get-HotFixs;Find-AllVulns}
    }
-
+   
    ## Delete sherlock script on remote system
    If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
    Write-Host "";exit ## exit @webserver
