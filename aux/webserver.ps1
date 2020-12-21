@@ -117,7 +117,7 @@
    
    PS C:\> .\webserver.ps1 -EOP ALL
    Find missing software patches for local privilege escalation
-   and list all KB's installed security patchs onscreen
+   and list all KB's security patchs installed onscreen (prompt)
 
    Title      : TrackPopupMenu Win32k Null Point Dereference
    MSBulletin : MS14-058
@@ -373,7 +373,7 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
 }
 
 
-If($EOP -eq "CVE" -or $EOP -eq "ALL"){
+If($EOP -ieq "CVE" -or $EOP -ieq "ALL" -or $EOP -ieq "True"){
 If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
    write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
@@ -381,12 +381,12 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v2)
+      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v1.2)
       Find missing software patchs for privilege escalation
 
    .NOTES
       This Module does not exploit any vulnerabitys found.
-      It will 'report' them and presents the exploit-db link
+      It will 'report' and presents the exploit-db POC link
 
    .EXAMPLE
       PS C:\> .\webserver.ps1 -EOP CVE
@@ -394,7 +394,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    
       PS C:\> .\webserver.ps1 -EOP ALL
       Find missing software patches for local privilege escalation
-      and list all KB's installed security patchs onscreen
+      and list all KB's security patchs installed onscreen (prompt)
 
       Title      : TrackPopupMenu Win32k Null Point Dereference
       MSBulletin : MS14-058
@@ -413,20 +413,20 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    $CheckInt = Get-Content -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    $SizeDump = ((Get-Item -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue).length/1KB)
    If(-not(Test-Path -Path "$Env:TMP\sherlock.ps1") -or $SizeDump -lt 16 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
-      ## Fail to download Sherlock.ps1 using BitsTransfer OR download file is corrupted
+      ## Fail to download Sherlock.ps1 using BitsTransfer OR the downloaded file is corrupted
       Write-Host "[abort] fail to download sherlock.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
       If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
       Start-Sleep -Seconds 1;exit ## exit @webserver
    }
 
-   ## Import-Module
+   ## Import-Module (-Force reloads the module everytime)
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
       Write-Host "CmdLet: sherlock v2 Author: @_RastaMouse|@r00t-3xp10it" -ForeGroundColor DarkGreen
       Write-Host "Find missing software patchs for privilege escalation"
       Write-Host "-----------------------------------------------------"
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
-      If($EOP -eq "CVE"){Find-AllVulns}Else{Get-HotFixs;Find-AllVulns}
+      If($EOP -ieq "ALL"){Get-HotFixs;Find-AllVulns}Else{Find-AllVulns}
    }
    
    ## Delete sherlock script on remote system
