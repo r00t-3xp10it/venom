@@ -98,6 +98,7 @@ $Global:ExploitTable = $null
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
 
+
 function Get-HotFixs {
    Get-HotFix
    Write-Host ""
@@ -514,6 +515,7 @@ function Find-MS16135 {
 }
 
 # -------------------------------------------------------------------------------------------------------
+
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
