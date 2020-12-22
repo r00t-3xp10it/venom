@@ -14,59 +14,55 @@
    This CmdLet continues @_RastaMouse (Deprecated) Module with new 2020 CVE's
 
 .NOTES
-   RTM build reference (affected OS versions)
-   ------------------------------------------
-   6002: Vista SP2/2008 SP2
-   7600: 7/2008 R2
-   7601: 7 SP1/2008 R2 SP1
-   9200: 8/2012
-   9600: 8.1/2012 R2
-   10240: 10 Threshold
-   10586: 10 Threshold 2
-   14393: 10 Redstone/2016
-   15063: 10 Redstone 2
-   16299: 10 Redstone 3
-   17134: 10 Redstone 4
+   RTM    OS Version
+   ---    ----------
+   6002   Vista SP2/2008 SP2
+   7600   7/2008 R2
+   7601   7 SP1/2008 R2 SP1
+   9200   8/2012
+   9600   8.1/2012 R2
+   10240  10 Threshold
+   10586  10 Threshold 2
+   14393  10 Redstone/2016
+   15063  10 Redstone 2
+   16299  10 Redstone 3
+   17134  10 Redstone 4
 
-   CVE's checked by this cmdlet
-   ----------------------------
-   CVE-2010-0232
-   CVE-2010-3338
-   CVE-2010-3888
-   CVE-2013-1300
-   CVE-2013-3881
-   CVE-2014-4113
-   CVE-2015-1701
-   CVE-2015-2426
-   CVE-2015-2433
-   CVE-2016-0051
-   CVE-2016-0093/94/95/96
-   CVE-2016-0099
-   CVE-2016-7255
-   CVE-2017-7199
-   CVE-2020-0624 (v1.2)
-   CVE-2020-1054 (v1.2)
-   CVE-2020-5752 (v1.2)
+   Id  CVE's to test
+   --  -------------
+   1   CVE-2010-0232
+   2   CVE-2010-3338
+   3   CVE-2010-3888
+   4   CVE-2013-1300
+   5   CVE-2013-3881
+   6   CVE-2014-4113
+   7   CVE-2015-1701
+   8   CVE-2015-2426
+   9   CVE-2015-2433
+   10  CVE-2016-0051
+   11  CVE-2016-0093/94/95/96
+   12  CVE-2016-0099
+   13  CVE-2016-7255
+   14  CVE-2017-7199
+   15  CVE-2020-0624 (v1.2)
+   16  CVE-2020-1054 (v1.2)
+   17  CVE-2020-5752 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
    Access This cmdlet Comment_Based_Help
 
 .EXAMPLE
-   PS C:\> Import-Module Sherlock.ps1 -Force;Get-HotFixs
+   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-HotFixs
    Import module, display all installed KB Updates (HotFix)
 
 .EXAMPLE
-   PS C:\> Import-Module Sherlock.ps1 -Force;Find-AllVulns
+   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Find-AllVulns
    Import module and scan for all CVE's vulnerabilitys status
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "Sherlock.ps1" -Force;Get-HotFixs;Find-AllVulns
+   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs;Find-AllVulns
    Import module, Display KB's Installed and scan for all CVE's vuln status
-
-.EXAMPLE
-   PS C:\> (Find-AllVulns(iwr https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/sherlock.ps1))
-   Import module and scan for all CVE's vulnerabilitys status (FileLess - sherlock.ps1 does not touch disk)
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -93,6 +89,7 @@
 
 
 ## Variable declarations
+$CveDataBaseId = "17"
 $CmdletVersion = "v1.2"
 $Global:ExploitTable = $null
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
@@ -667,3 +664,4 @@ function Find-CVE20205752 {
     }
     Set-ExploitTable $CVEID $VulnStatus
 }
+
