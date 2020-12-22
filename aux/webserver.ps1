@@ -93,8 +93,13 @@
 
 .EXAMPLE
    PS C:\> .\webserver.ps1 -Sessions List
-   Enumerate active @webserver sessions OR
-   Kill sessions by is PID identifier number
+   Enumerate active @webserver sessions.
+   [Id][StartTime][Bind][Port][Directory]
+
+.EXAMPLE
+   PS C:\> .\webserver.ps1 -Sessions 2345
+   Enumerate active @webserver sessions AND
+   Kills the session by is PID identifier  
    This parameter can NOT be used together with other parameters
    because after completing is task (List sessions) it exits.
 
@@ -422,14 +427,38 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    ## Import-Module (-Force reloads the module everytime)
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
-      Write-Host "CmdLet: sherlock v2 Author: @_RastaMouse|@r00t-3xp10it" -ForeGroundColor DarkGreen
-      Write-Host "Find missing software patchs for privilege escalation"
-      Write-Host "-----------------------------------------------------"
+
+      ## Gets Sherlock version number
+      $DatabaseEntrys = Get-Content -Path "$Env:TMP\sherlock.ps1"|findstr /C:"CmdletVersion"
+      $Release = $DatabaseEntrys -split("=");$data = $Release[1] -replace '"','' -replace ' ',''
+      ## Gets Sherlock CVE database entrys available
+      $ApanhaMe = Get-Content -Path "$Env:TMP\sherlock.ps1"|findstr /C:"CveDataBaseId"
+      $SplitBanana = $ApanhaMe -split("=");$GetCveId = $SplitBanana[1] -replace '"','' -replace ' ',''
+
+      ## Create Data Table for output
+      $mytable = New-Object System.Data.DataTable
+      $mytable.Columns.Add("Module name")|Out-Null
+      $mytable.Columns.Add("Version")|Out-Null
+      $mytable.Columns.Add("CVE entrys")|Out-Null
+      $mytable.Columns.Add("Co-author")|Out-Null
+      $mytable.Columns.Add("Author")|Out-Null
+      $mytable.Rows.Add("Sherlock",
+                        "$data",
+                        "$GetCveId",
+                        "@r00t-3xp10it",
+                        "@_RastaMouse")|Out-Null
+
+      ## Display Data Table
+      $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+      Get-Content -Path "$Env:TMP\MyTable.log"
+      Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+
+      ## Import-Module
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
       If($EOP -ieq "ALL"){Get-HotFixs;Find-AllVulns}Else{Find-AllVulns}
    }
    
-   ## Delete sherlock script on remote system
+   ## Delete sherlock script from remote system
    If(Test-Path -Path "$Env:TMP\sherlock.ps1"){Remove-Item -Path "$Env:TMP\sherlock.ps1" -Force}
    Write-Host "";exit ## exit @webserver
 }
