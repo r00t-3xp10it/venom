@@ -47,6 +47,7 @@
    15  CVE-2020-0624 (v1.2)
    16  CVE-2020-1054 (v1.2)
    17  CVE-2020-5752 (v1.2)
+   18  CVE-2020-13162 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -89,16 +90,42 @@
 
 
 ## Variable declarations
-$CveDataBaseId = "17"
+$CveDataBaseId = "18"
 $CmdletVersion = "v1.2"
 $Global:ExploitTable = $null
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
 
 
+function Sherlock-Banner {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Displays Sherlock v1.2 Script Banner
+   #>
+
+   ## Create Data Table for output
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("Module name")|Out-Null
+   $mytable.Columns.Add("Version")|Out-Null
+   $mytable.Columns.Add("CVE entrys")|Out-Null
+   $mytable.Columns.Add("Co-author")|Out-Null
+   $mytable.Columns.Add("Author")|Out-Null
+   $mytable.Rows.Add("Sherlock",
+                     "$CmdletVersion",
+                     "$CveDataBaseId",
+                     "@r00t-3xp10it",
+                     "@_RastaMouse")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+   Get-Content -Path "$Env:TMP\MyTable.log"
+   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+}
+
 function Get-HotFixs {
    Get-HotFix
-   Write-Host ""
 }
 
 function Get-FileVersionInfo($FilePath){
@@ -158,10 +185,11 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
 
     ## r00t-3xp10it update (v1.2)
+    $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
-
+   
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
@@ -181,6 +209,8 @@ function Set-ExploitTable ($MSBulletin, $VulnStatus){
 }
 
 function Get-Results {
+    Write-Host ""
+    Sherlock-Banner
     $Global:ExploitTable
 }
 
@@ -206,6 +236,7 @@ function Find-AllVulns {
         Find-CVE20200624 
         Find-CVE20201054
         Find-CVE20205752
+        Find-CVE20191458
 
         Get-Results
 }
@@ -527,6 +558,58 @@ function Find-MS16135 {
    #>
 
 # -------------------------------------------------------------------------------------------------------
+
+function Find-CVE20191458 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Win32k Uninitialized Variable Elevation of Privileges
+
+   .DESCRIPTION
+      CVE: 2019-1458
+      MSBulletin: N/A
+      Affected systems:
+         Windows 7 and Windows Server 2008 R2   - 6.1.7601.24540
+         Windows 8.1 and Windows Server 2012 R2 - 6.3.9600.19574
+         Windows 10 v1507                       - 10.0.10240.18427
+         Windows 10 v1511                       - 10.0.10586.99999
+         Windows 10 v1607                       - 10.0.14393.3383
+   #>
+
+    $MSBulletin = "N/A"
+    $CVEID = "2019-1458"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+    $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
+
+    ## Check for OS affected version/arch (Windows 10 x64)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 7 -or $MajorVersion -eq 8 -or $MajorVersion -eq 10 -and $Architecture[0] -eq "64 bits")){
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
+    }Else{
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## Win32k appl not found
+           $VulnStatus = "Not Vulnerable (Win32k driver not found)"
+       }Else{
+
+          ## Affected: < 10.0.14393.3383 (Windows 10)
+          $Major = $SoftwareVersion.Split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 24540 ] }
+           9600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 19574 ] }
+           10240 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 18427 ] }
+           10586 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 99999 ] }
+           14393 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 3383 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
+}
 
 function Find-CVE20200624 {
 
