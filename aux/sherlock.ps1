@@ -84,6 +84,7 @@
 .LINK
     https://www.exploit-db.com/
     https://github.com/r00t-3xp10it/venom
+    http://www.catalog.update.microsoft.com/
     https://packetstormsecurity.com/files/os/windows/
     https://github.com/r00t-3xp10it/venom/tree/master/aux/Sherlock.ps1
 #>
@@ -130,12 +131,13 @@ function Get-HotFixs {
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Find missing KB packages
+      Find missing security KB packages
 
    .NOTES
       LogFile: systeminfo.txt
       Contains the output of 'Get-HotFix' cmdline
       to be compared againts Sherlock $dATAbASE list
+      Special thanks to @youhacker55 for Windows 7 db
 
    .EXAMPLE
       Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs
@@ -159,11 +161,10 @@ function Get-HotFixs {
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
    ## Generates system report file
-   $GetKBId = Get-HotFix|Select-Object HotFixID|findstr /V "HotFixID --------"
-   $data = $GetKBId -replace ' ','';echo $data > $Env:TMP\systeminfo.txt
+   (Get-HotFix).HotFixID > $Env:TMP\systeminfo.txt
 
    ## Sherlock $dATAbASE lists
-   $MajorVersion = [int]$OSVersion.split(".")[0]
+   # Supported Versions: Windows (10|8|8.1|Vista)
    If($MajorVersion -eq 10){## Windows 10
       $dATAbASE = @(
          "KB4552931","KB4497165","KB4515383",
@@ -173,32 +174,32 @@ function Get-HotFixs {
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
-   }ElseIf($MajorVersion -eq 8){## Windows (8|8.1)
+   }ElseIf($MajorVersion -eq 888){## Windows (8|8.1) --> TODO
       $dATAbASE = @(
-         "KB4552931","KB4497165","KB4515383",
-         "KB4516115","KB4517245","KB4521863",
+         "KB4033369","KB4078130","KB4515383",
+         "KB4074906","KB4517245","KB4521863",
          "KB4524569","KB4528759","KB4537759",
          "KB4538674","KB4541338","KB4552152",
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
-  }ElseIf($MajorVersion -eq 7){## Windows 7
+  }ElseIf($MajorVersion -eq 7){## Windows 7 --> wait for @youhacker55 report
       $dATAbASE = @(
-         "KB4552931","KB4497165","KB4515383",
-         "KB4516115","KB4517245","KB4521863",
-         "KB4524569","KB4528759","KB4537759",
-         "KB4538674","KB4541338","KB4552152",
-         "KB4559309","KB4560959","KB4561600",
-         "KB4560960"
+         "KB4033342","KB4078130","KB4074906",
+         "KB3186497","KB4020513","KB4020507",
+         "KB4020503","KB3216523","KB3196686",
+         "KB3083186","KB3074233","KB3074230",
+         "KB3037581","KB3035490","KB3023224",
+         "KB2979578"
       )
   }ElseIf($MajorVersion -eq "Vista"){## Windows Vista
       $dATAbASE = @(
-         "KB4552931","KB4497165","KB4515383",
-         "KB4516115","KB4517245","KB4521863",
-         "KB4524569","KB4528759","KB4537759",
-         "KB4538674","KB4541338","KB4552152",
-         "KB4559309","KB4560959","KB4561600",
-         "KB4560960"
+         "KB3033890","KB3045171","KB3046002",
+         "KB3050945","KB3051768","KB3055642",
+         "KB3057839","KB3059317","KB3061518",
+         "KB3063858","KB3065979","KB3067505",
+         "KB3067903","KB3069392","KB3070102",
+         "KB3072630"
       )
   }Else{
      $dATAbASE = "Not supported under W$MajorVersion systems"
@@ -217,9 +218,9 @@ function Get-HotFixs {
          If($bypass -eq "True"){## Operative System NOT supported output
             Write-Host "$Count  <$KBkey>" -ForeGroundColor Red -BackGroundColor Black
          }Else{
-            Write-Host "$Count  $KBkey  <Missing>  <NotFound>" -ForeGroundColor Red -BackGroundColor Black         
+            Write-Host "$Count  $KBkey  <Missing>  <NotFound>" -ForeGroundColor Red -BackGroundColor Black
+            Start-Sleep -Milliseconds 250
          }
-         Start-Sleep -Milliseconds 250
       }Else{
          Write-Host "+  $KBkey  Installed  Patched" -ForeGroundColor Green
       }
@@ -293,9 +294,6 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
-
-
-
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
