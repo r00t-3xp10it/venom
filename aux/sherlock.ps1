@@ -289,9 +289,7 @@ function New-ExploitTable {
     ## r00t-3xp10it update (v1.2)
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
-
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","N/A","2020-0642","https://packetstormsecurity.com/files/158729/Microsoft-Windows-Win32k-Privilege-Escalation.html")
-
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
@@ -799,7 +797,7 @@ function Find-CVE20200642 {
           $Revision = [int]$SoftwareVersion.Split(".")[3]
 
            switch($Major){
-           2600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 1333 ] }
+           2600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 1329 ] }
            default { $VulnStatus = "Not Vulnerable" }
            }
        }
