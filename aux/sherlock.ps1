@@ -30,25 +30,24 @@
 
    Id  CVE's to test
    --  -------------
-   1   CVE-2010-0232
-   2   CVE-2010-3338
-   3   CVE-2010-3888
-   4   CVE-2013-1300
-   5   CVE-2013-3881
-   6   CVE-2014-4113
-   7   CVE-2015-1701
-   8   CVE-2015-2426
-   9   CVE-2015-2433
-   10  CVE-2016-0051
-   11  CVE-2016-0093/94/95/96
-   12  CVE-2016-0099
-   13  CVE-2016-7255
-   14  CVE-2017-7199
-   15  CVE-2019-1458 (v1.2)
-   16  CVE-2020-0624 (v1.2)
-   17  CVE-2020-1054 (v1.2)
-   18  CVE-2020-5752 (v1.2)
-   19  CVE-2020-13162 (v1.2)
+   1   MS10-015
+   2   MS10-092
+   3   MS13-053
+   4   MS13-081
+   5   MS14-058
+   6   MS15-051
+   7   MS15-078
+   8   MS16-016
+   9   MS16-032
+   10  MS16-034
+   11  MS16-135
+   12  CVE-2017-7199
+   13  CVE-2019-1458 (v1.2)
+   14  CVE-2020-0624 (v1.2)
+   15  CVE-2020-0642 (v1.2)
+   16  CVE-2020-1054 (v1.2)
+   17  CVE-2020-5752 (v1.2)
+   18  CVE-2020-13162 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -92,7 +91,7 @@
 
 ## Variable declarations
 $KBDataEntrys = "16"
-$CveDataBaseId = "19"
+$CveDataBaseId = "18"
 $CmdletVersion = "v1.2"
 $IntDataBase = "23/12/2020"
 $Global:ExploitTable = $null
@@ -108,12 +107,15 @@ function Sherlock-Banner {
    #>
 
    ## Create Data Table for output
+   $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
    $mytable.Columns.Add("ModuleName")|Out-Null
    $mytable.Columns.Add("CVE-entrys")|Out-Null
+   $mytable.Columns.Add("OS")|Out-Null
    $mytable.Columns.Add("CVE-dataBase")|Out-Null
    $mytable.Rows.Add("Sherlock",
                      "$CveDataBaseId",
+                     "W$MajorVersion",
                      "$IntDataBase")|Out-Null
 
    ## Display Data Table
@@ -139,13 +141,16 @@ function Get-HotFixs {
       Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs
    #>
 
+   $MajorVersion = [int]$OSVersion.split(".")[0]
    ## Create Data Table for output
    $mytable = New-Object System.Data.DataTable
    $mytable.Columns.Add("ModuleName")|Out-Null
    $mytable.Columns.Add("KB-entrys")|Out-Null
+   $mytable.Columns.Add("OS")|Out-Null
    $mytable.Columns.Add("KB-dataBase")|Out-Null
    $mytable.Rows.Add("Sherlock",
                      "$KBDataEntrys",
+                     "W$MajorVersion",
                      "$IntDataBase")|Out-Null
 
    ## Display Data Table
@@ -157,30 +162,66 @@ function Get-HotFixs {
    $GetKBId = Get-HotFix|Select-Object HotFixID|findstr /V "HotFixID --------"
    $data = $GetKBId -replace ' ','';echo $data > $Env:TMP\systeminfo.txt
 
-   ## Sherlock $dATAbASE list
-   $dATAbASE = @(
-      "KB4552931","KB4497165","KB4515383",
-      "KB4516115","KB4517245","KB4521863",
-      "KB4524569","KB1111111", #Fake entry
-      "KB4528759","KB4537759","KB4538674",
-      "KB9999999", #Fake entry
-      "KB4541338","KB4552152","KB4559309",
-      "KB4560959","KB4561600","KB4560960"
-   )
+   ## Sherlock $dATAbASE lists
+   $MajorVersion = [int]$OSVersion.split(".")[0]
+   If($MajorVersion -eq 10){## Windows 10
+      $dATAbASE = @(
+         "KB4552931","KB4497165","KB4515383",
+         "KB4516115","KB4517245","KB4521863",#"KB3245007", ## Fake KB entry for debug
+         "KB4524569","KB4528759","KB4537759",
+         "KB4538674","KB4541338","KB4552152",
+         "KB4559309","KB4560959","KB4561600",
+         "KB4560960"
+      )
+   }ElseIf($MajorVersion -eq 8){## Windows (8|8.1)
+      $dATAbASE = @(
+         "KB4552931","KB4497165","KB4515383",
+         "KB4516115","KB4517245","KB4521863",
+         "KB4524569","KB4528759","KB4537759",
+         "KB4538674","KB4541338","KB4552152",
+         "KB4559309","KB4560959","KB4561600",
+         "KB4560960"
+      )
+  }ElseIf($MajorVersion -eq 7){## Windows 7
+      $dATAbASE = @(
+         "KB4552931","KB4497165","KB4515383",
+         "KB4516115","KB4517245","KB4521863",
+         "KB4524569","KB4528759","KB4537759",
+         "KB4538674","KB4541338","KB4552152",
+         "KB4559309","KB4560959","KB4561600",
+         "KB4560960"
+      )
+  }ElseIf($MajorVersion -eq Vista){## Windows Vista
+      $dATAbASE = @(
+         "KB4552931","KB4497165","KB4515383",
+         "KB4516115","KB4517245","KB4521863",
+         "KB4524569","KB4528759","KB4537759",
+         "KB4538674","KB4541338","KB4552152",
+         "KB4559309","KB4560959","KB4561600",
+         "KB4560960"
+      )
+  }Else{
+     $dATAbASE = "Not supported under W$MajorVersion systems"
+     $bypass = "True" ## Operative System NOT supported
+  }
 
    ## Put systeminfo.txt contents into an array list
    [System.Collections.ArrayList]$LocalKBLog = Get-Content "$Env:TMP\systeminfo.txt" -EA SilentlyContinue
-   Write-Host "Id HotFixID   Status"
-   Write-Host "-- ---------  ---------" -ForeGroundColor DarkGreen
+   Write-Host "Id HotFixID   Status     VulnState"
+   Write-Host "-- ---------  ---------  ---------"
 
    ## Compare the two Lists together
    ForEach($KBkey in $dATAbASE){
       Start-Sleep -Milliseconds 600
       If(-not($LocalKBLog -Match $KBkey)){$Count++
-         Write-Host "$Count  $KBkey  <Missing>" -ForeGroundColor Red -BackGroundColor Black
+         If($bypass -eq "True"){## Operative System NOT supported output
+            Write-Host "$Count  <$KBkey>" -ForeGroundColor Red -BackGroundColor Black
+         }Else{
+            Write-Host "$Count  $KBkey  <Missing>  <NotFound>" -ForeGroundColor Red -BackGroundColor Black         
+         }
          Start-Sleep -Milliseconds 250
       }Else{
-         Write-Host "+  $KBkey  Installed"
+         Write-Host "+  $KBkey  Installed  Patched" -ForeGroundColor Green
       }
    }
    Write-Host ""
@@ -248,9 +289,14 @@ function New-ExploitTable {
     ## r00t-3xp10it update (v1.2)
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
+
+    $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","N/A","2020-0642","https://packetstormsecurity.com/files/158729/Microsoft-Windows-Win32k-Privilege-Escalation.html")
+
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
+
+
 
 }
 
@@ -296,7 +342,8 @@ function Find-AllVulns {
         Find-CVE20177199
         ## version 1.2 update
         Find-CVE20191458
-        Find-CVE20200624 
+        Find-CVE20200624
+        Find-CVE20200642
         Find-CVE20201054
         Find-CVE20205752
         Find-CVE202013162
@@ -717,6 +764,51 @@ function Find-CVE20200624 {
     Set-ExploitTable $CVEID $VulnStatus
 }
 
+function Find-CVE20200642 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Win32k.sys Local Privilege Escalation
+
+   .DESCRIPTION
+      CVE: 2020-0642
+      MSBulletin: N/A
+      Affected systems:
+         Windows 10 (1909)
+         Windows Server Version 1909 (Core)
+   #>
+
+    $CVEID = "2020-0642"
+    $MSBulletin = "N/A"
+    $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
+
+    ## Check for OS affected version (Windows Server|10)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If($MajorVersion -ne 10){## Affected version number (Windows)
+        $VulnStatus = "Not supported on Windows $MajorVersion systems"
+    }Else{
+
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## Win32k.sys driver not found
+           $VulnStatus = "Not Vulnerable (Win32k.sys driver not found)"
+       }Else{
+
+          ## Vuln: =< 5.1.2600.1330
+          $Major = [int]$SoftwareVersion.split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           2600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 1333 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
+}
+
+
+
 function Find-CVE20201054 {
 
    <#
@@ -751,7 +843,7 @@ function Find-CVE20201054 {
           $Revision = [int]$SoftwareVersion.Split(".")[3]
 
            switch($Major){
-           7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 24553 ] } # Windows 7 SP1
+           7601 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 24553 ] } # Windows 7 SP1
            default { $VulnStatus = "Not Vulnerable" }
            }
        }
