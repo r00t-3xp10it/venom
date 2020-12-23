@@ -191,7 +191,7 @@ function Get-HotFixs {
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
-  }ElseIf($MajorVersion -eq Vista){## Windows Vista
+  }ElseIf($MajorVersion -eq "Vista"){## Windows Vista
       $dATAbASE = @(
          "KB4552931","KB4497165","KB4515383",
          "KB4516115","KB4517245","KB4521863",
