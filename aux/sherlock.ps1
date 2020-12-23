@@ -44,10 +44,11 @@
    12  CVE-2016-0099
    13  CVE-2016-7255
    14  CVE-2017-7199
-   15  CVE-2020-0624 (v1.2)
-   16  CVE-2020-1054 (v1.2)
-   17  CVE-2020-5752 (v1.2)
-   18  CVE-2020-13162 (v1.2)
+   15  CVE-2019-1458 (v1.2)
+   16  CVE-2020-0624 (v1.2)
+   17  CVE-2020-1054 (v1.2)
+   18  CVE-2020-5752 (v1.2)
+   19  CVE-2020-13162 (v1.2)
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -55,7 +56,7 @@
 
 .EXAMPLE
    PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-HotFixs
-   Import module, display all installed KB Updates (HotFix)
+   Import module, Find missing KB packages Updates (HotFix)
 
 .EXAMPLE
    PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Find-AllVulns
@@ -63,7 +64,7 @@
 
 .EXAMPLE
    PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs;Find-AllVulns
-   Import module, Display KB's Installed and scan for all CVE's vuln status
+   Import module, Find missing KB packages and scan for all CVE's vulnerabilitys status
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -90,12 +91,13 @@
 
 
 ## Variable declarations
-$CveDataBaseId = "18"
+$KBDataEntrys = "16"
+$CveDataBaseId = "19"
 $CmdletVersion = "v1.2"
+$IntDataBase = "23/12/2020"
 $Global:ExploitTable = $null
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
-
 
 function Sherlock-Banner {
 
@@ -107,16 +109,12 @@ function Sherlock-Banner {
 
    ## Create Data Table for output
    $mytable = New-Object System.Data.DataTable
-   $mytable.Columns.Add("Module name")|Out-Null
-   $mytable.Columns.Add("Version")|Out-Null
-   $mytable.Columns.Add("CVE entrys")|Out-Null
-   $mytable.Columns.Add("Co-author")|Out-Null
-   $mytable.Columns.Add("Author")|Out-Null
+   $mytable.Columns.Add("ModuleName")|Out-Null
+   $mytable.Columns.Add("CVE-entrys")|Out-Null
+   $mytable.Columns.Add("CVE-dataBase")|Out-Null
    $mytable.Rows.Add("Sherlock",
-                     "$CmdletVersion",
                      "$CveDataBaseId",
-                     "@r00t-3xp10it",
-                     "@_RastaMouse")|Out-Null
+                     "$IntDataBase")|Out-Null
 
    ## Display Data Table
    $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
@@ -125,7 +123,70 @@ function Sherlock-Banner {
 }
 
 function Get-HotFixs {
-   Get-HotFix
+[int]$Count = 0
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Find missing KB packages
+
+   .NOTES
+      LogFile: systeminfo.txt
+      Contains the output of 'Get-HotFix' cmdline
+      to be compared againts Sherlock $dATAbASE list
+
+   .EXAMPLE
+      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs
+   #>
+
+   ## Create Data Table for output
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("ModuleName")|Out-Null
+   $mytable.Columns.Add("KB-entrys")|Out-Null
+   $mytable.Columns.Add("KB-dataBase")|Out-Null
+   $mytable.Rows.Add("Sherlock",
+                     "$KBDataEntrys",
+                     "$IntDataBase")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+   Get-Content -Path "$Env:TMP\MyTable.log"
+   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+
+   ## Generates system report file
+   $GetKBId = Get-HotFix|Select-Object HotFixID|findstr /V "HotFixID --------"
+   $data = $GetKBId -replace ' ','';echo $data > $Env:TMP\systeminfo.txt
+
+   ## Sherlock $dATAbASE list
+   $dATAbASE = @(
+      "KB4552931","KB4497165","KB4515383",
+      "KB4516115","KB4517245","KB4521863",
+      "KB4524569","KB1111111", #Fake entry
+      "KB4528759","KB4537759","KB4538674",
+      "KB9999999", #Fake entry
+      "KB4541338","KB4552152","KB4559309",
+      "KB4560959","KB4561600","KB4560960"
+   )
+
+   ## Put systeminfo.txt contents into an array list
+   [System.Collections.ArrayList]$LocalKBLog = Get-Content "$Env:TMP\systeminfo.txt" -EA SilentlyContinue
+   Write-Host "Id HotFixID   Status"
+   Write-Host "-- ---------  ---------" -ForeGroundColor DarkGreen
+
+   ## Compare the two Lists together
+   ForEach($KBkey in $dATAbASE){
+      Start-Sleep -Milliseconds 600
+      If(-not($LocalKBLog -Match $KBkey)){$Count++
+         Write-Host "$Count  $KBkey  <Missing>" -ForeGroundColor Red -BackGroundColor Black
+         Start-Sleep -Milliseconds 250
+      }Else{
+         Write-Host "+  $KBkey  Installed"
+      }
+   }
+   Write-Host ""
+   If(Test-Path -Path "$Env:TMP\systeminfo.txt"){
+      Remove-Item "$Env:TMP\systeminfo.txt" -Force
+   }
 }
 
 function Get-FileVersionInfo($FilePath){
@@ -189,7 +250,8 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
-   
+    $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
+
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
@@ -233,10 +295,11 @@ function Find-AllVulns {
         Find-MS16135
         Find-CVE20177199
         ## version 1.2 update
+        Find-CVE20191458
         Find-CVE20200624 
         Find-CVE20201054
         Find-CVE20205752
-        Find-CVE20191458
+        Find-CVE202013162
 
         Get-Results
 }
@@ -585,7 +648,7 @@ function Find-CVE20191458 {
 
     ## Check for OS affected version/arch (Windows 10 x64)
     $MajorVersion = [int]$OSVersion.split(".")[0]
-    If(-not($MajorVersion -eq 7 -or $MajorVersion -eq 8 -or $MajorVersion -eq 10 -and $Architecture[0] -eq "64 bits")){
+    If(-not($MajorVersion -eq 7 -or $MajorVersion -eq 8 -or $MajorVersion -eq 10) -and $Architecture[0] -ne "64 bits"){
         $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
     }Else{
        
@@ -748,3 +811,55 @@ function Find-CVE20205752 {
     Set-ExploitTable $CVEID $VulnStatus
 }
 
+function Find-CVE202013162 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Pulse Secure Client Local Elevation of Privileges
+
+   .DESCRIPTION
+      CVE: 2020-13162
+      MSBulletin: N/A
+      Affected systems:
+         windows 8.1
+         Windows 10 (1909)
+   #>
+
+    $MSBulletin = "N/A"
+    $CVEID = "2020-13162"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+
+    ## Check for OS affected version/arch
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 8 -or $MajorVersion -eq 10)){
+        $VulnStatus = "Not supported on Windows $MajorVersion systems"
+    }Else{
+
+       ## Find PulseSecureService.exe absoluct install path
+       # Default Path: ${Env:PROGRAMFILES(x86)}\Common Files\Pulse Secure\JUNS\PulseSecureService.exe
+       $SearchFilePath = (Get-ChildItem -Path "${Env:PROGRAMFILES(x86)}\Common Files\", "$Env:PROGRAMFILES\Common Files\", "$Env:LOCALAPPDATA\Programs\Common Files\" -Filter PulseSecureService.exe -Recurse -ErrorAction SilentlyContinue -Force).fullname
+       If(-not($SearchFilepath)){## Add value to $FilePath or else 'Get-Item' pops up an error if $null
+          $FilePath = ${Env:PROGRAMFILES(x86)} + "\Common Files\Pulse Secure\JUNS\PulseSecureService.exe"
+       }Else{
+          $FilePath = $SearchFilePath
+       }
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## PulseSecureService.exe appl not found
+           $VulnStatus = "Not Vulnerable (PulseSecureService.exe not found)"
+       }Else{
+
+          ## Affected: < 9.1.6 (Windows 8|10)
+          $Major = [int]$SoftwareVersion.split(",")[1]
+          $Revision = [int]$SoftwareVersion.Split(",")[2]
+
+           switch($Major){
+           1 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 6 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $CVEID $VulnStatus
+}
