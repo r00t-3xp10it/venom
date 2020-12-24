@@ -165,7 +165,7 @@ function Get-HotFixs {
 
    ## Sherlock $dATAbASE lists
    # Supported Versions: Windows (10|8|8.1|Vista)
-   If($MajorVersion -eq 10){## Windows 10
+   If($MajorVersion -eq 10){## Windows 10 --> Finished
       $dATAbASE = @(
          "KB4552931","KB4497165","KB4515383",
          "KB4516115","KB4517245","KB4521863",#"KB3245007", ## Fake KB entry for debug
@@ -174,7 +174,7 @@ function Get-HotFixs {
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
-   }ElseIf($MajorVersion -eq 888){## Windows (8|8.1) --> TODO
+   }ElseIf($MajorVersion -eq 888){## Windows (8|8.1)
       $dATAbASE = @(
          "KB4033369","KB4078130","KB4515383",
          "KB4074906","KB4517245","KB4521863",
@@ -183,7 +183,7 @@ function Get-HotFixs {
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
-  }ElseIf($MajorVersion -eq 7){## Windows 7 --> wait for @youhacker55 report
+  }ElseIf($MajorVersion -eq 7){## Windows 7 --> finished ..wait for @youhacker55 report
       $dATAbASE = @(
          "KB4033342","KB4078130","KB4074906",
          "KB3186497","KB4020513","KB4020507",
@@ -192,7 +192,7 @@ function Get-HotFixs {
          "KB3037581","KB3035490","KB3023224",
          "KB2979578"
       )
-  }ElseIf($MajorVersion -eq "Vista"){## Windows Vista
+  }ElseIf($MajorVersion -eq "Vista"){## Windows Vista --> finished
       $dATAbASE = @(
          "KB3033890","KB3045171","KB3046002",
          "KB3050945","KB3051768","KB3055642",
@@ -218,9 +218,9 @@ function Get-HotFixs {
          If($bypass -eq "True"){## Operative System NOT supported output
             Write-Host "$Count  <$KBkey>" -ForeGroundColor Red -BackGroundColor Black
          }Else{
-            Write-Host "$Count  $KBkey  <Missing>  <NotFound>" -ForeGroundColor Red -BackGroundColor Black
-            Start-Sleep -Milliseconds 250
+            Write-Host "$Count  $KBkey  <Missing>  <NotFound>" -ForeGroundColor Red -BackGroundColor Black         
          }
+         Start-Sleep -Milliseconds 250
       }Else{
          Write-Host "+  $KBkey  Installed  Patched" -ForeGroundColor Green
       }
