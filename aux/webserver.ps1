@@ -119,6 +119,9 @@
 .EXAMPLE
    PS C:\> .\webserver.ps1 -EOP CVE
    Find missing software patches for local privilege escalation.
+
+   PS C:\> .\webserver.ps1 -EOP HOTFIXS
+   Find missing KB patchs for local privilege escalation.
    
    PS C:\> .\webserver.ps1 -EOP ALL
    Find missing software patches for local privilege escalation
@@ -194,7 +197,7 @@ Write-Host $Banner;
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
 $FileName = $Download.split(',')[1] ## Extract the filename from -Download "string"
-If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $EOP -ne 'False'){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False' -or $EOP -ne 'False'){
    write-host "[warning] -Download parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -276,7 +279,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
 If($SKill -gt 0){
 $Count = 0 ## Loop counter 
-If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $EOP -ne 'False'){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False' -or $EOP -ne 'False' -or $Download -ne 'False'){
    write-host "[warning] -SKill parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -320,7 +323,8 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
 
 If($Sessions -ieq "List" -or $Sessions -Match '^\d+$'){
 $Count = 0 ## Loop counter
-If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $SKill -ne '0'){
+
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Keylogger -ne 'False' -or $EOP -ne 'False' -or $Download -ne 'False' -or $SKill -ne '0'){
    write-host "[warning] -Sessions parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -378,8 +382,8 @@ If($SForce -ne '0' -or $SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -o
 }
 
 
-If($EOP -ieq "CVE" -or $EOP -ieq "ALL" -or $EOP -ieq "True"){
-If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False'){
+If($EOP -ieq "CVE" -or $EOP -ieq "ALL" -or $EOP -ieq "True" -or $EOP -ieq "HOTFIXS"){
+If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'False' -or $Keylogger -ne 'False' -or $Download -ne 'False' -or $SKill -ne '0'){
    write-host "[warning] -EOP parameter can not be used together with other parameters .." -ForeGroundColor Yellow
    Start-Sleep -Seconds 1
 }
@@ -396,6 +400,9 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    .EXAMPLE
       PS C:\> .\webserver.ps1 -EOP CVE
       Find missing software patches for local privilege escalation.
+
+      PS C:\> .\webserver.ps1 -EOP HOTFIXS
+      Find missing KB patchs for local privilege escalation.
    
       PS C:\> .\webserver.ps1 -EOP ALL
       Find missing software patches for local privilege escalation
@@ -430,6 +437,8 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
       If($EOP -ieq "ALL"){## Use ALL Sherlock parameters
          Get-HotFixs;Find-AllVulns
+      }ElseIf($EOP -ieq "HOTFIXS"){## find missing KB patchs
+         Get-HotFixs
       }Else{## Default its to lunch only CVE tests
          Find-AllVulns
       }
