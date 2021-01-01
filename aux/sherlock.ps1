@@ -189,9 +189,9 @@ function Get-Paths {
 
 
    ## Search for Unquoted service paths (StartMode = Auto)
-   gwmi -class Win32_Service -Property Name,DisplayName,PathName,StartMode|Where {
-         $_.StartMode -eq "Auto" -and $_.PathName -NotLike "C:\Windows*" -and $_.PathName -NotMatch '"*"'
-      }|Select PathName,Name > $Env:TMP\GetPaths.log
+   gwmi -class Win32_Service -Property Name,DisplayName,PathName,StartMode,StartName|Where {
+         $_.StartMode -eq "Auto" -and $_.StartName -eq 'LocalSystem' -and $_.PathName -NotLike "C:\Windows*" -and $_.PathName -NotMatch '"*"'
+      }|Select StartName,Name,PathName > $Env:TMP\GetPaths.log
    If(Test-Path -Path "$Env:TMP\GetPaths.log" -EA SilentlyContinue){
       Get-Content -Path "$Env:TMP\GetPaths.log"
       Remove-Item -path "$Env:TMP\GetPaths.log" -Force
@@ -246,7 +246,20 @@ function Get-Paths {
       ForEach($Token in $dAtAbAsEList){## Loop truth Get-ChildItem Itens (Paths)
          If(-not($Token -Match 'WindowsApps')){## Exclude => WindowsApps folder [UnauthorizedAccessException]
             $IsInHerit = (Get-Acl "$Token").Access.IsInherited|Select -First 1
-            (Get-Acl "$Token").Access|Where {## Search for Everyone:(F) folder permissions (default)
+            (Get-Acl "$Token").Access|Where {
+
+               <#
+               .SYNOPSIS
+                  Search for Everyone:(F) folder permissions (default)
+
+               .NOTES
+                  Vulnerable Group Name     Privileges   Sherlock Scan
+                  ---------------------     ----------   -------------
+                  Everyone                  FullControl  Default
+                  BUILTIN\Users             FullControl  Manual
+                  NT AUTHORITY\INTERACTIVE  FullControl  Manual  
+               #>
+
                $CleanOutput = $_.FileSystemRights -Match "$param2" -and $_.IdentityReference -Match "$UserGroup" ## <-- In my system the IdentityReference is: 'Todos'
                If($CleanOutput){$Count++ ##  Write the Table 'IF' found any vulnerable permissions
                   Write-Host "`nVulnId            : ${Count}::ACL (Mitre T1222)"
@@ -341,6 +354,19 @@ function Get-RegPaths {
       $IsInHerit = (Get-Acl -Path "$Token").Access.IsInherited|Select -First 1
       $CleanOutput = (Get-Acl -Path "$Token").Access|Where {## Search for Everyone:(F) registry service permissions (default)
          $_.IdentityReference -Match "$UserGroup" -and $_.RegistryRights -Match 'FullControl' -and $_.IsInherited -Match 'False'
+
+               <#
+               .SYNOPSIS
+                  Find Weak Service Registry Permissions (EoP)
+
+               .NOTES
+                  Vulnerable Group Name     Privileges   Sherlock Scan
+                  ---------------------     ----------   -------------
+                  Everyone                  FullControl  Default
+                  BUILTIN\Users             FullControl  Manual
+                  NT AUTHORITY\INTERACTIVE  FullControl  Manual  
+               #>
+
       }
       If($CleanOutput){$Count++ ##  Write the Table 'IF' found any vulnerable permissions
          Write-Host "`nVulnId            : ${Count}::SRV"
@@ -1469,3 +1495,4 @@ function Find-CVE202017382 {
     }
     Set-ExploitTable $CVEID $VulnStatus
 }
+
