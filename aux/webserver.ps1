@@ -6,7 +6,7 @@
    Tested Under: Windows 10 - Build 18363
    Required Dependencies: python (http.server)
    Optional Dependencies: Curl|BitsTransfer
-   PS cmdlet Dev version: v1.17
+   PS cmdlet Dev version: v1.18
 
 .DESCRIPTION
    This cmdlet has written to assist venom amsi evasion reverse tcp shell's (agents)
@@ -166,7 +166,7 @@
 )
 
 $HiddeMsgBox = $False
-$CmdletVersion = "v1.17"
+$CmdletVersion = "v1.18"
 $Initial_Path = (pwd).Path
 $Server_hostName = (hostname)
 $Server_Working_Dir = "$SPath"
@@ -390,7 +390,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
 
    <#
    .SYNOPSIS
-      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v1.2)
+      Author: @_RastaMouse|@r00t-3xp10it (sherlock.ps1 v1.3)
       Find missing software patchs for privilege escalation
 
    .NOTES
@@ -435,10 +435,12 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
-      If($EOP -ieq "ALL"){## Use ALL Sherlock parameters
-         Get-HotFixs;Find-AllVulns
+      If($EOP -ieq "ALL"){## Use ALL Sherlock EoP functions
+         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Find-AllVulns
       }ElseIf($EOP -ieq "HOTFIXS"){## find missing KB patchs
          Get-HotFixs
+      }ElseIf($EOP -ieq "CVE"){## find missing CVE patchs
+         Find-AllVulns
       }Else{## Default its to lunch only CVE tests
          Find-AllVulns
       }
