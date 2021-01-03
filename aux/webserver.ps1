@@ -436,7 +436,7 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
       If($EOP -ieq "ALL"){## Use ALL Sherlock EoP functions
-         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Find-AllVulns
+         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Get-DllHijack;Find-AllVulns
       }ElseIf($EOP -ieq "HOTFIXS"){## find missing KB patchs
          Get-HotFixs
       }ElseIf($EOP -ieq "CVE"){## find missing CVE patchs

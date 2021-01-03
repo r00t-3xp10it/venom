@@ -3,11 +3,11 @@
    Find missing software patchs for privilege escalation (windows).
 
    Author: @_RastaMouse (Deprecated)
-   Update: @r00t-3xp10it (v1.3)
+   Update: @r00t-3xp10it (v1.3.1)
    Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: none
-   PS cmdlet Dev version: v1.3
+   PS cmdlet Dev version: v1.3.1
 
 .DESCRIPTION
    Cmdlet to find missing software patchs for privilege escalation (windows).
@@ -27,7 +27,7 @@
    CVE-2017-7199, CVE-2019-1215, CVE-2019-1458
    CVE-2020-005, CVE-2020-0624, CVE-2020-0642
    CVE-2020-1054, CVE-2020-5752, CVE-2020-13162
-   CVE-2020-17382
+   CVE-2020-17382, CVE-2020-17008
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -72,8 +72,8 @@
    Import module, Scan pre-defined CVE's (EoP) using Sherlock $dATAbASE
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs;Find-AllVulns
-   Import module, Find missing KB packages and scan for CVE's (EoP) vulnerabilitys.
+   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-DllHijack
+   Import module, Find DLL's prone to hijacking (EoP).
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -102,9 +102,9 @@
 
 
 ## Var declarations
-$CveDataBaseId = "21"        ## 21 CVE's entrys available ($dATAbASE)
-$CmdletVersion = "v1.3"      ## Sherlock CmdLet develop version number
-$CVEdataBase = "01/01/2021"  ## Global $dATAbASE (CVE) last update date
+$CveDataBaseId = "22"        ## 22 CVE's entrys available ($dATAbASE)
+$CmdletVersion = "v1.3.1"    ## Sherlock CmdLet develop version number
+$CVEdataBase = "02/01/2021"  ## Global $dATAbASE (CVE) last update date
 $Global:ExploitTable = $null ## Global Output DataTable
 $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
@@ -118,6 +118,7 @@ function Sherlock-Banner {
       Sherlock CVE function banner
    #>
 
+   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -136,6 +137,7 @@ function Sherlock-Banner {
    $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
    Get-Content -Path "$Env:TMP\MyTable.log"
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+   Start-sleep -Seconds 2
 }
 
 function Get-Paths {
@@ -170,6 +172,7 @@ function Get-Paths {
       REMARK: Allways use double quotes if Group Name contains any empty spaces
    #>
 
+   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -191,7 +194,7 @@ function Get-Paths {
    ## Search for Unquoted service paths (StartMode = Auto)
    gwmi -class Win32_Service -Property Name,DisplayName,PathName,StartMode,StartName|Where {
          $_.StartMode -eq "Auto" -and $_.StartName -eq 'LocalSystem' -and $_.PathName -NotLike "C:\Windows*" -and $_.PathName -NotMatch '"*"'
-      }|Select StartName,Name,PathName > $Env:TMP\GetPaths.log
+      }|Select PathName,Name > $Env:TMP\GetPaths.log
    If(Test-Path -Path "$Env:TMP\GetPaths.log" -EA SilentlyContinue){
       Get-Content -Path "$Env:TMP\GetPaths.log"
       Remove-Item -path "$Env:TMP\GetPaths.log" -Force
@@ -201,7 +204,7 @@ function Get-Paths {
    $param2 = $args[1] ## User Imput => FileSystemRights (ReadAndExecute)
    $param3 = $args[2] ## User Imput => Group (BUILTIN\Users)
    If($param2 -ieq $null){$param2 = "FullControl"}## Default FileSystemRights value
-   If($param3 -ieq $null){$param3 = "Everyone"}## Default FileSystemRights value
+   If($param3 -ieq $null){$param3 = "Everyone"}## Default Group Name value
    If($param1 -ieq "ACL"){## List folders with Everyone:(F) Permissions (ACL)
 
       ## Escaping backslash's and quotes because of:
@@ -246,20 +249,7 @@ function Get-Paths {
       ForEach($Token in $dAtAbAsEList){## Loop truth Get-ChildItem Itens (Paths)
          If(-not($Token -Match 'WindowsApps')){## Exclude => WindowsApps folder [UnauthorizedAccessException]
             $IsInHerit = (Get-Acl "$Token").Access.IsInherited|Select -First 1
-            (Get-Acl "$Token").Access|Where {
-
-               <#
-               .SYNOPSIS
-                  Search for Everyone:(F) folder permissions (default)
-
-               .NOTES
-                  Vulnerable Group Name     Privileges   Sherlock Scan
-                  ---------------------     ----------   -------------
-                  Everyone                  FullControl  Default
-                  BUILTIN\Users             FullControl  Manual
-                  NT AUTHORITY\INTERACTIVE  FullControl  Manual  
-               #>
-
+            (Get-Acl "$Token").Access|Where {## Search for Everyone:(F) folder permissions (default)
                $CleanOutput = $_.FileSystemRights -Match "$param2" -and $_.IdentityReference -Match "$UserGroup" ## <-- In my system the IdentityReference is: 'Todos'
                If($CleanOutput){$Count++ ##  Write the Table 'IF' found any vulnerable permissions
                   Write-Host "`nVulnId            : ${Count}::ACL (Mitre T1222)"
@@ -321,6 +311,7 @@ function Get-RegPaths {
       $UserGroup = "$UserImput"  
    }
    
+   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -354,19 +345,6 @@ function Get-RegPaths {
       $IsInHerit = (Get-Acl -Path "$Token").Access.IsInherited|Select -First 1
       $CleanOutput = (Get-Acl -Path "$Token").Access|Where {## Search for Everyone:(F) registry service permissions (default)
          $_.IdentityReference -Match "$UserGroup" -and $_.RegistryRights -Match 'FullControl' -and $_.IsInherited -Match 'False'
-
-               <#
-               .SYNOPSIS
-                  Find Weak Service Registry Permissions (EoP)
-
-               .NOTES
-                  Vulnerable Group Name     Privileges   Sherlock Scan
-                  ---------------------     ----------   -------------
-                  Everyone                  FullControl  Default
-                  BUILTIN\Users             FullControl  Manual
-                  NT AUTHORITY\INTERACTIVE  FullControl  Manual  
-               #>
-
       }
       If($CleanOutput){$Count++ ##  Write the Table 'IF' found any vulnerable permissions
          Write-Host "`nVulnId            : ${Count}::SRV"
@@ -615,6 +593,84 @@ $KBDataEntrys = "null"
    Write-Host ""
 }
 
+function Get-DllHijack {
+$WorkingDir = (pwd).Path
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Find DLL Hijacking
+
+   .NOTES
+      dll_hijack_detect_x64.exe created by @Adam_Kramer
+      https://github.com/adamkramer/dll_hijack_detect
+
+   .EXAMPLE
+      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-DllHijack
+   #>
+
+   Write-Host ""
+   ## Create Data Table for output
+   $MajorVersion = [int]$OSVersion.split(".")[0]
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("ModuleName")|Out-Null
+   $mytable.Columns.Add("OS")|Out-Null
+   $mytable.Columns.Add("Arch")|Out-Null
+   $mytable.Columns.Add("SearchFor")|Out-Null
+   $mytable.Rows.Add("Sherlock",
+                     "W$MajorVersion",
+                     "$ProcessArchitecture",
+                     "DLL-Hijacking")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+   Get-Content -Path "$Env:TMP\MyTable.log"
+   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+   Start-sleep -Seconds 2
+
+   ## Variable declarations (x64 bits)
+   $Architecture = Get-Architecture
+   $ArchBuildBits = $Architecture[0]
+   If($ArchBuildBits -eq "64 bits"){## Download x64 binary
+     $ArchiveName = "dll_hijack_detect_x64"
+   }Else{## Download x86 binary
+     $ArchiveName = "dll_hijack_detect_x86"
+   }
+
+   ## Download dll_hijack_detect_x64.zip (OR x86) archive from my GitHub repository
+   # Repository: https://github.com/r00t-3xp10it/venom/blob/master/bin/dll_hijack_detect_x64.zip
+   Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/${ArchiveName}.zip -Destination $Env:TMP\${ArchiveName}.zip -ErrorAction SilentlyContinue|Out-Null   
+ 
+   ## Check for Failed/Corrupted archive download
+   If(Test-Path -Path "$Env:TMP\${ArchiveName}.zip"){
+      $SizeDump = ((Get-Item "$Env:TMP\${ArchiveName}.zip" -EA SilentlyContinue).length/1KB)
+      If($SizeDump -lt 25){## Downloaded Archive corrupted detected
+         Write-Host "`n`nDll Hijacking"
+         Write-Host "-------------";Start-Sleep -Seconds 1
+         Write-Host "[corrupted] Fail to download '${ArchiveName}.zip' archive" -ForegroundColor Red -BackgroundColor Black
+         Start-Sleep -Seconds 1
+      }Else{## Remote execute dll_hijack_detect_x64.exe binary
+         ## Un-Compress dll_hijack_detect_x64 Archive into $Env:TMP remote directory
+         Expand-Archive -LiteralPath "$Env:TMP\${ArchiveName}.zip" -DestinationPath "$Env:TMP" -Force
+         If($ArchBuildBits -eq "64 bits"){## dll_hijack_detect_x64 binary
+            cd $Env:TMP;.\dll_hijack_detect_x64.exe /unsigned
+         }Else{## dll_hijack_detect_x86 binary
+            cd $Env:TMP;.\dll_hijack_detect_x86.exe /unsigned
+         }
+         ## Remove Old files/binary from remote host
+         Remove-Item -Path "$Env:TMP\${ArchiveName}.zip" -Force
+         Remove-Item -Path "$Env:TMP\${ArchiveName}.exe" -Force
+         cd $WorkingDir ## Return to Sherlock working directory
+      }
+   }Else{## Fail Archive download detected
+      Write-Host "`n`nDll Hijacking"
+      Write-Host "-------------";Start-Sleep -Seconds 1
+      Write-Host "[Fail] Fail to download '${ArchiveName}.zip' archive" -ForegroundColor Red -BackgroundColor Black
+      Start-Sleep -Seconds 1
+   }## End of Check for Corrupted downloads
+   Write-Host ""
+}
+
 function Get-FileVersionInfo($FilePath){
     $VersionInfo = (Get-Item $FilePath -EA SilentlyContinue).VersionInfo
     $FileVersion = ( "{0}.{1}.{2}.{3}" -f $VersionInfo.FileMajorPart, $VersionInfo.FileMinorPart, $VersionInfo.FileBuildPart, $VersionInfo.FilePrivatePart )
@@ -671,7 +727,7 @@ function New-ExploitTable {
     ## Miscs that aren't MS
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
 
-    ## r00t-3xp10it update (v1.3)
+    ## r00t-3xp10it update (v1.3.1)
     $Global:ExploitTable.Rows.Add("ws2ifsl.sys Use After Free Elevation of Privileges","N/A","2019-1215","https://www.exploit-db.com/exploits/47935")
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("checkmk Local Elevation of Privileges","N/A","2020-005","https://tinyurl.com/ycrgjxec")
@@ -681,6 +737,7 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("MSI Ambient Link Driver Elevation of Privileges","N/A","2020-17382","https://www.exploit-db.com/exploits/48836")
+    $Global:ExploitTable.Rows.Add("splWOW64 Local Elevation of Privileges","MS69-132","CVE-2020-17008","https://bugs.chromium.org/p/project-zero/issues/detail?id=2096")
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
@@ -720,7 +777,7 @@ function Find-AllVulns {
       CVE-2017-7199, CVE-2019-1215, CVE-2019-1458
       CVE-2020-005, CVE-2020-0624, CVE-2020-0642
       CVE-2020-1054, CVE-2020-5752, CVE-2020-13162
-      CVE-2020-17382
+      CVE-2020-17382, CVE-2020-17008
 
    .EXAMPLE
       Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Find-AllVulns
@@ -752,6 +809,7 @@ function Find-AllVulns {
         Find-CVE202013162
         Find-CVE202017382
         Find-CVE2020005
+        Find-CVE202017008
 
         Get-Results
 }
@@ -769,6 +827,7 @@ function Find-MS10015 {
         $VersionInfo = $VersionInfo.Split(".")
         $Build = $VersionInfo[2]
         $Revision = $VersionInfo[3].Split(" ")[0]
+
         switch($Build){
             7600 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le "20591" ] }
             default { $VulnStatus = "Not Vulnerable" }
@@ -1063,7 +1122,7 @@ function Find-MS16135 {
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
-      Sherlock version v1.3 update
+      Sherlock version v1.3.1 update
 
    .DESCRIPTION
       The next functions are related to new 2020 EOP CVE's
@@ -1075,7 +1134,6 @@ function Find-MS16135 {
    #>
 
 # -------------------------------------------------------------------------------------------------------
-
 
 function Find-CVE2020005 {
 
@@ -1496,3 +1554,62 @@ function Find-CVE202017382 {
     Set-ExploitTable $CVEID $VulnStatus
 }
 
+function Find-CVE202017008 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      splWOW64 Local Elevation of Privileges
+
+   .NOTES
+      The company is currently aiming to address the bug in January 2021.
+
+   .DESCRIPTION
+      CVE: 2020-17008
+      MSBulletin: MS69-132
+      Affected systems:
+         Windows 10 (1901) x64 - 10.0.18362.900
+
+   .LINKS
+      https://bugs.chromium.org/p/project-zero/issues/detail?id=2096
+      https://www.securityweek.com/google-microsoft-improperly-patched-exploited-windows-vulnerability      
+   #>
+
+    $CVEID = "2020-17008"
+    $MSBulletin = "MS69-132"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+    $FilePath = $Env:WINDIR + "\splwow64.exe"
+
+    ## Check for OS affected version/arch (Windows 10 x64 bits)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 10) -and $Architecture[0] -ne "64 bits"){
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
+    }Else{
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## splwow64.exe appl not found
+           $VulnStatus = "Not Vulnerable"
+       }Else{
+
+          <#
+          .SYNOPSIS
+             Affected: =< 10.0.18362.900 (Windows 10 x64 bits)
+
+          .NOTES
+             VulnVersion     Minor   Checks
+             -----------     ------  ------
+             10.0.18362.900  18362   =< 900
+          #>
+
+          $Major = [int]$SoftwareVersion.Split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           18362 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 900 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $MSBulletin $VulnStatus
+}
