@@ -3,11 +3,11 @@
    Find missing software patchs for privilege escalation (windows).
 
    Author: @_RastaMouse (Deprecated)
-   Update: @r00t-3xp10it (v1.3.1)
+   Update: @r00t-3xp10it (v1.3.2)
    Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: none
-   PS cmdlet Dev version: v1.3.1
+   PS cmdlet Dev version: v1.3.2
 
 .DESCRIPTION
    Cmdlet to find missing software patchs for privilege escalation (windows).
@@ -34,46 +34,62 @@
    Access This cmdlet Comment_Based_Help
 
 .EXAMPLE
-   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-HotFixs
-   Import module, Find missing security KB Id packages (HotFix)
+   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force
+   Force the reload Of Module if allready exist in db
 
 .EXAMPLE
-   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-Rotten
-   Import module, Find Rotten Potato vuln privilege settings (EoP)
+   PS C:\> Get-HotFixs
+   Find missing security KB packages (HotFix Id)
 
 .EXAMPLE
-   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-Paths
-   Import module, Find Unquoted service paths (EoP vulnerability)
+   PS C:\> Get-Rotten
+   Find Rotten Potato vuln privilege settings (EoP)
 
 .EXAMPLE
-   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Get-Paths ACL
-   Import module, Find Unquoted service paths (EoP vulnerability) and
-   search recursive in PROGRAMFILES directorys for folders with
-   Everyone:(F) 'FullControl' permissions set.
+   PS C:\> Get-Paths
+   Find Unquoted service paths (EoP vulnerability)
 
 .EXAMPLE
-   PS C:\> Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-Paths ACL ReadAndExecute
-   'ACL' 2º argument accepts the Everyone:(FileSystemRigths) value to search.
+   PS C:\> Get-Paths ACL
+   Find Unquoted service paths (EoP vulnerability) and
+   search recursive for folders with Everyone:(F) permissions
 
 .EXAMPLE
-   PS C:\> Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-Paths ACL FullControl BUILTIN\Users
-   'ACL' 3º argument accepts the Group (Everyone|BUILTIN\Users|Etc) value to search.
+   PS C:\> Get-Paths ACL Modify
+   SYNTAX: Get-Paths <ACL> <FileSystemRigths>
+   Get-Paths 2º arg accepts Everyone:(FileSystemRigths) value.
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-RegPaths
-   Find Weak Service Registry Permissions Under Everyone Group Name (EoP)
+   PS C:\> Get-Paths ACL FullControl BUILTIN\Users
+   SYNTAX: Get-Paths <ACL> <FileSystemRigths> <IdentityReference>
+   Get-Paths 3º arg accepts the Group Name (Everyone|BUILTIN\Users)
 
 .EXAMPLE
-   PS C:\> Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-RegPaths BUILTIN\Users
-   'Get-RegPaths' argument accepts the Group (Everyone|BUILTIN\Users) value.
+   PS C:\> Get-RegPaths
+   Find Weak Services Registry Permissions Everyone:(F)
 
 .EXAMPLE
-   PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force;Find-AllVulns
-   Import module, Scan pre-defined CVE's (EoP) using Sherlock $dATAbASE
+   PS C:\> Get-RegPaths BUILTIN\Users
+   SYNTAX: Get-RegPaths <IdentityReference>
+   Get-RegPaths arg accepts the Group Name (Everyone|BUILTIN\Users)
 
 .EXAMPLE
-   PS C:\> Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-DllHijack
-   Import module, Find DLL's prone to hijacking (EoP).
+   PS C:\> Get-DllHijack
+   Find DLL's prone to hijacking (EoP).
+
+.EXAMPLE
+   PS C:\> Get-DllHijack EnvPaths
+   SYNTAX: Get-DllHijack <EnvPaths-Argument>
+   Checks if the current %PATH% has any directories
+   that Migth be writeable (W) by the current user.
+
+.EXAMPLE
+   PS C:\> Find-AllVulns
+   Scan pre-defined CVE's using Sherlock $dATAbASE
+
+.EXAMPLE
+   PS C:\> Use-AllModules
+   Run ALL Sherlock enumeration modules
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -103,12 +119,42 @@
 
 ## Var declarations
 $CveDataBaseId = "22"        ## 22 CVE's entrys available ($dATAbASE)
-$CmdletVersion = "v1.3.1"    ## Sherlock CmdLet develop version number
+$CmdletVersion = "v1.3.2"    ## Sherlock CmdLet develop version number
 $CVEdataBase = "02/01/2021"  ## Global $dATAbASE (CVE) last update date
 $Global:ExploitTable = $null ## Global Output DataTable
 $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
+
+
+function Use-AllModules {
+
+   <#
+   .SYNOPSIS
+      Run ALL Sherlock enumeration modules
+
+   .EXAMPLE
+      PS C:\> Use-AllModules
+   #>
+
+   ## Get Group Name in diferent languages
+   # NOTE: England, Portugal, France, Germany, Bielorussia, Indonesia, Holland, Romania, Russia, Croacia 
+   $FindGroup = whoami /groups|findstr /I "Everyone Todos Tout Alle Yсе Semua Allemaal Toate Bce Svi"|Select-Object -First 1
+   $SplitString = $FindGroup -split(" ")
+   $GroupName = $SplitString[0] -replace ' ',''
+   If(-not($GroupName) -or $GroupName -ieq $null){$GroupName = "Everyone"}
+
+   ## Run All modules
+   Get-HotFixs
+   Get-Rotten
+   Get-Paths ACL FullControl $GroupName
+   Get-RegPaths $GroupName
+   Get-DllHijack
+   Find-AllVulns
+   #Get-DllHijack EnvPaths (possition:7)
+
+Write-Host ""
+}
 
 function Sherlock-Banner {
 
@@ -146,7 +192,7 @@ function Get-Paths {
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Find Unquoted service vuln paths (EoP)
+      Find Unquoted service vulnerable paths (EoP)
 
    .NOTES
       This function searchs for Unquoted service vuln paths.
@@ -154,22 +200,23 @@ function Get-Paths {
       to successfuly exploit Unquoted service paths vulnerability.
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-Paths
+      PS C:\> Get-Paths
       Find Unquoted service vulnerable paths (EoP vulnerability)
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-Paths ACL
-      IF the 'ACL' argument its used in this function, then Sherlock
-      also recursive search for folders with Everyone:(F) permissions.
+      PS C:\> Get-Paths ACL
+      Find Unquoted service paths (EoP vulnerability) and
+      search recursive for folders with Everyone:(F) permissions
 
    .EXAMPLE
-      Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-Paths ACL ReadAndExecute
-      'ACL' 2º argument accepts the Everyone:(FileSystemRigths) value to search.
+      PS C:\> Get-Paths ACL Modify
+      SYNTAX: Get-Paths <ACL> <FileSystemRigths>
+      Get-Paths 2º arg accepts Everyone:(FileSystemRigths) value.
 
    .EXAMPLE
-      Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-Paths ACL FullControl BUILTIN\Users
-      'ACL' 3º argument accepts the Group Name (Everyone|BUILTIN\Users|Etc) value to search.
-      REMARK: Allways use double quotes if Group Name contains any empty spaces
+      PS C:\> Get-Paths ACL FullControl BUILTIN\Users
+      Get-Paths 3º arg accepts the Group Name (Everyone|BUILTIN\Users)
+      REMARK: Use double quotes if Group Name contains any empty spaces in Name
    #>
 
    Write-Host ""
@@ -191,18 +238,20 @@ function Get-Paths {
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
 
-   ## Search for Unquoted service paths (StartMode = Auto)
+   ## Search for Unquoted service paths (StartMode = Auto StartName = LocalSystem)
    gwmi -class Win32_Service -Property Name,DisplayName,PathName,StartMode,StartName|Where {
          $_.StartMode -eq "Auto" -and $_.StartName -eq 'LocalSystem' -and $_.PathName -NotLike "C:\Windows*" -and $_.PathName -NotMatch '"*"'
       }|Select PathName,Name > $Env:TMP\GetPaths.log
    If(Test-Path -Path "$Env:TMP\GetPaths.log" -EA SilentlyContinue){
       Get-Content -Path "$Env:TMP\GetPaths.log"
       Remove-Item -path "$Env:TMP\GetPaths.log" -Force
+      Start-Sleep -Seconds 2
    }
 
+   ## Search for weak directory permissions
    $param1 = $args[0] ## User Imput => Trigger ACL tests argument
    $param2 = $args[1] ## User Imput => FileSystemRights (ReadAndExecute)
-   $param3 = $args[2] ## User Imput => Group (BUILTIN\Users)
+   $param3 = $args[2] ## User Imput => Group Name (BUILTIN\Users)
    If($param2 -ieq $null){$param2 = "FullControl"}## Default FileSystemRights value
    If($param3 -ieq $null){$param3 = "Everyone"}## Default Group Name value
    If($param1 -ieq "ACL"){## List folders with Everyone:(F) Permissions (ACL)
@@ -238,7 +287,7 @@ function Get-Paths {
       Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
       ## Display available Groups
-      $ListGroups = whoami /groups
+      $ListGroups = whoami /groups|findstr /V "GROUP INFORMATION ----- Label"
       echo $ListGroups > $Env:TMP\Groups.log
       Get-Content -Path "$Env:TMP\Groups.log"
       Remove-Item -Path "$Env:TMP\Groups.log" -Force
@@ -246,7 +295,7 @@ function Get-Paths {
       Write-Host ""
       ## Directorys to search recursive: $Env:PROGRAMFILES, ${Env:PROGRAMFILES(x86)}, $Env:LOCALAPPDATA\Programs\
       $dAtAbAsEList = Get-ChildItem  -Path "$Env:PROGRAMFILES", "${Env:PROGRAMFILES(x86)}", "$Env:LOCALAPPDATA\Programs\" -Recurse -ErrorAction SilentlyContinue -Force|Where { $_.PSIsContainer }|Select -ExpandProperty FullName
-      ForEach($Token in $dAtAbAsEList){## Loop truth Get-ChildItem Itens (Paths)
+      ForEach($Token in $dAtAbAsEList){## Loop truth Get-ChildItem Items (Paths)
          If(-not($Token -Match 'WindowsApps')){## Exclude => WindowsApps folder [UnauthorizedAccessException]
             $IsInHerit = (Get-Acl "$Token").Access.IsInherited|Select -First 1
             (Get-Acl "$Token").Access|Where {## Search for Everyone:(F) folder permissions (default)
@@ -262,16 +311,18 @@ function Get-Paths {
          }## End of Exclude WindowsApps
       }## End of ForEach loop
 
-      Write-Host "`n`nWeak Directorys"
-      Write-Host "---------------"
+      Write-Host "`n`nWeak Directory Permissions"
+      Write-Host "--------------------------"
       If(-not($Count -gt 0) -or $Count -ieq $null){## Weak directorys permissions report banner
          Write-Host "None directorys found with '${UserGroup}:($param2)' permissions!" -ForegroundColor Red -BackgroundColor Black
+         Write-Host ""
       }Else{
          Write-Host "Found $Count directorys with '${UserGroup}:($param2)' permissions!"  -ForegroundColor Green -BackgroundColor Black
+         Write-Host ""
       }
 
    }## End of List folders Permissions
-   Write-Host ""
+   Start-Sleep -Seconds 2
 }
 
 function Get-RegPaths {
@@ -280,20 +331,16 @@ function Get-RegPaths {
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Find Weak Service Registry Permissions (EoP)
-
-   .NOTES
-      This function searchs for Weak Registry Permissions.
-      https://medium.com/bugbountywriteup/privilege-escalation-in-windows-380bee3a2842
+      Find Weak Services Registry Permissions (EoP)
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-RegPaths
-      Find Weak Service Registry Permissions Under Everyone Group Name (EoP)
+      PS C:\> Get-RegPaths
+      Find Weak Services Registry Permissions Everyone:(F)
 
    .EXAMPLE
-      Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-RegPaths BUILTIN\Users
-      'Get-RegPaths' argument accepts the Group Name (Everyone|BUILTIN\Users).
-      REMARK: Allways use double quotes if Group Name contains any empty spaces.
+      PS C:\> Get-RegPaths BUILTIN\Users
+      Get-RegPaths arg accepts the Group Name (Everyone|BUILTIN\Users)
+      REMARK: Use double quotes if Group Name contains any empty spaces in Name
    #>
 
    ## Var declarations
@@ -332,7 +379,7 @@ function Get-RegPaths {
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
    ## Display available Groups
-   $ListGroups = whoami /groups
+   $ListGroups = whoami /groups|findstr /V "GROUP INFORMATION ----- Label"
    echo $ListGroups > $Env:TMP\Groups.log
    Get-Content -Path "$Env:TMP\Groups.log"
    Remove-Item -Path "$Env:TMP\Groups.log" -Force
@@ -363,7 +410,7 @@ function Get-RegPaths {
    }Else{
       Write-Host "Found $Count registry services with '${UserGroup}:(FullControl)' permissions!" -ForegroundColor Green -BackgroundColor Black
    }
-   Write-Host ""
+   Start-Sleep -Seconds 2;Write-Host ""
 }
 
 function Get-Rotten {
@@ -375,10 +422,11 @@ function Get-Rotten {
       Find Rotten Potato vulnerable settings (EoP)
 
    .NOTES
-      Rotten Potato tests can NOT run under Admin privs
+      Rotten Potato tests can 'NOT' run under Admin privs
 
    .EXAMPLE
-      Import-Module "$Env:TMP\Sherlock.ps1" -Force;Get-Rotten
+      PS C:\> Get-Rotten
+      Find Rotten Potato vuln privilege settings (EoP)
    #>
 
    Write-Host ""
@@ -403,7 +451,7 @@ function Get-Rotten {
    $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544")
    If(-not($IsClientAdmin)){## Running tests Under UserLand Privileges => OK
 
-      $ListPrivsDb = whoami /priv
+      $ListPrivsDb = whoami /priv|findstr /V "PRIVILEGES INFORMATION -----"
       ## Display privileges List onscreen
       echo $ListPrivsDb > "$Env:TMP\ListPrivsDb.txt"
       Get-Content -Path "$Env:TMP\ListPrivsDb.txt"
@@ -417,8 +465,8 @@ function Get-Rotten {
          $Count++
       }
 
-      Write-Host "`n`nRotten Potato"
-      Write-Host "-------------";Start-Sleep -Seconds 1
+      Write-Host "`n`nRotten Potato Vulnerability"
+      Write-Host "---------------------------";Start-Sleep -Seconds 1
       If($CheckVulnSet){## Check if there are vulnerable settings to report them
          Write-Host "Found $Count Rotten Potato Vulnerable Setting(s)" -ForegroundColor Green -BackgroundColor Black
          Write-Host "----------------------------- --------------------------------------------- --------"
@@ -428,14 +476,14 @@ function Get-Rotten {
       }
 
    }Else{## Rotten Potato can NOT run under Admin privs
-      Write-Host "`n`nRotten Potato"
-      Write-Host "-------------";Start-Sleep -Seconds 1
+      Write-Host "`n`nRotten Potato Vulnerability"
+      Write-Host "---------------------------";Start-Sleep -Seconds 1
       Write-Host "Rotten Potato tests can NOT run under Administrator privileges!" -ForegroundColor Red -BackgroundColor Black
    }
 
    ## Clean old LogFiles
    If(Test-Path -Path "$Env:TMP\DCprivs.log"){remove-item "$Env:TMP\DCprivs.log" -Force}
-   Write-Host "";Start-Sleep -Seconds 2
+   Start-Sleep -Seconds 2;Write-Host ""
 }
 
 function Get-HotFixs {
@@ -453,7 +501,8 @@ $KBDataEntrys = "null"
       Special thanks to @youhacker55 (W7 x64 database)
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-HotFixs
+      PS C:\> Get-HotFixs
+      Find missing security KB packages (HotFix Id)
    #>
 
    ## Variable declarations
@@ -521,7 +570,7 @@ $KBDataEntrys = "null"
          "KB2805222","KB2805227","KB2750149",
          "KB2919355","KB2919442","KB2932046",
          "KB2959977","KB2937592","KB2938439",
-         "KB2934018","STOPED-HERE","KB4552152",
+         "KB2934018","STOPED-HERE","KB4552152", ## <-- TODO:
          "KB4559309","KB4560959","KB4561600",
          "KB4560960"
       )
@@ -590,23 +639,28 @@ $KBDataEntrys = "null"
          Write-Host "+  $KBkey  Installed  Patched" -ForeGroundColor Green
       }
    }
-   Write-Host ""
+   Start-Sleep -Seconds 2;Write-Host ""
 }
 
 function Get-DllHijack {
-$WorkingDir = (pwd).Path
 
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Find DLL Hijacking
+      Find service DLL's prone to Hijacking
 
    .NOTES
       dll_hijack_detect_x64.exe created by @Adam_Kramer
       https://github.com/adamkramer/dll_hijack_detect
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Get-DllHijack
+      PS C:\> Get-DllHijack
+      Find DLL's prone to hijacking (EoP).
+
+   .EXAMPLE
+      PS C:\> Get-DllHijack EnvPaths
+      Checks if the current %PATH% has any directories
+      that Migth be writeable (W) by the current user.
    #>
 
    Write-Host ""
@@ -620,7 +674,7 @@ $WorkingDir = (pwd).Path
    $mytable.Rows.Add("Sherlock",
                      "W$MajorVersion",
                      "$ProcessArchitecture",
-                     "DLL-Hijacking")|Out-Null
+                     "DLL-Hijack")|Out-Null
 
    ## Display Data Table
    $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
@@ -628,47 +682,135 @@ $WorkingDir = (pwd).Path
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
    Start-sleep -Seconds 2
 
-   ## Variable declarations (x64 bits)
-   $Architecture = Get-Architecture
-   $ArchBuildBits = $Architecture[0]
-   If($ArchBuildBits -eq "64 bits"){## Download x64 binary
-     $ArchiveName = "dll_hijack_detect_x64"
-   }Else{## Download x86 binary
-     $ArchiveName = "dll_hijack_detect_x86"
-   }
 
-   ## Download dll_hijack_detect_x64.zip (OR x86) archive from my GitHub repository
-   # Repository: https://github.com/r00t-3xp10it/venom/blob/master/bin/dll_hijack_detect_x64.zip
-   Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/${ArchiveName}.zip -Destination $Env:TMP\${ArchiveName}.zip -ErrorAction SilentlyContinue|Out-Null   
+   ## User Imputs
+   $ModuleSelection = $args[0]
+   If($ModuleSelection -ieq "EnvPaths"){## Finds all %PATH% .DLL hijacking opportunities.
+
+      <#
+      .SYNOPSIS
+         Checks if the current %PATH% has any directories
+         that are writeable (W) by the current user.
+
+       .EXAMPLE
+          PS C:\> Get-DllHijack EnvPaths
+          Finds all %PATH% .DLL hijacking opportunities. 
+      #>
+
+      ## Variable declarations
+      $OrigError = $ErrorActionPreference
+      $ErrorActionPreference = "SilentlyContinue"
+      $Paths = (Get-Item Env:Path).value.split(';')|Where-Object {$_ -ne ""}
+
+      ForEach($Path in $Paths){
+         $Path = $Path.Replace('"',"")
+         If(-not $Path.EndsWith("\")){
+            $Path = $Path + "\"
+         }
+
+      ## reference - http://stackoverflow.com/questions/9735449/how-to-verify-whether-the-share-has-write-access
+      # This function writes a random file on $Path to test if user as 'Write (W)' privileges on $Path
+      $TestPath = Join-Path $Path ([IO.Path]::GetRandomFileName())
+
+      ## if the path doesn't exist
+      # try to create the folder before testing it for write
+      if(-not $(Test-Path -Path $Path)){
+         try {
+            ## try to create the folder
+            $Null = New-Item -ItemType directory -Path $Path
+            echo $Null > $TestPath
+            $Out = New-Object PSObject
+            $Out|Add-Member Noteproperty 'Permissions' 'Write'
+            $Out|Add-Member Noteproperty 'HijackablePath' $Path
+            $Out #|Format-Table -AutoSize
+         }
+         catch {}
+         finally {
+            ## remove the directory
+            Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+         }
+      }
+      Else{
+         try {
+            ## if the folder already exists
+            echo $Null > $TestPath
+            $Out = New-Object PSObject
+            $Out|Add-Member Noteproperty 'Permissions' 'Write'
+            $Out|Add-Member Noteproperty 'HijackablePath' $Path
+            $Out #|Format-Table -AutoSize
+         }
+         catch {} 
+         finally {
+            ## Try to remove the item again just to be safe
+            Remove-Item $TestPath -Force -ErrorAction SilentlyContinue
+         }
+      }
+   }
+   Start-Sleep -Seconds 2
+    
+   }Else{## dll_hijack_detect_x64.exe by @Adam_Kramer
+
+      <#
+      .SYNOPSIS
+         Author: r00t-3xp10it
+         Find service DLL's prone to Hijacking
+
+      .NOTES
+         dll_hijack_detect_x64.exe created by @Adam_Kramer
+         https://github.com/adamkramer/dll_hijack_detect
+
+      .EXAMPLE
+         PS C:\> Get-DllHijack
+         Find service DLL's prone to Hijacking (DLL-Hijack) 
+      #>
+
+      ## Variable declarations
+      $Architecture = Get-Architecture
+      $ArchBuildBits = $Architecture[0]
+      If($ArchBuildBits -eq "64 bits"){## Download x64 binary
+        $ArchiveName = "dll_hijack_detect_x64"
+        $limmitKbytes = "26" ## Archive is: 26,9130859375/KB
+      }Else{## Download x86 binary
+        $ArchiveName = "dll_hijack_detect_x86"
+        $limmitKbytes = "5" ## Archive is: 5,6396484375/KB
+      }
+
+      ## Download dll_hijack_detect.zip (x86|x64) archive from my GitHub repository
+      # Repository: https://github.com/r00t-3xp10it/venom/blob/master/bin/dll_hijack_detect_x64.zip
+      Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/${ArchiveName}.zip -Destination $Env:TMP\${ArchiveName}.zip -ErrorAction SilentlyContinue|Out-Null   
  
-   ## Check for Failed/Corrupted archive download
-   If(Test-Path -Path "$Env:TMP\${ArchiveName}.zip"){
-      $SizeDump = ((Get-Item "$Env:TMP\${ArchiveName}.zip" -EA SilentlyContinue).length/1KB)
-      If($SizeDump -lt 25){## Downloaded Archive corrupted detected
+      ## Check for Failed/Corrupted archive download
+      If(Test-Path -Path "$Env:TMP\${ArchiveName}.zip"){
+         $SizeDump = ((Get-Item "$Env:TMP\${ArchiveName}.zip" -EA SilentlyContinue).length/1KB)
+         If($SizeDump -lt $limmitKbytes){## Archive corrupted detected
+            Write-Host "`n`nDll Hijacking"
+            Write-Host "-------------";Start-Sleep -Seconds 1
+            Write-Host "[corrupted] Fail to download '${ArchiveName}.zip' archive ($SizeDump/KB)" -ForegroundColor Red -BackgroundColor Black
+            Start-Sleep -Seconds 1
+         }Else{## Remote execute dll_hijack_detect.exe binary
+            ## De-Compress dll_hijack_detect Archive into $Env:TMP remote directory
+            Expand-Archive -LiteralPath "$Env:TMP\${ArchiveName}.zip" -DestinationPath "$Env:TMP" -Force
+
+            <#
+            .SYNOPSIS
+               run an executable and display output on terminal console
+               Credits: https://stackoverflow.com/questions/1673967/
+               how-to-run-an-exe-file-in-powershell-with-parameters-with-spaces-and-quotes
+            #>
+
+            &"$Env:TMP\$ArchiveName.exe" /unsigned
+            ## Remove Old files/binary from remote host
+            Remove-Item -Path "$Env:TMP\${ArchiveName}.zip" -Force
+            Remove-Item -Path "$Env:TMP\${ArchiveName}.exe" -Force
+         }
+      }Else{## Fail Archive download detected
          Write-Host "`n`nDll Hijacking"
          Write-Host "-------------";Start-Sleep -Seconds 1
-         Write-Host "[corrupted] Fail to download '${ArchiveName}.zip' archive" -ForegroundColor Red -BackgroundColor Black
+         Write-Host "[Fail] Fail to download '${ArchiveName}.zip' archive" -ForegroundColor Red -BackgroundColor Black
          Start-Sleep -Seconds 1
-      }Else{## Remote execute dll_hijack_detect_x64.exe binary
-         ## Un-Compress dll_hijack_detect_x64 Archive into $Env:TMP remote directory
-         Expand-Archive -LiteralPath "$Env:TMP\${ArchiveName}.zip" -DestinationPath "$Env:TMP" -Force
-         If($ArchBuildBits -eq "64 bits"){## dll_hijack_detect_x64 binary
-            cd $Env:TMP;.\dll_hijack_detect_x64.exe /unsigned
-         }Else{## dll_hijack_detect_x86 binary
-            cd $Env:TMP;.\dll_hijack_detect_x86.exe /unsigned
-         }
-         ## Remove Old files/binary from remote host
-         Remove-Item -Path "$Env:TMP\${ArchiveName}.zip" -Force
-         Remove-Item -Path "$Env:TMP\${ArchiveName}.exe" -Force
-         cd $WorkingDir ## Return to Sherlock working directory
-      }
-   }Else{## Fail Archive download detected
-      Write-Host "`n`nDll Hijacking"
-      Write-Host "-------------";Start-Sleep -Seconds 1
-      Write-Host "[Fail] Fail to download '${ArchiveName}.zip' archive" -ForegroundColor Red -BackgroundColor Black
-      Start-Sleep -Seconds 1
-   }## End of Check for Corrupted downloads
-   Write-Host ""
+      }## End of Check for Corrupted downloads
+   }## End of EnvPaths argument
+   Start-Sleep -Seconds 2;Write-Host ""
 }
 
 function Get-FileVersionInfo($FilePath){
@@ -727,7 +869,7 @@ function New-ExploitTable {
     ## Miscs that aren't MS
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
 
-    ## r00t-3xp10it update (v1.3.1)
+    ## r00t-3xp10it update (v1.3.2)
     $Global:ExploitTable.Rows.Add("ws2ifsl.sys Use After Free Elevation of Privileges","N/A","2019-1215","https://www.exploit-db.com/exploits/47935")
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("checkmk Local Elevation of Privileges","N/A","2020-005","https://tinyurl.com/ycrgjxec")
@@ -780,7 +922,7 @@ function Find-AllVulns {
       CVE-2020-17382, CVE-2020-17008
 
    .EXAMPLE
-      Import-Module -Name "$Env:TMP\Sherlock.ps1" -Force;Find-AllVulns
+      PS C:\> Find-AllVulns
    #>
 
     If(-not($Global:ExploitTable)){
@@ -1122,7 +1264,7 @@ function Find-MS16135 {
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
-      Sherlock version v1.3.1 update
+      Sherlock version v1.3.2 update
 
    .DESCRIPTION
       The next functions are related to new 2020 EOP CVE's

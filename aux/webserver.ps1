@@ -117,15 +117,11 @@
    completing is task (Download file) it exits execution.
 
 .EXAMPLE
-   PS C:\> .\webserver.ps1 -EOP CVE
-   Find missing software patches for local privilege escalation.
-
    PS C:\> .\webserver.ps1 -EOP HOTFIXS
-   Find missing KB patchs for local privilege escalation.
-   
+   PS C:\> .\webserver.ps1 -EOP ACL
+   PS C:\> .\webserver.ps1 -EOP CVE
    PS C:\> .\webserver.ps1 -EOP ALL
-   Find missing software patches for local privilege escalation
-   and list all KB's security patchs installed onscreen (prompt)
+   Find missing software patches for privilege escalation.
 
    Title      : TrackPopupMenu Win32k Null Point Dereference
    MSBulletin : MS14-058
@@ -398,16 +394,18 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
       It will 'report' and presents the exploit-db POC link
 
    .EXAMPLE
-      PS C:\> .\webserver.ps1 -EOP CVE
-      Find missing software patches for local privilege escalation.
-
       PS C:\> .\webserver.ps1 -EOP HOTFIXS
-      Find missing KB patchs for local privilege escalation.
-   
-      PS C:\> .\webserver.ps1 -EOP ALL
-      Find missing software patches for local privilege escalation
-      and list all KB's security patchs installed onscreen (prompt)
 
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -EOP ACL
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -EOP CVE
+
+   .EXAMPLE
+      PS C:\> .\webserver.ps1 -EOP ALL
+
+   .OUTPUTS
       Title      : TrackPopupMenu Win32k Null Point Dereference
       MSBulletin : MS14-058
       CVEID      : 2014-4113
@@ -436,13 +434,16 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
       If($EOP -ieq "ALL"){## Use ALL Sherlock EoP functions
-         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Get-DllHijack;Find-AllVulns
+         Use-AllModules
       }ElseIf($EOP -ieq "HOTFIXS"){## find missing KB patchs
          Get-HotFixs
+      }ElseIf($EOP -ieq "ACL"){## find Unquoted service paths
+         ## and search recursive for folders with Everyone:(F) permissions
+         Get-Paths ACL
       }ElseIf($EOP -ieq "CVE"){## find missing CVE patchs
          Find-AllVulns
       }Else{## Default its to lunch only CVE tests
-         Find-AllVulns
+         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Get-DllHijack;Find-AllVulns
       }
    }
    
