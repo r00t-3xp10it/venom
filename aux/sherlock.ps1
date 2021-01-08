@@ -299,24 +299,6 @@ function Get-Paths {
    #>
 
    Write-Host ""
-   ## Create Data Table for output
-   $MajorVersion = [int]$OSVersion.split(".")[0]
-   $mytable = New-Object System.Data.DataTable
-   $mytable.Columns.Add("ModuleName")|Out-Null
-   $mytable.Columns.Add("OS")|Out-Null
-   $mytable.Columns.Add("Arch")|Out-Null
-   $mytable.Columns.Add("SearchFor")|Out-Null
-   $mytable.Rows.Add("Sherlock",
-                     "W$MajorVersion",
-                     "$ProcessArchitecture",
-                     "DACLPermissions")|Out-Null
-
-   ## Display Data Table
-   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
-   Get-Content -Path "$Env:TMP\MyTable.log"
-   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
-
-
    ## Search for weak directory permissions
    $param1 = $args[0] ## User Imput => FileSystemRights (ReadAndExecute)
    $param2 = $args[1] ## User Imput => Group Name (BUILTIN\Users)
