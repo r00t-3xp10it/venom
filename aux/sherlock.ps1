@@ -3,11 +3,11 @@
    Find missing software patchs for privilege escalation (windows).
 
    Author: @_RastaMouse (Deprecated)
-   Update: @r00t-3xp10it (v1.3.2)
+   Update: @r00t-3xp10it (v1.3.3)
    Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: none
-   PS cmdlet Dev version: v1.3.2
+   PS cmdlet Dev version: v1.3.3
 
 .DESCRIPTION
    Cmdlet to find missing software patchs for privilege escalation (windows).
@@ -18,16 +18,17 @@
    recursive search for folders with Everyone:(F) permissions ($Env:PROGRAMFILES)
 
 .NOTES
-   CVE's to test
-   -------------
+   Vulnerabilitys/CVE's to test
+   ----------------------------
    MS10-015, MS10-092, MS13-053, MS13-081
    MS14-058, MS15-051, MS15-078, MS16-016
    MS16-032, MS16-034, MS16-135
 
    CVE-2017-7199, CVE-2019-1215, CVE-2019-1458
    CVE-2020-005, CVE-2020-0624, CVE-2020-0642
-   CVE-2020-1054, CVE-2020-5752, CVE-2020-13162
-   CVE-2020-17382, CVE-2020-17008
+   CVE-2020-1048, CVE-2020-1054, CVE-2020-5752
+   CVE-2020-13162, CVE-2020-17382, CVE-2020-17008
+   CVE-2020-25106
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -35,7 +36,8 @@
 
 .EXAMPLE
    PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force
-   Force the reload Of Module if allready exist in db
+   Force the reload of this Module if allready exists
+   Remark: Importing Module its Mandatory condiction
 
 .EXAMPLE
    PS C:\> Get-HotFixs
@@ -46,23 +48,22 @@
    Find Rotten Potato vuln privilege settings (EoP)
 
 .EXAMPLE
-   PS C:\> Get-Paths
+   PS C:\> Get-Unquoted
    Find Unquoted service paths (EoP vulnerability)
 
 .EXAMPLE
-   PS C:\> Get-Paths ACL
-   Find Unquoted service paths (EoP vulnerability) and
-   search recursive for folders with Everyone:(F) permissions
+   PS C:\> Get-Paths
+   Find weak directory permissions (EoP)
 
 .EXAMPLE
-   PS C:\> Get-Paths ACL Modify
-   SYNTAX: Get-Paths <ACL> <FileSystemRigths>
-   Get-Paths 2º arg accepts Everyone:(FileSystemRigths) value.
+   PS C:\> Get-Paths Modify
+   SYNTAX: Get-Paths <FileSystemRigths>
+   Get-Paths 1º arg accepts Everyone:(FileSystemRigths) value.
 
 .EXAMPLE
-   PS C:\> Get-Paths ACL FullControl BUILTIN\Users
-   SYNTAX: Get-Paths <ACL> <FileSystemRigths> <IdentityReference>
-   Get-Paths 3º arg accepts the Group Name (Everyone|BUILTIN\Users)
+   PS C:\> Get-Paths FullControl BUILTIN\Users
+   SYNTAX: Get-Paths <FileSystemRigths> <IdentityReference>
+   Get-Paths 2º arg accepts the Group Name (Everyone|BUILTIN\Users)
 
 .EXAMPLE
    PS C:\> Get-RegPaths
@@ -91,6 +92,10 @@
    PS C:\> Use-AllModules
    Run ALL Sherlock enumeration modules
 
+.EXAMPLE
+   PS C:\> Use-AllModules Agressive
+   Run ALL Sherlock enumeration modules (agressive)
+
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
 
@@ -118,9 +123,9 @@
 
 
 ## Var declarations
-$CveDataBaseId = "22"        ## 22 CVE's entrys available ($dATAbASE)
-$CmdletVersion = "v1.3.2"    ## Sherlock CmdLet develop version number
-$CVEdataBase = "02/01/2021"  ## Global $dATAbASE (CVE) last update date
+$CveDataBaseId = "24"        ## 24 CVE's entrys available ($dATAbASE)
+$CmdletVersion = "v1.3.3"    ## Sherlock CmdLet develop version number
+$CVEdataBase = "06/01/2021"  ## Global $dATAbASE (CVE) last update date
 $Global:ExploitTable = $null ## Global Output DataTable
 $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
@@ -128,32 +133,69 @@ $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
 
 
 function Use-AllModules {
+$UserImput = $args[0] ## User Imputs
 
    <#
    .SYNOPSIS
+      Author: r00t-3xp10it
       Run ALL Sherlock enumeration modules
 
    .EXAMPLE
       PS C:\> Use-AllModules
+
+   .EXAMPLE
+      PS C:\> Use-AllModules Agressive
+      Permissions to scan: FullControl(F), Write(W), Modify(M)
+      Group Names to scan: Everyone, BUILTIN\Users, NT AUTHORITY\INTERACTIVE
+
+   .NOTES
+      Be prepaired for huge outputs If used the 'Agressive' @argument.
+      Because it will loop through all permissions and all Group Names.
    #>
 
    ## Get Group Name in diferent languages
    # NOTE: England, Portugal, France, Germany, Bielorussia, Indonesia, Holland, Romania, Russia, Croacia 
-   $FindGroup = whoami /groups|findstr /I "Everyone Todos Tout Alle Yсе Semua Allemaal Toate Bce Svi"|Select-Object -First 1
-   $SplitString = $FindGroup -split(" ")
-   $GroupName = $SplitString[0] -replace ' ',''
-   If(-not($GroupName) -or $GroupName -ieq $null){$GroupName = "Everyone"}
+   $FindGroup = whoami /groups|findstr /C:"Everyone" /C:"Todos" /C:"Tout" /C:"Alle" /C:"YÑÐµ" /C:"Semua" /C:"Allemaal" /C:"Toate" /C:"Bce" /C:"Svi"|Select-Object -First 1
+   $SplitString = $FindGroup -split(" ");$GroupEveryone = $SplitString[0] -replace ' ',''
 
-   ## Run All modules
-   Get-HotFixs
-   Get-Rotten
-   Get-Paths ACL FullControl $GroupName
-   Get-RegPaths $GroupName
-   Get-DllHijack
-   Find-AllVulns
-   #Get-DllHijack EnvPaths (possition:7)
+   ## Get Group Name (BUILTIN\users) in diferent languages
+   # NOTE: England, Portugal, France, Germany, Indonesia, Holland, Romania, Croacia 
+   $FindGroupUser = whoami /groups|findstr /C:"BUILTIN\Users" /C:"BUILTIN\Utilizadores" /C:"BUILTIN\Utilisateurs" /C:"BUILTIN\Benutzer" /C:"BUILTIN\Pengguna" /C:"BUILTIN\Gebruikers" /C:"BUILTIN\Utilizatori" /C:"BUILTIN\Korisnici"|Select-Object -First 1
+   $SplitStringUser = $FindGroupUser -split(" ");$GroupNameUsers = $SplitStringUser[0] -replace ' ',''
 
-Write-Host ""
+   ## Default values if none string its found in permissions/groupname query
+   If(-not($GroupEveryone) -or $GroupEveryone -ieq $null){$GroupEveryone = "Everyone"}
+   If(-not($GroupNameUsers) -or $GroupNameUsers -ieq $null){$GroupNameUsers = "BUILTIN\Users"}
+
+   ## Permissions/GroupName database
+   $Permissions = @(## Permissions List
+      "FullControl","Write","Modify"
+   )
+   $GroupsList = @(## Group Name List
+      "$GroupEveryone","$GroupNameUsers",
+      "NT AUTHORITY\INTERACTIVE"
+   )
+
+   ## Run ALL modules
+   Get-HotFixs;Get-Rotten;Get-Unquoted
+   If($UserImput -ieq "Agressive"){## Agressive enumeration
+      ## Be prepaired for huge outputs with this test :)
+      ForEach($PrivsToken in $Permissions){## Loop through permissions list
+         ForEach($ItemToken in $GroupsList){## Loop through Group Names List
+            Get-Paths $PrivsToken $ItemToken
+         }
+      }
+      ForEach($GroupsToken in $GroupsList){## Loop through Group Names List
+         Get-RegPaths $GroupsToken
+      }
+      Get-DllHijack;Find-AllVulns;Get-DllHijack EnvPaths
+      cmdkey /List  ## Get stored credentials to use with RUNAS
+   }ElseIf(-not($UserImput) -or $UserImput -ieq $null){## Default Enumeration
+      Get-Paths FullControl $GroupEveryone
+      Get-RegPaths $GroupEveryone 
+      Get-DllHijack;Find-AllVulns
+   }
+   Write-Host ""
 }
 
 function Sherlock-Banner {
@@ -186,8 +228,7 @@ function Sherlock-Banner {
    Start-sleep -Seconds 2
 }
 
-function Get-Paths {
-[int]$Count = 0 ## Loop counter
+function Get-Unquoted {
 
    <#
    .SYNOPSIS
@@ -200,23 +241,8 @@ function Get-Paths {
       to successfuly exploit Unquoted service paths vulnerability.
 
    .EXAMPLE
-      PS C:\> Get-Paths
+      PS C:\> Get-Unquoted
       Find Unquoted service vulnerable paths (EoP vulnerability)
-
-   .EXAMPLE
-      PS C:\> Get-Paths ACL
-      Find Unquoted service paths (EoP vulnerability) and
-      search recursive for folders with Everyone:(F) permissions
-
-   .EXAMPLE
-      PS C:\> Get-Paths ACL Modify
-      SYNTAX: Get-Paths <ACL> <FileSystemRigths>
-      Get-Paths 2º arg accepts Everyone:(FileSystemRigths) value.
-
-   .EXAMPLE
-      PS C:\> Get-Paths ACL FullControl BUILTIN\Users
-      Get-Paths 3º arg accepts the Group Name (Everyone|BUILTIN\Users)
-      REMARK: Use double quotes if Group Name contains any empty spaces in Name
    #>
 
    Write-Host ""
@@ -226,11 +252,11 @@ function Get-Paths {
    $mytable.Columns.Add("ModuleName")|Out-Null
    $mytable.Columns.Add("OS")|Out-Null
    $mytable.Columns.Add("Arch")|Out-Null
-   $mytable.Columns.Add("SearchPaths")|Out-Null
+   $mytable.Columns.Add("SearchFor")|Out-Null
    $mytable.Rows.Add("Sherlock",
                      "W$MajorVersion",
                      "$ProcessArchitecture",
-                     "Unquoted")|Out-Null
+                     "UnquotedPaths")|Out-Null
 
    ## Display Data Table
    $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
@@ -247,25 +273,66 @@ function Get-Paths {
       Remove-Item -path "$Env:TMP\GetPaths.log" -Force
       Start-Sleep -Seconds 2
    }
+}
+
+function Get-Paths {
+[int]$Count = 0 ## Loop counter
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Find weak Directory permissions (EoP)
+
+   .EXAMPLE
+      PS C:\> Get-Paths
+      Search recursive for folders with Everyone:(F) permissions
+
+   .EXAMPLE
+      PS C:\> Get-Paths Modify
+      SYNTAX: Get-Paths <FileSystemRigths>
+      Get-Paths 1º arg accepts Everyone:(FileSystemRigths) value.
+
+   .EXAMPLE
+      PS C:\> Get-Paths FullControl BUILTIN\Users
+      Get-Paths 2º arg accepts the Group Name (Everyone|BUILTIN\Users)
+      REMARK: Use double quotes if Group Name contains any empty spaces in Name
+   #>
+
+   Write-Host ""
+   ## Create Data Table for output
+   $MajorVersion = [int]$OSVersion.split(".")[0]
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("ModuleName")|Out-Null
+   $mytable.Columns.Add("OS")|Out-Null
+   $mytable.Columns.Add("Arch")|Out-Null
+   $mytable.Columns.Add("SearchFor")|Out-Null
+   $mytable.Rows.Add("Sherlock",
+                     "W$MajorVersion",
+                     "$ProcessArchitecture",
+                     "DACLPermissions")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+   Get-Content -Path "$Env:TMP\MyTable.log"
+   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+
 
    ## Search for weak directory permissions
-   $param1 = $args[0] ## User Imput => Trigger ACL tests argument
-   $param2 = $args[1] ## User Imput => FileSystemRights (ReadAndExecute)
-   $param3 = $args[2] ## User Imput => Group Name (BUILTIN\Users)
-   If($param2 -ieq $null){$param2 = "FullControl"}## Default FileSystemRights value
-   If($param3 -ieq $null){$param3 = "Everyone"}## Default Group Name value
-   If($param1 -ieq "ACL"){## List folders with Everyone:(F) Permissions (ACL)
+   $param1 = $args[0] ## User Imput => FileSystemRights (ReadAndExecute)
+   $param2 = $args[1] ## User Imput => Group Name (BUILTIN\Users)
+   If($param1 -ieq $null){$param1 = "FullControl"}## Default FileSystemRights value
+   If($param2 -ieq $null){$param2 = "Everyone"}## Default Group Name value
 
       ## Escaping backslash's and quotes because of:
       # NT AUTHORITY\INTERACTIVE empty spaces in User Imputs
-      If($param3 -Match '"' -and $param3 -Match '\\'){
-         $UserGroup = $param3 -replace '\\','\\' -replace '"',''
-      }ElseIf($param3 -Match '\\'){
-         $UserGroup = $param3 -replace '\\','\\'
-      }ElseIf($param3 -Match '"'){
-         $UserGroup = $param3 -replace '"',''
+      If($param2 -Match '"' -and $param2 -Match '\\'){
+         $UserGroup = $param2 -replace '\\','\\' -replace '"',''
+      }ElseIf($param2 -Match '\\'){
+         $UserGroup = $param2 -replace '\\','\\'
+      }ElseIf($param2 -Match '"'){
+         $UserGroup = $param2 -replace '"',''
       }Else{## Group Name without backslash's
-         $UserGroup = $param3  
+         $UserGroup = $param2  
       }
 
       ## Create Data Table for output
@@ -273,13 +340,13 @@ function Get-Paths {
       $mytable.Columns.Add("ModuleName")|Out-Null
       $mytable.Columns.Add("OS")|Out-Null
       $mytable.Columns.Add("Arch")|Out-Null
-      $mytable.Columns.Add("SearchACL")|Out-Null
+      $mytable.Columns.Add("SearchDACL")|Out-Null
       $mytable.Columns.Add("Group Name")|Out-Null
       $mytable.Rows.Add("Sherlock",
                         "W$MajorVersion",
                         "$ProcessArchitecture",
-                        "$param2",
-                        "$param3")|Out-Null
+                        "$param1",
+                        "$param2")|Out-Null
 
       ## Display Data Table
       $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
@@ -299,11 +366,11 @@ function Get-Paths {
          If(-not($Token -Match 'WindowsApps')){## Exclude => WindowsApps folder [UnauthorizedAccessException]
             $IsInHerit = (Get-Acl "$Token").Access.IsInherited|Select -First 1
             (Get-Acl "$Token").Access|Where {## Search for Everyone:(F) folder permissions (default)
-               $CleanOutput = $_.FileSystemRights -Match "$param2" -and $_.IdentityReference -Match "$UserGroup" ## <-- In my system the IdentityReference is: 'Todos'
+               $CleanOutput = $_.FileSystemRights -Match "$param1" -and $_.IdentityReference -Match "$UserGroup" ## <-- In my system the IdentityReference is: 'Todos'
                If($CleanOutput){$Count++ ##  Write the Table 'IF' found any vulnerable permissions
                   Write-Host "`nVulnId            : ${Count}::ACL (Mitre T1222)"
                   Write-Host "FolderPath        : $Token" -ForegroundColor Yellow
-                  Write-Host "FileSystemRights  : $param2"
+                  Write-Host "FileSystemRights  : $param1"
                   Write-Host "IdentityReference : $UserGroup"
                   Write-Host "IsInherited       : $IsInHerit"
                }
@@ -311,18 +378,16 @@ function Get-Paths {
          }## End of Exclude WindowsApps
       }## End of ForEach loop
 
-      Write-Host "`n`nWeak Directory Permissions"
-      Write-Host "--------------------------"
-      If(-not($Count -gt 0) -or $Count -ieq $null){## Weak directorys permissions report banner
-         Write-Host "None directorys found with '${UserGroup}:($param2)' permissions!" -ForegroundColor Red -BackgroundColor Black
-         Write-Host ""
-      }Else{
-         Write-Host "Found $Count directorys with '${UserGroup}:($param2)' permissions!"  -ForegroundColor Green -BackgroundColor Black
-         Write-Host ""
-      }
-
-   }## End of List folders Permissions
-   Start-Sleep -Seconds 2
+   Write-Host "`n`nWeak Directory Permissions"
+   Write-Host "--------------------------"
+   If(-not($Count -gt 0) -or $Count -ieq $null){## Weak directorys permissions report banner
+      Write-Host "None directorys found with '${UserGroup}:($param1)' permissions!" -ForegroundColor Red -BackgroundColor Black
+      Write-Host ""
+   }Else{
+      Write-Host "Found $Count directorys with '${UserGroup}:($param1)' permissions!"  -ForegroundColor Green -BackgroundColor Black
+      Write-Host ""
+   }
+   Write-Host "";Start-Sleep -Seconds 2
 }
 
 function Get-RegPaths {
@@ -365,7 +430,7 @@ function Get-RegPaths {
    $mytable.Columns.Add("ModuleName")|Out-Null
    $mytable.Columns.Add("OS")|Out-Null
    $mytable.Columns.Add("Arch")|Out-Null
-   $mytable.Columns.Add("SrvRigths")|Out-Null
+   $mytable.Columns.Add("SrvPermissions")|Out-Null
    $mytable.Columns.Add("Group Name")|Out-Null
    $mytable.Rows.Add("Sherlock",
                      "W$MajorVersion",
@@ -499,6 +564,7 @@ $KBDataEntrys = "null"
       Sherlock KB tests will compare installed KB
       Id patches againts Sherlock $dATAbASE Id list
       Special thanks to @youhacker55 (W7 x64 database)
+      Special thanks to @TroyDTaylor (W8 x64 database)
 
    .EXAMPLE
       PS C:\> Get-HotFixs
@@ -520,8 +586,8 @@ $KBDataEntrys = "null"
       $KBDataEntrys = "16"        ## <-- TODO: confirm
       $KB_dataBase = "23/12/2020" ## KB entrys database last update date
    }ElseIf($MajorVersion -eq '8'){
-      $KBDataEntrys = "null"      ## <-- TODO: confirm
-      $KB_dataBase = "23/12/2020" ## KB entrys database last update date
+      $KBDataEntrys = "44"        ## Credits: @TroyDTaylor (fully patch)
+      $KB_dataBase = "06/01/2021" ## KB entrys database last update date
    }ElseIf($MajorVersion -eq '10' -and $CPUArchitecture -eq "64 bits"){
       $KBDataEntrys = "16"        ## Credits: @r00t-3xp10it (fully patch)
       $KB_dataBase = "23/12/2020" ## KB entrys database last update date
@@ -565,15 +631,22 @@ $KBDataEntrys = "null"
          $dATAbASE = "Not supported under W$MajorVersion ($CPUArchitecture) architecture"
          $bypassTest = "True" ## Architecture 'NOT' supported by this test
       }
-   }ElseIf($MajorVersion -eq 88){## Windows (8|8.1) x32/x64
-      $dATAbASE = @(
-         "KB2805222","KB2805227","KB2750149",
-         "KB2919355","KB2919442","KB2932046",
-         "KB2959977","KB2937592","KB2938439",
-         "KB2934018","STOPED-HERE","KB4552152", ## <-- TODO:
-         "KB4559309","KB4560959","KB4561600",
-         "KB4560960"
-      )
+   }ElseIf($MajorVersion -eq 8){## Windows (8|8.1)
+      If($CPUArchitecture -eq "64 bits" -or $ProcessArchitecture -eq "AMD64"){
+         $dATAbASE = @(## Windows 8.1 x64 bits (@TroyDTaylor)
+            "KB2920189","KB2931358","KB2931366","KB2949621","KB2961072","KB2976627",
+            "KB2977629","KB2987107","KB3003057","KB3004545","KB3019978","KB3035126",
+            "KB3045685","KB3045999","KB3046017","KB3046737","KB3059317","KB3061512",
+            "KB3062760","KB3071756","KB3076949","KB3084135","KB3086255","KB3109103",
+            "KB3109560","KB3110329","KB3126434","KB3126587","KB3138910","KB3138962",
+            "KB3139398","KB3139914","KB3146723","KB3155784","KB3156059","KB3159398",
+            "KB3161949","KB3172729","KB3175024","KB3178539","KB3187754","KB4566425",
+            "KB4580325","KB4592484"
+         )
+      }Else{## Windows 8.1 x32 bits
+         $dATAbASE = "Not supported under W$MajorVersion ($CPUArchitecture) architecture"
+         $bypassTest = "True" ## Architecture 'NOT' supported by this test
+      }
    }ElseIf($MajorVersion -eq 7){## Windows 7
       If($CPUArchitecture -eq "64 bits" -or $ProcessArchitecture -eq "AMD64"){
          $dATAbASE = @(## Windows 7 x64 bits (@youhacker55 KB List)
@@ -646,7 +719,7 @@ function Get-DllHijack {
 
    <#
    .SYNOPSIS
-      Author: r00t-3xp10it
+      Author: r00t-3xp10it|@Adam_Kramer
       Find service DLL's prone to Hijacking
 
    .NOTES
@@ -869,17 +942,19 @@ function New-ExploitTable {
     ## Miscs that aren't MS
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
 
-    ## r00t-3xp10it update (v1.3.2)
+    ## r00t-3xp10it update (v1.3.3)
     $Global:ExploitTable.Rows.Add("ws2ifsl.sys Use After Free Elevation of Privileges","N/A","2019-1215","https://www.exploit-db.com/exploits/47935")
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("checkmk Local Elevation of Privileges","N/A","2020-005","https://tinyurl.com/ycrgjxec")
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","MS13-036","2020-0624","https://tinyurl.com/ybpz7k6y")
     $Global:ExploitTable.Rows.Add("Win32k Elevation of Privileges","N/A","2020-0642","https://packetstormsecurity.com/files/158729/Microsoft-Windows-Win32k-Privilege-Escalation.html")
+    $Global:ExploitTable.Rows.Add("Microsoft Spooler Local Elevation of Privileges","MS69-134","CVE-2020-1048","https://0day.today/exploit/34948")
     $Global:ExploitTable.Rows.Add("DrawIconEx Win32k Elevation of Privileges","N/A","2020-1054","https://packetstormsecurity.com/files/160515/Microsoft-Windows-DrawIconEx-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Druva inSync Local Elevation of Privileges","N/A","2020-5752","https://packetstormsecurity.com/files/160404/Druva-inSync-Windows-Client-6.6.3-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("Pulse Secure Client Local Elevation of Privileges","N/A","2020-13162","https://packetstormsecurity.com/files/158117/Pulse-Secure-Client-For-Windows-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("MSI Ambient Link Driver Elevation of Privileges","N/A","2020-17382","https://www.exploit-db.com/exploits/48836")
     $Global:ExploitTable.Rows.Add("splWOW64 Local Elevation of Privileges","MS69-132","CVE-2020-17008","https://bugs.chromium.org/p/project-zero/issues/detail?id=2096")
+    $Global:ExploitTable.Rows.Add("SUPREMO Local Elevation of Privileges","MS69-133","CVE-2020-25106","https://0day.today/exploit/35570")
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
@@ -918,8 +993,9 @@ function Find-AllVulns {
 
       CVE-2017-7199, CVE-2019-1215, CVE-2019-1458
       CVE-2020-005, CVE-2020-0624, CVE-2020-0642
-      CVE-2020-1054, CVE-2020-5752, CVE-2020-13162
-      CVE-2020-17382, CVE-2020-17008
+      CVE-2020-1048, CVE-2020-1054, CVE-2020-5752
+      CVE-2020-13162, CVE-2020-17382, CVE-2020-17008
+      CVE-2020-25106
 
    .EXAMPLE
       PS C:\> Find-AllVulns
@@ -952,10 +1028,11 @@ function Find-AllVulns {
         Find-CVE202017382
         Find-CVE2020005
         Find-CVE202017008
+        Find-CVE202025106
+        Find-CVE20201048
 
         Get-Results
 }
-
 
 function Find-MS10015 {
 
@@ -1264,7 +1341,7 @@ function Find-MS16135 {
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
-      Sherlock version v1.3.2 update
+      Sherlock version v1.3.3 update
 
    .DESCRIPTION
       The next functions are related to new 2020 EOP CVE's
@@ -1276,6 +1353,50 @@ function Find-MS16135 {
    #>
 
 # -------------------------------------------------------------------------------------------------------
+
+function Find-CVE202025106 {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      SUPREMO (rat) Local Privilege Escalation
+
+   .DESCRIPTION
+      CVE: 2020-25106
+      MSBulletin: MS69-133
+      Affected systems:
+         Windows 10 (1901) x64 - 4.1.3.2348
+   #>
+
+    $CVEID = "2020-25106"
+    $MSBulletin = "MS69-133"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+    $FilePath = ${Env:PROGRAMFILES(X86)} + "\Supremo\SupremoService.exe"
+
+    ## Check for OS affected version/arch (Windows 10 x64 bits)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 10) -and $Architecture[0] -ne "64 bits"){
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
+    }Else{
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## SupremoService.exe appl not found
+           $VulnStatus = "Not Vulnerable"
+       }Else{
+
+          ## Affected: =< 4.1.3.2348 Fixed: 4.2.0.2423
+          $Major = [int]$SoftwareVersion.Split(".")[1]
+          $Revision = $SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           1 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 2348 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $MSBulletin $VulnStatus
+}
 
 function Find-CVE2020005 {
 
@@ -1435,12 +1556,14 @@ function Find-CVE20200624 {
 
     $CVEID = "2020-0624"
     $MSBulletin = "MS13-036"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
     $FilePath = $Env:WINDIR + "\System32\Win32k.sys"
 
     ## Check for OS affected version (Windows 10)
     $MajorVersion = [int]$OSVersion.split(".")[0]
-    If($MajorVersion -ne 10){## Affected version number (Windows)
-        $VulnStatus = "Not supported on Windows $MajorVersion systems"
+    If($MajorVersion -ne 10 -and $ArchBuildBits -ne "64 bits"){## Affected version number (Windows)
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
     }Else{
 
        $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
@@ -1503,7 +1626,48 @@ function Find-CVE20200642 {
     Set-ExploitTable $CVEID $VulnStatus
 }
 
+function Find-CVE20201048 {
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Microsoft Spooler Local Privilege Elevation Vulnerability
 
+   .DESCRIPTION
+      CVE: 2020-1048
+      MSBulletin: MS69-134
+      Affected systems:
+         Windows 8 x64 bits - 6.2.9200.18363
+   #>
+
+    $CVEID = "2020-1048"
+    $MSBulletin = "MS69-134"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+    $FilePath = $Env:WINDIR + "\System32\ualapi.dll"
+
+    ## Check for OS affected version/arch (Windows 8 x64 bits)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If($MajorVersion -ne 8 -and $ArchBuildBits -ne "64 bits"){
+        $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
+    }Else{
+       
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## ualapi.dll appl not found
+           $VulnStatus = "Not Vulnerable"
+       }Else{
+
+          ## Affected: =< 6.2.9200.18363
+          $Major = [int]$SoftwareVersion.Split(".")[2]
+          $Revision = $SoftwareVersion.Split(".")[3]
+
+           switch($Major){
+           9200 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 18363 ] }
+           default { $VulnStatus = "Not Vulnerable" }
+           }
+       }
+    }
+    Set-ExploitTable $MSBulletin $VulnStatus
+}
 
 function Find-CVE20201054 {
 
@@ -1568,21 +1732,25 @@ function Find-CVE20205752 {
 
     ## Check for OS affected version/arch (Windows 10 x64)
     $MajorVersion = [int]$OSVersion.split(".")[0]
-    If(-not($MajorVersion -eq 10 -and $Architecture[0] -eq "64 bits")){
+    If(-not($MajorVersion -eq 10 -and $ArchBuildBits -eq "64 bits")){
         $VulnStatus = "Not supported on Windows $MajorVersion ($ArchBuildBits) systems"
     }Else{
 
+       ## Bypassing AV detection
+       $CardiacArrest = "$"+"Env"+":PROGRAM"+"FILES" -Join ''
+       $FuckingNuts = "$"+"Env"+":LOCAL"+"APPD"+"ATA" -Join ''
+       $ArteryBlocked = "$"+"{Env"+":PROGRA"+"MFILES(x86)}" -Join ''
+
        ## Find druva.exe absoluct install path
-       # Default Path: ${Env:PROGRAMFILES(x86)}\Druva\inSync4\druva.exe
-       $SearchFilePath = (Get-ChildItem -Path ${Env:PROGRAMFILES(x86)}\Druva\, $Env:PROGRAMFILES\Druva\, $Env:LOCALAPPDATA\Programs\Druva\ -Filter druva.exe -Recurse -ErrorAction SilentlyContinue -Force).fullname
+       $SearchFilePath = (Get-ChildItem -Path $ArteryBlocked\Druva\, $CardiacArrest\Druva\, $FuckingNuts\Programs\Druva\ -Filter druva.exe -Recurse -ErrorAction SilentlyContinue -Force).fullname
        If(-not($SearchFilepath)){## Add value to $FilePath or else 'Get-Item' pops up an error if $null
-          $FilePath = ${Env:PROGRAMFILES(x86)} + "\Druva\inSync4\druva.exe"
+          $FilePath = "$ArteryBlocked" + "\inSync4\Fail.exe"
        }Else{
           $FilePath = $SearchFilePath[0]
        }
        
        $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
-       If(-not($SoftwareVersion)){## druva.exe appl not found
+       If(-not($SoftwareVersion)){## Binary.exe appl not found
            $VulnStatus = "Not Vulnerable"
        }Else{
 

