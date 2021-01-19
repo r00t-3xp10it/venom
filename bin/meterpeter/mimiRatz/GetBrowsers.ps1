@@ -124,7 +124,7 @@ If(-not($param1)){
 
 ## [GetBrowsers] PS Script Banner (Manual Run)
 # For those who insiste in running this script outside meterpeter
-Write-Host "GetBrowsers - Enumerate installed browser(s) information." -ForeGroundColor Green
+#Write-Host "GetBrowsers - Enumerate installed browser(s) information." -ForeGroundColor Green
 If($mpset -eq $True){Write-Host "[i] LogFile => $LogFilePath\BrowserEnum.log" -ForeGroundColor yellow}
 Start-sleep -Seconds 1
 
@@ -1046,3 +1046,4 @@ If($param1 -eq "-ALL"){BROWSER_RECON;IE_Dump;FIREFOX;CHROME}
 Get-Content $LogFilePath\BrowserEnum.log;Write-Host "`n";
 If($mpset -eq $False){Remove-Item $LogFilePath\BrowserEnum.log -Force}
 Exit
+

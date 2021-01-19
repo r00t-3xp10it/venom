@@ -587,7 +587,7 @@ function Get-ModifiableRegPaths {
                     }
                     If($CurrentUserSids -Contains $IdentitySID){
                        $State = $True ## Mark that we have found a vulnerable service
-                       $ParseData = $Path -replace '{Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE','HKLM:' -replace '}',''
+                       $ParseData = $Path -replace '{Microsoft.PowerShell.Core\\Registry::HKEY_LOCAL_MACHINE','HKLM:' -replace '}',''
                        $parsePerm = $Permissions -replace '{','' -replace '}',''
                         New-Object -TypeName PSObject -Property @{
                             ModifiablePath = $ParseData
@@ -601,7 +601,7 @@ function Get-ModifiableRegPaths {
         If(-not($State)){## None vuln Service registry found
            Write-Host "`n`nModifiable Registry Service Paths"
            Write-Host "---------------------------------"
-           write-host "None Service Insecure Registry Permissions Found" -ForegroundColor Red -BackgroundColor Black
+           write-host "None Service Insecure Registry Permissions Found!" -ForegroundColor Red -BackgroundColor Black
         }
         Write-Host ""
     }
