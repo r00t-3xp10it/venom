@@ -139,6 +139,7 @@ $Global:ExploitTable = $null ## Global Output DataTable
 $ProcessArchitecture = $env:PROCESSOR_ARCHITECTURE
 $OSVersion = (Get-WmiObject Win32_OperatingSystem).version
 $host.UI.RawUI.WindowTitle = "@Sherlock $CmdletVersion {SSA@RedTeam}"
+$IsClientAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -Match "S-1-5-32-544")
 
 
 function Use-AllModules {
@@ -489,6 +490,7 @@ function Get-RegPaths {
 
 function Get-ModifiableRegPaths {
 
+
     <#
     .SYNOPSIS
        Author: @itm4n|@r00t-3xp10it
@@ -518,6 +520,11 @@ function Get-ModifiableRegPaths {
     #>
 
     BEGIN {
+
+    If($IsClientAdmin){## This module cant not run under admin privs
+       write-host "[error] This module cant not run under administrator privs!" -ForegroundColor Red -BackgroundColor Black
+       Write-Host "";Start-Sleep -Seconds 1
+
        ## Create Data Table for output
        $MajorVersion = [int]$OSVersion.split(".")[0]
        $mytable = New-Object System.Data.DataTable
@@ -605,6 +612,7 @@ function Get-ModifiableRegPaths {
         }
         Write-Host ""
     }
+  }## This module cant not run under admin privs
 }
 
 function Get-Rotten {
