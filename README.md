@@ -29,17 +29,17 @@
 
 
 ## LEGAL DISCLAMER
-    The author does not hold any responsibility for the bad use of this tool, remember that attacking targets
-    without prior consent is illegal and punished by law. So use this tool responsibly.
+    The author does not hold any responsibility for the bad use of this tool, remember that attacking
+    targets without prior consent is illegal and punished by law. So use this tool responsibly.
 
 
 
 ## FRAMEWORK DESCRIPTION
-    The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( C# | python | ruby
-    dll | msi | hta-psh | docm | apk | macho | elf | deb | mp4 | etc ) injects the shellcode generated into
-    one template (example: python) "the python funtion will execute the shellcode into ram" and uses compilers
-    like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the executable file. It also starts a
-    multi-handler to recive the remote connection (shell or meterpreter session).
+    The script will use msfvenom (metasploit) to generate shellcode in diferent formats ( C# | python
+    | ruby | dll | msi | hta-psh | docm | apk | macho | elf | deb | mp4 | etc ) injects the shellcode
+    generated into one template (example: python) "the python funtion will execute the shellcode into
+    ram" and uses compilers like gcc (gnu cross compiler) or mingw32 or pyinstaller to build the
+    executable file. It also starts a multi-handler to recive the remote connection (shell or meterpreter)
 
     'venom generator' reproduces some of the technics used by Veil-Evasion.py, unicorn.py, powersploit.py, etc..
 
