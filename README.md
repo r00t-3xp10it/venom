@@ -14,6 +14,7 @@
 ![licence](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)
 ![lastupdated](https://img.shields.io/aur/last-modified/venom)
 ![languages](https://img.shields.io/github/languages/count/r00t-3xp10it/venom)
+![Open issues](https://img.shields.io/github/issues/r00t-3xp10it/venom?color=red&label=open%20issues)
 
 
 
