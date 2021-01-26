@@ -12,8 +12,8 @@
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 ![licence](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)
-![lastupdated](https://img.shields.io/aur/last-modified/venom?style=plastic)
-
+![lastupdated](https://img.shields.io/aur/last-modified/venom)
+![languages](https://img.shields.io/github/languages/count/r00t-3xp10it/venom)
 
 
 
