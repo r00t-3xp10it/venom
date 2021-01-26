@@ -12,6 +12,9 @@
 [![Stage](https://img.shields.io/badge/Release-Stable-brightgreen.svg)]()
 [![Build](https://img.shields.io/badge/Supported_OS-Linux-orange.svg)]()
 ![licence](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)
+![issues](https://img.shields.io/badge/codeclimate/issues/r00t-3xp10it/VENOM-1.0.17-orange.svg)
+
+
 
 
 ## VENOM 1.0.17 - metasploit Shellcode generator/compiller
