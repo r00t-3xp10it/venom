@@ -230,6 +230,9 @@ If($GetDnsCache -ieq "Enum"){
    #>
 
    Get-DNSClientCache|Select-Object Entry,Data|Format-Table -AutoSize
+   If(-not($?)){## Command fail to retrieve dns cache info
+      Write-Host "[error] None DNS entrys found in $Remote_hostName!" -ForegroundColor Red -BackGroundColor Black
+   }
    Write-Host "";Start-Sleep -Seconds 1
 }
 
