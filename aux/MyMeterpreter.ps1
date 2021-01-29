@@ -256,11 +256,11 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
    #>
 
    ## Variable declarations
-   $Processor = (Get-WmiObject Win32_processor).Caption
    $System = (Get-WmiObject Win32_OperatingSystem).Caption
    $Version = (Get-WmiObject Win32_OperatingSystem).Version
    $NameDomain = (Get-WmiObject Win32_OperatingSystem).CSName
    $IsVirtualMachine = (Get-MpComputerStatus).IsVirtualMachine
+   $MyProcessor = (Get-WmiObject Win32_processor).Caption
    $SystemDir = (Get-WmiObject Win32_OperatingSystem).SystemDirectory
    $Architecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
    $Publicip = (curl http://ipinfo.io/ip -UseBasicParsing).content ## Credits: @securethelogs
@@ -301,7 +301,7 @@ If($SysInfo -ieq "Enum" -or $SysInfo -ieq "Verbose"){
    Write-Host "System32          : $SystemDir"
    Write-Host "DefaultWebBrowser : $Parse_Browser_Data (predefined)"
    Write-Host "CmdLetWorkingDir  : $Working_Directory" -ForegroundColor Yellow
-   Write-Host "Processor         : $Processor"
+   Write-Host "Processor         : $MyProcessor"
    Write-Host "User-Agent        : $UserAgentString`n"
 
    ## Get ALL drives available
@@ -3155,3 +3155,4 @@ $HelpParameters = @"
 "@;
 Write-Host "$HelpParameters"
 }
+
