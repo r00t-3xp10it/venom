@@ -71,7 +71,7 @@
 `git clone https://github.com/r00t-3xp10it/venom.git`
 
 **2º - Set execution permissions**<br />
-`cd venom-main`<br />
+`cd venom`<br />
 `sudo find ./ -name "*.sh" -exec chmod +x {} \;`<br />
 `sudo find ./ -name "*.py" -exec chmod +x {} \;`<br />
 
