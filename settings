@@ -78,6 +78,16 @@ WINE_DRIVEC=/root/.wine/drive_c
 
 
 
+
+### WinRar installation path inside WINE
+# This next setting allow users to input
+# the absoluct path of WinRar install.
+-----------------------------------------------------------------
+WinRAR_DRIVEC=/root/.wine/drive_c/Program Files/WinRAR/WinRAR.exe
+-----------------------------------------------------------------
+
+
+
 ### Metasploit modules (auxiliarys) directory structure.
 # This next setting allow users to input the full path
 # where to copy venom toolkit msf_auxiliary_modules.

