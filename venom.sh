@@ -12594,7 +12594,7 @@ cat << !
                  it compresses image.jpeg and add's a cmdline to winrar (sfx)
                  to silent download redpill.ps1 post-exploit auxiliary and to
                  silent download\execute our client in target RAM.
-    WIKI       : https://gist.github.com/r00t-3xp10it/b94c67b75858705ba34cdbc8047899d9#gistcomment-3784466
+    WIKI       : https://github.com/r00t-3xp10it/venom/blob/master/bin/powerglot/readme.md
     DEPENDENCIE: python3, powerglot.py, winrar (wine)
 
 !
@@ -12614,7 +12614,7 @@ cat << !
                  and redpill.ps1 post-exploitation auxiliary module then adds a firewall rule
                  to prevent client execution TCP connection warnings. And finally executes the
                  the Bind TCP shell in background. ( The Client beacons home every 30 seconds )
-    WIKI       : https://gist.github.com/r00t-3xp10it/cdc678c49256d34dda3ab4e5a1b00fe9#gistcomment-3772235
+    WIKI       : https://github.com/r00t-3xp10it/venom/blob/master/bin/shepard/README.md
     DEPENDENCIE: python3, Zip
 
 !
