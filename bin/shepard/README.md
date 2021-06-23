@@ -2,11 +2,11 @@
 
 <br />
 
-Author: @d3adzo ( BindShell ) | @r00t-3xp10it
-Tested Under: Windows 10 ( 19042 ) x64 bits
-Required Dependencies: <b><i>Invoke-WebRequest</i></b> {native} , <b><i>python3</i></b> {attacker machine}
-Optional Dependencies: <b><i>netsh advfirewall</i></b> {native} , <b><i>ComputerDefaults.exe</i></b> {native}
-Sherpard GitHub: https://github.com/d3adzo/shepard
+Author: @d3adzo ( BindShell ) | @r00t-3xp10it<br />
+Tested Under: Windows 10 ( 19042 ) x64 bits<br />
+Required Dependencies: <b><i>Invoke-WebRequest</i></b> {native} , <b><i>python3</i></b> {attacker machine}<br />
+Optional Dependencies: <b><i>netsh advfirewall</i></b> {native} , <b><i>ComputerDefaults.exe</i></b> {native}<br />
+Sherpard GitHub: https://github.com/d3adzo/shepard<br />
 
 <br />
 
