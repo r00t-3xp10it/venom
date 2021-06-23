@@ -35,7 +35,7 @@ This PS dropper later compiled to binary.exe uses <b><i>Social Engineering</i></
 
 <b><i>Executing Server (attacker):</i></b> to recive the connection back
 ```cmd
-python shepardsbind_recv.py <target IP>
+python3 shepardsbind_recv.py <target IP>
 ```
 ![um](https://user-images.githubusercontent.com/23490060/121764609-29d1f000-cb3d-11eb-94b0-a3fb0dffe36c.png)
 
