@@ -12419,7 +12419,7 @@ cat << !
     LOLBin             : Invoke-WebRequest
     DROPPER EXTENSION  : EXE (sfx)
     AGENT EXTENSION    : PS1
-    AGENT PERSISTENCE  : NOT AVAILABLE
+    AGENT PERSISTENCE  : redpill cmdlet (%tmp%)
 
     AGENT Nº9
     ─────────
@@ -12428,7 +12428,7 @@ cat << !
     LOLBin             : Invoke-WebRequest
     DROPPER EXTENSION  : EXE (ps1-To-Exe)
     AGENT EXTENSION    : EXE
-    AGENT PERSISTENCE  : NOT AVAILABLE
+    AGENT PERSISTENCE  : redpill cmdlet (%tmp%)
 
     ╔═════════════════════════════════════════════════════════════╗
     ║   M    - Return to main menu                                ║
