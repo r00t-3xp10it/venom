@@ -81,7 +81,7 @@
 **4º - Run main tool**<br />
 `sudo ./venom.sh`
 
-**Update venom instalation** (compare local version againts github oficial version)<br />
+**Update venom instalation** (compare local version againts github official version)<br />
 `sudo ./venom.sh -u`
 
 
